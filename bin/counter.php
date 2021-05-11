@@ -111,7 +111,7 @@ if (mysqli_num_rows($count_query) == 0) die("No users");
 			<h1 class="w3-jumbo"><?php echo $contest['name']; ?></h1>
 		</div>
 		<table class="w3-table-all w3-hoverable w3-card-4">
-		<caption class="w3-text-grey">Este cômputo se refere ao <?php echo($contest['name']);?> e foi gerado no dia <?php echo(date('d/m/Y'));?>, às <?php echo(date('H:i:s'));?> do horário UTC. A coluna "total de pontos" exibe a pontuação arredondada para baixo, sendo o critério de desempate o valor da soma total de bytes adicionados. Todos os usuários inscritos que editaram algum dos artigos da lista deste wikiconcurso estão listados abaixo, mesmo não tendo edição válida alguma. Neste caso, a lista os exibe por ordem alfabética.<br><br></caption>
+		<caption class="w3-text-grey">Este cômputo se refere ao <?php echo($contest['name']);?> e foi gerado no dia <?php echo(date('d/m/Y'));?>, às <?php echo(date('H:i:s'));?> do horário UTC. A ordem de classificação é realizada de acordo com o total de pontos, calculados com a pontuação arredondada para baixo, sendo utilizado como critério de desempate o valor da soma total de bytes adicionados e, caso ainda exista empate, por ordem alfabética. Todos os usuários inscritos que editaram algum dos artigos da lista deste wikiconcurso estão listados abaixo, mesmo não tendo edição válida alguma.<br><br></caption>
 		<tr>
 			<th>Usuário</th>
 			<th>Soma de bytes</th>

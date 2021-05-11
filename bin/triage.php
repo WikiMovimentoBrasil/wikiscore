@@ -208,6 +208,7 @@ mysqli_close($con);
 				<div class="w3-container w3-light-grey w3-justify">
 					<h2>Dados do concurso</h2>
 					<p>Nome: <?php echo $contest['name']; ?></p>
+					<p class="w3-small">Usuário: <?php echo(ucfirst($_SESSION['user']['user_name']));?></p>
 					<p class="w3-small">Início: <?php echo(date('d/m/Y H:i:s (\U\T\C)', $contest['start_time']))?></p>
 					<p class="w3-small">Término: <?php echo(date('d/m/Y H:i:s (\U\T\C)', $contest['end_time']))?></p>
 					<p class="w3-small">Delay no registro das edições: <?php echo(str_replace("hours", "horas", $contest['revert_time']))?></p>
