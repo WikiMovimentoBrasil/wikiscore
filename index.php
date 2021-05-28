@@ -7,7 +7,9 @@ require __DIR__.'/bin/data.php';
 if (isset($contests_array[@$_GET['contest']])) {
 	$contest = $contests_array[$_GET['contest']];
 } else {
-	foreach ($contests_array as $contest) echo("<a href='index.php?contest=".$contest['name_id']."'>".$contest['name']."</a><br>");
+	readfile("top.html");
+	foreach ($contests_array as $contest) echo("<p><a href='index.php?contest=".$contest['name_id']."'>".$contest['name']."</a></p>\n");
+	readfile("bottom.html");
 	die();
 }
 
