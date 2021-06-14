@@ -14,6 +14,7 @@ $csv = file_get_contents('https://outreachdashboard.wmflabs.org/course_students_
 $lines = str_getcsv($csv, "\n");
 foreach($lines as &$row) $row = str_getcsv($row, ","); 
 array_shift($lines);
+unset($row);
 
 //Atualiza tabela de usuários e de edições
 foreach ($lines as $row) {
