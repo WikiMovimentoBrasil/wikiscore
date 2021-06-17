@@ -6,55 +6,44 @@ require "protect.php";
 //Coleta informações do concurso
 require "data.php";
 
-//Define arrays
-$list_cat = array();
-$list_official = array();
+//Verifica se a lista oficial e a categoria foram definidas
+if (isset($contest['official_list_pageid']) AND isset($contest['category_pageid'])) {
 
-//Coleta lista de artigos na página do concurso
-$list_api_params = [
-    "action" 		=> "query",
-    "format" 		=> "json",
-    "prop" 			=> "links",
-    "pageids" 		=> $contest['official_list_pageid'],
-    "plnamespace" 	=> "0",
-    "pllimit" 		=> "500"
-];
+	//Define arrays
+	$list_cat = array();
+	$list_official = array();
 
-$list_api = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params)), true);
-$listmembers = end($list_api['query']['pages'])['links'];
-foreach ($listmembers as $pagetitle) $list_official[] = $pagetitle['title'];
-
-//Coleta segunda página da lista, caso exista
-while (isset($list_api['continue'])) {
+	//Coleta lista de artigos na página do concurso
 	$list_api_params = [
-		"action" 		=> "query",
-		"format" 		=> "json",
-		"prop" 			=> "links",
-		"pageids" 		=> $contest['official_list_pageid'],
-		"plnamespace" 	=> "0",
-		"pllimit" 		=> "500",
-		"plcontinue"	=> $list_api['continue']['plcontinue']
+	    "action" 		=> "query",
+	    "format" 		=> "json",
+	    "prop" 			=> "links",
+	    "pageids" 		=> $contest['official_list_pageid'],
+	    "plnamespace" 	=> "0",
+	    "pllimit" 		=> "500"
 	];
+
 	$list_api = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params)), true);
 	$listmembers = end($list_api['query']['pages'])['links'];
-	foreach ($listmembers as $pagetitle) $list_official[] = $pagetitle['title'];	
-}
+	foreach ($listmembers as $pagetitle) $list_official[] = $pagetitle['title'];
 
-//Coleta lista de artigos na categoria
-$categorymembers_api_params = [
-	"action" 		=> "query",
-	"format" 		=> "json",
-	"list" 			=> "categorymembers",
-	"cmnamespace" 	=> "0",
-	"cmpageid" 		=> $contest['category_pageid'],
-	"cmprop" 		=> "title",
-	"cmlimit"		=> "500"
-];
-$categorymembers_api = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($categorymembers_api_params)), true);
-foreach ($categorymembers_api['query']['categorymembers'] as $pageid) $list_cat[] = $pageid['title'];
+	//Coleta segunda página da lista, caso exista
+	while (isset($list_api['continue'])) {
+		$list_api_params = [
+			"action" 		=> "query",
+			"format" 		=> "json",
+			"prop" 			=> "links",
+			"pageids" 		=> $contest['official_list_pageid'],
+			"plnamespace" 	=> "0",
+			"pllimit" 		=> "500",
+			"plcontinue"	=> $list_api['continue']['plcontinue']
+		];
+		$list_api = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params)), true);
+		$listmembers = end($list_api['query']['pages'])['links'];
+		foreach ($listmembers as $pagetitle) $list_official[] = $pagetitle['title'];	
+	}
 
-//Coleta segunda página da categoria, caso exista
-while (isset($categorymembers_api['continue'])) {
+	//Coleta lista de artigos na categoria
 	$categorymembers_api_params = [
 		"action" 		=> "query",
 		"format" 		=> "json",
@@ -62,11 +51,38 @@ while (isset($categorymembers_api['continue'])) {
 		"cmnamespace" 	=> "0",
 		"cmpageid" 		=> $contest['category_pageid'],
 		"cmprop" 		=> "title",
-		"cmlimit"		=> "500",
-		"cmcontinue"	=> $categorymembers_api['continue']['cmcontinue']
+		"cmlimit"		=> "500"
 	];
 	$categorymembers_api = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($categorymembers_api_params)), true);
 	foreach ($categorymembers_api['query']['categorymembers'] as $pageid) $list_cat[] = $pageid['title'];
+
+	//Coleta segunda página da categoria, caso exista
+	while (isset($categorymembers_api['continue'])) {
+		$categorymembers_api_params = [
+			"action" 		=> "query",
+			"format" 		=> "json",
+			"list" 			=> "categorymembers",
+			"cmnamespace" 	=> "0",
+			"cmpageid" 		=> $contest['category_pageid'],
+			"cmprop" 		=> "title",
+			"cmlimit"		=> "500",
+			"cmcontinue"	=> $categorymembers_api['continue']['cmcontinue']
+		];
+		$categorymembers_api = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($categorymembers_api_params)), true);
+		foreach ($categorymembers_api['query']['categorymembers'] as $pageid) $list_cat[] = $pageid['title'];
+	}
+
+	//Processa listagens
+	$adicionar = array_diff($list_cat, $list_official);
+	asort($adicionar);
+	$remover = array_diff($list_official, $list_cat);
+	asort($remover);
+
+} else {
+
+	//Define variáveis como em branco, para evitar erro
+	$adicionar = array();
+	$remover = array();
 }
 
 //Lista páginas pendentes de eliminação
@@ -79,11 +95,7 @@ foreach ($esr_list as $page) $deletion[] = $page['title'];
 foreach ($er_list as $page) $deletion[] = $page['title'];
 foreach ($caa_list as $page) $deletion[] = $page['title'];
 
-//Processa listagens
-$adicionar = array_diff($list_cat, $list_official);
-asort($adicionar);
-$remover = array_diff($list_official, $list_cat);
-asort($remover);
+//Processa listagem
 $eliminar = array_intersect($deletion, $list_cat);
 asort($eliminar);
 

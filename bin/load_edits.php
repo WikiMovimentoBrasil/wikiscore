@@ -7,24 +7,24 @@ set_time_limit(120);
 //Conecta ao banco de dados
 require "connect.php";
 
-//Coleta lista de artigos na categoria
-$categorymembers_api_params = [
-	"action" 		=> "query",
-	"format" 		=> "json",
-	"list" 			=> "categorymembers",
-	"cmnamespace" 	=> "0",
-	"cmpageid" 		=> $contest['category_pageid'],
-	"cmprop" 		=> "ids",
-	"cmlimit"		=> "500"
-];
-$categorymembers_api = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($categorymembers_api_params)), true);
+//Verifica se PSID do PetScan foi fornecido ao invés de uma categoria comum
+if (isset($contest['category_petscan'])) {
+	
+	//Recupera lista do PetScan
+	$petscan_list = json_decode(
+		file_get_contents(
+			"https://petscan.wmflabs.org/?format=json&psid=".$contest['category_petscan']
+		), true
+	);
+	$petscan_list = $petscan_list['*']['0']['a']['*'];
 
-//Insere lista em uma array
-$list = array();
-foreach ($categorymembers_api['query']['categorymembers'] as $pageid) $list[] = $pageid['pageid'];
+	//Insere lista em uma array
+	$list = array();
+	foreach ($petscan_list as $petscan_id) $list[] = $petscan_id['id'];
 
-//Coleta segunda página da lista, caso exista
-while (isset($categorymembers_api['continue'])) {
+} else {
+
+	//Coleta lista de artigos na categoria
 	$categorymembers_api_params = [
 		"action" 		=> "query",
 		"format" 		=> "json",
@@ -32,11 +32,29 @@ while (isset($categorymembers_api['continue'])) {
 		"cmnamespace" 	=> "0",
 		"cmpageid" 		=> $contest['category_pageid'],
 		"cmprop" 		=> "ids",
-		"cmlimit"		=> "500",
-		"cmcontinue"	=> $categorymembers_api['continue']['cmcontinue']
+		"cmlimit"		=> "500"
 	];
 	$categorymembers_api = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($categorymembers_api_params)), true);
+
+	//Insere lista em uma array
+	$list = array();
 	foreach ($categorymembers_api['query']['categorymembers'] as $pageid) $list[] = $pageid['pageid'];
+
+	//Coleta segunda página da lista, caso exista
+	while (isset($categorymembers_api['continue'])) {
+		$categorymembers_api_params = [
+			"action" 		=> "query",
+			"format" 		=> "json",
+			"list" 			=> "categorymembers",
+			"cmnamespace" 	=> "0",
+			"cmpageid" 		=> $contest['category_pageid'],
+			"cmprop" 		=> "ids",
+			"cmlimit"		=> "500",
+			"cmcontinue"	=> $categorymembers_api['continue']['cmcontinue']
+		];
+		$categorymembers_api = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($categorymembers_api_params)), true);
+		foreach ($categorymembers_api['query']['categorymembers'] as $pageid) $list[] = $pageid['pageid'];
+	}
 }
 
 //Monta e executa query para atualização da tabela de artigos
