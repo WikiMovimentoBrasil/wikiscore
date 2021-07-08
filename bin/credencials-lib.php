@@ -81,6 +81,7 @@ class credencials {
       foreach ($user as $k=>$v) {
         if ($k!="user_password") { $_SESSION['user'][$k] = $v; }
       }
+      $_SESSION['user']['contest'] = CONTEST;
       return true;
     }
     return false;
@@ -94,6 +95,7 @@ define('DB_NAME', $database);
 define('DB_CHARSET', 'utf8');
 define('DB_USER', $db_user);
 define('DB_PASSWORD', $db_pass);
+define('CONTEST', $contest['name_id']);
 
 // (G) CREATE USER OBJECT
 $USR = new credencials();
