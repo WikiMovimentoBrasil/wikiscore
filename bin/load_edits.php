@@ -67,7 +67,7 @@ foreach ($list as $articleID) mysqli_query($con, "
 	;");
 
 //Coleta lista de artigos
-$articles_query = mysqli_query($con, "SELECT * FROM `articles` LIMIT 1000;");
+$articles_query = mysqli_query($con, "SELECT * FROM `articles`;");
 if (mysqli_num_rows($articles_query) == 0) die("No articles");
 
 //Coleta revisões já inseridas no banco de dados

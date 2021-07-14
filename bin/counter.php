@@ -41,14 +41,14 @@ FROM
           SUM(edits_ruled.`bytes`) AS `sum`, 
           SUM(edits_ruled.`valid_edits`) AS `total edits`, 
           FLOOR(
-            SUM(edits_ruled.`bytes`) / 3000
+            SUM(edits_ruled.`bytes`) / ${contest['bytes_per_points']}
           ) AS `bytes points` 
         FROM 
           (
             SELECT 
               edits.`article`, 
               edits.`user`, 
-              CASE WHEN SUM(edits.`bytes`) > 90000 THEN 90000 ELSE SUM(edits.`bytes`) END AS `bytes`, 
+              CASE WHEN SUM(edits.`bytes`) > ${contest['mas_bytes_per_article']} THEN ${contest['mas_bytes_per_article']} ELSE SUM(edits.`bytes`) END AS `bytes`, 
               COUNT(edits.`valid_edit`) AS `valid_edits` 
             FROM 
               `edits` 
@@ -71,9 +71,7 @@ FROM
           `distinct`.`user`, 
           `distinct`.`article`, 
           SUM(`distinct`.`pictures`) AS `total pictures`, 
-          FLOOR(
-            SUM(`distinct`.`pictures`) / 5
-          ) AS `pictures points` 
+       CASE WHEN ${contest['pictures_per_points']} = 0 THEN 0 ELSE FLOOR(SUM(`distinct`.`pictures`) / ${contest['pictures_per_points']}) END AS `pictures points` 
         FROM 
           (
             SELECT 
