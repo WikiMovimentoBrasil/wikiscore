@@ -20,7 +20,8 @@ if ($_POST) {
 			`valid_edit`='".$post['valid']."',
 			`pictures`='".$post['pic']."', 
 			`by` = '".addslashes($_SESSION['user']['user_name'])."', 
-			`when` = '".addslashes(date('Y-m-d H:i:s'))."' 
+			`when` = '".addslashes(date('Y-m-d H:i:s'))."',
+			`obs` =  '".addslashes($_POST['obs'])."'
 		WHERE `diff`='".addslashes($_POST['diff'])."';";
 
 	//Executa query
@@ -167,9 +168,9 @@ mysqli_close($con);
 							<input type="hidden" name="diff" value=<?php echo('"'.@$output['revision']['diff'].'"'); ?>>
 							<div class="w3-container w3-cell w3-half">
 								<p>Edição válida?</p>
-								<input class="w3-radio w3-section" type="radio" id="valid-sim" name="valid" value="sim">
+								<input class="w3-radio w3-section" type="radio" id="valid-sim" name="valid" value="sim" onclick="document.getElementById('obs').required = false">
 								<label for="valid-sim">Sim</label><br>
-								<input class="w3-radio w3-section" type="radio" id="valid-nao" name="valid" value="nao">
+								<input class="w3-radio w3-section" type="radio" id="valid-nao" name="valid" value="nao" onclick="document.getElementById('obs').required = true">
 								<label for="valid-nao">Não</label><br><br>
 							</div>
 							<div class="w3-container w3-cell w3-half">
@@ -180,6 +181,7 @@ mysqli_close($con);
 								<label for="pic-nao">Não</label><br><br>
 							</div>
 							<p>
+								<input class="w3-input w3-border" name="obs" id="obs" type="text" placeholder="Observação">
 								<input class="w3-button w3-green w3-border-green w3-border w3-block w3-margin-top w3-small" type="submit" value="Salvar">
 							</p>
 						</form>
