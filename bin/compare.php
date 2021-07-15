@@ -102,7 +102,7 @@ asort($eliminar);
 //Conecta ao banco de dados
 require "connect.php";
 
-//Coleta lista de diffs
+//Coleta lista de diffs e artigos novos
 $inconsistency_query = mysqli_query($con, 
 	"SELECT 
 	  `diff`, 
@@ -120,6 +120,14 @@ $inconsistency_query = mysqli_query($con,
 	  AND `valid_user` = '1' 
 	  AND `bytes` > 0 
 	  AND `reverted` IS NULL
+	ORDER BY `timestamp` ASC;");
+$wd_query = mysqli_query($con,
+	"SELECT 
+	  `article` 
+	FROM
+	  `edits`
+	WHERE 
+	  `new_page` = '1' 
 	ORDER BY `timestamp` ASC;");
 ?>
 
@@ -171,12 +179,21 @@ $inconsistency_query = mysqli_query($con,
 	    				<h3>Passíveis de eliminação</h3>
 	 	 			</div>
 		  			<ul class="w3-ul w3-border-top">
-		  				<li>Os artigos abaixos estão inseridos na categoria e estão marcados em alguma modalidade de eliminação (rápida, semirrápida, por consenso ou por candidatura).</li>
+		  				<li>Os artigos abaixos estão inseridos na categoria e estão marcados em alguma modalidade de eliminação (rápida, semirrápida, por consenso ou por candidatura). Adicionalmente, também exibe artigos novos sem item no Wikidata.</li>
 				    	<?php foreach ($eliminar as $artigo_del) {
 				    		echo("<li>");
 				    		echo("<a target='_blank' href='".$contest['endpoint']."?title=".urlencode($artigo_del)."'>".$artigo_del."</a>");
 							echo("</li>\n");
-				    	}?>
+				    	}
+				    	while ($row = mysqli_fetch_assoc($wd_query)) {
+							$wd = file_get_contents("https://pt.wikipedia.org/w/api.php?action=query&format=json&prop=pageprops&ppprop=wikibase_item&pageids=".$row['article']);
+							$wd = end(json_decode($wd, true)["query"]["pages"]);
+							if (isset($wd["pageprops"]["wikibase_item"])) continue;
+							echo("<li class=\"w3-green\">");
+							echo("<a target='_blank' href='".$contest['endpoint']."?curid=".urlencode($wd['pageid'])."'>".$wd['title']."</a> <small>(Sem Wikidata)</small>");
+							echo("</li>\n");
+						}
+						?>
 	  				</ul>
 	 			</div>
 			</div>

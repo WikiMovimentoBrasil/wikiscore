@@ -15,7 +15,7 @@ $contests_array = array(
 		'outreach_name'			=> 'Museu_Paulista/Wikiconcurso_Casa_Brasileira_(15_de_março_a_15_de_maio_de_2021)',
 		'bytes_per_points'		=> "3000",
 		'mas_bytes_per_article' => "90000",
-		'pictures_per_points'	=> "5"
+		'pictures_per_points'	=> "5",
 		'theme'					=> "amber"
 	),
 	'wlb_lista' => array(
