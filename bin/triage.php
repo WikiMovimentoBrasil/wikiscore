@@ -12,6 +12,15 @@ if ($_POST) {
 	if ($_POST['valid'] == 'sim') $post['valid'] = 1;
 	if ($_POST['pic'] == 'sim') $post['pic'] = 1;
 
+	if (!isset($_POST['obs'])) {
+		$post['obs'] = NULL;
+	} elseif ($_POST['obs'] == '') {
+		$post['obs'] = NULL;
+	} else {
+		$post['obs'] = addslashes($_POST['obs']);
+	}
+	
+
 	//Monta query
 	$sql_update = "
 		UPDATE 
@@ -21,8 +30,8 @@ if ($_POST) {
 			`pictures`='".$post['pic']."', 
 			`by` = '".addslashes($_SESSION['user']['user_name'])."', 
 			`when` = '".addslashes(date('Y-m-d H:i:s'))."',
-			`obs` =  '".addslashes($_POST['obs'])."'
-		WHERE `diff`='".addslashes($_POST['diff'])."';";
+			`obs` =  '".$post['obs']."'
+		WHERE `diff`='".$_POST['diff']."';";
 
 	//Executa query
 	$update_query = mysqli_query($con, $sql_update);
@@ -33,7 +42,7 @@ if ($_POST) {
 		$output['success']['pic'] = $post['pic'];
 
 		//Destrava edições do usuário que porventura ainda estejam travadas
-		$unhold_query = mysqli_query($con, "
+		mysqli_query($con, "
 			UPDATE 
 				`edits` 
 			SET 
@@ -168,16 +177,16 @@ mysqli_close($con);
 							<input type="hidden" name="diff" value=<?php echo('"'.@$output['revision']['diff'].'"'); ?>>
 							<div class="w3-container w3-cell w3-half">
 								<p>Edição válida?</p>
-								<input class="w3-radio w3-section" type="radio" id="valid-sim" name="valid" value="sim" onclick="document.getElementById('obs').required = false">
+								<input class="w3-radio w3-section" type="radio" id="valid-sim" name="valid" value="sim" onclick="document.getElementById('obs').required = false" required>
 								<label for="valid-sim">Sim</label><br>
-								<input class="w3-radio w3-section" type="radio" id="valid-nao" name="valid" value="nao" onclick="document.getElementById('obs').required = true">
+								<input class="w3-radio w3-section" type="radio" id="valid-nao" name="valid" value="nao" onclick="document.getElementById('obs').required = true" required>
 								<label for="valid-nao">Não</label><br><br>
 							</div>
 							<div class="w3-container w3-cell w3-half">
 								<p>Com imagem?</p>
-								<input class="w3-radio w3-section" type="radio" id="pic-sim" name="pic" value="sim">
+								<input class="w3-radio w3-section" type="radio" id="pic-sim" name="pic" value="sim" required>
 								<label for="pic-sim">Sim</label><br>
-								<input class="w3-radio w3-section" type="radio" id="pic-nao" name="pic" value="nao">
+								<input class="w3-radio w3-section" type="radio" id="pic-nao" name="pic" value="nao" required>
 								<label for="pic-nao">Não</label><br><br>
 							</div>
 							<p>
@@ -190,7 +199,12 @@ mysqli_close($con);
 					<div class="w3-container w3-light-grey w3-justify">
 						<h2>Detalhes da edição</h2>
 						<p style="overflow-wrap: break-word;">
-							Diff: 
+							<b>Usuário:</b> <span style="font-weight:bolder;color:red;"><?php echo(@$output['revision']['user']);?></span>
+							<br><b>Artigo:</b> <?php echo(@$output['compare']['totitle']);?>
+							<br><b>Diferença (bytes):</b> <?php echo(@$output['revision']['bytes']);?>
+							<br><b>Horário:</b> <?php echo(@$output['revision']['timestamp']);?> (UTC)
+							<br><b>Sumário:</b> <?php echo(@$output['revision']['summary']);?>
+							<br>Diff: 
 							<a target="_blank" <?php echo('href="https://pt.wikipedia.org/w/index.php?diff='.@$output['revision']['diff'].'"');?>><!--
 							---><?php echo(@$output['revision']['diff']);?><!--
 						---></a><!--
@@ -198,11 +212,6 @@ mysqli_close($con);
 						---><a target="_blank" <?php echo('href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid='.@$output['revision']['diff'].'"');?>><!--
 							--->Copyvio Detector<!--
 						---></a>
-							<br><b>Usuário:</b> <?php echo(@$output['revision']['user']);?>
-							<br><b>Artigo:</b> <?php echo(@$output['compare']['totitle']);?>
-							<br><b>Diferença (bytes):</b> <?php echo(@$output['revision']['bytes']);?>
-							<br><b>Horário:</b> <?php echo(@$output['revision']['timestamp']);?> (UTC)
-							<br><b>Sumário:</b> <?php echo(@$output['revision']['summary']);?>
 						</p>
 					</div>
 				</div>
