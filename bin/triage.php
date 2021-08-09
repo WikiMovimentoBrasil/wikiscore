@@ -12,12 +12,40 @@ if ($_POST) {
 	if ($_POST['valid'] == 'sim') $post['valid'] = 1;
 	if ($_POST['pic'] == 'sim') $post['pic'] = 1;
 
+	//Processa observação inserida no formulário
 	if (!isset($_POST['obs'])) {
-		$post['obs'] = NULL;
-	} elseif ($_POST['obs'] == '') {
-		$post['obs'] = NULL;
+		$post['obs'] = '';
 	} else {
 		$post['obs'] = addslashes($_POST['obs']);
+	}
+
+	//Processa alteração do número de bytes
+	if (isset($_POST['overwrite'])) {
+
+		//Busca número de bytes no banco de dados
+		$look_bytes = mysqli_fetch_assoc(
+			mysqli_query($con, "
+				SELECT 
+					`bytes`
+				FROM 
+					`edits` 
+				WHERE 
+					`diff` = '".$_POST['diff']."'
+				LIMIT 1
+			;")
+		);
+
+		//Verifica se há diferença. Caso sim, altera o número de bytes e adiciona comentário
+		if ($look_bytes['bytes'] != $_POST['overwrite']) {
+			mysqli_query($con, "
+				UPDATE 
+					`edits` 
+				SET 
+					`bytes`	 = '".addslashes($_POST['overwrite'])."'
+				WHERE `diff` = '".$_POST['diff']."';
+			");
+			$post['obs'] = $post['obs']." / bytes: ".$look_bytes['bytes']." -> ".addslashes($_POST['overwrite']);
+		}
 	}
 	
 
@@ -26,12 +54,12 @@ if ($_POST) {
 		UPDATE 
 			`edits` 
 		SET 
-			`valid_edit`='".$post['valid']."',
-			`pictures`='".$post['pic']."', 
-			`by` = '".addslashes($_SESSION['user']['user_name'])."', 
-			`when` = '".addslashes(date('Y-m-d H:i:s'))."',
-			`obs` =  '".$post['obs']."'
-		WHERE `diff`='".$_POST['diff']."';";
+			`valid_edit`	= '".$post['valid']."',
+			`pictures`		= '".$post['pic']."', 
+			`by` 			= '".addslashes($_SESSION['user']['user_name'])."', 
+			`when` 			= '".addslashes(date('Y-m-d H:i:s'))."',
+			`obs` 			= '".$post['obs']."'
+		WHERE `diff`		= '".$_POST['diff']."';";
 
 	//Executa query
 	$update_query = mysqli_query($con, $sql_update);
@@ -191,7 +219,17 @@ mysqli_close($con);
 							</div>
 							<p>
 								<input class="w3-input w3-border" name="obs" id="obs" type="text" placeholder="Observação">
-								<input class="w3-button w3-green w3-border-green w3-border w3-block w3-margin-top w3-small" type="submit" value="Salvar">
+								<br>
+								<input class="w3-button w3-border w3-block w3-red" name="overwrite" id="overwrite" type="button" value="Alterar bytes" onclick="
+									document.getElementById('overwrite').removeAttribute('value');
+									document.getElementById('overwrite').type = 'number';
+									document.getElementById('overwrite').className = 'w3-input w3-border';
+									document.getElementById('overwrite').value = '<?php echo(@$output['revision']['bytes']);?>';
+									document.getElementById('overwrite').removeAttribute('onclick');
+									document.getElementById('overwrite').removeAttribute('id');
+									document.getElementById('obs').required = true;
+								">
+								<input class="w3-button w3-green w3-border-green w3-border w3-block w3-margin-top" type="submit" value="Salvar">
 							</p>
 						</form>
 					</div>
