@@ -14,19 +14,72 @@ php -S 127.0.0.1:8000
 
 Then visit 127.0.0.1:8000 on your prefered browser. 
 
-
-## Setting up cron jobs
-
-
 ## Setting up a new Wiki Contest
+
 ### Set up a new database
-Create a new local database for the contest. Name it s54728__CONTEST-NAME. 
+Create a new local database for the contest. Instructions are described in NewDB.sql. When running, replace "DatabaseName" with the database name of your choice.
+
+### Define database connection credentials
+Database connection credentials must be entered on line 16 of the index.php file.
+
+```php
+//Define credenciais do banco de dados
+$db_user = //DB user
+$db_pass = //DB pass
+$db_host = //DB host
+$database = //Database name
+```
 
 ### Add the contest to bin/data.php
-Manually add a new contest 'CONTEST-NAME' in $contests_array. We suggest copying and editing 'casabr'.
+```php
+'example' => array(
+		'name_id' 				=> "example", //Must be the same as the array key
+		'start_time' 			=> "1615766399", //Unix time
+		'end_time' 				=> "1621123200", //Unix time
+		'name' 					=> "Example Contest 2020", //Long name of the contest
+		'revert_time' 			=> "-24 hours", //Recomended, but can be changed
+		'official_list_pageid' 	=> "6496164", //Page ID of the list of articles
+		'category_pageid' 		=> "6517644", //Category containing the articles
+		'endpoint'				=> "https://pt.wikipedia.org/w/index.php",
+		'api_endpoint'			=> "https://pt.wikipedia.org/w/api.php",
+		'outreach_name'			=> 'Museu_Paulista/Wikiconcurso_Casa_Brasileira_(15_de_março_a_15_de_maio_de_2021)', //Course adress at outreachdashboard.wmflabs.org
+		'bytes_per_points'		=> "3000",
+		'mas_bytes_per_article' => "90000",
+		'pictures_per_points'	=> "5",
+		'theme'					=> "amber" //See list: https://www.w3schools.com/w3css/w3css_colors.asp
+	),
+```
 
-### Set up a cron job to update your file.
+### Set up the cron jobs to update your file
+Set up the recurring scripts for your new contest as described in the previous section.
 
+### Enter the reviewers' credentials
+Enter the evaluators' data in the "credentials" table in the database. The model below is suggested, replacing the NAME and E-MAIL with the evaluator's information. The password hash can be calculated in: https://phppasswordhash.com/
+
+```sql
+INSERT INTO `credencials` (`user_name`, `user_email`, `user_password`, `user_status`) 
+VALUES ('NAME', 'E-MAIL', 'HASH', 'A');
+```
+
+If the evaluator needs to be blocked, replace the user_status value in the database to "P".
+
+## Setting up cron jobs
+Three scripts must be set up to run daily, or on whichever frequency you prefer, to feed the contests' databases:
+1. load_edits
+2. load_users
+3. load_reverts
+
+Scripts are required to run in the order above, as some processes depend on running the previous script. They are responsible for gathering the information on:
+1. new editions made in listed articles,
+2. which users are participating in the contest,
+3. mark edits made by participants on edit's table, if made after the participant's time of enrollment,
+4. checks if users has been renamed during the course of the contest,
+6. if any previous edition has been reverted, unmade or deleted
+
+The URL to run the scripts is:
+```
+index.php?contest=CONTEST_NAME&page=SCRIPT_NAME
+```
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
