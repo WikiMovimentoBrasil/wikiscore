@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `edits` (
   `reverted` tinyint(1) unsigned DEFAULT NULL,
   `by` tinytext COLLATE utf8mb4_unicode_ci,
   `when` timestamp NULL DEFAULT NULL,
+  `obs` text NULL DEFAULT NULL,
   PRIMARY KEY (`n`),
   UNIQUE KEY `diff` (`diff`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6270 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
