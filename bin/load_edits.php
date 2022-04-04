@@ -2,7 +2,7 @@
 echo("<pre>");
 
 //Aumenta tempo limite de execução do script
-set_time_limit(120);
+set_time_limit(1200);
 
 //Conecta ao banco de dados
 require "connect.php";
