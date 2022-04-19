@@ -78,8 +78,25 @@ $contests_array = array(
         'outreach_name'         => 'Grupo_de_Usuários_Wiki_Movimento_Brasil/Wikiconcurso_Wiki_Loves_Espírito_Santo',
         'bytes_per_points'      => "3000",
         'mas_bytes_per_article' => "90000",
-        'pictures_per_points'   => "5",
-        'theme'                 => "blue"
+        'pictures_per_points'   => "0",
+        'theme'                 => "blue",
+        'category_petscan'      => "21891035"
+    ),
+    'chuvadebytes' => array(
+        'name_id'               => "chuvadebytes",
+        'start_time'            => "1649041200",
+        'end_time'              => "1657249200",
+        'name'                  => "Chuva de Bytes",
+        'revert_time'           => "-24 hours",
+        'official_list_pageid'  => "6842180",
+        'category_pageid'       => "6775733",
+        'endpoint'              => "https://pt.wikipedia.org/w/index.php",
+        'api_endpoint'          => "https://pt.wikipedia.org/w/api.php",
+        'outreach_name'         => 'Projeto_Mais_Teoria_da_História_na_Wiki/Wikiconcurso_Chuva_de_bytes',
+        'bytes_per_points'      => "3000",
+        'mas_bytes_per_article' => "90000",
+        'pictures_per_points'   => "1",
+        'theme'                 => "teal"
     )
 );
 
