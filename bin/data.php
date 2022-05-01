@@ -77,10 +77,9 @@ $contests_array = array(
         'api_endpoint'          => "https://pt.wikipedia.org/w/api.php",
         'outreach_name'         => 'Grupo_de_Usuários_Wiki_Movimento_Brasil/Wikiconcurso_Wiki_Loves_Espírito_Santo',
         'bytes_per_points'      => "3000",
-        'mas_bytes_per_article' => "90000",
+        'mas_bytes_per_article' => "120000",
         'pictures_per_points'   => "0",
         'theme'                 => "blue",
-        'category_petscan'      => "21891035"
     ),
     'chuvadebytes' => array(
         'name_id'               => "chuvadebytes",
