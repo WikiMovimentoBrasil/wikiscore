@@ -50,6 +50,8 @@ while ($user = mysqli_fetch_assoc($check_renamed)) {
 		"list" 			=> "logevents",
 		"leprop" 		=> "details|title",
 		"leaction" 		=> "renameuser/renameuser",
+		"ledir" 		=> "newer",
+		"lestart" 		=> date('Y-m-d\TH:i:s.000\Z', $contest['start_time']),
 		"letitle" 		=> "User:".$user['user'],
 	];
 	$check_renamed_api = json_decode(file_get_contents("https://meta.wikimedia.org/w/api.php?".http_build_query($check_renamed_api_params)), true)["query"]["logevents"];
