@@ -124,11 +124,13 @@ $inconsistency_query = mysqli_query($con,
 $wd_query = mysqli_query($con,
 	"SELECT 
 	  `article` 
-	FROM
-	  `edits`
+	FROM 
+	  `edits` 
+	  INNER JOIN `articles` ON `edits`.`article` = `articles`.`articleID` 
 	WHERE 
-	  `new_page` = '1' 
-	ORDER BY `timestamp` ASC;");
+	  `edits`.`new_page` = '1' 
+	ORDER BY 
+	  `edits`.`timestamp` ASC;");
 ?>
 
 <!DOCTYPE html>

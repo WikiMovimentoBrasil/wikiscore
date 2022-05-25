@@ -80,6 +80,7 @@ $contests_array = array(
         'mas_bytes_per_article' => "120000",
         'pictures_per_points'   => "0",
         'theme'                 => "blue",
+        'category_petscan'      => "22089572"
     ),
     'chuvadebytes' => array(
         'name_id'               => "chuvadebytes",
