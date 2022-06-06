@@ -97,6 +97,22 @@ $contests_array = array(
         'mas_bytes_per_article' => "90000",
         'pictures_per_points'   => "1",
         'theme'                 => "teal"
+    ),
+    'lgbtqiapmais' => array(
+        'name_id'               => "lgbtqiapmais",
+        'start_time'            => "1654052400",
+        'end_time'              => "1656558000",
+        'name'                  => "Mais LGBTQIAP+ em Teoria da História na Wiki",
+        'revert_time'           => "-24 hours",
+        'official_list_pageid'  => "6794558",
+        'category_pageid'       => "6775721",
+        'endpoint'              => "https://pt.wikipedia.org/w/index.php",
+        'api_endpoint'          => "https://pt.wikipedia.org/w/api.php",
+        'outreach_name'         => 'Projeto_Mais_Teoria_da_História_na_Wiki/Mais_LGBTQIAP_em_Teoria_da_História_na_Wiki',
+        'bytes_per_points'      => "3000",
+        'mas_bytes_per_article' => "90000",
+        'pictures_per_points'   => "3",
+        'theme'                 => "lgbtqiapmais"
     )
 );
 
