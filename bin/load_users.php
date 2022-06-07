@@ -105,7 +105,7 @@ mysqli_query($con, "
 	SET 
 		`by` = NULL 
 	WHERE 
-		`by` LIKE 'hold-%'
+		`by` LIKE 'hold-%' OR `by` LIKE 'skip-%'
 	;");
 
 //Encerra conexão

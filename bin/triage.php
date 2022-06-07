@@ -7,78 +7,104 @@ require "connect.php";
 
 //Processa informações caso formulário tenha sido submetido
 if ($_POST) {
-	$post['valid'] = 0;
-	$post['pic'] = 0;
-	if ($_POST['valid'] == 'sim') $post['valid'] = 1;
-	if ($_POST['pic'] == 'sim') $post['pic'] = 1;
 
-	//Processa observação inserida no formulário
-	if (!isset($_POST['obs'])) {
-		$post['obs'] = '';
+	//Atualiza edição que o avaliador tenha pulado edição
+	if (isset($_POST['skip'])) {
+		$skip_query = mysqli_query($con, "
+			UPDATE 
+				`edits` 
+			SET 
+				`by` = 'skip-".$_SESSION['user']['user_name']."' 
+			WHERE 
+				`diff`='".addslashes($_POST['diff'])."'
+		;");
+		if (mysqli_affected_rows($con) == 0) die("<br>Erro ao pular edição. Atualize a página para tentar novamente.");
+
+	//Salva avaliação da edição
 	} else {
-		$post['obs'] = addslashes($_POST['obs']);
-	}
 
-	//Processa alteração do número de bytes
-	if (isset($_POST['overwrite'])) {
+		//Processa validade da edição, de acordo com o avaliador
+		if ($_POST['valid'] == 'sim') {
+			$post['valid'] = 1;
+		} else {
+			$post['valid'] = 0;
+		}
 
-		//Busca número de bytes no banco de dados
-		$look_bytes = mysqli_fetch_assoc(
-			mysqli_query($con, "
-				SELECT 
-					`bytes`
-				FROM 
-					`edits` 
-				WHERE 
-					`diff` = '".$_POST['diff']."'
-				LIMIT 1
-			;")
-		);
+		//Verifica se imagem foi inserida, de acordo com o avaliador
+		if ($_POST['pic'] == 'sim') {
+			$post['pic'] = 1;
+		} else {
+			$post['pic'] = 0;
+		}
+		
+		//Processa observação inserida no formulário
+		if (!isset($_POST['obs'])) {
+			$post['obs'] = '';
+		} else {
+			$post['obs'] = addslashes($_POST['obs']);
+		}
 
-		//Verifica se há diferença. Caso sim, altera o número de bytes e adiciona comentário
-		if ($look_bytes['bytes'] != $_POST['overwrite']) {
+		//Processa alteração do número de bytes, caso informação tenha sido editada pelo avaliador
+		if (isset($_POST['overwrite'])) {
+
+			//Busca número de bytes no banco de dados
+			$look_bytes = mysqli_fetch_assoc(
+				mysqli_query($con, "
+					SELECT 
+						`bytes`
+					FROM 
+						`edits` 
+					WHERE 
+						`diff` = '".addslashes($_POST['diff'])."'
+					LIMIT 1
+				;")
+			);
+
+			//Verifica se há diferença. Caso sim, altera o número de bytes e adiciona comentário
+			if ($look_bytes['bytes'] != $_POST['overwrite']) {
+				mysqli_query($con, "
+					UPDATE 
+						`edits` 
+					SET 
+						`bytes`	 = '".addslashes($_POST['overwrite'])."'
+					WHERE `diff` = '".addslashes($_POST['diff'])."';
+				");
+				$post['obs'] = $post['obs']." / bytes: ".$look_bytes['bytes']." -> ".addslashes($_POST['overwrite']);
+			}
+		}
+		
+
+		//Monta query para atualizar banco de dados
+		$sql_update = "
+			UPDATE 
+				`edits` 
+			SET 
+				`valid_edit`	= '".$post['valid']."',
+				`pictures`		= '".$post['pic']."', 
+				`by` 			= '".addslashes($_SESSION['user']['user_name'])."', 
+				`when` 			= '".addslashes(date('Y-m-d H:i:s'))."',
+				`obs` 			= '".$post['obs']."'
+			WHERE `diff`		= '".addslashes($_POST['diff'])."';";
+
+		//Executa query e retorna o resultado para o avaliador
+		$update_query = mysqli_query($con, $sql_update);
+		if (mysqli_affected_rows($con) != 0) {
+
+			$output['success']['diff'] = addslashes($_POST['diff']);
+			$output['success']['valid'] = $post['valid'];
+			$output['success']['pic'] = $post['pic'];
+
+			//Destrava edições do usuário que porventura ainda estejam travadas
 			mysqli_query($con, "
 				UPDATE 
 					`edits` 
 				SET 
-					`bytes`	 = '".addslashes($_POST['overwrite'])."'
-				WHERE `diff` = '".$_POST['diff']."';
-			");
-			$post['obs'] = $post['obs']." / bytes: ".$look_bytes['bytes']." -> ".addslashes($_POST['overwrite']);
+					`by` = NULL 
+				WHERE 
+					`by` = 'hold-".$_SESSION['user']['user_name']."'
+			;");
+
 		}
-	}
-	
-
-	//Monta query
-	$sql_update = "
-		UPDATE 
-			`edits` 
-		SET 
-			`valid_edit`	= '".$post['valid']."',
-			`pictures`		= '".$post['pic']."', 
-			`by` 			= '".addslashes($_SESSION['user']['user_name'])."', 
-			`when` 			= '".addslashes(date('Y-m-d H:i:s'))."',
-			`obs` 			= '".$post['obs']."'
-		WHERE `diff`		= '".$_POST['diff']."';";
-
-	//Executa query
-	$update_query = mysqli_query($con, $sql_update);
-	if (mysqli_affected_rows($con) != 0) {
-
-		$output['success']['diff'] = $_POST['diff'];
-		$output['success']['valid'] = $post['valid'];
-		$output['success']['pic'] = $post['pic'];
-
-		//Destrava edições do usuário que porventura ainda estejam travadas
-		mysqli_query($con, "
-			UPDATE 
-				`edits` 
-			SET 
-				`by` = NULL 
-			WHERE 
-				`by` = 'hold-".$_SESSION['user']['user_name']."'
-		;");
-
 	}
 }
 
@@ -98,7 +124,7 @@ $count_query = mysqli_query($con, "
 ;");
 $output['count'] = mysqli_fetch_assoc($count_query)['count'];
 
-//Coleta edição
+//Coleta edição para avaliação
 $revision_query = mysqli_query($con, "
 	SELECT 
 		`diff`, 
@@ -134,15 +160,14 @@ if ($output['revision'] != NULL) {
 	;");
 	if (mysqli_affected_rows($con) == 0) die("<br>Erro ao travar edição. Atualize a página para tentar novamente.");
 
-	//Coleta comparativo de edição
+	//Coleta informações da edição via API do MediaWiki
 	$output['compare'] = json_decode(file_get_contents("https://pt.wikipedia.org/w/api.php?action=compare&prop=title%7Cdiff&format=json&fromrev=".$output['revision']['diff']."&torelative=prev"), true)['compare'];
 }
 
 //Encerra conexão
 mysqli_close($con);
 
-
-//Exibe revisão e formulário de avaliação
+//Exibe edição e formulário de avaliação
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -179,8 +204,8 @@ mysqli_close($con);
 						<p>
 							Diff:<br>
 							<a target="_blank" <?php echo('href="https://pt.wikipedia.org/w/index.php?diff='.@$output['success']['diff'].'"');?>><!--
-							---><?php echo(@$output['success']['diff']);?><!--
-						---></a>
+							 --><?php echo(@$output['success']['diff']);?><!--
+						 --></a>
 						</p>
 						<p>
 							Edição válida:<br><?php echo(@$output['success']['valid']);?>
@@ -195,6 +220,11 @@ mysqli_close($con);
 					<div class="w3-container w3-margin-bottom">
 						<button class="w3-button w3-border-amber w3-<?php echo($contest['theme']);?> w3-border w3-block w3-small" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=counter', '_blank');">Contador</button>
 						<button class="w3-button w3-border-blue w3-blue w3-border w3-block w3-small" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=compare', '_blank');">Comparador</button>
+						<form method="post">
+							<input type="hidden" name="diff" value=<?php echo('"'.@$output['revision']['diff'].'"'); ?>>
+							<input type="hidden" name="skip" value="true">
+							<input class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small" type="submit" value="Pular edição">
+						</form>
 					</div>
 				</div>
 				<br>
@@ -244,12 +274,12 @@ mysqli_close($con);
 							<br><b>Sumário:</b> <?php echo(@$output['revision']['summary']);?>
 							<br>Diff: 
 							<a target="_blank" <?php echo('href="https://pt.wikipedia.org/w/index.php?diff='.@$output['revision']['diff'].'"');?>><!--
-							---><?php echo(@$output['revision']['diff']);?><!--
-						---></a><!--
-						---> - <!--
-						---><a target="_blank" <?php echo('href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid='.@$output['revision']['diff'].'"');?>><!--
-							--->Copyvio Detector<!--
-						---></a>
+							 --><?php echo(@$output['revision']['diff']);?><!--
+						 --></a><!--
+						 --> - <!--
+						 --><a target="_blank" <?php echo('href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid='.@$output['revision']['diff'].'"');?>><!--
+							 -->Copyvio Detector<!--
+						 --></a>
 						</p>
 					</div>
 				</div>
