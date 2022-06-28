@@ -115,6 +115,4 @@ $contests_array = array(
         'theme'                 => "lgbtqiapmais"
     )
 );
-
-?>
  

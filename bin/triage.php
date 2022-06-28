@@ -220,6 +220,7 @@ mysqli_close($con);
 					<div class="w3-container w3-margin-bottom">
 						<button class="w3-button w3-border-amber w3-<?php echo($contest['theme']);?> w3-border w3-block w3-small" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=counter', '_blank');">Contador</button>
 						<button class="w3-button w3-border-blue w3-blue w3-border w3-block w3-small" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=compare', '_blank');">Comparador</button>
+						<button class="w3-button w3-border-green w3-green w3-border w3-block w3-small" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=edits', '_blank');">Edições avaliadas (CSV)</button>
 						<form method="post">
 							<input type="hidden" name="diff" value=<?php echo('"'.@$output['revision']['diff'].'"'); ?>>
 							<input type="hidden" name="skip" value="true">
