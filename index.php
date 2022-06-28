@@ -32,6 +32,8 @@ if (!isset($_GET['page'])) {
 	require __DIR__.'/bin/compare.php';
 } elseif ($_GET['page'] == 'edits') {
 	require __DIR__.'/bin/edits.php';
+} elseif ($_GET['page'] == 'modify') {
+	require __DIR__.'/bin/modify.php';
 } elseif ($_GET['page'] == 'load_edits') {
 	require __DIR__.'/bin/load_edits.php';
 } elseif ($_GET['page'] == 'load_reverts') {
