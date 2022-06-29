@@ -46,6 +46,7 @@ $database = //Database name
 		'bytes_per_points'		=> "3000",
 		'mas_bytes_per_article' => "90000",
 		'pictures_per_points'	=> "5",
+		'aval_pic_per_edit'     => "0",
 		'theme'					=> "amber" //See list: https://www.w3schools.com/w3css/w3css_colors.asp
 	),
 ```

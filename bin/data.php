@@ -16,6 +16,7 @@ $contests_array = array(
         'bytes_per_points'      => "3000",
         'mas_bytes_per_article' => "90000",
         'pictures_per_points'   => "5",
+        'aval_pic_per_edit'     => "0",
         'theme'                 => "amber"
     ),
     'wlb_lista' => array(
@@ -32,6 +33,7 @@ $contests_array = array(
         'bytes_per_points'      => "3000",
         'mas_bytes_per_article' => "90000",
         'pictures_per_points'   => "0",
+        'aval_pic_per_edit'     => "0",
         'theme'                 => "blue"
     ),
     'wlb_geral' => array(
@@ -46,6 +48,7 @@ $contests_array = array(
         'bytes_per_points'      => "3000",
         'mas_bytes_per_article' => "90000",
         'pictures_per_points'   => "0",
+        'aval_pic_per_edit'     => "0",
         'theme'                 => "blue-grey",
         'category_petscan'      => "19362327"
     ),
@@ -63,6 +66,7 @@ $contests_array = array(
         'bytes_per_points'      => "3000",
         'mas_bytes_per_article' => "90000",
         'pictures_per_points'   => "1",
+        'aval_pic_per_edit'     => "0",
         'theme'                 => "purple"
     ),
     'wles' => array(
@@ -79,6 +83,7 @@ $contests_array = array(
         'bytes_per_points'      => "3000",
         'mas_bytes_per_article' => "120000",
         'pictures_per_points'   => "0",
+        'aval_pic_per_edit'     => "0",
         'theme'                 => "blue",
         'category_petscan'      => "22089572"
     ),
@@ -96,6 +101,7 @@ $contests_array = array(
         'bytes_per_points'      => "3000",
         'mas_bytes_per_article' => "90000",
         'pictures_per_points'   => "1",
+        'aval_pic_per_edit'     => "1",
         'theme'                 => "teal"
     ),
     'lgbtqiapmais' => array(
@@ -112,6 +118,7 @@ $contests_array = array(
         'bytes_per_points'      => "3000",
         'mas_bytes_per_article' => "90000",
         'pictures_per_points'   => "3",
+        'aval_pic_per_edit'     => "1",
         'theme'                 => "lgbtqiapmais"
     )
 );
