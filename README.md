@@ -33,22 +33,22 @@ $database = //Database name
 ### Add the contest to bin/data.php
 ```php
 'example' => array(
-		'name_id' 				=> "example", //Must be the same as the array key
-		'start_time' 			=> "1615766399", //Unix time
-		'end_time' 				=> "1621123200", //Unix time
-		'name' 					=> "Example Contest 2020", //Long name of the contest
-		'revert_time' 			=> "-24 hours", //Recomended, but can be changed
-		'official_list_pageid' 	=> "6496164", //Page ID of the list of articles
-		'category_pageid' 		=> "6517644", //Category containing the articles
-		'endpoint'				=> "https://pt.wikipedia.org/w/index.php",
-		'api_endpoint'			=> "https://pt.wikipedia.org/w/api.php",
-		'outreach_name'			=> 'Museu_Paulista/Wikiconcurso_Casa_Brasileira_(15_de_março_a_15_de_maio_de_2021)', //Course adress at outreachdashboard.wmflabs.org
-		'bytes_per_points'		=> "3000",
-		'mas_bytes_per_article' => "90000",
-		'pictures_per_points'	=> "5",
-		'aval_pic_per_edit'     => "0",
-		'theme'					=> "amber" //See list: https://www.w3schools.com/w3css/w3css_colors.asp
-	),
+        'name_id'               => "example",              //Must be the same as the array key
+        'start_time'            => "1615766399",           //Unix time
+        'end_time'              => "1621123200",           //Unix time
+        'name'                  => "Example Contest 2020", //Long name of the contest
+        'revert_time'           => "-24 hours",            //Recomended, but can be changed
+        'official_list_pageid'  => "6496164",              //Page ID of the list of articles
+        'category_pageid'       => "6517644",              //Category containing the articles
+        'endpoint'              => "https://pt.wikipedia.org/w/index.php",
+        'api_endpoint'          => "https://pt.wikipedia.org/w/api.php",
+        'outreach_name'         => 'Museu/Wikiconcurso',   //Course adress at outreachdashboard.wmflabs.org
+        'bytes_per_points'      => "3000",                 //Number of bytes needed to reach 1 point
+        'max_bytes_per_article' => "90000",                //Maximum number of bytes allowed per article, per participant
+        'pictures_per_points'   => "5",                    //Number of images needed to reach 1 point
+        'aval_pic_per_edit'     => "0",                    //0 if the image count is per article, 1 if it is per edition
+        'theme'                 => "amber"                 //See list: https://www.w3schools.com/w3css/w3css_colors.asp
+    ),
 ```
 
 ### Set up the cron jobs to update your file

@@ -48,7 +48,7 @@ FROM
             SELECT 
               edits.`article`, 
               edits.`user`, 
-              CASE WHEN SUM(edits.`bytes`) > ${contest['mas_bytes_per_article']} THEN ${contest['mas_bytes_per_article']} ELSE SUM(edits.`bytes`) END AS `bytes`, 
+              CASE WHEN SUM(edits.`bytes`) > ${contest['max_bytes_per_article']} THEN ${contest['max_bytes_per_article']} ELSE SUM(edits.`bytes`) END AS `bytes`, 
               COUNT(edits.`valid_edit`) AS `valid_edits` 
             FROM 
               `edits` 
