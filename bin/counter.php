@@ -75,13 +75,18 @@ FROM
         FROM 
           (
             SELECT 
-              DISTINCT edits.`user`, 
+              edits.`user`, 
               edits.`article`, 
-              edits.`pictures` 
+              edits.`pictures`, 
+              edits.`n` 
             FROM 
               `edits` 
             WHERE 
-              edits.`pictures` IS NOT NULL
+              edits.`pictures` IS NOT NULL 
+            GROUP BY 
+              CASE WHEN ${contest['count_pic_per_edit']} = 0 THEN edits.`user` END, 
+              CASE WHEN ${contest['count_pic_per_edit']} = 0 THEN edits.`article` END, 
+              CASE WHEN ${contest['count_pic_per_edit']} = 0 THEN edits.`pictures` ELSE edits.`n` END
           ) AS `distinct` 
         GROUP BY 
           `distinct`.`user` 
