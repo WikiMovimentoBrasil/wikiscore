@@ -243,11 +243,21 @@ mysqli_close($con);
 								<label for="valid-nao">Não</label><br><br>
 							</div>
 							<div class="w3-container w3-cell w3-half">
-								<p>Com imagem?</p>
-								<input class="w3-radio w3-section" type="radio" id="pic-sim" name="pic" value="sim" required>
-								<label for="pic-sim">Sim</label><br>
-								<input class="w3-radio w3-section" type="radio" id="pic-nao" name="pic" value="nao" required>
-								<label for="pic-nao">Não</label><br><br>
+								<p>Imagem?</p>
+								<?php if ($contest['pictures_mode'] == 2) {
+									echo('
+										<input class="w3-input w3-border" type="number" id="pic" name="pic" value="0" min="0" max="9" required>
+										<label for="pic">Quantidade</label><br><br>
+									');
+								} else {
+									echo('
+										<input class="w3-radio w3-section" type="radio" id="pic-sim" name="pic" value="sim" required>
+										<label for="pic-sim">Sim</label><br>
+										<input class="w3-radio w3-section" type="radio" id="pic-nao" name="pic" value="nao" required>
+										<label for="pic-nao">Não</label><br><br>
+									');
+								}
+								?>
 							</div>
 							<p>
 								<input class="w3-input w3-border" name="obs" id="obs" type="text" placeholder="Observação">

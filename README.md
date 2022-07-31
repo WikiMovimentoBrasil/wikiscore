@@ -46,10 +46,16 @@ $database = //Database name
         'bytes_per_points'      => "3000",                 //Number of bytes needed to reach 1 point
         'max_bytes_per_article' => "90000",                //Maximum number of bytes allowed per article, per participant
         'pictures_per_points'   => "5",                    //Number of images needed to reach 1 point
-        'aval_pic_per_edit'     => "0",                    //0 if the image count is per article, 1 if it is per edition
+        'pictures_mode'         => "0",                    //See below
+        'max_pic_per_article'   => "3",                    //Maximum number of pictures allowed per article, per participant
         'theme'                 => "amber"                 //See list: https://www.w3schools.com/w3css/w3css_colors.asp
     ),
 ```
+
+### Pictures mode
+0 = Sistema booleano por artigo. Contabiliza apenas a inserção de uma imagem em um artigo, ignorando outras imagens adicionadas no mesmo artigo.
+1 = Sistema booleano por edição. Contabiliza apenas a inserção de uma imagem em uma edição, ignorando outras imagens adicionadas na mesma edição.
+2 = Sistema integer. Contabiliza cada imagem inserida no artigo até o máximo estabelecido em 'max_bytes_per_article'.
 
 ### Set up the cron jobs to update your file
 Set up the recurring scripts for your new contest as described in the previous section.

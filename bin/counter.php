@@ -84,9 +84,9 @@ FROM
             WHERE 
               edits.`pictures` IS NOT NULL 
             GROUP BY 
-              CASE WHEN ${contest['aval_pic_per_edit']} = 0 THEN edits.`user` END, 
-              CASE WHEN ${contest['aval_pic_per_edit']} = 0 THEN edits.`article` END, 
-              CASE WHEN ${contest['aval_pic_per_edit']} = 0 THEN edits.`pictures` ELSE edits.`n` END
+              CASE WHEN ${contest['pictures_mode']} = 0 THEN edits.`user` END, 
+              CASE WHEN ${contest['pictures_mode']} = 0 THEN edits.`article` END, 
+              CASE WHEN ${contest['pictures_mode']} = 0 THEN edits.`pictures` ELSE edits.`n` END
           ) AS `distinct` 
         GROUP BY 
           `distinct`.`user` 

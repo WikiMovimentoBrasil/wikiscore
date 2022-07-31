@@ -15,11 +15,15 @@ if ($_POST) {
 		$post['valid'] = 0;
 	}
 
-	//Verifica se imagem foi inserida, de acordo com o avaliador
-	if ($_POST['pic'] == 'sim') {
-		$post['pic'] = 1;
+	//Verifica se/quantas imagem(es) foi(ram) inserida(s), de acordo com o avaliador
+	if ($contest['pictures_mode'] == 2) {
+		$post['pic'] = addslashes($_POST['pic']);
 	} else {
-		$post['pic'] = 0;
+		if ($_POST['pic'] == 'sim') {
+			$post['pic'] = 1;
+		} else {
+			$post['pic'] = 0;
+		}
 	}
 	
 	//Processa observação inserida no formulário
@@ -152,11 +156,21 @@ mysqli_close($con);
 					<label for="valid-nao">Não</label><br><br>
 				</div>
 				<div class="w3-container w3-cell w3-half">
-					<p>Com imagem?</p>
-					<input class="w3-radio w3-section" type="radio" id="pic-sim" name="pic" value="sim" required>
-					<label for="pic-sim">Sim</label><br>
-					<input class="w3-radio w3-section" type="radio" id="pic-nao" name="pic" value="nao" required>
-					<label for="pic-nao">Não</label><br><br>
+					<p>Imagem?</p>
+					<?php if ($contest['pictures_mode'] == 2) {
+						echo('
+							<input class="w3-input w3-border" type="number" id="pic" name="pic" value="0" min="0" max="9" required>
+							<label for="pic">Quantidade</label><br><br>
+						');
+					} else {
+						echo('
+							<input class="w3-radio w3-section" type="radio" id="pic-sim" name="pic" value="sim" required>
+							<label for="pic-sim">Sim</label><br>
+							<input class="w3-radio w3-section" type="radio" id="pic-nao" name="pic" value="nao" required>
+							<label for="pic-nao">Não</label><br><br>
+						');
+					}
+					?>
 				</div>
 				<p>
 					<input class="w3-input w3-border" name="obs" id="obs" type="text" placeholder="Observação" required>
@@ -186,7 +200,7 @@ mysqli_close($con);
 					<li>Artigo novo: <?php if ($output['revision']['new_page']) { echo("Sim"); } else { echo("Não"); } ?></li>
 					<li>Edição válida: <?php if ($output['revision']['valid_edit']) { echo("Sim"); } else { echo("Não"); } ?></li>
 					<li>Usuário inscrito: <?php if ($output['revision']['valid_user']) { echo("Sim"); } else { echo("Não"); } ?></li>
-					<li>Imagem: <?php if ($output['revision']['pictures']) { echo("Sim"); } else { echo("Não"); } ?></li>
+					<li>Imagem: <?php if ($contest['pictures_mode'] == 2) { echo(@$output['revision']['pictures']); } else { if ($output['revision']['pictures']) { echo("Sim"); } else { echo("Não"); }} ?></li>
 					<li>Edição revertida: <?php if ($output['revision']['reverted']) { echo("Sim"); } else { echo("Não"); } ?></li>
 					<li>Avaliador: <?php echo(@$output['revision']['by']); ?></li>
 					<li>Horário da avaliação: <?php echo(@$output['revision']['when']); ?></li>
