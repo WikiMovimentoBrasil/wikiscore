@@ -120,6 +120,24 @@ $contests_array = array(
         'pictures_per_points'   => "3",
         'pictures_mode'         => "1",
         'theme'                 => "lgbtqiapmais"
+    ),
+    'povosoriginarios' => array(
+        'name_id'               => "povosoriginarios",
+        'start_time'            => "1659322800",
+        'end_time'              => "1661914800",
+        'name'                  => "Mais Povos Originários em Teoria da História na Wiki",
+        'revert_time'           => "-24 hours",
+        'official_list_pageid'  => "6934381",
+        'category_pageid'       => "6775726",
+        'endpoint'              => "https://pt.wikipedia.org/w/index.php",
+        'api_endpoint'          => "https://pt.wikipedia.org/w/api.php",
+        'outreach_name'         => 'Projeto_Mais_Teoria_da_História_na_Wiki/Mais_povos_originários_em_Teoria_da_História_na_Wiki',
+        'bytes_per_points'      => "3000",
+        'max_bytes_per_article' => "90000",
+        'pictures_per_points'   => "3",
+        'pictures_mode'         => "2",
+        'max_pic_per_article'   => "3",
+        'theme'                 => "povosoriginarios"
     )
 );
  
