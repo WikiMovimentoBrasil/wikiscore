@@ -30,11 +30,15 @@ if ($_POST) {
 			$post['valid'] = 0;
 		}
 
-		//Verifica se imagem foi inserida, de acordo com o avaliador
-		if ($_POST['pic'] == 'sim') {
-			$post['pic'] = 1;
+		//Verifica se/quantas imagem(es) foi(ram) inserida(s), de acordo com o avaliador
+		if ($contest['pictures_mode'] == 2) {
+			$post['pic'] = addslashes($_POST['pic']);
 		} else {
-			$post['pic'] = 0;
+			if ($_POST['pic'] == 'sim') {
+				$post['pic'] = 1;
+			} else {
+				$post['pic'] = 0;
+			}
 		}
 		
 		//Processa observação inserida no formulário
