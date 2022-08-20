@@ -128,6 +128,19 @@ $count_query = mysqli_query($con, "
 ;");
 $output['count'] = mysqli_fetch_assoc($count_query)['count'];
 
+//Captura horário de última edição inserida no banco de dados
+$lastedit_query = mysqli_query($con, "
+	SELECT 
+		`timestamp` AS `lastedit`
+	FROM 
+		`edits`
+	ORDER BY 
+		`timestamp` DESC 
+	LIMIT 
+		1
+;");
+$output['lastedit'] = strtotime(mysqli_fetch_assoc($lastedit_query)["lastedit"]);
+
 //Coleta edição para avaliação
 $revision_query = mysqli_query($con, "
 	SELECT 
@@ -285,10 +298,10 @@ mysqli_close($con);
 						<p style="overflow-wrap: break-word;">
 							<b>Usuário:</b> <span style="font-weight:bolder;color:red;"><?php echo(@$output['revision']['user']);?></span>
 							<br><b>Artigo:</b> <?php echo(@$output['compare']['totitle']);?>
-							<br><b>Diferença (bytes):</b> <?php echo(@$output['revision']['bytes']);?>
+							<br><b>Diferença:</b> <?php echo(@$output['revision']['bytes']);?> bytes
 							<br><b>Horário:</b> <?php echo(@$output['revision']['timestamp']);?> (UTC)
 							<br><b>Sumário:</b> <?php echo(@$output['revision']['summary']);?>
-							<br>Diff: 
+							<br><b>Diff:</b> 
 							<a target="_blank" <?php echo('href="https://pt.wikipedia.org/w/index.php?diff='.@$output['revision']['diff'].'"');?>><!--
 							 --><?php echo(@$output['revision']['diff']);?><!--
 						 --></a><!--
@@ -301,20 +314,21 @@ mysqli_close($con);
 				</div>
 				<br>
 				<div class="w3-container w3-light-grey w3-justify">
-					<h2>Dados do concurso</h2>
-					<p>Nome: <?php echo $contest['name']; ?></p>
-					<p class="w3-small">Usuário: <?php echo(ucfirst($_SESSION['user']['user_name']));?></p>
-					<p class="w3-small">Início: <?php echo(date('d/m/Y H:i:s (\U\T\C)', $contest['start_time']))?></p>
-					<p class="w3-small">Término: <?php echo(date('d/m/Y H:i:s (\U\T\C)', $contest['end_time']))?></p>
-					<p class="w3-small">Delay no registro das edições: <?php echo(str_replace("hours", "horas", $contest['revert_time']))?></p>
+					<h2>Informações gerais</h2>
+					<p class="w3-small"><b>Nome do wikiconcurso</b><br><?php echo $contest['name']; ?></p>
+					<p class="w3-small"><b>Nome do atual avaliador</b><br><?php echo(ucfirst($_SESSION['user']['user_name'])); ?></p>
+					<p class="w3-small"><b>Horário de início do wikiconcurso</b><br><?php echo(date('d/m/Y H:i:s (\U\T\C)', $contest['start_time'])); ?></p>
+					<p class="w3-small"><b>Horário de término do wikiconcurso</b><br><?php echo(date('d/m/Y H:i:s (\U\T\C)', $contest['end_time'])); ?></p>
+					<p class="w3-small"><b>Última atualização do banco de dados</b><br><?php echo(date('d/m/Y H:i:s (\U\T\C)', $output['lastedit'])); ?></p>
+					<p class="w3-small"><b>Delay no registro das edições</b><br><?php echo(str_replace("hours", "horas", $contest['revert_time'])); ?></p>
 				</div>
 				<br>
 			</div>
 			<div class="w3-threequarter">
-				<div <?php if(!isset($output['compare']['*'])) echo('style="display:none;"');?>>
+				<div <?php if(!isset($output['compare']['*'])) echo('style="display:none;"'); ?>>
 					<h3>Diferencial de edição</h3>
 					<table class="diff diff-contentalign-left diff-editfont-monospace" style="word-wrap: break-word;white-space: pre-wrap;word-break: break-word;">
-						<?php print_r(@$output['compare']['*']);?>
+						<?php print_r(@$output['compare']['*']); ?>
 					</table>
 					<hr>
 				</div>
