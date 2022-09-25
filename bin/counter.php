@@ -53,8 +53,7 @@ FROM
             FROM 
               `edits` 
             WHERE 
-              edits.`valid_edit` IS NOT NULL 
-              AND edits.`bytes` > 0 
+              edits.`valid_edit` IS NOT NULL
             GROUP BY 
               `user`, 
               `article` 
