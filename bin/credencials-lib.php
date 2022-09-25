@@ -86,6 +86,29 @@ class credencials {
     }
     return false;
   }
+
+  // (E) SAVE USER
+  function save ($email, $pass, $id=null) {
+    $name = strstr($email, "@", true);
+    if ($name == false) return false;
+    $name = trim($name, "@");
+    
+    if ($id===null) {
+      $sql = "INSERT INTO `credencials` (`user_name`, `user_email`, `user_password`) VALUES (?,?,?)";
+      $data = [$name, $email, password_hash($pass, PASSWORD_DEFAULT)];
+    } else {
+      $sql = "UPDATE `credencials` SET `user_name`=?, `user_email`=?, `user_password`=? WHERE `user_id`=?";
+      $data = [$name, $email, password_hash($pass, PASSWORD_DEFAULT), $id];
+    }
+    try {
+      $this->stmt = $this->pdo->prepare($sql);
+      $this->stmt->execute($data);
+      return true;
+    } catch (Exception $ex) {
+      $this->error = $ex->getMessage();
+      return false;
+    }
+  }
 }
 
 // (F) DATABASE SETTINGS - CHANGE TO YOUR OWN!
