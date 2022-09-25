@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS `DatabaseName`
+CREATE DATABASE IF NOT EXISTS `DatabaseName`;
 USE `DatabaseName`;
 
 CREATE TABLE IF NOT EXISTS `articles` (
@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS `articles` (
   `articleID` mediumint(9) unsigned NOT NULL,
   PRIMARY KEY (`key`),
   UNIQUE KEY `articleID` (`articleID`)
-) ENGINE=InnoDB AUTO_INCREMENT=1089 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `credencials` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS `credencials` (
   UNIQUE KEY `user_email` (`user_email`),
   KEY `user_name` (`user_name`),
   KEY `user_status` (`user_status`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `edits` (
   `n` int(6) unsigned NOT NULL AUTO_INCREMENT,
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `edits` (
   `obs` text NULL DEFAULT NULL,
   PRIMARY KEY (`n`),
   UNIQUE KEY `diff` (`diff`)
-) ENGINE=InnoDB AUTO_INCREMENT=6270 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS `users` (
   `n` int(4) unsigned NOT NULL AUTO_INCREMENT,
@@ -47,4 +47,4 @@ CREATE TABLE IF NOT EXISTS `users` (
   `timestamp` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`n`),
   UNIQUE KEY `user` (`user`)
-) ENGINE=InnoDB AUTO_INCREMENT=17157 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
