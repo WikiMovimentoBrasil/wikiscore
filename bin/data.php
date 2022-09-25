@@ -138,6 +138,24 @@ $contests_array = array(
         'pictures_mode'         => "2",
         'max_pic_per_article'   => "3",
         'theme'                 => "povosoriginarios"
+    ),
+    'dhma' => array(
+        'name_id'               => "dhma",
+        'start_time'            => "1664928000",
+        'end_time'              => "1670198399",
+        'name'                  => "Direitos Humanos e Meio Ambiente",
+        'revert_time'           => "-24 hours",
+        'official_list_pageid'  => "6938165",
+        'category_pageid'       => "6971542",
+        'endpoint'              => "https://pt.wikipedia.org/w/index.php",
+        'api_endpoint'          => "https://pt.wikipedia.org/w/api.php",
+        'outreach_name'         => 'WMB-WMPT-WLX/Wikiconcurso_Direitos_Humanos_e_Meio_Ambiente_(5_de_outubro_a_5_de_dezembro_de_2022)',
+        'bytes_per_points'      => "3000",
+        'max_bytes_per_article' => "90000",
+        'minimum_bytes'         => "200",
+        'pictures_per_points'   => "0",
+        'pictures_mode'         => "0",
+        'theme'                 => "brown"
     )
 );
  
