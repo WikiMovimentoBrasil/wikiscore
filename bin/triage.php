@@ -112,6 +112,10 @@ if ($_POST) {
 	}
 }
 
+//Define número mínimo de bytes necessários de acordo com com configuração do concurso
+$bytes = 0;
+if (isset($contest['minimum_bytes'])) $bytes = $contest['minimum_bytes'];
+
 //Conta edições faltantes
 $count_query = mysqli_query($con, "
 	SELECT 
@@ -123,7 +127,7 @@ $count_query = mysqli_query($con, "
 		`valid_edit` IS NULL AND 
 		`valid_user` IS NOT NULL AND 
 		`by` IS NULL AND 
-		`bytes` > 0 AND 
+		`bytes` > {$bytes} AND 
 		`timestamp` < '".date('Y-m-d H:i:s',strtotime($contest['revert_time']))."'
 ;");
 $output['count'] = mysqli_fetch_assoc($count_query)['count'];
@@ -156,7 +160,7 @@ $revision_query = mysqli_query($con, "
 		`reverted` IS NULL AND 
 		`valid_edit` IS NULL AND 
 		`valid_user` IS NOT NULL AND 
-		`bytes` > 0 AND 
+		`bytes` > {$bytes} AND 
 		`by` IS NULL AND 
 		`timestamp` < '".date('Y-m-d H:i:s',strtotime($contest['revert_time']))."' 
 	ORDER BY 
