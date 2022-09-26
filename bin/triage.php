@@ -197,6 +197,7 @@ mysqli_close($con);
 	<meta charset="UTF-8">
 	<link rel="stylesheet" href="bin/w3.css">
 	<link rel="stylesheet" href="bin/diff.css">
+	<link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/6.2.0/css/all.css">
 	<body>
 		<div class="w3-<?php echo($contest['theme']);?> w3-padding-32 w3-margin-bottom w3-center">
 			<h1 class="w3-jumbo"><?php echo $contest['name']; ?></h1>
@@ -216,9 +217,6 @@ mysqli_close($con);
 						<h6 class="w3-center">Edições pendentes</h6>
 						<h1 class="w3-center"><?php echo($output['count']);?></h1>
 						<br>
-						<form method="post">
-							<input class="w3-button w3-red w3-border-red w3-border w3-block w3-margin-bottom w3-small" type="submit" name="logout" value="Logout">
-						</form>
 					</div>
 					<div class="w3-half w3-container" <?php if(!isset($output['success']['diff'])) echo('style="display:none;"');?>>
 						<h3>Última avaliação</h3>
@@ -238,17 +236,52 @@ mysqli_close($con);
 							<button class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small" type="button">Desfazer</button>
 						</p>
 					</div>
+
 					<div class="w3-container w3-margin-bottom">
-						<button class="w3-button w3-border-blue w3-blue w3-border w3-block w3-small" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=counter', '_blank');">Contador</button>
-						<button class="w3-button w3-border-pink w3-pink w3-border w3-block w3-small" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=compare', '_blank');">Comparador</button>
-						<button class="w3-button w3-border-green w3-green w3-border w3-block w3-small" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=edits', '_blank');">Edições avaliadas (CSV)</button>
-						<button class="w3-button w3-border-orange w3-orange w3-border w3-block w3-small" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=modify', '_blank');">Modificar avaliação</button>
-						<form method="post">
-							<input type="hidden" name="diff" value=<?php echo('"'.@$output['revision']['diff'].'"'); ?>>
-							<input type="hidden" name="skip" value="true">
-							<input class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small" type="submit" value="Pular edição">
-						</form>
+						<div class="w3-row">
+							<div class="w3-half">
+								<button class="w3-button w3-<?php echo($contest['theme']);?> w3-border w3-block w3-small" style="filter: hue-rotate(-150deg);" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=counter', '_blank');">
+									<i class="fa-solid fa-chart-line w3-xxlarge"></i><br>Contador
+								</button>
+							</div>
+							<div class="w3-half">
+								<button class="w3-button w3-<?php echo($contest['theme']);?> w3-border w3-block w3-small" style="filter: hue-rotate(-90deg);" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=modify', '_blank');">
+									<i class="fa-solid fa-pen-to-square w3-xxlarge"></i><br>Modificar
+								</button>
+							</div>
+						</div>
+						<div class="w3-row">
+							<div class="w3-half">
+								<button class="w3-button w3-<?php echo($contest['theme']);?> w3-border w3-block w3-small" style="filter: hue-rotate(-30deg);" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=compare', '_blank');">
+									<i class="fa-solid fa-code-compare w3-xxlarge"></i><br>Comparador
+								</button>
+							</div>
+							<div class="w3-half">
+								<button class="w3-button w3-<?php echo($contest['theme']);?> w3-border w3-block w3-small" style="filter: hue-rotate(30deg);" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=edits', '_blank');">
+									<i class="fa-solid fa-list-check w3-xxlarge"></i><br>Avaliadas
+								</button>
+							</div>
+						</div>
+						<div class="w3-row">
+							<div class="w3-half">
+								<form method="post">
+									<input type="hidden" name="diff" value=<?php echo('"'.@$output['revision']['diff'].'"'); ?>>
+									<input type="hidden" name="skip" value="true">
+									<button class="w3-button w3-<?php echo($contest['theme']);?> w3-border w3-block w3-small" style="filter: hue-rotate(90deg);" type="submit" value="Pular edição">
+										<i class="fa-solid fa-forward w3-xxlarge"></i><br>Pular
+									</button>
+								</form>
+							</div>
+							<div class="w3-half">
+								<form method="post">
+									<button class="w3-button w3-<?php echo($contest['theme']);?> w3-border w3-block w3-small" style="filter: hue-rotate(150deg);" type="submit" name="logout" value="Logout">
+										<i class="fa-solid fa-door-open w3-xxlarge"></i><br>Sair
+									</button>
+								</form>
+							</div>
+						</div>
 					</div>
+
 				</div>
 				<br>
 				<div <?php if(!isset($output['revision']['timestamp'])) echo('style="display:none;"');?>>

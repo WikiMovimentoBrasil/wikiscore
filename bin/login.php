@@ -39,8 +39,17 @@ require "data.php";
    <h1> <?php echo $contest['name']; ?> </h1>
   </header>
   <div class="w3-container">
-   <button 
-   	onclick="document.getElementById('id01').style.display='block'" class="w3-button <?php echo("w3-".$contest['theme']);?> w3-large" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">Clique aqui para entrar</button>
+    <div class="w3-card-4 w3-light-grey w3-justify" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+      <header class="w3-container <?php echo("w3-".$contest['theme']);?>">
+        <h1>Sistema de avaliações</h1>
+      </header>
+      <div class="w3-container">
+        <p class="w3-small"><b>Nome do wikiconcurso</b><br><?php echo $contest['name']; ?></p>
+        <p class="w3-small"><b>Horário de início do wikiconcurso</b><br><?php echo(date('d/m/Y H:i:s (\U\T\C)', $contest['start_time'])); ?></p>
+        <p class="w3-small"><b>Horário de término do wikiconcurso</b><br><?php echo(date('d/m/Y H:i:s (\U\T\C)', $contest['end_time'])); ?></p>
+      </div>
+      <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-block <?php echo("w3-".$contest['theme']);?> w3-large" style="filter: hue-rotate(180deg);">Clique aqui para entrar</button>
+    </div>
    <div id="id01" class="w3-modal">
     <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
      <div class="w3-center">
