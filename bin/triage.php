@@ -204,12 +204,33 @@ mysqli_close($con);
 		</div>
 		<div class="w3-row-padding w3-content" style="max-width:1400px">
 			<div class="w3-quarter">
-				<div class="w3-container w3-light-grey">
-					<div <?php if(isset($output['success']['diff'])) {
-						echo('class="w3-half w3-container"');
-					} else {
-						echo('class="w3-container"');
-					}?>>
+				<div class="w3-container w3-light-grey w3-margin-bottom" <?php if(!isset($output['success']['diff'])) echo('style="display:none;"');?>>
+					<h2>Última avaliação</h2>
+					<p>
+						Diff: <a target="_blank" <?php echo('href="https://pt.wikipedia.org/w/index.php?diff='.@$output['success']['diff'].'"');?>><!--
+						 --><?php echo(@$output['success']['diff']);?><!--
+					 --></a>
+					</p>
+					<p>
+						Edição válida: <?php if(@$output['success']['valid']){
+							echo('<i class="fa-regular w3-text-green fa-circle-check"></i> Sim');
+						} else {
+							echo('<i class="fa-regular w3-text-red fa-circle-xmark"></i> Não');
+						}?>
+					</p>
+					<p>
+						Com imagem: <?php if(@$output['success']['pic']){
+							echo('<i class="fa-regular w3-text-green fa-circle-check"></i> Sim');
+						} else {
+							echo('<i class="fa-regular w3-text-red fa-circle-xmark"></i> Não');
+						}?>
+					</p>
+					<p>
+						<button class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=modify&diff=<?php echo(@$output['success']['diff']); ?>', '_blank');"><i class="fa-solid fa-eraser w3-medium"></i> Corrigir</button>
+					</p>
+				</div>
+				<div class="w3-container w3-light-grey w3-margin-bottom">
+					<div class="w3-container">
 						<div <?php if(!isset($output['revision']['timestamp'])) echo('style="display:none;"');?>>
 							<h6 class="w3-center">Você está avaliando uma edição do dia</h6>
 							<h4 class="w3-center"><?php echo(@substr($output['revision']['timestamp'], 0, 10));?></h4>
@@ -217,24 +238,6 @@ mysqli_close($con);
 						<h6 class="w3-center">Edições pendentes</h6>
 						<h1 class="w3-center"><?php echo($output['count']);?></h1>
 						<br>
-					</div>
-					<div class="w3-half w3-container" <?php if(!isset($output['success']['diff'])) echo('style="display:none;"');?>>
-						<h3>Última avaliação</h3>
-						<p>
-							Diff:<br>
-							<a target="_blank" <?php echo('href="https://pt.wikipedia.org/w/index.php?diff='.@$output['success']['diff'].'"');?>><!--
-							 --><?php echo(@$output['success']['diff']);?><!--
-						 --></a>
-						</p>
-						<p>
-							Edição válida:<br><?php echo(@$output['success']['valid']);?>
-						</p>
-						<p>
-							Com imagem:<br><?php echo(@$output['success']['pic']);?>
-						</p>
-						<p>
-							<button class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small" type="button">Desfazer</button>
-						</p>
 					</div>
 
 					<div class="w3-container w3-margin-bottom">
@@ -281,11 +284,9 @@ mysqli_close($con);
 							</div>
 						</div>
 					</div>
-
 				</div>
-				<br>
 				<div <?php if(!isset($output['revision']['timestamp'])) echo('style="display:none;"');?>>
-					<div class="w3-container w3-light-grey">
+					<div class="w3-container w3-light-grey w3-margin-bottom">
 						<h2>Avaliação</h2>
 						<form method="post">
 							<input type="hidden" name="diff" value=<?php echo('"'.@$output['revision']['diff'].'"'); ?>>
@@ -329,8 +330,7 @@ mysqli_close($con);
 							</p>
 						</form>
 					</div>
-					<br>
-					<div class="w3-container w3-light-grey w3-justify">
+					<div class="w3-container w3-light-grey w3-justify w3-margin-bottom">
 						<h2>Detalhes da edição</h2>
 						<p style="overflow-wrap: break-word;">
 							<b>Usuário:</b> <span style="font-weight:bolder;color:red;"><?php echo(@$output['revision']['user']);?></span>
@@ -349,8 +349,7 @@ mysqli_close($con);
 						</p>
 					</div>
 				</div>
-				<br>
-				<div class="w3-container w3-light-grey w3-justify">
+				<div class="w3-container w3-light-grey w3-justify w3-margin-bottom">
 					<h2>Informações gerais</h2>
 					<p class="w3-small"><b>Nome do wikiconcurso</b><br><?php echo $contest['name']; ?></p>
 					<p class="w3-small"><b>Nome do atual avaliador</b><br><?php echo(ucfirst($_SESSION['user']['user_name'])); ?></p>
@@ -359,7 +358,6 @@ mysqli_close($con);
 					<p class="w3-small"><b>Última atualização do banco de dados</b><br><?php echo(date('d/m/Y H:i:s (\U\T\C)', $output['lastedit'])); ?></p>
 					<p class="w3-small"><b>Delay no registro das edições</b><br><?php echo(str_replace("hours", "horas", $contest['revert_time'])); ?></p>
 				</div>
-				<br>
 			</div>
 			<div class="w3-threequarter">
 				<div <?php if(!isset($output['compare']['*'])) echo('style="display:none;"'); ?>>
