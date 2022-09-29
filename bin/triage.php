@@ -8,181 +8,190 @@ require "connect.php";
 //Processa informações caso formulário tenha sido submetido
 if ($_POST) {
 
-	//Atualiza edição que o avaliador tenha pulado edição
-	if (isset($_POST['skip'])) {
-		$skip_query = mysqli_query($con, "
-			UPDATE 
-				`edits` 
-			SET 
-				`by` = 'skip-".$_SESSION['user']['user_name']."' 
-			WHERE 
-				`diff`='".addslashes($_POST['diff'])."'
-		;");
-		if (mysqli_affected_rows($con) == 0) die("<br>Erro ao pular edição. Atualize a página para tentar novamente.");
+    //Escapa variáveis submetidas via formulário para uso no SQL
+    $slashed_diff = addslashes(@$_POST['diff']);
+    $slashed_overwrite = addslashes(@$_POST['overwrite']);
+    $slashed_username = addslashes(@$_SESSION['user']['user_name']);
 
-	//Salva avaliação da edição
-	} else {
+    //Atualiza edição que o avaliador tenha pulado edição
+    if (isset($_POST['skip'])) {
+        $skip_query = mysqli_query($con, "
+            UPDATE 
+                `edits` 
+            SET 
+                `by` = 'skip-{$slashed_username}' 
+            WHERE 
+                `diff`='{$slashed_diff}'
+        ;");
+        if (mysqli_affected_rows($con) == 0) die("<br>Erro ao pular edição. Atualize a página para tentar novamente.");
 
-		//Processa validade da edição, de acordo com o avaliador
-		if ($_POST['valid'] == 'sim') {
-			$post['valid'] = 1;
-		} else {
-			$post['valid'] = 0;
-		}
+    //Salva avaliação da edição
+    } else {
 
-		//Verifica se/quantas imagem(es) foi(ram) inserida(s), de acordo com o avaliador
-		if ($contest['pictures_mode'] == 2) {
-			$post['pic'] = addslashes($_POST['pic']);
-		} else {
-			if ($_POST['pic'] == 'sim') {
-				$post['pic'] = 1;
-			} else {
-				$post['pic'] = 0;
-			}
-		}
-		
-		//Processa observação inserida no formulário
-		if (!isset($_POST['obs'])) {
-			$post['obs'] = '';
-		} else {
-			$post['obs'] = addslashes($_POST['obs']);
-		}
+        //Processa validade da edição, de acordo com o avaliador
+        if ($_POST['valid'] == 'sim') {
+            $post['valid'] = 1;
+        } else {
+            $post['valid'] = 0;
+        }
 
-		//Processa alteração do número de bytes, caso informação tenha sido editada pelo avaliador
-		if (isset($_POST['overwrite'])) {
+        //Verifica se/quantas imagem(es) foi(ram) inserida(s), de acordo com o avaliador
+        if ($contest['pictures_mode'] == 2) {
+            $post['pic'] = addslashes($_POST['pic']);
+        } else {
+            if ($_POST['pic'] == 'sim') {
+                $post['pic'] = 1;
+            } else {
+                $post['pic'] = 0;
+            }
+        }
+        
+        //Processa observação inserida no formulário
+        if (!isset($_POST['obs'])) {
+            $post['obs'] = '';
+        } else {
+            $post['obs'] = addslashes($_POST['obs']);
+        }
 
-			//Busca número de bytes no banco de dados
-			$look_bytes = mysqli_fetch_assoc(
-				mysqli_query($con, "
-					SELECT 
-						`bytes`
-					FROM 
-						`edits` 
-					WHERE 
-						`diff` = '".addslashes($_POST['diff'])."'
-					LIMIT 1
-				;")
-			);
+        //Processa alteração do número de bytes, caso informação tenha sido editada pelo avaliador
+        if (isset($_POST['overwrite'])) {
 
-			//Verifica se há diferença. Caso sim, altera o número de bytes e adiciona comentário
-			if ($look_bytes['bytes'] != $_POST['overwrite']) {
-				mysqli_query($con, "
-					UPDATE 
-						`edits` 
-					SET 
-						`bytes`	 = '".addslashes($_POST['overwrite'])."'
-					WHERE `diff` = '".addslashes($_POST['diff'])."';
-				");
-				$post['obs'] = $post['obs']." / bytes: ".$look_bytes['bytes']." -> ".addslashes($_POST['overwrite']);
-			}
-		}
-		
+            //Busca número de bytes no banco de dados
+            $look_bytes = mysqli_fetch_assoc(
+                mysqli_query($con, "
+                    SELECT 
+                        `bytes`
+                    FROM 
+                        `edits` 
+                    WHERE 
+                        `diff` = '{$slashed_diff}'
+                    LIMIT 1
+                ;")
+            );
 
-		//Monta query para atualizar banco de dados
-		$sql_update = "
-			UPDATE 
-				`edits` 
-			SET 
-				`valid_edit`	= '".$post['valid']."',
-				`pictures`		= '".$post['pic']."', 
-				`by` 			= '".addslashes($_SESSION['user']['user_name'])."', 
-				`when` 			= '".addslashes(date('Y-m-d H:i:s'))."',
-				`obs` 			= '".$post['obs']."'
-			WHERE `diff`		= '".addslashes($_POST['diff'])."';";
+            //Verifica se há diferença. Caso sim, altera o número de bytes e adiciona comentário
+            if ($look_bytes['bytes'] != $_POST['overwrite']) {
+                mysqli_query($con, "
+                    UPDATE 
+                        `edits` 
+                    SET 
+                        `bytes`  = '{$slashed_overwrite}'
+                    WHERE `diff` = '{$slashed_diff}';
+                ");
+                $post['obs'] = "{$post['obs']} / bytes: {$look_bytes['bytes']} -> {$slashed_overwrite}";
+            }
+        }
+        
 
-		//Executa query e retorna o resultado para o avaliador
-		$update_query = mysqli_query($con, $sql_update);
-		if (mysqli_affected_rows($con) != 0) {
+        //Monta query para atualizar banco de dados
+        $when = date('Y-m-d H:i:s');
+        $sql_update = "
+            UPDATE 
+                `edits` 
+            SET 
+                `valid_edit`    = '{$post['valid']}',
+                `pictures`      = '{$post['pic']}', 
+                `by`            = '{$slashed_username}', 
+                `when`          = '{$when}',
+                `obs`           = '{$post['obs']}'
+            WHERE `diff`        = '{$slashed_diff}';";
 
-			$output['success']['diff'] = addslashes($_POST['diff']);
-			$output['success']['valid'] = $post['valid'];
-			$output['success']['pic'] = $post['pic'];
+        //Executa query e retorna o resultado para o avaliador
+        $update_query = mysqli_query($con, $sql_update);
+        if (mysqli_affected_rows($con) != 0) {
 
-			//Destrava edições do usuário que porventura ainda estejam travadas
-			mysqli_query($con, "
-				UPDATE 
-					`edits` 
-				SET 
-					`by` = NULL 
-				WHERE 
-					`by` = 'hold-".$_SESSION['user']['user_name']."'
-			;");
+            $output['success']['diff'] = addslashes($_POST['diff']);
+            $output['success']['valid'] = $post['valid'];
+            $output['success']['pic'] = $post['pic'];
 
-		}
-	}
+            //Destrava edições do usuário que porventura ainda estejam travadas
+            mysqli_query($con, "
+                UPDATE 
+                    `edits` 
+                SET 
+                    `by` = NULL 
+                WHERE 
+                    `by` = 'hold-{$slashed_username}'
+            ;");
+
+        }
+    }
 }
 
 //Define número mínimo de bytes necessários de acordo com com configuração do concurso
 $bytes = 0;
 if (isset($contest['minimum_bytes'])) $bytes = $contest['minimum_bytes'];
 
+//Converte prazo de reversão para formato compatível com SQL
+$revert_time = date('Y-m-d H:i:s', strtotime($contest['revert_time']));
+
 //Conta edições faltantes
 $count_query = mysqli_query($con, "
-	SELECT 
-		COUNT(*) AS `count` 
-	FROM 
-		`edits` 
-	WHERE 
-		`reverted` IS NULL AND 
-		`valid_edit` IS NULL AND 
-		`valid_user` IS NOT NULL AND 
-		`by` IS NULL AND 
-		`bytes` > {$bytes} AND 
-		`timestamp` < '".date('Y-m-d H:i:s',strtotime($contest['revert_time']))."'
+    SELECT 
+        COUNT(*) AS `count` 
+    FROM 
+        `edits` 
+    WHERE 
+        `reverted` IS NULL AND 
+        `valid_edit` IS NULL AND 
+        `valid_user` IS NOT NULL AND 
+        `by` IS NULL AND 
+        `bytes` > {$bytes} AND 
+        `timestamp` < '{$revert_time}'
 ;");
 $output['count'] = mysqli_fetch_assoc($count_query)['count'];
 
 //Captura horário de última edição inserida no banco de dados
 $lastedit_query = mysqli_query($con, "
-	SELECT 
-		`timestamp` AS `lastedit`
-	FROM 
-		`edits`
-	ORDER BY 
-		`timestamp` DESC 
-	LIMIT 
-		1
+    SELECT 
+        `timestamp` AS `lastedit`
+    FROM 
+        `edits`
+    ORDER BY 
+        `timestamp` DESC 
+    LIMIT 
+        1
 ;");
 $output['lastedit'] = strtotime(mysqli_fetch_assoc($lastedit_query)["lastedit"]);
 
 //Coleta edição para avaliação
 $revision_query = mysqli_query($con, "
-	SELECT 
-		`diff`, 
-		`bytes`, 
-		`user`, 
-		`summary`, 
-		`article`, 
-		`timestamp` 
-	FROM 
-		`edits` 
-	WHERE 
-		`reverted` IS NULL AND 
-		`valid_edit` IS NULL AND 
-		`valid_user` IS NOT NULL AND 
-		`bytes` > {$bytes} AND 
-		`by` IS NULL AND 
-		`timestamp` < '".date('Y-m-d H:i:s',strtotime($contest['revert_time']))."' 
-	ORDER BY 
-		`timestamp` DESC 
-	LIMIT 1
+    SELECT 
+        `diff`, 
+        `bytes`, 
+        `user`, 
+        `summary`, 
+        `article`, 
+        `timestamp` 
+    FROM 
+        `edits` 
+    WHERE 
+        `reverted` IS NULL AND 
+        `valid_edit` IS NULL AND 
+        `valid_user` IS NOT NULL AND 
+        `bytes` > {$bytes} AND 
+        `by` IS NULL AND 
+        `timestamp` < '{$revert_time}' 
+    ORDER BY 
+        `timestamp` DESC 
+    LIMIT 1
 ;");
 $output['revision'] = mysqli_fetch_assoc($revision_query);
 
 //Trava edição para evitar que dois avaliadores avaliem a mesma edição ao mesmo tempo
 if ($output['revision'] != NULL) {
-	$hold_query = mysqli_query($con, "
-		UPDATE 
-			`edits` 
-		SET 
-			`by` = 'hold-".$_SESSION['user']['user_name']."' 
-		WHERE 
-			`diff`='".$output['revision']['diff']."'
-	;");
-	if (mysqli_affected_rows($con) == 0) die("<br>Erro ao travar edição. Atualize a página para tentar novamente.");
+    $hold_query = mysqli_query($con, "
+        UPDATE 
+            `edits` 
+        SET 
+            `by` = 'hold-{$slashed_username}' 
+        WHERE 
+            `diff`='{$output['revision']['diff']}'
+    ;");
+    if (mysqli_affected_rows($con) == 0) die("<br>Erro ao travar edição. Atualize a página para tentar novamente.");
 
-	//Coleta informações da edição via API do MediaWiki
-	$output['compare'] = json_decode(file_get_contents("https://pt.wikipedia.org/w/api.php?action=compare&prop=title%7Cdiff&format=json&fromrev=".$output['revision']['diff']."&torelative=prev"), true)['compare'];
+    //Coleta informações da edição via API do MediaWiki
+    $output['compare'] = json_decode(file_get_contents("https://pt.wikipedia.org/w/api.php?action=compare&prop=title%7Cdiff&format=json&fromrev={$output['revision']['diff']}&torelative=prev"), true)['compare'];
 }
 
 //Encerra conexão
@@ -192,182 +201,174 @@ mysqli_close($con);
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
-	<title><?php echo $contest['name']; ?></title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta charset="UTF-8">
-	<link rel="stylesheet" href="bin/w3.css">
-	<link rel="stylesheet" href="bin/diff.css">
-	<link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/6.2.0/css/all.css">
-	<body>
-		<div class="w3-<?php echo($contest['theme']);?> w3-padding-32 w3-margin-bottom w3-center">
-			<h1 class="w3-jumbo"><?php echo $contest['name']; ?></h1>
-		</div>
-		<div class="w3-row-padding w3-content" style="max-width:1400px">
-			<div class="w3-quarter">
-				<div class="w3-container w3-light-grey w3-margin-bottom" <?php if(!isset($output['success']['diff'])) echo('style="display:none;"');?>>
-					<h2>Última avaliação</h2>
-					<p>
-						Diff: <a target="_blank" <?php echo('href="https://pt.wikipedia.org/w/index.php?diff='.@$output['success']['diff'].'"');?>><!--
-						 --><?php echo(@$output['success']['diff']);?><!--
-					 --></a>
-					</p>
-					<p>
-						Edição válida: <?php if(@$output['success']['valid']){
-							echo('<i class="fa-regular w3-text-green fa-circle-check"></i> Sim');
-						} else {
-							echo('<i class="fa-regular w3-text-red fa-circle-xmark"></i> Não');
-						}?>
-					</p>
-					<p>
-						Com imagem: <?php if(@$output['success']['pic']){
-							echo('<i class="fa-regular w3-text-green fa-circle-check"></i> Sim');
-						} else {
-							echo('<i class="fa-regular w3-text-red fa-circle-xmark"></i> Não');
-						}?>
-					</p>
-					<p>
-						<button class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=modify&diff=<?php echo(@$output['success']['diff']); ?>', '_blank');"><i class="fa-solid fa-eraser w3-medium"></i> Corrigir</button>
-					</p>
-				</div>
-				<div class="w3-container w3-light-grey w3-margin-bottom">
-					<div class="w3-container">
-						<div <?php if(!isset($output['revision']['timestamp'])) echo('style="display:none;"');?>>
-							<h6 class="w3-center">Você está avaliando uma edição do dia</h6>
-							<h4 class="w3-center"><?php echo(@substr($output['revision']['timestamp'], 0, 10));?></h4>
-						</div>
-						<h6 class="w3-center">Edições pendentes</h6>
-						<h1 class="w3-center"><?php echo($output['count']);?></h1>
-						<br>
-					</div>
+    <title><?=$contest['name'];?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="bin/w3.css">
+    <link rel="stylesheet" href="bin/diff.css">
+    <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/6.2.0/css/all.css">
+    <body>
+        <div class="w3-<?=$contest['theme'];?> w3-padding-32 w3-margin-bottom w3-center">
+            <h1 class="w3-jumbo"><?=$contest['name'];?></h1>
+        </div>
+        <div class="w3-row-padding w3-content" style="max-width:1400px">
+            <div class="w3-quarter">
+                <div class="w3-container w3-light-grey w3-margin-bottom" <?php if(!isset($output['success']['diff'])) echo('style="display:none;"');?>>
+                    <h2>Última avaliação</h2>
+                    <p>
+                        Diff: <a href="https://pt.wikipedia.org/w/index.php?diff=<?=@$output['success']['diff'];?>" target="_blank"><?=@$output['success']['diff'];?></a>
+                    </p>
+                    <p>
+                        Edição válida: <?php if(@$output['success']['valid']){
+                            echo('<i class="fa-regular w3-text-green fa-circle-check"></i> Sim');
+                        } else {
+                            echo('<i class="fa-regular w3-text-red fa-circle-xmark"></i> Não');
+                        }?>
+                    </p>
+                    <p>
+                        Com imagem: <?php if(@$output['success']['pic']){
+                            echo('<i class="fa-regular w3-text-green fa-circle-check"></i> Sim');
+                        } else {
+                            echo('<i class="fa-regular w3-text-red fa-circle-xmark"></i> Não');
+                        }?>
+                    </p>
+                    <p>
+                        <button class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=modify&diff=<?=@$output['success']['diff'];?>', '_blank');"><i class="fa-solid fa-eraser w3-medium"></i> Corrigir</button>
+                    </p>
+                </div>
+                <div class="w3-container w3-light-grey w3-margin-bottom">
+                    <div class="w3-container">
+                        <div style="<?php if(!isset($output['revision']['timestamp'])) echo('display:none;');?>">
+                            <h6 class="w3-center">Você está avaliando uma edição do dia</h6>
+                            <h4 class="w3-center"><?=@substr($output['revision']['timestamp'], 0, 10);?></h4>
+                        </div>
+                        <h6 class="w3-center">Edições pendentes</h6>
+                        <h1 class="w3-center"><?=$output['count'];?></h1>
+                        <br>
+                    </div>
 
-					<div class="w3-container w3-margin-bottom">
-						<div class="w3-row">
-							<div class="w3-half">
-								<button class="w3-button w3-<?php echo($contest['theme']);?> w3-border w3-block w3-small" style="filter: hue-rotate(-150deg);" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=counter', '_blank');">
-									<i class="fa-solid fa-chart-line w3-xxlarge"></i><br>Contador
-								</button>
-							</div>
-							<div class="w3-half">
-								<button class="w3-button w3-<?php echo($contest['theme']);?> w3-border w3-block w3-small" style="filter: hue-rotate(-90deg);" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=modify', '_blank');">
-									<i class="fa-solid fa-pen-to-square w3-xxlarge"></i><br>Modificar
-								</button>
-							</div>
-						</div>
-						<div class="w3-row">
-							<div class="w3-half">
-								<button class="w3-button w3-<?php echo($contest['theme']);?> w3-border w3-block w3-small" style="filter: hue-rotate(-30deg);" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=compare', '_blank');">
-									<i class="fa-solid fa-code-compare w3-xxlarge"></i><br>Comparador
-								</button>
-							</div>
-							<div class="w3-half">
-								<button class="w3-button w3-<?php echo($contest['theme']);?> w3-border w3-block w3-small" style="filter: hue-rotate(30deg);" type="button" onclick="window.open('index.php?contest=<?php echo($contest['name_id']);?>&page=edits', '_blank');">
-									<i class="fa-solid fa-list-check w3-xxlarge"></i><br>Avaliadas
-								</button>
-							</div>
-						</div>
-						<div class="w3-row">
-							<div class="w3-half">
-								<form method="post">
-									<input type="hidden" name="diff" value=<?php echo('"'.@$output['revision']['diff'].'"'); ?>>
-									<input type="hidden" name="skip" value="true">
-									<button class="w3-button w3-<?php echo($contest['theme']);?> w3-border w3-block w3-small" style="filter: hue-rotate(90deg);" type="submit" value="Pular edição">
-										<i class="fa-solid fa-forward w3-xxlarge"></i><br>Pular
-									</button>
-								</form>
-							</div>
-							<div class="w3-half">
-								<form method="post">
-									<button class="w3-button w3-<?php echo($contest['theme']);?> w3-border w3-block w3-small" style="filter: hue-rotate(150deg);" type="submit" name="logout" value="Logout">
-										<i class="fa-solid fa-door-open w3-xxlarge"></i><br>Sair
-									</button>
-								</form>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div <?php if(!isset($output['revision']['timestamp'])) echo('style="display:none;"');?>>
-					<div class="w3-container w3-light-grey w3-margin-bottom">
-						<h2>Avaliação</h2>
-						<form method="post">
-							<input type="hidden" name="diff" value=<?php echo('"'.@$output['revision']['diff'].'"'); ?>>
-							<div class="w3-container w3-cell w3-half">
-								<p>Edição válida?</p>
-								<input class="w3-radio w3-section" type="radio" id="valid-sim" name="valid" value="sim" onclick="document.getElementById('obs').required = false" required>
-								<label for="valid-sim">Sim</label><br>
-								<input class="w3-radio w3-section" type="radio" id="valid-nao" name="valid" value="nao" onclick="document.getElementById('obs').required = true" required>
-								<label for="valid-nao">Não</label><br><br>
-							</div>
-							<div class="w3-container w3-cell w3-half">
-								<p>Imagem?</p>
-								<?php if ($contest['pictures_mode'] == 2) {
-									echo('
-										<input class="w3-input w3-border" type="number" id="pic" name="pic" value="0" min="0" max="9" required>
-										<label for="pic">Quantidade</label><br><br>
-									');
-								} else {
-									echo('
-										<input class="w3-radio w3-section" type="radio" id="pic-sim" name="pic" value="sim" required>
-										<label for="pic-sim">Sim</label><br>
-										<input class="w3-radio w3-section" type="radio" id="pic-nao" name="pic" value="nao" required>
-										<label for="pic-nao">Não</label><br><br>
-									');
-								}
-								?>
-							</div>
-							<p>
-								<input class="w3-input w3-border" name="obs" id="obs" type="text" placeholder="Observação">
-								<br>
-								<input class="w3-button w3-border w3-block w3-red" name="overwrite" id="overwrite" type="button" value="Alterar bytes" onclick="
-									document.getElementById('overwrite').removeAttribute('value');
-									document.getElementById('overwrite').type = 'number';
-									document.getElementById('overwrite').className = 'w3-input w3-border';
-									document.getElementById('overwrite').value = '<?php echo(@$output['revision']['bytes']);?>';
-									document.getElementById('overwrite').removeAttribute('onclick');
-									document.getElementById('overwrite').removeAttribute('id');
-									document.getElementById('obs').required = true;
-								">
-								<input class="w3-button w3-green w3-border-green w3-border w3-block w3-margin-top" type="submit" value="Salvar">
-							</p>
-						</form>
-					</div>
-					<div class="w3-container w3-light-grey w3-justify w3-margin-bottom">
-						<h2>Detalhes da edição</h2>
-						<p style="overflow-wrap: break-word;">
-							<b>Usuário:</b> <span style="font-weight:bolder;color:red;"><?php echo(@$output['revision']['user']);?></span>
-							<br><b>Artigo:</b> <?php echo(@$output['compare']['totitle']);?>
-							<br><b>Diferença:</b> <?php echo(@$output['revision']['bytes']);?> bytes
-							<br><b>Horário:</b> <?php echo(@$output['revision']['timestamp']);?> (UTC)
-							<br><b>Sumário:</b> <?php echo(@$output['revision']['summary']);?>
-							<br><b>Diff:</b> 
-							<a target="_blank" <?php echo('href="https://pt.wikipedia.org/w/index.php?diff='.@$output['revision']['diff'].'"');?>><!--
-							 --><?php echo(@$output['revision']['diff']);?><!--
-						 --></a><!--
-						 --> - <!--
-						 --><a target="_blank" <?php echo('href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid='.@$output['revision']['diff'].'"');?>><!--
-							 -->Copyvio Detector<!--
-						 --></a>
-						</p>
-					</div>
-				</div>
-				<div class="w3-container w3-light-grey w3-justify w3-margin-bottom">
-					<h2>Informações gerais</h2>
-					<p class="w3-small"><b>Nome do wikiconcurso</b><br><?php echo $contest['name']; ?></p>
-					<p class="w3-small"><b>Nome do atual avaliador</b><br><?php echo(ucfirst($_SESSION['user']['user_name'])); ?></p>
-					<p class="w3-small"><b>Horário de início do wikiconcurso</b><br><?php echo(date('d/m/Y H:i:s (\U\T\C)', $contest['start_time'])); ?></p>
-					<p class="w3-small"><b>Horário de término do wikiconcurso</b><br><?php echo(date('d/m/Y H:i:s (\U\T\C)', $contest['end_time'])); ?></p>
-					<p class="w3-small"><b>Última atualização do banco de dados</b><br><?php echo(date('d/m/Y H:i:s (\U\T\C)', $output['lastedit'])); ?></p>
-					<p class="w3-small"><b>Delay no registro das edições</b><br><?php echo(str_replace("hours", "horas", $contest['revert_time'])); ?></p>
-				</div>
-			</div>
-			<div class="w3-threequarter">
-				<div <?php if(!isset($output['compare']['*'])) echo('style="display:none;"'); ?>>
-					<h3>Diferencial de edição</h3>
-					<table class="diff diff-contentalign-left diff-editfont-monospace" style="word-wrap: break-word;white-space: pre-wrap;word-break: break-word;">
-						<?php print_r(@$output['compare']['*']); ?>
-					</table>
-					<hr>
-				</div>
-			</div>
-		</div>
-	</body>
+                    <div class="w3-container w3-margin-bottom">
+                        <div class="w3-row">
+                            <div class="w3-half">
+                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(-150deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=counter', '_blank');">
+                                    <i class="fa-solid fa-chart-line w3-xxlarge"></i><br>Contador
+                                </button>
+                            </div>
+                            <div class="w3-half">
+                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(-90deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=modify', '_blank');">
+                                    <i class="fa-solid fa-pen-to-square w3-xxlarge"></i><br>Modificar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="w3-row">
+                            <div class="w3-half">
+                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(-30deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=compare', '_blank');">
+                                    <i class="fa-solid fa-code-compare w3-xxlarge"></i><br>Comparador
+                                </button>
+                            </div>
+                            <div class="w3-half">
+                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(30deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=edits', '_blank');">
+                                    <i class="fa-solid fa-list-check w3-xxlarge"></i><br>Avaliadas
+                                </button>
+                            </div>
+                        </div>
+                        <div class="w3-row">
+                            <div class="w3-half">
+                                <form method="post">
+                                    <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
+                                    <input type="hidden" name="skip" value="true">
+                                    <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(90deg);" type="submit" value="Pular edição">
+                                        <i class="fa-solid fa-forward w3-xxlarge"></i><br>Pular
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="w3-half">
+                                <form method="post">
+                                    <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(150deg);" type="submit" name="logout" value="Logout">
+                                        <i class="fa-solid fa-door-open w3-xxlarge"></i><br>Sair
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div <?php if(!isset($output['revision']['timestamp'])) echo('style="display:none;"');?>>
+                    <div class="w3-container w3-light-grey w3-margin-bottom">
+                        <h2>Avaliação</h2>
+                        <form method="post">
+                            <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
+                            <div class="w3-container w3-cell w3-half">
+                                <p>Edição válida?</p>
+                                <input class="w3-radio w3-section" type="radio" id="valid-sim" name="valid" value="sim" onclick="document.getElementById('obs').required = false" required>
+                                <label for="valid-sim">Sim</label><br>
+                                <input class="w3-radio w3-section" type="radio" id="valid-nao" name="valid" value="nao" onclick="document.getElementById('obs').required = true" required>
+                                <label for="valid-nao">Não</label><br><br>
+                            </div>
+                            <div class="w3-container w3-cell w3-half">
+                                <p>Imagem?</p>
+                                <?php if ($contest['pictures_mode'] == 2) {
+                                    echo('
+                                        <input class="w3-input w3-border" type="number" id="pic" name="pic" value="0" min="0" max="9" required>
+                                        <label for="pic">Quantidade</label><br><br>
+                                    ');
+                                } else {
+                                    echo('
+                                        <input class="w3-radio w3-section" type="radio" id="pic-sim" name="pic" value="sim" required>
+                                        <label for="pic-sim">Sim</label><br>
+                                        <input class="w3-radio w3-section" type="radio" id="pic-nao" name="pic" value="nao" required>
+                                        <label for="pic-nao">Não</label><br><br>
+                                    ');
+                                }
+                                ?>
+                            </div>
+                            <p>
+                                <input class="w3-input w3-border" name="obs" id="obs" type="text" placeholder="Observação">
+                                <br>
+                                <input class="w3-button w3-border w3-block w3-red" name="overwrite" id="overwrite" type="button" value="Alterar bytes" onclick="
+                                    document.getElementById('overwrite').removeAttribute('value');
+                                    document.getElementById('overwrite').type = 'number';
+                                    document.getElementById('overwrite').className = 'w3-input w3-border';
+                                    document.getElementById('overwrite').value = '<?=@$output['revision']['bytes'];?>';
+                                    document.getElementById('overwrite').removeAttribute('onclick');
+                                    document.getElementById('overwrite').removeAttribute('id');
+                                    document.getElementById('obs').required = true;
+                                ">
+                                <input class="w3-button w3-green w3-border-green w3-border w3-block w3-margin-top" type="submit" value="Salvar">
+                            </p>
+                        </form>
+                    </div>
+                    <div class="w3-container w3-light-grey w3-justify w3-margin-bottom">
+                        <h2>Detalhes da edição</h2>
+                        <p style="overflow-wrap: break-word;">
+                            <b>Usuário:</b> <span style="font-weight:bolder;color:red;"><?=@$output['revision']['user'];?></span>
+                            <br><b>Artigo:</b> <?=@$output['compare']['totitle'];?>
+                            <br><b>Diferença:</b> <?=@$output['revision']['bytes'];?> bytes
+                            <br><b>Horário:</b> <?=@$output['revision']['timestamp'];?> (UTC)
+                            <br><b>Sumário:</b> <?=@$output['revision']['summary'];?>
+                            <br><b>Diff:</b> 
+                            <a href="https://pt.wikipedia.org/w/index.php?diff=<?=@$output['revision']['diff'];?>" target="_blank"><?=@$output['revision']['diff'];?></a> - <a target="_blank" href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>">Copyvio Detector</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="w3-container w3-light-grey w3-justify w3-margin-bottom">
+                    <h2>Informações gerais</h2>
+                    <p class="w3-small"><b>Nome do wikiconcurso</b><br><?php echo $contest['name']; ?></p>
+                    <p class="w3-small"><b>Nome do atual avaliador</b><br><?=ucfirst($_SESSION['user']['user_name']);?></p>
+                    <p class="w3-small"><b>Horário de início do wikiconcurso</b><br><?=date('d/m/Y H:i:s (\U\T\C)', $contest['start_time']);?></p>
+                    <p class="w3-small"><b>Horário de término do wikiconcurso</b><br><?=date('d/m/Y H:i:s (\U\T\C)', $contest['end_time']);?></p>
+                    <p class="w3-small"><b>Última atualização do banco de dados</b><br><?=date('d/m/Y H:i:s (\U\T\C)', $output['lastedit']);?></p>
+                    <p class="w3-small"><b>Delay no registro das edições</b><br><?=str_replace("hours", "horas", $contest['revert_time']);?></p>
+                </div>
+            </div>
+            <div class="w3-threequarter">
+                <div <?php if(!isset($output['compare']['*'])) echo('style="display:none;"'); ?>>
+                    <h3>Diferencial de edição</h3>
+                    <table class="diff diff-contentalign-left diff-editfont-monospace" style="word-wrap: break-word;white-space: pre-wrap;word-break: break-word;">
+                        <?php print_r(@$output['compare']['*']); ?>
+                    </table>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </body>
 </html>
