@@ -236,8 +236,15 @@ if ($output['revision'] != NULL) {
     //Loop para retornar o código HTML do histórico da página
     foreach ($history as $i => $edit) {
         $delta = $history[$i]['size'] - $history[$i+1]['size'];
-        $timestamp = date('d/m/Y H:i:s (\U\T\C)', strtotime($history[$i]['timestamp']));
-        $output['history'][] = str_repeat(" ", 24)."<p class='w3-small'><b>{$history[$i]['user']}</b><br>{$timestamp}<br>{$delta} bytes</p>\n";
+        if ($delta < 0) {
+            $delta_color = "red";
+        } elseif ($delta > 0) {
+            $delta_color = "green";
+        } else {
+            $delta_color = "grey";
+        }
+        $timestamp = date('d/m/Y H:i:s (\U\T\C)', strtotime($edit['timestamp']));
+        $output['history'][] = str_repeat(" ", 24)."<p class='w3-small'><b>{$edit['user']}</b><br>{$timestamp}<br><span class='w3-text-{$delta_color}'>{$delta} bytes</span></p>\n";
     }
 
     //Remove pseudo-edição
@@ -265,7 +272,7 @@ mysqli_close($con);
         </div>
         <div class="w3-row-padding w3-content" style="max-width:1400px">
             <div class="w3-quarter">
-                <div class="w3-container w3-light-grey w3-margin-bottom" <?php if(!isset($output['success']['diff'])) echo('style="display:none;"');?>>
+                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" <?php if(!isset($output['success']['diff'])) echo('style="display:none;"');?>>
                     <h2>Última avaliação</h2>
                     <p>
                         Diff: <a href="https://pt.wikipedia.org/w/index.php?diff=<?=@$output['success']['diff'];?>" target="_blank"><?=@$output['success']['diff'];?></a>
@@ -288,7 +295,7 @@ mysqli_close($con);
                         <button class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=modify&diff=<?=@$output['success']['diff'];?>', '_blank');"><i class="fa-solid fa-eraser w3-medium"></i> Corrigir</button>
                     </p>
                 </div>
-                <div class="w3-container w3-light-grey w3-margin-bottom">
+                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom">
                     <h2>Painel</h2>
                     <div class="w3-container">
                         <div style="<?php if(!isset($output['revision']['timestamp'])) echo('display:none;');?>">
@@ -346,7 +353,7 @@ mysqli_close($con);
                     </div>
                 </div>
                 <div <?php if(!isset($output['revision']['timestamp'])) echo('style="display:none;"');?>>
-                    <div class="w3-container w3-light-grey w3-margin-bottom">
+                    <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom">
                         <h2>Avaliação</h2>
                         <form method="post">
                             <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
@@ -390,7 +397,7 @@ mysqli_close($con);
                             </p>
                         </form>
                     </div>
-                    <div class="w3-container w3-light-grey w3-justify w3-margin-bottom">
+                    <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                         <h2>Detalhes da edição</h2>
                         <p style="overflow-wrap: break-word;">
                             <b>Usuário:</b> <span style="font-weight:bolder;color:red;"><?=@$output['revision']['user'];?></span>
@@ -402,12 +409,12 @@ mysqli_close($con);
                             <a href="https://pt.wikipedia.org/w/index.php?diff=<?=@$output['revision']['diff'];?>" target="_blank"><?=@$output['revision']['diff'];?></a> - <a target="_blank" href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>">Copyvio Detector</a>
                         </p>
                     </div>
-                    <div class="w3-container w3-light-grey w3-justify w3-margin-bottom">
+                    <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                         <h2>Histórico recente</h2>
                         <?=$output['history'];?>
                     </div>
                 </div>
-                <div class="w3-container w3-light-grey w3-justify w3-margin-bottom">
+                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                     <h2>Informações gerais</h2>
                     <p class="w3-small"><b>Nome do wikiconcurso</b><br><?=$contest['name'];?></p>
                     <p class="w3-small"><b>Nome do atual avaliador</b><br><?=ucfirst($_SESSION['user']['user_name']);?></p>
