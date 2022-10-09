@@ -5,17 +5,19 @@ require "protect.php";
 //Conecta ao banco de dados
 require "connect.php";
 
+//Escapa variável para uso no SQL
+if (isset($_SESSION['user']['user_name'])) $slashed_username = addslashes($_SESSION['user']['user_name']);
+
 //Processa informações caso formulário tenha sido submetido
 if ($_POST) {
 
-    //Escapa variáveis submetidas via formulário para uso no SQL
-    $slashed_diff = addslashes(@$_POST['diff']);
-    $slashed_overwrite = addslashes(@$_POST['overwrite']);
-    $slashed_username = addslashes(@$_SESSION['user']['user_name']);
+    //Escapa variáveis para uso no SQL
+    if (isset($_POST['diff'])) $slashed_diff = addslashes($_POST['diff']);
+    if (isset($_POST['overwrite'])) $slashed_overwrite = addslashes($_POST['overwrite']);
 
     //Atualiza edição que o avaliador tenha pulado edição
     if (isset($_POST['skip'])) {
-        $skip_query = mysqli_query($con, "
+        mysqli_query($con, "
             UPDATE 
                 `edits` 
             SET 
@@ -94,7 +96,8 @@ if ($_POST) {
                 `by`            = '{$slashed_username}', 
                 `when`          = '{$when}',
                 `obs`           = '{$post['obs']}'
-            WHERE `diff`        = '{$slashed_diff}';";
+            WHERE `diff`        = '{$slashed_diff}';
+        ";
 
         //Executa query e retorna o resultado para o avaliador
         $update_query = mysqli_query($con, $sql_update);
@@ -180,7 +183,7 @@ $output['revision'] = mysqli_fetch_assoc($revision_query);
 
 //Trava edição para evitar que dois avaliadores avaliem a mesma edição ao mesmo tempo
 if ($output['revision'] != NULL) {
-    $hold_query = mysqli_query($con, "
+    mysqli_query($con, "
         UPDATE 
             `edits` 
         SET 
@@ -191,7 +194,56 @@ if ($output['revision'] != NULL) {
     if (mysqli_affected_rows($con) == 0) die("<br>Erro ao travar edição. Atualize a página para tentar novamente.");
 
     //Coleta informações da edição via API do MediaWiki
-    $output['compare'] = json_decode(file_get_contents("https://pt.wikipedia.org/w/api.php?action=compare&prop=title%7Cdiff&format=json&fromrev={$output['revision']['diff']}&torelative=prev"), true)['compare'];
+    $compare_api_params = [
+        "action"    => "compare",
+        "prop"      => "title|diff",
+        "format"    => "json",
+        "fromrev"   => $output['revision']['diff'],
+        "torelative"=> "prev"
+    ];
+    $output['compare'] = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($compare_api_params)), true)['compare'];
+
+    //Coleta histórico recente do artigo até o início do concurso
+    $history_params = [
+        "action"    => "query",
+        "format"    => "json",
+        "prop"      => "revisions",
+        "pageids"   => $output['revision']['article'],
+        "rvprop"    => "timestamp|user|size|ids",
+        "rvlimit"   => "max",
+        "rvend"     => date('Y-m-d\TH:i:s.000\Z', $contest['start_time'])
+    ];
+    $history = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($history_params)), true)["query"]["pages"];
+
+    //Verifica situação da primeira edição. 
+    //Se for a primeira edição, insere pseudo-edição anterior com tamanho zero
+    //Se existir edição anterior, busca na API o tamanho da edição imediatamente anterior e insere pseudo-edição com tamanho correspondente
+    $history = end($history)["revisions"];
+    if (end($history)["parentid"] == 0) {
+        $history[] = ["size" => "0"];
+    } else {
+        $lastdiff_params = [
+            "action"        => "compare",
+            "format"        => "json",
+            "fromrev"       => end($history)["parentid"],
+            "torelative"    => "prev",
+            "prop"          => "size"
+        ];
+        $lastdiff = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($lastdiff_params)), true)["compare"];
+        $history[] = ["size" => $lastdiff["fromsize"]];
+    }
+
+    //Loop para retornar o código HTML do histórico da página
+    foreach ($history as $i => $edit) {
+        $delta = $history[$i]['size'] - $history[$i+1]['size'];
+        $timestamp = date('d/m/Y H:i:s (\U\T\C)', strtotime($history[$i]['timestamp']));
+        $output['history'][] = str_repeat(" ", 24)."<p class='w3-small'><b>{$history[$i]['user']}</b><br>{$timestamp}<br>{$delta} bytes</p>\n";
+    }
+
+    //Remove pseudo-edição
+    array_pop($output['history']);
+    $output['history'] = implode("", $output['history']);
+
 }
 
 //Encerra conexão
@@ -237,6 +289,7 @@ mysqli_close($con);
                     </p>
                 </div>
                 <div class="w3-container w3-light-grey w3-margin-bottom">
+                    <h2>Painel</h2>
                     <div class="w3-container">
                         <div style="<?php if(!isset($output['revision']['timestamp'])) echo('display:none;');?>">
                             <h6 class="w3-center">Você está avaliando uma edição do dia</h6>
@@ -349,10 +402,14 @@ mysqli_close($con);
                             <a href="https://pt.wikipedia.org/w/index.php?diff=<?=@$output['revision']['diff'];?>" target="_blank"><?=@$output['revision']['diff'];?></a> - <a target="_blank" href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>">Copyvio Detector</a>
                         </p>
                     </div>
+                    <div class="w3-container w3-light-grey w3-justify w3-margin-bottom">
+                        <h2>Histórico recente</h2>
+                        <?=$output['history'];?>
+                    </div>
                 </div>
                 <div class="w3-container w3-light-grey w3-justify w3-margin-bottom">
                     <h2>Informações gerais</h2>
-                    <p class="w3-small"><b>Nome do wikiconcurso</b><br><?php echo $contest['name']; ?></p>
+                    <p class="w3-small"><b>Nome do wikiconcurso</b><br><?=$contest['name'];?></p>
                     <p class="w3-small"><b>Nome do atual avaliador</b><br><?=ucfirst($_SESSION['user']['user_name']);?></p>
                     <p class="w3-small"><b>Horário de início do wikiconcurso</b><br><?=date('d/m/Y H:i:s (\U\T\C)', $contest['start_time']);?></p>
                     <p class="w3-small"><b>Horário de término do wikiconcurso</b><br><?=date('d/m/Y H:i:s (\U\T\C)', $contest['end_time']);?></p>
