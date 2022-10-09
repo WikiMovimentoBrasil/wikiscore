@@ -31,8 +31,9 @@ require "data.php";
 require "connect.php";
 
 //Calcula número total de dias do wikiconcurso e monta eixo X dos gráficos
-$days = ceil(($contest['end_time'] - $contest['start_time']) / 60 / 60 / 24 );
-for ($i=1; $i < $days; $i++) $all_days[] = $i;
+$elapsed_days = floor((time() - $contest['start_time']) / 60 / 60 / 24 );
+$total_days = ceil(($contest['end_time'] - $contest['start_time']) / 60 / 60 / 24 );
+for ($i=1; $i < $total_days; $i++) $all_days[] = $i;
 $all_days = implode(", ", $all_days);
 
 //Define faixa de dias para queries dos gráficos
@@ -53,6 +54,7 @@ $total_edits = mysqli_query($con, "
     GROUP BY date;
 ");
 while ($row = mysqli_fetch_assoc($total_edits)) $total_edits_rows[] = $row['count'];
+array_splice($total_edits_rows, $elapsed_days);
 $total_edits_rows = implode(", ", $total_edits_rows);
 
 $valid_edits = mysqli_query($con, "
@@ -64,6 +66,7 @@ $valid_edits = mysqli_query($con, "
     GROUP BY date;
 ");
 while ($row = mysqli_fetch_assoc($valid_edits)) $valid_edits_rows[] = $row['count'];
+array_splice($valid_edits_rows, $elapsed_days);
 $valid_edits_rows = implode(", ", $valid_edits_rows);
 
 $new_articles = mysqli_query($con, "
@@ -75,6 +78,7 @@ $new_articles = mysqli_query($con, "
     GROUP BY date;
 ");
 while ($row = mysqli_fetch_assoc($new_articles)) $new_articles_rows[] = $row['count'];
+array_splice($new_articles_rows, $elapsed_days);
 $new_articles_rows = implode(", ", $new_articles_rows);
 
 $new_bytes = mysqli_query($con, "
@@ -86,6 +90,7 @@ $new_bytes = mysqli_query($con, "
     GROUP BY date;
 ");
 while ($row = mysqli_fetch_assoc($new_bytes)) $new_bytes_rows[] = $row['count'];
+array_splice($new_bytes_rows, $elapsed_days);
 $new_bytes_rows = implode(", ", $new_bytes_rows);
 
 $valid_bytes = mysqli_query($con, "
@@ -97,11 +102,18 @@ $valid_bytes = mysqli_query($con, "
     GROUP BY date;
 ");
 while ($row = mysqli_fetch_assoc($valid_bytes)) $valid_bytes_rows[] = $row['count'];
+array_splice($valid_bytes_rows, $elapsed_days);
 $valid_bytes_rows = implode(", ", $valid_bytes_rows);
 
 //Captura horário de última edição avaliada no banco de dados
 $lastedit_query = mysqli_query($con, "SELECT `timestamp` AS `lastedit` FROM `edits` WHERE `valid_edit` IS NOT NULL ORDER BY `timestamp` DESC LIMIT 1;");
-$lastedit = strtotime(mysqli_fetch_assoc($lastedit_query)["lastedit"]);
+$lastedit = mysqli_fetch_assoc($lastedit_query);
+if (isset($lastedit["lastedit"])) {
+    $lastedit = strtotime($lastedit["lastedit"]);
+} else {
+    $lastedit = "-";
+}
+
 
 ?>
 
