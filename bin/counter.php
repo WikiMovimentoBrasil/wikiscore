@@ -5,6 +5,15 @@ require "protect.php";
 //Conecta ao banco de dados
 require "connect.php";
 
+//Coleta horário personalizado de consulta
+if (isset($_GET['time_round'])) { 
+  $time_unix = strtotime($_GET['time_round']);
+  $time_sql = date('Y-m-d\TH:i:s.000\Z', $time_unix);
+} else {
+  $time_unix = time();
+  $time_sql = 0;
+}
+
 //Coleta lista de editores
 $count_query = mysqli_query($con, 
 "SELECT 
@@ -53,7 +62,7 @@ FROM
             FROM 
               `edits` 
             WHERE 
-              edits.`valid_edit` IS NOT NULL
+              edits.`valid_edit` IS NOT NULL AND edits.`timestamp` < ( CASE WHEN '${time_sql}' = 0 THEN NOW() ELSE '${time_sql}' END)
             GROUP BY 
               `user`, 
               `article` 
@@ -81,7 +90,7 @@ FROM
             FROM 
               `edits` 
             WHERE 
-              edits.`pictures` IS NOT NULL 
+              edits.`pictures` IS NOT NULL AND edits.`timestamp` < ( CASE WHEN '${time_sql}' = 0 THEN NOW() ELSE '${time_sql}' END)
             GROUP BY 
               CASE WHEN ${contest['pictures_mode']} = 0 THEN edits.`user` END, 
               CASE WHEN ${contest['pictures_mode']} = 0 THEN edits.`article` END, 
@@ -98,31 +107,44 @@ ORDER BY
   `points`.`sum` DESC, 
   `user_table`.`user` ASC");
 if (mysqli_num_rows($count_query) == 0) die("No users");
+
+
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-BR">
 	<head>
-		<title>Contador - <?php echo($contest['name']);?></title>
+		<title>Contador - <?=$contest['name'];?></title>
 		<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="bin/w3.css">
 	</head>
 	<body>
-		<div class="w3-<?php echo($contest['theme']);?> w3-padding-32 w3-margin-bottom w3-center">
-			<h1 class="w3-jumbo"><?php echo $contest['name']; ?></h1>
+		<div class="w3-<?=$contest['theme'];?> w3-padding-32 w3-margin-bottom w3-center">
+			<h1 class="w3-jumbo"><?=$contest['name'];?></h1>
 		</div>
-		<table class="w3-table-all w3-hoverable w3-card-4">
-		<caption class="w3-text-grey">Este cômputo se refere ao <?php echo($contest['name']);?> e foi gerado no dia <?php echo(date('d/m/Y'));?>, às <?php echo(date('H:i:s'));?> do horário UTC. A ordem de classificação é realizada de acordo com o total de pontos, calculados com a pontuação arredondada para baixo, sendo utilizado como critério de desempate o valor da soma total de bytes adicionados e, caso ainda exista empate, por ordem alfabética. Todos os usuários inscritos que editaram algum dos artigos da lista deste wikiconcurso estão listados abaixo, mesmo não tendo edição válida alguma.<br><br></caption>
-		<tr>
-			<th>Usuário</th>
-			<th>Soma de bytes</th>
-			<th>Total de edições</th>
-			<th>Pontos por bytes</th>
-			<th>Artigos com imagens</th>
-			<th>Pontos por imagens</th>
-			<th>Total de pontos</th>
-		</tr><?php
+    <div class="w3-container">
+      <div class="w3-threequarter w3-section">
+        <p class="w3-text-darkgrey w3-container">Este cômputo se refere ao wikiconcurso "<?=$contest['name'];?>" e foi gerado no dia <?=date('d/m/Y', $time_unix);?>, às 
+        <?=date('H:i:s', $time_unix);?> do horário UTC. A ordem de classificação é realizada de acordo com o total de pontos, calculados com a pontuação arredondada para baixo, sendo utilizado como critério de desempate o valor da soma total de bytes adicionados e, caso ainda exista empate, por ordem alfabética. Todos os usuários inscritos que editaram algum dos artigos da lista deste wikiconcurso estão listados abaixo, mesmo não tendo edição válida alguma.</p>
+      </div>
+      <div class="w3-quarter w3-section">
+        <form class="w3-container w3-card w3-padding" method="get">
+          <caption>Caso queira obter um extrato da pontuação até determinado horário, especifique no formulário abaixo.</caption>
+          <input class="w3-input w3-border" type="datetime-local" name="time_round" value="<?=date('Y-m-d\TH:i', $time_unix);?>">
+          <input class="w3-btn w3-block w3-<?=$contest['theme'];?>" type="submit">
+        </form>
+      </div>
+  		<table class="w3-table-all w3-hoverable w3-card">
+    		<tr>
+    			<th>Usuário</th>
+    			<th>Soma de bytes</th>
+    			<th>Total de edições</th>
+    			<th>Pontos por bytes</th>
+    			<th>Artigos com imagens</th>
+    			<th>Pontos por imagens</th>
+    			<th>Total de pontos</th>
+    		</tr><?php
 
 //Loop para exibição de cada linha
 while ($row = mysqli_fetch_assoc($count_query)) {
@@ -137,6 +159,7 @@ while ($row = mysqli_fetch_assoc($count_query)) {
 	echo("</tr>\n");
 }
 ?>
-		</table>
+		  </table>
+    </div>
 	</body>
 </html>
