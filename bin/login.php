@@ -21,7 +21,7 @@ if (isset($_SESSION['user'])) {
 if (isset($_POST['do_login'])) {
     echo "<script>alert('E-mail/senha inválidos');</script>";
 } elseif (isset($_POST['do_create'])) {
-    echo "<script>alert('Usuário registrado. Solicite autorização.');</script>";
+    echo "<script>alert('Avaliador pré-cadastrado. Solicite autorização do gestor do wikiconcurso.');</script>";
 }
 
 //Coleta informações do concurso
@@ -208,7 +208,7 @@ if (isset($lastedit["lastedit"])) {
                     </form>
                     <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
                         <button onclick="document.getElementById('id01').style.display='none'" type="button" class="w3-button w3-red">Cancelar</button>
-                        <button class="w3-right w3-button w3-blue" type="submit" form="login" name="do_create">Cadastrar</button>
+                        <button class="w3-right w3-button w3-blue" type="submit" form="login" name="do_create">Pré-cadastrar</button>
                     </div>
                 </div>
             </div>

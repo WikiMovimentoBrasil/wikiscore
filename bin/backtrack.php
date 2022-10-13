@@ -59,14 +59,14 @@ if (isset($_POST['diff'])) {
 ?>
 <!DOCTYPE html>
 <html>
-    <title><?=$contest['name'];?></title>
+    <title>Retroceder - <?=$contest['name'];?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="./bin/w3.css">
-    <link rel="stylesheet" href="./bin/diff.css">
+    <link rel="stylesheet" href="bin/w3.css">
     <body>
         <header class="w3-container w3-<?=$contest['theme'];?>">
             <h1>Retroceder - <?=$contest['name'];?></h1>
         </header>
+        <br>
         <div class="w3-row-padding w3-content" style="max-width:700px">
             <div class="w3-container w3-margin-top w3-card-4">
                 <div class="w3-container">

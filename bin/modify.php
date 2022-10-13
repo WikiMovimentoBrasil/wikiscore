@@ -8,6 +8,10 @@ require "connect.php";
 //Processa informações caso formulário tenha sido submetido
 if ($_POST) {
 
+	//Escapa diff inserido no formulário
+	if (!isset($_POST['diff'])) die("Diff não fornecido!");
+	$post['diff'] = addslashes($_POST['diff']);
+
 	//Processa validade da edição, de acordo com o avaliador
 	if ($_POST['valid'] == 'sim') {
 		$post['valid'] = 1;
@@ -34,7 +38,7 @@ if ($_POST) {
 	}
 
 	//Busca número de bytes e nome do avaliador no banco de dados
-	$look = mysqli_fetch_assoc(
+	$query = mysqli_fetch_assoc(
 		mysqli_query($con, "
 			SELECT 
 				`bytes`,
@@ -42,40 +46,43 @@ if ($_POST) {
 			FROM 
 				`edits` 
 			WHERE 
-				`diff` = '".addslashes($_POST['diff'])."'
+				`diff` = '{$post['diff']}'
 			LIMIT 1
 		;")
 	);
 
 	//Verifica se diff pertence ao avaliador atual
-	if ($look['by'] == $_SESSION['user']['user_name']) {
+	if ($query['by'] == $_SESSION['user']['user_name']) {
 
 		//Processa alteração incluíndo número de bytes, caso informação tenha sido editada pelo avaliador
-		if (isset($_POST['overwrite']) AND $look['bytes'] != $_POST['overwrite']) {
-			
-			$post['obs'] .= " / bytes: ".$look['bytes']." -> ".addslashes($_POST['overwrite']);
+		$time = date('Y-m-d H:i:s');
+		if (isset($_POST['overwrite']) AND $query['bytes'] != $_POST['overwrite']) {
+
+			$post['overwrite'] = addslashes($_POST['overwrite']);
+			$obs = "Modif: de {$query['bytes']} para {$post['overwrite']} em {$time} com justificativa \"{$post['obs']}\"\n";
 			$sql_update = "
 				UPDATE 
 					`edits` 
 				SET 
-					`bytes`	 		= '".addslashes($_POST['overwrite'])."'
-					`valid_edit`	= '".$post['valid']."',
-					`pictures`		= '".$post['pic']."', 
-					`obs` 			= CONCAT('Modificação em ".addslashes(date('Y-m-d H:i:s')).": ".$post['obs']."\n', `obs`)
-				WHERE `diff` = '".addslashes($_POST['diff'])."';
+					`bytes`	 		= '{$post['overwrite']}'
+					`valid_edit`	= '{$post['valid']}',
+					`pictures`		= '{$post['pic']}', 
+					`obs` 			= CONCAT(IFNULL(`obs`, ''), '{$obs}')
+				WHERE `diff` = '{$post['diff']}';
 			";	
 		
 		//Processa alteração sem modificar número de bytes
 		} else {
 
+			$obs = "Modif: em {$time} com justificativa \"{$post['obs']}\"\n";
 			$sql_update = "
 				UPDATE 
 					`edits` 
 				SET 
-					`valid_edit`	= '".$post['valid']."',
-					`pictures`		= '".$post['pic']."', 
-					`obs` 			= CONCAT('Modificação em ".addslashes(date('Y-m-d H:i:s')).": ".$post['obs']."\n', `obs`)
-				WHERE `diff` = '".addslashes($_POST['diff'])."';
+					`valid_edit`	= '{$post['valid']}',
+					`pictures`		= '{$post['pic']}', 
+					`obs` 			= CONCAT(IFNULL(`obs`, ''), '{$obs}')
+				WHERE `diff` = '{$post['diff']}';
 			";
 		}
 
@@ -128,14 +135,15 @@ mysqli_close($con);
 ?>
 <!DOCTYPE html>
 <html>
-	<title><?php echo $contest['name']; ?></title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="./bin/w3.css">
-    <link rel="stylesheet" href="./bin/diff.css">
-	<body>
-		<header class=<?php echo("\"w3-container w3-".$contest['theme']."\"");?>>
-			<h1><?php echo $contest['name']; ?></h1>
-		</header>
+    <title>Modificar - <?=$contest['name'];?></title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="bin/w3.css">
+    <link rel="stylesheet" href="bin/diff.css">
+    <body>
+        <header class="w3-container w3-<?=$contest['theme'];?>">
+            <h1>Modificar - <?=$contest['name'];?></h1>
+        </header>
+        <br>
 		<div class="w3-row-padding w3-content" style="max-width:1400px">
 			<div class="w3-container w3-quarter w3-margin-top">
 				<form class="w3-container w3-card w3-margin-bottom" id="modify" method="get">
