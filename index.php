@@ -21,25 +21,27 @@ $db_pass = $ts_mycnf['password'];
 $db_host = 'tools.db.svc.eqiad.wmflabs';
 $database = $ts_mycnf['user']."__".$contest['name_id'];
 
-//Carrega página solicitada
-if (!isset($_GET['page'])) {
-	require __DIR__.'/bin/login.php';
-} elseif ($_GET['page'] == 'triage') {
-	require __DIR__.'/bin/triage.php';
-} elseif ($_GET['page'] == 'counter') {
-	require __DIR__.'/bin/counter.php';
-} elseif ($_GET['page'] == 'compare') {
-	require __DIR__.'/bin/compare.php';
-} elseif ($_GET['page'] == 'edits') {
-	require __DIR__.'/bin/edits.php';
-} elseif ($_GET['page'] == 'modify') {
-	require __DIR__.'/bin/modify.php';
-} elseif ($_GET['page'] == 'load_edits') {
-	require __DIR__.'/bin/load_edits.php';
-} elseif ($_GET['page'] == 'load_reverts') {
-	require __DIR__.'/bin/load_reverts.php';
-} elseif ($_GET['page'] == 'load_users') {
-	require __DIR__.'/bin/load_users.php';
+//Lista páginas disponíveis para uso
+$accepted_pages = array(
+	"login",
+	"triage",
+	"counter",
+	"compare",
+	"edits",
+	"modify",
+	"backtrack",
+	"load_edits",
+	"load_reverts",
+	"load_users"
+);
+
+//Carrega página solicitada ou redireciona para página de login
+if (isset($_GET['page'])) {
+	if (in_array($_GET['page'], $accepted_pages)) {
+		require __DIR__.'/bin/'.$_GET['page'].'.php';
+	} else {
+		require __DIR__.'/bin/login.php';
+	}
 } else {
 	require __DIR__.'/bin/login.php';
 }
