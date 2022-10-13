@@ -12,18 +12,18 @@ if (isset($_SESSION['user']['user_name'])) $slashed_username = addslashes($_SESS
 if ($_POST) {
 
     //Escapa variáveis para uso no SQL
-    if (isset($_POST['diff'])) $slashed_diff = addslashes($_POST['diff']);
-    if (isset($_POST['overwrite'])) $slashed_overwrite = addslashes($_POST['overwrite']);
+    if (isset($_POST['diff'])) $post['diff'] = addslashes($_POST['diff']);
+    if (isset($_POST['overwrite'])) $post['overwrite'] = addslashes($_POST['overwrite']);
 
     //Atualiza edição que o avaliador tenha pulado edição
-    if (isset($_POST['skip'])) {
+    if (isset($_POST['skip']) and isset($_POST['diff'])) {
         mysqli_query($con, "
             UPDATE 
                 `edits` 
             SET 
                 `by` = 'skip-{$slashed_username}' 
             WHERE 
-                `diff`='{$slashed_diff}'
+                `diff`='{$post['diff']}' AND `by` = 'hold-{$slashed_username}'
         ;");
         if (mysqli_affected_rows($con) == 0) die("<br>Erro ao pular edição. Atualize a página para tentar novamente.");
 
@@ -47,46 +47,51 @@ if ($_POST) {
                 $post['pic'] = 0;
             }
         }
-        
-        //Processa observação inserida no formulário
-        if (!isset($_POST['obs'])) {
-            $post['obs'] = '';
-        } else {
-            $post['obs'] = addslashes($_POST['obs']);
-        }
 
         //Processa alteração do número de bytes, caso informação tenha sido editada pelo avaliador
         if (isset($_POST['overwrite'])) {
 
             //Busca número de bytes no banco de dados
-            $look_bytes = mysqli_fetch_assoc(
+            $query = mysqli_fetch_assoc(
                 mysqli_query($con, "
                     SELECT 
                         `bytes`
                     FROM 
                         `edits` 
                     WHERE 
-                        `diff` = '{$slashed_diff}'
+                        `diff` = '{$post['diff']}'
                     LIMIT 1
                 ;")
             );
 
             //Verifica se há diferença. Caso sim, altera o número de bytes e adiciona comentário
-            if ($look_bytes['bytes'] != $_POST['overwrite']) {
+            if ($query['bytes'] != $post['overwrite']) {
                 mysqli_query($con, "
                     UPDATE 
                         `edits` 
                     SET 
-                        `bytes`  = '{$slashed_overwrite}'
-                    WHERE `diff` = '{$slashed_diff}';
+                        `bytes`  = '{$post['overwrite']}'
+                    WHERE 
+                        `diff` = '{$post['diff']}';
                 ");
-                $post['obs'] = "{$post['obs']} / bytes: {$look_bytes['bytes']} -> {$slashed_overwrite}";
+                $post['overwrited'] = TRUE;
+                $post['obs'] .= " | bytes: {$query['bytes']} -> {$post['overwrite']}";
             }
         }
         
+        //Processa observação inserida no formulário
+        if (!isset($_POST['obs']) OR $_POST['obs'] == '') {
+            $post['obs'] = '';
+        } elseif (isset($post['overwrited'])) {
+            $obs = addslashes($_POST['obs']);
+            $post['obs'] = "Aval: de {$query['bytes']} para {$post['overwrite']} com justificativa \"{$obs}\"\n";
+        } else {
+            $obs = addslashes($_POST['obs']);
+            $post['obs'] = "Aval: \"{$obs}\"\n";
+        }
 
         //Monta query para atualizar banco de dados
-        $when = date('Y-m-d H:i:s');
+        $when = date('Y-m-d H:i:s'); 
         $sql_update = "
             UPDATE 
                 `edits` 
@@ -95,8 +100,8 @@ if ($_POST) {
                 `pictures`      = '{$post['pic']}', 
                 `by`            = '{$slashed_username}', 
                 `when`          = '{$when}',
-                `obs`           = '{$post['obs']}'
-            WHERE `diff`        = '{$slashed_diff}';
+                `obs`           = CONCAT(IFNULL(`obs`, ''), '{$post['obs']}')
+            WHERE `diff`        = '{$post['diff']}';
         ";
 
         //Executa query e retorna o resultado para o avaliador
@@ -176,7 +181,7 @@ $revision_query = mysqli_query($con, "
         `by` IS NULL AND 
         `timestamp` < '{$revert_time}' 
     ORDER BY 
-        `timestamp` DESC 
+        `timestamp` ASC 
     LIMIT 1
 ;");
 $output['revision'] = mysqli_fetch_assoc($revision_query);
@@ -310,25 +315,37 @@ mysqli_close($con);
                     <div class="w3-container w3-margin-bottom">
                         <div class="w3-row">
                             <div class="w3-half">
-                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(-150deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=counter', '_blank');">
+                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(40deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=counter', '_blank');">
                                     <i class="fa-solid fa-chart-line w3-xxlarge"></i><br>Contador
                                 </button>
                             </div>
                             <div class="w3-half">
-                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(-90deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=modify', '_blank');">
+                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(80deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=modify', '_blank');">
                                     <i class="fa-solid fa-pen-to-square w3-xxlarge"></i><br>Modificar
                                 </button>
                             </div>
                         </div>
                         <div class="w3-row">
                             <div class="w3-half">
-                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(-30deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=compare', '_blank');">
+                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(120deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=compare', '_blank');">
                                     <i class="fa-solid fa-code-compare w3-xxlarge"></i><br>Comparador
                                 </button>
                             </div>
                             <div class="w3-half">
-                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(30deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=edits', '_blank');">
+                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(160deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=edits', '_blank');">
                                     <i class="fa-solid fa-list-check w3-xxlarge"></i><br>Avaliadas
+                                </button>
+                            </div>
+                        </div>
+                        <div class="w3-row">
+                            <div class="w3-half">
+                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(200deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=backtrack', '_blank');">
+                                    <i class="fa-solid fa-history w3-xxlarge"></i><br>Retroceder
+                                </button>
+                            </div>
+                            <div class="w3-half">
+                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(240deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=evaluators', '_blank');" disabled>
+                                    <i class="fa-solid fa-users w3-xxlarge"></i><br>Avaliadores
                                 </button>
                             </div>
                         </div>
@@ -337,14 +354,14 @@ mysqli_close($con);
                                 <form method="post">
                                     <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
                                     <input type="hidden" name="skip" value="true">
-                                    <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(90deg);" type="submit" value="Pular edição">
+                                    <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(280deg);" type="submit" value="Pular edição">
                                         <i class="fa-solid fa-forward w3-xxlarge"></i><br>Pular
                                     </button>
                                 </form>
                             </div>
                             <div class="w3-half">
                                 <form method="post">
-                                    <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(150deg);" type="submit" name="logout" value="Logout">
+                                    <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(320deg);" type="submit" name="logout" value="Logout">
                                         <i class="fa-solid fa-door-open w3-xxlarge"></i><br>Sair
                                     </button>
                                 </form>
