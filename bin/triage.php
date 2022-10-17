@@ -136,7 +136,8 @@ $revert_time = date('Y-m-d H:i:s', strtotime($contest['revert_time']));
 //Conta edições faltantes
 $count_query = mysqli_query($con, "
     SELECT 
-        COUNT(*) AS `count` 
+        COUNT(*) AS `total_count`,
+        SUM(CASE WHEN `timestamp` < '{$revert_time}' THEN 1 ELSE 0 END) AS `count` 
     FROM 
         `edits` 
     WHERE 
@@ -144,10 +145,11 @@ $count_query = mysqli_query($con, "
         `valid_edit` IS NULL AND 
         `valid_user` IS NOT NULL AND 
         `by` IS NULL AND 
-        `bytes` > {$bytes} AND 
-        `timestamp` < '{$revert_time}'
+        `bytes` > {$bytes}
 ;");
-$output['count'] = mysqli_fetch_assoc($count_query)['count'];
+$count_query = mysqli_fetch_assoc($count_query);
+$output['count'] = $count_query['count'];
+$output['total_count'] = $count_query['total_count'];
 
 //Captura horário de última edição inserida no banco de dados
 $lastedit_query = mysqli_query($con, "
@@ -307,8 +309,16 @@ mysqli_close($con);
                             <h6 class="w3-center">Você está avaliando uma edição do dia</h6>
                             <h4 class="w3-center"><?=@substr($output['revision']['timestamp'], 0, 10);?></h4>
                         </div>
-                        <h6 class="w3-center">Edições pendentes</h6>
-                        <h1 class="w3-center"><?=$output['count'];?></h1>
+                            <div class="w3-row">
+                                <div class="w3-half">
+                                    <h6 class="w3-center">Edições para avaliar</h6>
+                                    <h1 class="w3-center"><?=$output['count'];?></h1>
+                                </div>
+                                <div class="w3-half">
+                                    <h6 class="w3-center">Edições em espera</h6>
+                                    <h1 class="w3-center"><?=$output['total_count'];?></h1>
+                                </div>
+                            </div>
                         <br>
                     </div>
 
