@@ -206,7 +206,7 @@ $wd_query = mysqli_query($con,
                                 "ppprop"        => "wikibase_item",
                                 "pageids"       => $row['article']
                             ];
-                            $wd_api = file_get_contents($contest['api_endpoint']."?".http_build_query($wd_params)), true);
+                            $wd_api = file_get_contents($contest['api_endpoint']."?".http_build_query($wd_params));
                             $wd = end(json_decode($wd_api, true)["query"]["pages"]);
                             if (isset($wd["pageprops"]["wikibase_item"])) continue;
 
