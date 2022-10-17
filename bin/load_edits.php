@@ -58,12 +58,16 @@ if (isset($contest['category_petscan'])) {
 }
 
 //Monta e executa query para atualização da tabela de artigos
-mysqli_query($con, "TRUNCATE `articles`;");
-foreach ($list as $articleID) mysqli_query($con, "
+$list = implode("'), ('", $list);
+mysqli_query($con, "
+	TRUNCATE 
+		`articles`
+	;");
+mysqli_query($con, "
 	INSERT INTO 
 		`articles` (`articleID`) 
 	VALUES 
-		('".$articleID."')
+		('{$list}')
 	;");
 
 //Coleta lista de artigos
@@ -130,8 +134,8 @@ while ($row = mysqli_fetch_assoc($articles_query)) {
 					) 
 				VALUES 
 					(
-						'".$revision['revid']."', 
-						'".$row["articleID"]."'
+						'{$revision['revid']}', 
+						'{$row["articleID"]}'
 					)
 			;");
 			continue;
@@ -159,9 +163,9 @@ while ($row = mysqli_fetch_assoc($articles_query)) {
 				) 
 			VALUES 
 				(
-					'".$revision['revid']."', 
-					'".$row["articleID"]."', 
-					'".$compare_api['totimestamp']."', 
+					'{$revision['revid']}', 
+					'{$row["articleID"]}', 
+					'{$compare_api['totimestamp']}', 
 					'".addslashes($compare_api['touser'])."', 
 					'".($compare_api['tosize'] - $compare_api['fromsize'])."', 
 					'".addslashes($compare_api['tocomment'])."'
