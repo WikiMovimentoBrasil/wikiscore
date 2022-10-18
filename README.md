@@ -33,15 +33,14 @@ $database = //Database name
 ### Add the contest to bin/data.php
 ```php
 'example' => array(
-        'name_id'               => "example",              //Must be the same as the array key
         'start_time'            => "1615766399",           //Unix time
         'end_time'              => "1621123200",           //Unix time
         'name'                  => "Example Contest 2020", //Long name of the contest
-        'revert_time'           => "-24 hours",            //Recomended, but can be changed
+        'revert_time'           => "24",                   //Recomended, but can be changed
         'official_list_pageid'  => "6496164",              //Page ID of the list of articles
         'category_pageid'       => "6517644",              //Category containing the articles
-        'endpoint'              => "https://pt.wikipedia.org/w/index.php",
-        'api_endpoint'          => "https://pt.wikipedia.org/w/api.php",
+        'endpoint'              => "https://domain/w/index.php",
+        'api_endpoint'          => "https://domain/w/api.php",
         'outreach_name'         => 'Museu/Wikiconcurso',   //Course adress at outreachdashboard.wmflabs.org
         'bytes_per_points'      => "3000",                 //Number of bytes needed to reach 1 point
         'max_bytes_per_article' => "90000",                //Maximum number of bytes allowed per article, per participant
@@ -53,9 +52,9 @@ $database = //Database name
 ```
 
 ### Pictures mode
-0 = Sistema booleano por artigo. Contabiliza apenas a inserção de uma imagem em um artigo, ignorando outras imagens adicionadas no mesmo artigo.
-1 = Sistema booleano por edição. Contabiliza apenas a inserção de uma imagem em uma edição, ignorando outras imagens adicionadas na mesma edição.
-2 = Sistema integer. Contabiliza cada imagem inserida no artigo até o máximo estabelecido em 'max_bytes_per_article'.
+* 0 = Sistema booleano por artigo. Contabiliza apenas a inserção de uma imagem em um artigo, ignorando outras imagens adicionadas no mesmo artigo.
+* 1 = Sistema booleano por edição. Contabiliza apenas a inserção de uma imagem em uma edição, ignorando outras imagens adicionadas na mesma edição.
+* 2 = Sistema integer. Contabiliza cada imagem inserida no artigo até o máximo estabelecido em 'max_bytes_per_article'.
 
 ### Set up the cron jobs to update your file
 Set up the recurring scripts for your new contest as described in the previous section.

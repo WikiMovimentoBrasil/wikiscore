@@ -83,7 +83,7 @@ if (isset($_POST['diff'])) {
                         foreach ($case["diffs"] as $diff) {
                             echo('<li class="w3-bar">');
                                 echo('<div class="w3-bar-item">');
-                                    echo("<span class='w3-large'><a href='https://pt.wikipedia.org/w/index.php?diff={$diff['diff']}' target='_blank'>{$diff['diff']}</a></span><br>");
+                                    echo("<span class='w3-large'><a href='{$contest['endpoint']}?diff={$diff['diff']}' target='_blank'>{$diff['diff']}</a></span><br>");
                                     echo("<span>Edição  em {$diff['timestamp']} - {$diff['bytes']} bytes</span>");
                                 echo('</div>');
                                 echo('<form method="post">');

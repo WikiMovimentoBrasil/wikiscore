@@ -203,8 +203,8 @@ mysqli_close($con);
 				<div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" <?php if(!isset($output['compare']['*'])) echo('style="display:none;"'); ?>>
 					<h2>Dados da edição</h2>
 					<ul class="w3-ul w3-margin-bottom">
-						<li>Edição:<br><a href="https://pt.wikipedia.org/w/index.php?diff=<?=@$output['revision']['diff'];?>" target="_blank"><?=@$output['revision']['diff'];?></a></li>
-						<li>ID do artigo:<br><a href="https://pt.wikipedia.org/w/index.php?curid=<?=@$output['revision']['article'];?>" target="_blank"><?=@$output['revision']['article'];?></a></li>
+						<li>Edição:<br><a href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>" target="_blank"><?=@$output['revision']['diff'];?></a></li>
+						<li>ID do artigo:<br><a href="<?=$contest['endpoint'];?>?curid=<?=@$output['revision']['article'];?>" target="_blank"><?=@$output['revision']['article'];?></a></li>
 						<li>Horário da edição:<br><?php echo(@$output['revision']['timestamp']); ?></li>
 						<li>Usuário:<br><?php echo(@$output['revision']['user']); ?></li>
 						<li>Bytes:<br><?php echo(@$output['revision']['bytes']); ?></li>

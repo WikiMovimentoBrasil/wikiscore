@@ -131,7 +131,7 @@ $bytes = 0;
 if (isset($contest['minimum_bytes'])) $bytes = $contest['minimum_bytes'];
 
 //Converte prazo de reversão para formato compatível com SQL
-$revert_time = date('Y-m-d H:i:s', strtotime($contest['revert_time']));
+$revert_time = date('Y-m-d H:i:s', strtotime("-{$contest['revert_time']} hours"));
 
 //Conta edições faltantes
 $count_query = mysqli_query($con, "
@@ -282,7 +282,7 @@ mysqli_close($con);
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" <?php if(!isset($output['success']['diff'])) echo('style="display:none;"');?>>
                     <h2>Última avaliação</h2>
                     <p>
-                        Diff: <a href="https://pt.wikipedia.org/w/index.php?diff=<?=@$output['success']['diff'];?>" target="_blank"><?=@$output['success']['diff'];?></a>
+                        Diff: <a href="<?=$contest['endpoint'];?>?diff=<?=@$output['success']['diff'];?>" target="_blank"><?=@$output['success']['diff'];?></a>
                     </p>
                     <p>
                         Edição válida: <?php if(@$output['success']['valid']){
@@ -433,7 +433,7 @@ mysqli_close($con);
                             <br><b>Horário:</b> <?=@$output['revision']['timestamp'];?> (UTC)
                             <br><b>Sumário:</b> <?=@$output['revision']['summary'];?>
                             <br><b>Diff:</b> 
-                            <a href="https://pt.wikipedia.org/w/index.php?diff=<?=@$output['revision']['diff'];?>" target="_blank"><?=@$output['revision']['diff'];?></a> - <a target="_blank" href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>">Copyvio Detector</a>
+                            <a href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>" target="_blank"><?=@$output['revision']['diff'];?></a> - <a target="_blank" href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>">Copyvio Detector</a>
                         </p>
                     </div>
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
