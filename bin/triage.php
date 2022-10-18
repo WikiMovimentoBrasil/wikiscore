@@ -19,7 +19,7 @@ if ($_POST) {
     if (isset($_POST['skip']) and isset($_POST['diff'])) {
         mysqli_query($con, "
             UPDATE 
-                `edits` 
+                `{$contest['name_id']}__edits` 
             SET 
                 `by` = 'skip-{$slashed_username}' 
             WHERE 
@@ -57,7 +57,7 @@ if ($_POST) {
                     SELECT 
                         `bytes`
                     FROM 
-                        `edits` 
+                        `{$contest['name_id']}__edits` 
                     WHERE 
                         `diff` = '{$post['diff']}'
                     LIMIT 1
@@ -68,7 +68,7 @@ if ($_POST) {
             if ($query['bytes'] != $post['overwrite']) {
                 mysqli_query($con, "
                     UPDATE 
-                        `edits` 
+                        `{$contest['name_id']}__edits` 
                     SET 
                         `bytes`  = '{$post['overwrite']}'
                     WHERE 
@@ -94,7 +94,7 @@ if ($_POST) {
         $when = date('Y-m-d H:i:s'); 
         $sql_update = "
             UPDATE 
-                `edits` 
+                `{$contest['name_id']}__edits` 
             SET 
                 `valid_edit`    = '{$post['valid']}',
                 `pictures`      = '{$post['pic']}', 
@@ -115,7 +115,7 @@ if ($_POST) {
             //Destrava edições do usuário que porventura ainda estejam travadas
             mysqli_query($con, "
                 UPDATE 
-                    `edits` 
+                    `{$contest['name_id']}__edits` 
                 SET 
                     `by` = NULL 
                 WHERE 
@@ -139,7 +139,7 @@ $count_query = mysqli_query($con, "
         COUNT(*) AS `total_count`,
         SUM(CASE WHEN `timestamp` < '{$revert_time}' THEN 1 ELSE 0 END) AS `count` 
     FROM 
-        `edits` 
+        `{$contest['name_id']}__edits` 
     WHERE 
         `reverted` IS NULL AND 
         `valid_edit` IS NULL AND 
@@ -156,7 +156,7 @@ $lastedit_query = mysqli_query($con, "
     SELECT 
         `timestamp` AS `lastedit`
     FROM 
-        `edits`
+        `{$contest['name_id']}__edits`
     ORDER BY 
         `timestamp` DESC 
     LIMIT 
@@ -174,7 +174,7 @@ $revision_query = mysqli_query($con, "
         `article`, 
         `timestamp` 
     FROM 
-        `edits` 
+        `{$contest['name_id']}__edits` 
     WHERE 
         `reverted` IS NULL AND 
         `valid_edit` IS NULL AND 
@@ -192,7 +192,7 @@ $output['revision'] = mysqli_fetch_assoc($revision_query);
 if ($output['revision'] != NULL) {
     mysqli_query($con, "
         UPDATE 
-            `edits` 
+            `{$contest['name_id']}__edits` 
         SET 
             `by` = 'hold-{$slashed_username}' 
         WHERE 

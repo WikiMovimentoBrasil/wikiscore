@@ -20,7 +20,7 @@ $ts_mycnf = parse_ini_file($ts_pw['dir'] . "/replica.my.cnf");
 $db_user = $ts_mycnf['user'];
 $db_pass = $ts_mycnf['password'];
 $db_host = 'tools.db.svc.eqiad.wmflabs';
-$database = $ts_mycnf['user']."__".$contest['name_id'];
+$database = $ts_mycnf['user']."__wikiconcursos";
 
 //Lista páginas disponíveis para uso
 $accepted_pages = array(

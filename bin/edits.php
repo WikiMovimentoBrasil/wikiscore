@@ -30,7 +30,7 @@ $csv =  "Diff da edição;".
         "Comentário do avaliador"."\r\n";
 
 //Coleta lista de edições
-$edits_query = mysqli_query($con, "SELECT * FROM `edits` WHERE `valid_edit` IS NOT NULL;");
+$edits_query = mysqli_query($con, "SELECT * FROM `{$contest['name_id']}__edits` WHERE `valid_edit` IS NOT NULL;");
 if (mysqli_num_rows($edits_query) == 0) die("No edits");
 
 while ($query = mysqli_fetch_assoc($edits_query)) {

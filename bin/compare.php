@@ -109,13 +109,13 @@ $inconsistency_query = mysqli_query($con,
       `valid_edit`,
       `timestamp`
     FROM 
-      `edits` 
+      `{$contest['name_id']}__edits` 
     WHERE 
       `article` NOT IN (
         SELECT 
           `articleID` 
         FROM 
-          `articles`
+          `{$contest['name_id']}__articles`
       ) 
       AND `valid_user` = '1' 
       AND `bytes` > 0 
@@ -125,12 +125,12 @@ $wd_query = mysqli_query($con,
     "SELECT 
       `article` 
     FROM 
-      `edits` 
-      INNER JOIN `articles` ON `edits`.`article` = `articles`.`articleID` 
+      `{$contest['name_id']}__edits` 
+      INNER JOIN `{$contest['name_id']}__articles` ON `{$contest['name_id']}__edits`.`article` = `{$contest['name_id']}__articles`.`articleID` 
     WHERE 
-      `edits`.`new_page` = '1' 
+      `{$contest['name_id']}__edits`.`new_page` = '1' 
     ORDER BY 
-      `edits`.`timestamp` ASC;");
+      `{$contest['name_id']}__edits`.`timestamp` ASC;");
 ?>
 
 <!DOCTYPE html>

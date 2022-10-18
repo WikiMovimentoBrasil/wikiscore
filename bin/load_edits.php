@@ -61,17 +61,17 @@ if (isset($contest['category_petscan'])) {
 $list = implode("'), ('", $list);
 mysqli_query($con, "
 	TRUNCATE 
-		`articles`
+		`{$contest['name_id']}__articles`
 	;");
 mysqli_query($con, "
 	INSERT INTO 
-		`articles` (`articleID`) 
+		`{$contest['name_id']}__articles` (`articleID`) 
 	VALUES 
 		('{$list}')
 	;");
 
 //Coleta lista de artigos
-$articles_query = mysqli_query($con, "SELECT * FROM `articles`;");
+$articles_query = mysqli_query($con, "SELECT * FROM `{$contest['name_id']}__articles`;");
 if (mysqli_num_rows($articles_query) == 0) die("No articles");
 
 //Coleta revisões já inseridas no banco de dados
@@ -80,7 +80,7 @@ $revision_query = mysqli_query($con, "
 	SELECT 
 		`diff` 
 	FROM 
-		`edits` 
+		`{$contest['name_id']}__edits` 
 	ORDER BY 
 		`diff`
 	;");
@@ -128,7 +128,7 @@ while ($row = mysqli_fetch_assoc($articles_query)) {
 		if (!isset($compare_api['compare'])) {
 			mysqli_query($con, "
 				INSERT IGNORE INTO 
-					`edits` (
+					`{$contest['name_id']}__edits` (
 						`diff`, 
 						`article`
 					) 
@@ -153,7 +153,7 @@ while ($row = mysqli_fetch_assoc($articles_query)) {
 		//Prepara query de inserção da revisão no banco de dados
 		$sql_compare = "
 			INSERT IGNORE INTO 
-				`edits` (
+				`{$contest['name_id']}__edits` (
 					`diff`, 
 					`article`, 
 					`timestamp`, 
@@ -178,7 +178,7 @@ while ($row = mysqli_fetch_assoc($articles_query)) {
 
 		//Marca edição como nova página
 		if (isset($compare_api['new_page'])) {
-			mysqli_query($con, "UPDATE `edits` SET `new_page` = '1' WHERE `diff` = '".$revision['revid']."';");
+			mysqli_query($con, "UPDATE `{$contest['name_id']}__edits` SET `new_page` = '1' WHERE `diff` = '".$revision['revid']."';");
 			if (mysqli_affected_rows($con) != 0) echo("<br> Marcada como nova página a revisão ".$revision['revid']);
 		} 
 	}

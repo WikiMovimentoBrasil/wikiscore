@@ -44,7 +44,7 @@ if ($_POST) {
 				`bytes`,
 				`by`
 			FROM 
-				`edits` 
+				`{$contest['name_id']}__edits` 
 			WHERE 
 				`diff` = '{$post['diff']}'
 			LIMIT 1
@@ -62,7 +62,7 @@ if ($_POST) {
 			$obs = "Modif: de {$query['bytes']} para {$post['overwrite']} em {$time} com justificativa \"{$post['obs']}\"\n";
 			$sql_update = "
 				UPDATE 
-					`edits` 
+					`{$contest['name_id']}__edits` 
 				SET 
 					`bytes`	 		= '{$post['overwrite']}'
 					`valid_edit`	= '{$post['valid']}',
@@ -77,7 +77,7 @@ if ($_POST) {
 			$obs = "Modif: em {$time} com justificativa \"{$post['obs']}\"\n";
 			$sql_update = "
 				UPDATE 
-					`edits` 
+					`{$contest['name_id']}__edits` 
 				SET 
 					`valid_edit`	= '{$post['valid']}',
 					`pictures`		= '{$post['pic']}', 
@@ -106,7 +106,7 @@ if (isset($_GET['diff'])) {
 		SELECT 
 			*
 		FROM 
-			`edits` 
+			`{$contest['name_id']}__edits` 
 		WHERE 
 			`diff`		= '".addslashes($_GET['diff'])."'
 		LIMIT 1

@@ -8,16 +8,16 @@ require "connect.php";
 //Coleta lista de edições para retroceder inscrição
 $backtrack_query = mysqli_query($con, "
     SELECT 
-      `edits`.`diff`, 
-      `edits`.`bytes`,
-      `edits`.`timestamp` AS `edit_timestamp`, 
-      `users`.`user`, 
-      `users`.`timestamp` AS `enrollment_timestamp` 
+      `{$contest['name_id']}__edits`.`diff`, 
+      `{$contest['name_id']}__edits`.`bytes`,
+      `{$contest['name_id']}__edits`.`timestamp` AS `edit_timestamp`, 
+      `{$contest['name_id']}__users`.`user`, 
+      `{$contest['name_id']}__users`.`timestamp` AS `enrollment_timestamp` 
     FROM 
-      `edits` 
-      INNER JOIN `users` ON `edits`.`user` = `users`.`user` 
+      `{$contest['name_id']}__edits` 
+      INNER JOIN `{$contest['name_id']}__users` ON `{$contest['name_id']}__edits`.`user` = `{$contest['name_id']}__users`.`user` 
     WHERE 
-      `edits`.valid_user IS NULL 
+      `{$contest['name_id']}__edits`.valid_user IS NULL 
       AND bytes > 0
     ORDER BY 
       `user`, 
@@ -39,7 +39,7 @@ if (isset($_POST['diff'])) {
     $time = date('Y-m-d H:i:s');
     $sql_update = "
         UPDATE 
-            `edits` 
+            `{$contest['name_id']}__edits` 
         SET 
             `valid_user`    = '1',
             `obs`           = CONCAT(IFNULL(`obs`, ''), 'Backtrack: {$slashed_username} em {$time}\n')

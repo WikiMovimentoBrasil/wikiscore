@@ -9,7 +9,7 @@ $edits_query = mysqli_query($con, "
 	SELECT 
 		`diff` 
 	FROM 
-		`edits` 
+		`{$contest['name_id']}__edits` 
 	WHERE 
 		`valid_user` IS NOT NULL AND 
 		`reverted` IS NULL
@@ -38,7 +38,7 @@ while ($row = mysqli_fetch_assoc($edits_query)) {
 	) { 
 		mysqli_query($con, "
 			UPDATE 
-				`edits` 
+				`{$contest['name_id']}__edits` 
 			SET 
 				`reverted` = '1' 
 			WHERE 

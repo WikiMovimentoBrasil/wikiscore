@@ -18,17 +18,17 @@ array_shift($lines);
 unset($row);
 
 //Atualiza tabela de usuários e de edições
-mysqli_query($con, "TRUNCATE `users`;");
+mysqli_query($con, "TRUNCATE `{$contest['name_id']}__users`;");
 foreach ($lines as $row) {
 	mysqli_query($con, "
 		INSERT IGNORE INTO 
-			`users` (`user`, `timestamp`) 
+			`{$contest['name_id']}__users` (`user`, `timestamp`) 
 		VALUES 
 			('".$row['0']."', '".$row['1']."')
 	;");
 	mysqli_query($con, "
 		UPDATE 
-			`edits` 
+			`{$contest['name_id']}__edits` 
 		SET 
 			`valid_user`='1' 
 		WHERE 
@@ -38,10 +38,10 @@ foreach ($lines as $row) {
 }
 
 //Coleta lista de usuários para verificar renomeações
-$check_renamed = mysqli_query($con, "SELECT `user` FROM `users`;");
+$check_renamed = mysqli_query($con, "SELECT `user` FROM `{$contest['name_id']}__users`;");
 
 //Loop para verificar renomeações na API do meta
-//Se encontrado, substititui nome na tabela `users` e edições em `edits`
+//Se encontrado, substititui nome na tabela `nameid__users` e edições em `nameid__edits`
 //Adicionalmente, habilita edições que porventura ainda não haviam sido habilitadas
 while ($user = mysqli_fetch_assoc($check_renamed)) {
 	$check_renamed_api_params = [
@@ -59,7 +59,7 @@ while ($user = mysqli_fetch_assoc($check_renamed)) {
 		echo("<br>Usuário renomeado: ".$check_renamed_api['0']['params']['olduser']." -> ".$check_renamed_api['0']['params']['newuser']);
 		mysqli_query($con, "
 			UPDATE 
-			  `edits` 
+			  `{$contest['name_id']}__edits` 
 			SET 
 			  `user` = '".$check_renamed_api['0']['params']['newuser']."' 
 			WHERE 
@@ -67,7 +67,7 @@ while ($user = mysqli_fetch_assoc($check_renamed)) {
 		");
 		mysqli_query($con, "
 			UPDATE 
-			  `users` 
+			  `{$contest['name_id']}__users` 
 			SET 
 			  `user` = '".$check_renamed_api['0']['params']['newuser']."' 
 			WHERE 
@@ -75,19 +75,19 @@ while ($user = mysqli_fetch_assoc($check_renamed)) {
 		");
 		$missing_edits = mysqli_query($con, "
 			SELECT 
-			  `edits`.`n`
+			  `{$contest['name_id']}__edits`.`n`
 			FROM 
-			  `edits` 
-			  LEFT JOIN `users` ON `edits`.`user` = `users`.`user` 
+			  `{$contest['name_id']}__edits` 
+			  LEFT JOIN `{$contest['name_id']}__users` ON `{$contest['name_id']}__edits`.`user` = `{$contest['name_id']}__users`.`user` 
 			WHERE 
-			  `edits`.`timestamp` > `users`.`timestamp` AND
-			  `edits`.`valid_user` IS NULL AND
-			  `edits`.`user` = '".$check_renamed_api['0']['params']['newuser']."';
+			  `{$contest['name_id']}__edits`.`timestamp` > `{$contest['name_id']}__users`.`timestamp` AND
+			  `{$contest['name_id']}__edits`.`valid_user` IS NULL AND
+			  `{$contest['name_id']}__edits`.`user` = '".$check_renamed_api['0']['params']['newuser']."';
 		");
 		while ($edition = mysqli_fetch_assoc($missing_edits)) {
 			mysqli_query($con, "
 				UPDATE 
-					`edits` 
+					`{$contest['name_id']}__edits` 
 				SET 
 					`valid_user`='1' 
 				WHERE 
@@ -101,7 +101,7 @@ while ($user = mysqli_fetch_assoc($check_renamed)) {
 //Destrava edições que porventura ainda estejam travadas
 mysqli_query($con, "
 	UPDATE 
-		`edits` 
+		`{$contest['name_id']}__edits` 
 	SET 
 		`by` = NULL 
 	WHERE 

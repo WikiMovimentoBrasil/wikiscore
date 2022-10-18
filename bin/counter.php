@@ -27,10 +27,10 @@ $count_query = mysqli_query($con,
 FROM 
     (
         SELECT 
-            DISTINCT `edits`.`user` 
+            DISTINCT `{$contest['name_id']}__edits`.`user` 
         FROM 
-            `edits` 
-            INNER JOIN `users` ON `users`.`user` = `edits`.`user`
+            `{$contest['name_id']}__edits` 
+            INNER JOIN `{$contest['name_id']}__users` ON `{$contest['name_id']}__users`.`user` = `{$contest['name_id']}__edits`.`user`
     ) AS `user_table` 
     LEFT JOIN (
         SELECT 
@@ -55,14 +55,14 @@ FROM
                 FROM 
                     (
                         SELECT 
-                            edits.`article`, 
-                            edits.`user`, 
-                            CASE WHEN SUM(edits.`bytes`) > ${contest['max_bytes_per_article']} THEN ${contest['max_bytes_per_article']} ELSE SUM(edits.`bytes`) END AS `bytes`, 
-                            COUNT(edits.`valid_edit`) AS `valid_edits` 
+                            `{$contest['name_id']}__edits`.`article`, 
+                            `{$contest['name_id']}__edits`.`user`, 
+                            CASE WHEN SUM(`{$contest['name_id']}__edits`.`bytes`) > ${contest['max_bytes_per_article']} THEN ${contest['max_bytes_per_article']} ELSE SUM(`{$contest['name_id']}__edits`.`bytes`) END AS `bytes`, 
+                            COUNT(`{$contest['name_id']}__edits`.`valid_edit`) AS `valid_edits` 
                         FROM 
-                            `edits` 
+                            `{$contest['name_id']}__edits` 
                         WHERE 
-                            edits.`valid_edit` IS NOT NULL AND edits.`timestamp` < ( CASE WHEN '${time_sql}' = '0' THEN NOW() ELSE '${time_sql}' END)
+                            `{$contest['name_id']}__edits`.`valid_edit` IS NOT NULL AND `{$contest['name_id']}__edits`.`timestamp` < ( CASE WHEN '${time_sql}' = '0' THEN NOW() ELSE '${time_sql}' END)
                         GROUP BY 
                             `user`, 
                             `article` 
@@ -83,18 +83,18 @@ FROM
                 FROM 
                     (
                         SELECT 
-                            edits.`user`, 
-                            edits.`article`, 
-                            edits.`pictures`, 
-                            edits.`n` 
+                            `{$contest['name_id']}__edits`.`user`, 
+                            `{$contest['name_id']}__edits`.`article`, 
+                            `{$contest['name_id']}__edits`.`pictures`, 
+                            `{$contest['name_id']}__edits`.`n` 
                         FROM 
-                            `edits` 
+                            `{$contest['name_id']}__edits` 
                         WHERE 
-                            edits.`pictures` IS NOT NULL AND edits.`timestamp` < ( CASE WHEN '${time_sql}' = '0' THEN NOW() ELSE '${time_sql}' END)
+                            `{$contest['name_id']}__edits`.`pictures` IS NOT NULL AND `{$contest['name_id']}__edits`.`timestamp` < ( CASE WHEN '${time_sql}' = '0' THEN NOW() ELSE '${time_sql}' END)
                         GROUP BY 
-                            CASE WHEN ${contest['pictures_mode']} = 0 THEN edits.`user` END, 
-                            CASE WHEN ${contest['pictures_mode']} = 0 THEN edits.`article` END, 
-                            CASE WHEN ${contest['pictures_mode']} = 0 THEN edits.`pictures` ELSE edits.`n` END
+                            CASE WHEN ${contest['pictures_mode']} = 0 THEN `{$contest['name_id']}__edits`.`user` END, 
+                            CASE WHEN ${contest['pictures_mode']} = 0 THEN `{$contest['name_id']}__edits`.`article` END, 
+                            CASE WHEN ${contest['pictures_mode']} = 0 THEN `{$contest['name_id']}__edits`.`pictures` ELSE `{$contest['name_id']}__edits`.`n` END
                     ) AS `distinct` 
                 GROUP BY 
                     `distinct`.`user` 

@@ -48,9 +48,9 @@ $date_generator = "SELECT DATE_ADD(@date_min, INTERVAL(@i:= @i + 1) - 1 DAY) AS 
 $total_edits = mysqli_query($con, "
     SELECT
        date_generator.date as the_date,
-       IFNULL(COUNT(`edits`.n), 0) as count
+       IFNULL(COUNT(`{$contest['name_id']}__edits`.n), 0) as count
     from ( {$date_generator} ) date_generator
-    left join `edits` on DATE(`timestamp`) = date_generator.date
+    left join `{$contest['name_id']}__edits` on DATE(`timestamp`) = date_generator.date
     GROUP BY date;
 ");
 while ($row = mysqli_fetch_assoc($total_edits)) $total_edits_rows[] = $row['count'];
@@ -62,7 +62,7 @@ $valid_edits = mysqli_query($con, "
        date_generator.date as the_date,
        IFNULL(COUNT(`queried`.n), 0) as count
     from ( {$date_generator} ) date_generator
-    left join (SELECT `n`, DATE(`timestamp`) AS date_timestamp from edits WHERE `valid_edit` = 1) AS queried on date_timestamp = date_generator.date
+    left join (SELECT `n`, DATE(`timestamp`) AS date_timestamp from `{$contest['name_id']}__edits` WHERE `valid_edit` = 1) AS queried on date_timestamp = date_generator.date
     GROUP BY date;
 ");
 while ($row = mysqli_fetch_assoc($valid_edits)) $valid_edits_rows[] = $row['count'];
@@ -74,7 +74,7 @@ $new_articles = mysqli_query($con, "
        date_generator.date as the_date,
        IFNULL(COUNT(`queried`.n), 0) as count
     from ( {$date_generator} ) date_generator
-    left join (SELECT `n`, DATE(`timestamp`) AS date_timestamp from edits WHERE `new_page` = 1) AS queried on date_timestamp = date_generator.date
+    left join (SELECT `n`, DATE(`timestamp`) AS date_timestamp from `{$contest['name_id']}__edits` WHERE `new_page` = 1) AS queried on date_timestamp = date_generator.date
     GROUP BY date;
 ");
 while ($row = mysqli_fetch_assoc($new_articles)) $new_articles_rows[] = $row['count'];
@@ -86,7 +86,7 @@ $new_bytes = mysqli_query($con, "
        date_generator.date as the_date,
        IFNULL(SUM(`queried`.`bytes`) / 1024, 0) as count
     from ( {$date_generator} ) date_generator
-    left join (SELECT `n`, DATE(`timestamp`) AS date_timestamp, `bytes`, `valid_edit` from edits WHERE `bytes` > 0) as `queried` on `queried`.date_timestamp = date_generator.date
+    left join (SELECT `n`, DATE(`timestamp`) AS date_timestamp, `bytes`, `valid_edit` from `{$contest['name_id']}__edits` WHERE `bytes` > 0) as `queried` on `queried`.date_timestamp = date_generator.date
     GROUP BY date;
 ");
 while ($row = mysqli_fetch_assoc($new_bytes)) $new_bytes_rows[] = $row['count'];
@@ -98,7 +98,7 @@ $valid_bytes = mysqli_query($con, "
        date_generator.date as the_date,
        IFNULL(SUM(`queried`.`bytes`) / 1024, 0) as count
     from ( {$date_generator} ) date_generator
-    left join (SELECT `n`, DATE(`timestamp`) AS date_timestamp, `bytes`, `valid_edit` from edits WHERE `valid_edit` = 1) as `queried` on `queried`.date_timestamp = date_generator.date
+    left join (SELECT `n`, DATE(`timestamp`) AS date_timestamp, `bytes`, `valid_edit` from `{$contest['name_id']}__edits` WHERE `valid_edit` = 1) as `queried` on `queried`.date_timestamp = date_generator.date
     GROUP BY date;
 ");
 while ($row = mysqli_fetch_assoc($valid_bytes)) $valid_bytes_rows[] = $row['count'];
@@ -106,7 +106,7 @@ array_splice($valid_bytes_rows, $elapsed_days);
 $valid_bytes_rows = implode(", ", $valid_bytes_rows);
 
 //Captura horário de última edição avaliada no banco de dados
-$lastedit_query = mysqli_query($con, "SELECT `timestamp` AS `lastedit` FROM `edits` WHERE `valid_edit` IS NOT NULL ORDER BY `timestamp` DESC LIMIT 1;");
+$lastedit_query = mysqli_query($con, "SELECT `timestamp` AS `lastedit` FROM `{$contest['name_id']}__edits` WHERE `valid_edit` IS NOT NULL ORDER BY `timestamp` DESC LIMIT 1;");
 $lastedit = mysqli_fetch_assoc($lastedit_query);
 if (isset($lastedit["lastedit"])) {
     $lastedit = strtotime($lastedit["lastedit"]);
