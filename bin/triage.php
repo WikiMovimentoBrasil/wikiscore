@@ -137,7 +137,7 @@ $revert_time = date('Y-m-d H:i:s', strtotime("-{$contest['revert_time']} hours")
 $count_query = mysqli_query($con, "
     SELECT 
         COUNT(*) AS `total_count`,
-        SUM(CASE WHEN `timestamp` < '{$revert_time}' THEN 1 ELSE 0 END) AS `count` 
+        IFNULL(SUM(CASE WHEN `timestamp` < '{$revert_time}' THEN 1 ELSE 0 END), 0) AS `count` 
     FROM 
         `{$contest['name_id']}__edits` 
     WHERE 
@@ -311,11 +311,11 @@ mysqli_close($con);
                         </div>
                             <div class="w3-row">
                                 <div class="w3-half">
-                                    <h6 class="w3-center">Edições para avaliar</h6>
+                                    <h6 class="w3-center">Edições<br>para avaliar</h6>
                                     <h1 class="w3-center"><?=$output['count'];?></h1>
                                 </div>
                                 <div class="w3-half">
-                                    <h6 class="w3-center">Edições em espera</h6>
+                                    <h6 class="w3-center">Edições<br>em espera</h6>
                                     <h1 class="w3-center"><?=$output['total_count'];?></h1>
                                 </div>
                             </div>
@@ -354,7 +354,7 @@ mysqli_close($con);
                                 </button>
                             </div>
                             <div class="w3-half">
-                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(240deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=evaluators', '_blank');" disabled>
+                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(240deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=evaluators', '_blank');">
                                     <i class="fa-solid fa-users w3-xxlarge"></i><br>Avaliadores
                                 </button>
                             </div>
@@ -448,7 +448,7 @@ mysqli_close($con);
                     <p class="w3-small"><b>Horário de início do wikiconcurso</b><br><?=date('d/m/Y H:i:s (\U\T\C)', $contest['start_time']);?></p>
                     <p class="w3-small"><b>Horário de término do wikiconcurso</b><br><?=date('d/m/Y H:i:s (\U\T\C)', $contest['end_time']);?></p>
                     <p class="w3-small"><b>Última atualização do banco de dados</b><br><?=date('d/m/Y H:i:s (\U\T\C)', $output['lastedit']);?></p>
-                    <p class="w3-small"><b>Delay no registro das edições</b><br><?=str_replace("hours", "horas", $contest['revert_time']);?></p>
+                    <p class="w3-small"><b>Delay no registro das edições</b><br><?=$contest['revert_time'];?> horas</p>
                 </div>
             </div>
             <div class="w3-threequarter">

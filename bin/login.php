@@ -178,7 +178,10 @@ if (isset($lastedit["lastedit"])) {
                                 <?=date('d/m/Y H:i:s (\U\T\C)', $lastedit);?>
                             </p>
                         </div>
-                        <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-block w3-<?=$contest['theme'];?> w3-large" style="filter: hue-rotate(180deg);">Clique aqui para entrar</button>
+                        <div class="w3-container w3-padding-small">
+                            <button class="w3-button w3-half w3-<?=$contest['theme'];?> w3-block w3-large" style="filter: hue-rotate(120deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=graph', '_blank');">Gráfico de pontos</button>
+                            <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-half w3-block w3-<?=$contest['theme'];?> w3-large" style="filter: hue-rotate(240deg);">Login</button>
+                        </div>
                     </div>
                 </div>
             </div>

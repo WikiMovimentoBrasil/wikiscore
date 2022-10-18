@@ -57,7 +57,7 @@ class credencials {
 
   // (C) GET USER BY EMAIL
   function getByEmail ($email) {
-    $this->stmt = $this->pdo->prepare("SELECT * FROM `{$contest['name_id']}__credencials` WHERE `user_email`=?");
+    $this->stmt = $this->pdo->prepare("SELECT * FROM `".CONTEST."__credencials` WHERE `user_email`=?");
     $this->stmt->execute([$email]);
     return $this->stmt->fetch();
   }
@@ -73,7 +73,7 @@ class credencials {
     if (!is_array($user)) { return false; }
 
     // (D3) USER STATUS
-    if ($user['user_status']!="A") { return false; }
+    if ($user['user_status']=="P") { return false; }
 
     // (D4) VERIFY PASSWORD + REGISTER SESSION
     if (password_verify($password, $user['user_password'])) {

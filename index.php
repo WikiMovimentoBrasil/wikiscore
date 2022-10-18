@@ -31,6 +31,8 @@ $accepted_pages = array(
 	"edits",
 	"modify",
 	"backtrack",
+	"evaluators",
+	"graph",
 	"load_edits",
 	"load_reverts",
 	"load_users"
