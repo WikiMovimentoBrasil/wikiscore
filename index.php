@@ -9,7 +9,7 @@ if (isset($contests_array[@$_GET['contest']])) {
 	$contest['name_id'] = $_GET['contest'];
 } else {
 	readfile("top.html");
-	foreach ($contests_array as $contest) echo("<p><a href='index.php?contest=".$contest['name_id']."'>".$contest['name']."</a></p>\n");
+	foreach ($contests_array as $name_id => $contest) echo("<p><a href='index.php?contest=".$name_id."'>".$contest['name']."</a></p>\n");
 	readfile("bottom.html");
 	die();
 }
