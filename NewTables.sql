@@ -1,14 +1,14 @@
-CREATE DATABASE IF NOT EXISTS `DatabaseName`;
-USE `DatabaseName`;
+# Substituir "NameID" pelo código de nome abreviado do concurso
 
-CREATE TABLE IF NOT EXISTS `articles` (
+
+CREATE TABLE IF NOT EXISTS `NameID__articles` (
   `key` int(4) unsigned NOT NULL AUTO_INCREMENT,
   `articleID` mediumint(9) unsigned NOT NULL,
   PRIMARY KEY (`key`),
   UNIQUE KEY `articleID` (`articleID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `credencials` (
+CREATE TABLE IF NOT EXISTS `NameID__credencials` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_name` varchar(255) NOT NULL,
   `user_email` varchar(255) NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS `credencials` (
   KEY `user_status` (`user_status`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `edits` (
+CREATE TABLE IF NOT EXISTS `NameID__edits` (
   `n` int(6) unsigned NOT NULL AUTO_INCREMENT,
   `diff` int(9) unsigned NOT NULL,
   `article` mediumint(8) unsigned NOT NULL DEFAULT '0',
@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS `edits` (
   UNIQUE KEY `diff` (`diff`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `users` (
+CREATE TABLE IF NOT EXISTS `NameID__users` (
   `n` int(4) unsigned NOT NULL AUTO_INCREMENT,
   `user` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
   `timestamp` timestamp NULL DEFAULT NULL,
