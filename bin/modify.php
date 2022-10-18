@@ -51,15 +51,15 @@ if ($_POST) {
 		;")
 	);
 
-	//Verifica se diff pertence ao avaliador atual
-	if ($query['by'] == $_SESSION['user']['user_name']) {
+	//Verifica se diff pertence ao avaliador atual ou o usuário atual é o gestor do concurso
+	if ($query['by'] == $_SESSION['user']['user_name'] OR $_SESSION['user']['user_status'] == 'G') {
 
-		//Processa alteração incluíndo número de bytes, caso informação tenha sido editada pelo avaliador
+		//Processa alteração incluíndo número de bytes, caso informação tenha sido editada pelo reavaliador
 		$time = date('Y-m-d H:i:s');
 		if (isset($_POST['overwrite']) AND $query['bytes'] != $_POST['overwrite']) {
 
 			$post['overwrite'] = addslashes($_POST['overwrite']);
-			$obs = "Modif: de {$query['bytes']} para {$post['overwrite']} em {$time} com justificativa \"{$post['obs']}\"\n";
+			$obs = "Modif: por {$_SESSION['user']['user_name']} de {$query['bytes']} para {$post['overwrite']} em {$time} com justificativa \"{$post['obs']}\"\n";
 			$sql_update = "
 				UPDATE 
 					`{$contest['name_id']}__edits` 
@@ -74,7 +74,7 @@ if ($_POST) {
 		//Processa alteração sem modificar número de bytes
 		} else {
 
-			$obs = "Modif: em {$time} com justificativa \"{$post['obs']}\"\n";
+			$obs = "Modif: por {$_SESSION['user']['user_name']} em {$time} com justificativa \"{$post['obs']}\"\n";
 			$sql_update = "
 				UPDATE 
 					`{$contest['name_id']}__edits` 
@@ -86,13 +86,13 @@ if ($_POST) {
 			";
 		}
 
-		//Executa query e retorna o resultado para o avaliador
+		//Executa query e retorna o resultado para o reavaliador
 		$update_query = mysqli_query($con, $sql_update);
 		if (mysqli_affected_rows($con) != 0) {
 			$output['success']['diff'] = addslashes($_POST['diff']);
 		}
 
-	//Caso o nome do avaliador seja diferente, define diff do resultado como null
+	//Caso o avaliador não seja autorizado, define diff do resultado como null
 	} else {
 		$output['success']['diff'] = NULL;
 	}
@@ -158,7 +158,7 @@ mysqli_close($con);
 						<button class="w3-button w3-section w3-green w3-ripple" style="width:100%">Carregar edição</button>
 					</p>
 				</form>
-				<form class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" id="modify" method="post" <?php if ($_SESSION['user']['user_name'] != @$output['revision']['by']) echo("style='display:none;'"); ?>>
+				<form class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" id="modify" method="post" <?php if ($_SESSION['user']['user_name'] != @$output['revision']['by'] AND $_SESSION['user']['user_status'] != 'G') echo("style='display:none;'"); ?>>
 					<h2>Reavaliação</h2>
 					<input type="hidden" name="diff" value=<?php echo('"'.@$output['revision']['diff'].'"'); ?>>
 					<div class="w3-container w3-cell w3-half">
