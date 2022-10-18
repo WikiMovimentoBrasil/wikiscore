@@ -16,58 +16,14 @@ Then visit 127.0.0.1:8000 on your prefered browser.
 
 ## Setting up a new Wiki Contest
 
-### Set up a new database
-Create a new local database for the contest. Instructions are described in NewDB.sql. When running, replace "DatabaseName" with the database name of your choice.
-
 ### Define database connection credentials
-Database connection credentials must be entered on line 16 of the index.php file.
+If you use Toolforge, credentials for connecting to the database are automatically registered. If you use another host, credentials must be entered on lines 17-23 of the index.php file.
 
-```php
-//Define credenciais do banco de dados
-$db_user = //DB user
-$db_pass = //DB pass
-$db_host = //DB host
-$database = //Database name
-```
+### Set up a new database and tables
+Create a new database for the contest. Instructions for the tables are described in NewTables.sql. When running, replace "NameID" with the contest ID of your choice.
 
-### Add the contest to bin/data.php
-```php
-'example' => array(
-        'start_time'            => "1615766399",           //Unix time
-        'end_time'              => "1621123200",           //Unix time
-        'name'                  => "Example Contest 2020", //Long name of the contest
-        'revert_time'           => "24",                   //Recomended, but can be changed
-        'official_list_pageid'  => "6496164",              //Page ID of the list of articles
-        'category_pageid'       => "6517644",              //Category containing the articles
-        'endpoint'              => "https://domain/w/index.php",
-        'api_endpoint'          => "https://domain/w/api.php",
-        'outreach_name'         => 'Museu/Wikiconcurso',   //Course adress at outreachdashboard.wmflabs.org
-        'bytes_per_points'      => "3000",                 //Number of bytes needed to reach 1 point
-        'max_bytes_per_article' => "90000",                //Maximum number of bytes allowed per article, per participant
-        'pictures_per_points'   => "5",                    //Number of images needed to reach 1 point
-        'pictures_mode'         => "0",                    //See below
-        'max_pic_per_article'   => "3",                    //Maximum number of pictures allowed per article, per participant
-        'theme'                 => "amber"                 //See list: https://www.w3schools.com/w3css/w3css_colors.asp
-    ),
-```
-
-### Pictures mode
-* 0 = Sistema booleano por artigo. Contabiliza apenas a inserção de uma imagem em um artigo, ignorando outras imagens adicionadas no mesmo artigo.
-* 1 = Sistema booleano por edição. Contabiliza apenas a inserção de uma imagem em uma edição, ignorando outras imagens adicionadas na mesma edição.
-* 2 = Sistema integer. Contabiliza cada imagem inserida no artigo até o máximo estabelecido em 'max_bytes_per_article'.
-
-### Set up the cron jobs to update your file
-Set up the recurring scripts for your new contest as described in the previous section.
-
-### Enter the reviewers' credentials
-Enter the evaluators' data in the "credentials" table in the database. The model below is suggested, replacing the NAME and E-MAIL with the evaluator's information. The password hash can be calculated in: https://phppasswordhash.com/
-
-```sql
-INSERT INTO `credencials` (`user_name`, `user_email`, `user_password`, `user_status`) 
-VALUES ('NAME', 'E-MAIL', 'HASH', 'A');
-```
-
-If the evaluator needs to be blocked, replace the user_status value in the database to "P".
+### Add the contest
+Please check the instructions on this repository's wiki for instructions.
 
 ## Setting up cron jobs
 Three scripts must be set up to run daily, or on whichever frequency you prefer, to feed the contests' databases:
