@@ -149,7 +149,7 @@ $count_query = mysqli_query($con, "
 ;");
 $count_query = mysqli_fetch_assoc($count_query);
 $output['count'] = $count_query['count'];
-$output['total_count'] = $count_query['total_count'];
+$output['total_count'] = $count_query['total_count'] - $count_query['count'];
 
 //Captura horário de última edição inserida no banco de dados
 $lastedit_query = mysqli_query($con, "

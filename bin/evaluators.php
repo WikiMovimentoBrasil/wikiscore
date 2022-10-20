@@ -16,12 +16,10 @@ $evaluators_query = mysqli_query($con, "
         `{$contest['name_id']}__credencials`.`user_status`, 
         COUNT(`{$contest['name_id']}__edits`.`by`) AS `evaluated` 
     FROM 
-        `{$contest['name_id']}__edits` 
-        LEFT JOIN `{$contest['name_id']}__credencials` ON `{$contest['name_id']}__edits`.`by` = `{$contest['name_id']}__credencials`.`user_name` 
-    WHERE 
-        `{$contest['name_id']}__edits`.`by` IS NOT NULL 
+        `{$contest['name_id']}__credencials` 
+        LEFT JOIN `{$contest['name_id']}__edits` ON `{$contest['name_id']}__edits`.`by` = `{$contest['name_id']}__credencials`.`user_name` 
     GROUP BY 
-        `{$contest['name_id']}__edits`.`by`;
+        `{$contest['name_id']}__credencials`.`user_name`;
 ");
 if (mysqli_num_rows($evaluators_query) == 0) die("Sem avaliadores");
 
