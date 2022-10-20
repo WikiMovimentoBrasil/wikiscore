@@ -11,15 +11,15 @@ require "connect.php";
 //Coleta lista de avaliadores
 $evaluators_query = mysqli_query($con, "
     SELECT 
-        `{$contest['name_id']}__credencials`.`user_name`, 
-        `{$contest['name_id']}__credencials`.`user_email`, 
-        `{$contest['name_id']}__credencials`.`user_status`, 
+        `{$contest['name_id']}__credentials`.`user_name`, 
+        `{$contest['name_id']}__credentials`.`user_email`, 
+        `{$contest['name_id']}__credentials`.`user_status`, 
         COUNT(`{$contest['name_id']}__edits`.`by`) AS `evaluated` 
     FROM 
-        `{$contest['name_id']}__credencials` 
-        LEFT JOIN `{$contest['name_id']}__edits` ON `{$contest['name_id']}__edits`.`by` = `{$contest['name_id']}__credencials`.`user_name` 
+        `{$contest['name_id']}__credentials` 
+        LEFT JOIN `{$contest['name_id']}__edits` ON `{$contest['name_id']}__edits`.`by` = `{$contest['name_id']}__credentials`.`user_name` 
     GROUP BY 
-        `{$contest['name_id']}__credencials`.`user_name`;
+        `{$contest['name_id']}__credentials`.`user_name`;
 ");
 if (mysqli_num_rows($evaluators_query) == 0) die("Sem avaliadores");
 
@@ -49,7 +49,7 @@ if ($_POST) {
     if (isset($_POST['off'])) {
         mysqli_query($con, "
             UPDATE 
-                `{$contest['name_id']}__credencials` 
+                `{$contest['name_id']}__credentials` 
             SET 
                 `user_status` = 'P' 
             WHERE 
@@ -59,7 +59,7 @@ if ($_POST) {
     } elseif (isset($_POST['on'])) {
         mysqli_query($con, "
             UPDATE 
-                `{$contest['name_id']}__credencials` 
+                `{$contest['name_id']}__credentials` 
             SET 
                 `user_status` = 'A' 
             WHERE 

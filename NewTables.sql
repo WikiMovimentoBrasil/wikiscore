@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS `NameID__articles` (
   UNIQUE KEY `articleID` (`articleID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS `NameID__credencials` (
+CREATE TABLE IF NOT EXISTS `NameID__credentials` (
   `user_id` int(11) NOT NULL AUTO_INCREMENT,
   `user_name` varchar(255) NOT NULL,
   `user_email` varchar(255) NOT NULL,

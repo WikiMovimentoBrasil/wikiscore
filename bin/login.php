@@ -2,7 +2,7 @@
 // (A) PROCESS LOGIN ON SUBMIT
 session_start();
 if (isset($_POST['email'])) {
-    require "credencials-lib.php";
+    require "credentials-lib.php";
 
     if (isset($_POST['do_create'])) {
         $USR->save($_POST['email'], $_POST['password']);

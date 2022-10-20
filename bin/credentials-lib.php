@@ -32,7 +32,7 @@ MORE
 Please visit https://code-boxx.com/ for more!
 */
 
-class credencials {
+class credentials {
   // (A) CONSTRUCTOR - CONNECT DATABASE
   private $pdo = null;
   private $stmt = null;
@@ -57,7 +57,7 @@ class credencials {
 
   // (C) GET USER BY EMAIL
   function getByEmail ($email) {
-    $this->stmt = $this->pdo->prepare("SELECT * FROM `".CONTEST."__credencials` WHERE `user_email`=?");
+    $this->stmt = $this->pdo->prepare("SELECT * FROM `".CONTEST."__credentials` WHERE `user_email`=?");
     $this->stmt->execute([$email]);
     return $this->stmt->fetch();
   }
@@ -94,10 +94,10 @@ class credencials {
     $name = trim($name, "@");
     
     if ($id===null) {
-      $sql = "INSERT INTO `{$contest['name_id']}__credencials` (`user_name`, `user_email`, `user_password`) VALUES (?,?,?)";
+      $sql = "INSERT INTO `{$contest['name_id']}__credentials` (`user_name`, `user_email`, `user_password`) VALUES (?,?,?)";
       $data = [$name, $email, password_hash($pass, PASSWORD_DEFAULT)];
     } else {
-      $sql = "UPDATE `{$contest['name_id']}__credencials` SET `user_name`=?, `user_email`=?, `user_password`=? WHERE `user_id`=?";
+      $sql = "UPDATE `{$contest['name_id']}__credentials` SET `user_name`=?, `user_email`=?, `user_password`=? WHERE `user_id`=?";
       $data = [$name, $email, password_hash($pass, PASSWORD_DEFAULT), $id];
     }
     try {
@@ -121,4 +121,4 @@ define('DB_PASSWORD', $db_pass);
 define('CONTEST', $contest['name_id']);
 
 // (G) CREATE USER OBJECT
-$USR = new credencials();
+$USR = new credentials();
