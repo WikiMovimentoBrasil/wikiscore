@@ -138,6 +138,7 @@ mysqli_close($con);
     <title>Modificar - <?=$contest['name'];?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bin/w3.css">
+	<link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
     <link rel="stylesheet" href="bin/diff.css">
     <body>
         <header class="w3-container w3-<?=$contest['theme'];?>">

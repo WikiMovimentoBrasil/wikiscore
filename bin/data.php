@@ -112,7 +112,8 @@ $contests_array = array(
         'max_bytes_per_article' => "90000",
         'pictures_per_points'   => "3",
         'pictures_mode'         => "1",
-        'theme'                 => "lgbtqiapmais"
+        'theme'                 => "color",
+        'color'                 => "9283CC"
     ),
     'povosoriginarios' => array(
         'start_time'            => "1659322800",
@@ -129,7 +130,8 @@ $contests_array = array(
         'pictures_per_points'   => "3",
         'pictures_mode'         => "2",
         'max_pic_per_article'   => "3",
-        'theme'                 => "povosoriginarios"
+        'theme'                 => "color",
+        'color'                 => "73A57C"
     ),
     'dhma' => array(
         'start_time'            => "1664928000",

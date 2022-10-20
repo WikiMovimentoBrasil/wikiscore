@@ -271,6 +271,7 @@ mysqli_close($con);
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8">
     <link rel="stylesheet" href="bin/w3.css">
+    <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
     <link rel="stylesheet" href="bin/diff.css">
     <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/6.2.0/css/all.css">
     <body>
