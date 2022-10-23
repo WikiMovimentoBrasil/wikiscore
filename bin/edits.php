@@ -40,7 +40,7 @@ while ($query = mysqli_fetch_assoc($edits_query)) {
             $query["timestamp"]."\";\"".
             $query["user"]."\";\"".
             $query["bytes"]."\";\"".
-            $query["summary"]."\";\"".
+            str_replace('"', '""', $query["summary"])."\";\"".
             $query["new_page"]."\";\"".
             $query["valid_edit"]."\";\"".
             $query["valid_user"]."\";\"".
@@ -48,7 +48,7 @@ while ($query = mysqli_fetch_assoc($edits_query)) {
             $query["reverted"]."\";\"".
             $query["by"]."\";\"".
             $query["when"]."\";\"".
-            $query["obs"]."\"\r\n";
+            str_replace('"', '""', $query["obs"])."\"\r\n";
 }
 
 echo(mb_convert_encoding($csv, 'CP1252', 'UTF-8'));

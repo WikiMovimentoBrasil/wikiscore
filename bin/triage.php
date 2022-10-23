@@ -75,7 +75,6 @@ if ($_POST) {
                         `diff` = '{$post['diff']}';
                 ");
                 $post['overwrited'] = TRUE;
-                $post['obs'] .= " | bytes: {$query['bytes']} -> {$post['overwrite']}";
             }
         }
         
