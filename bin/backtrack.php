@@ -17,8 +17,7 @@ $backtrack_query = mysqli_query($con, "
       `{$contest['name_id']}__edits` 
       INNER JOIN `{$contest['name_id']}__users` ON `{$contest['name_id']}__edits`.`user` = `{$contest['name_id']}__users`.`user` 
     WHERE 
-      `{$contest['name_id']}__edits`.valid_user IS NULL 
-      AND bytes > 0
+      `{$contest['name_id']}__edits`.valid_user IS NULL
     ORDER BY 
       `user`, 
       `edit_timestamp`

@@ -144,7 +144,7 @@ $count_query = mysqli_query($con, "
         `valid_edit` IS NULL AND 
         `valid_user` IS NOT NULL AND 
         `by` IS NULL AND 
-        `bytes` > {$bytes}
+        CASE WHEN '{$bytes}' = '-1' THEN `bytes` IS NOT NULL ELSE `bytes` > {$bytes} END
 ;");
 $count_query = mysqli_fetch_assoc($count_query);
 $output['count'] = $count_query['count'];
@@ -178,7 +178,7 @@ $revision_query = mysqli_query($con, "
         `reverted` IS NULL AND 
         `valid_edit` IS NULL AND 
         `valid_user` IS NOT NULL AND 
-        `bytes` > {$bytes} AND 
+        CASE WHEN '{$bytes}' = '-1' THEN `bytes` IS NOT NULL ELSE `bytes` > {$bytes} END AND
         `by` IS NULL AND 
         `timestamp` < '{$revert_time}' 
     ORDER BY 

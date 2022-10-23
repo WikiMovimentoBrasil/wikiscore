@@ -117,8 +117,7 @@ $inconsistency_query = mysqli_query($con,
         FROM 
           `{$contest['name_id']}__articles`
       ) 
-      AND `valid_user` = '1' 
-      AND `bytes` > 0 
+      AND `valid_user` = '1'
       AND `reverted` IS NULL
     ORDER BY `timestamp` ASC;");
 $wd_query = mysqli_query($con,
