@@ -159,7 +159,7 @@ mysqli_close($con);
 						<button class="w3-button w3-section w3-green w3-ripple" style="width:100%">Carregar edição</button>
 					</p>
 				</form>
-				<form class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" id="modify" method="post" <?php if ($_SESSION['user']['user_name'] != @$output['revision']['by'] AND $_SESSION['user']['user_status'] != 'G') echo("style='display:none;'"); ?>>
+				<form class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" id="modify" method="post" <?php if ($_SESSION['user']['user_name'] != @$output['revision']['by'] AND $_SESSION['user']['user_status'] != 'G') echo "style='display:none;'"; ?>>
 					<h2>Reavaliação</h2>
 					<input type="hidden" name="diff" value=<?php echo('"'.@$output['revision']['diff'].'"'); ?>>
 					<div class="w3-container w3-cell w3-half">
@@ -172,17 +172,17 @@ mysqli_close($con);
 					<div class="w3-container w3-cell w3-half">
 						<p>Imagem?</p>
 						<?php if ($contest['pictures_mode'] == 2) {
-							echo('
+							echo '
 								<input class="w3-input w3-border" type="number" id="pic" name="pic" value="0" min="0" max="9" required>
 								<label for="pic">Quantidade</label><br><br>
-							');
+							';
 						} else {
-							echo('
+							echo '
 								<input class="w3-radio w3-section" type="radio" id="pic-sim" name="pic" value="sim" required>
 								<label for="pic-sim">Sim</label><br>
 								<input class="w3-radio w3-section" type="radio" id="pic-nao" name="pic" value="nao" required>
 								<label for="pic-nao">Não</label><br><br>
-							');
+							';
 						}
 						?>
 					</div>
@@ -201,7 +201,7 @@ mysqli_close($con);
 						<input class="w3-button w3-orange w3-border-orange w3-border w3-block w3-margin-top" type="submit" value="Modificar">
 					</p>
 				</form>
-				<div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" <?php if(!isset($output['compare']['*'])) echo('style="display:none;"'); ?>>
+				<div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" <?php if(!isset($output['compare']['*'])) echo 'style="display:none;"'; ?>>
 					<h2>Dados da edição</h2>
 					<ul class="w3-ul w3-margin-bottom">
 						<li>Edição:<br><a href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>" target="_blank"><?=@$output['revision']['diff'];?></a></li>
@@ -210,11 +210,11 @@ mysqli_close($con);
 						<li>Usuário:<br><?php echo(@$output['revision']['user']); ?></li>
 						<li>Bytes:<br><?php echo(@$output['revision']['bytes']); ?></li>
 						<li>Sumário:<br><?php echo(@$output['revision']['summary']); ?>&nbsp;</li>
-						<li>Artigo novo:<br><?php if (@$output['revision']['new_page']) { echo("Sim"); } else { echo("Não"); } ?></li>
-						<li>Edição válida:<br><?php if (@$output['revision']['valid_edit']) { echo("Sim"); } else { echo("Não"); } ?></li>
-						<li>Usuário inscrito:<br><?php if (@$output['revision']['valid_user']) { echo("Sim"); } else { echo("Não"); } ?></li>
-						<li>Imagem:<br><?php if ($contest['pictures_mode'] == 2) { echo(@$output['revision']['pictures']); } else { if ($output['revision']['pictures']) { echo("Sim"); } else { echo("Não"); }} ?></li>
-						<li>Edição revertida:<br><?php if (@$output['revision']['reverted']) { echo("Sim"); } else { echo("Não"); } ?></li>
+						<li>Artigo novo:<br><?php if (@$output['revision']['new_page']) { echo "Sim"; } else { echo "Não"; } ?></li>
+						<li>Edição válida:<br><?php if (@$output['revision']['valid_edit']) { echo "Sim"; } else { echo "Não"; } ?></li>
+						<li>Usuário inscrito:<br><?php if (@$output['revision']['valid_user']) { echo "Sim"; } else { echo "Não"; } ?></li>
+						<li>Imagem:<br><?php if ($contest['pictures_mode'] == 2) { echo(@$output['revision']['pictures']); } else { if ($output['revision']['pictures']) { echo "Sim"; } else { echo "Não"; }} ?></li>
+						<li>Edição revertida:<br><?php if (@$output['revision']['reverted']) { echo "Sim"; } else { echo "Não"; } ?></li>
 						<li>Avaliador:<br><?php echo(@$output['revision']['by']); ?></li>
 						<li>Horário da avaliação:<br><?php echo(@$output['revision']['when']); ?></li>
 						<li>Comentário do avaliador:<br><pre><?php echo(@$output['revision']['obs']); ?></pre>&nbsp;</li>
@@ -222,7 +222,7 @@ mysqli_close($con);
 				</div>
 			</div>
 			<div class="w3-threequarter">
-                <div <?php if(!isset($output['compare']['*'])) echo('style="display:none;"'); ?>>
+                <div <?php if(!isset($output['compare']['*'])) echo 'style="display:none;"'; ?>>
                     <h3>Diferencial de edição</h3>
                     <table class="diff diff-contentalign-left diff-editfont-monospace" style="word-wrap: break-word;white-space: pre-wrap;word-break: break-word;">
                         <?php print_r(@$output['compare']['*']); ?>
@@ -230,12 +230,12 @@ mysqli_close($con);
                     <hr>
                 </div>
                 <?php
-	                if (!$output['compare']) echo("<script>alert('Edição não encontrada no banco de dados!');</script>"); 
+	                if (!$output['compare']) echo "<script>alert('Edição não encontrada no banco de dados!');</script>"; 
 	                if (@array_key_exists('diff', $output['success'])) {
 						if (is_null($output['success']['diff'])) { 
-							echo("<script>alert('Você não pode modificar uma avaliação de terceiro!');</script>");
+							echo "<script>alert('Você não pode modificar uma avaliação de terceiro!');</script>";
 						} else {
-							echo("<script>alert('Modificação realizada com sucesso!');</script>");
+							echo "<script>alert('Modificação realizada com sucesso!');</script>";
 						}
 					}
 				?>

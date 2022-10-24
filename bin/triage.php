@@ -279,23 +279,23 @@ mysqli_close($con);
         </div>
         <div class="w3-row-padding w3-content" style="max-width:1400px">
             <div class="w3-quarter">
-                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" <?php if(!isset($output['success']['diff'])) echo('style="display:none;"');?>>
+                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" <?php if(!isset($output['success']['diff'])) echo 'style="display:none;"';?>>
                     <h2>Última avaliação</h2>
                     <p>
                         Diff: <a href="<?=$contest['endpoint'];?>?diff=<?=@$output['success']['diff'];?>" target="_blank"><?=@$output['success']['diff'];?></a>
                     </p>
                     <p>
                         Edição válida: <?php if(@$output['success']['valid']){
-                            echo('<i class="fa-regular w3-text-green fa-circle-check"></i> Sim');
+                            echo '<i class="fa-regular w3-text-green fa-circle-check"></i> Sim';
                         } else {
-                            echo('<i class="fa-regular w3-text-red fa-circle-xmark"></i> Não');
+                            echo '<i class="fa-regular w3-text-red fa-circle-xmark"></i> Não';
                         }?>
                     </p>
                     <p>
                         Com imagem: <?php if(@$output['success']['pic']){
-                            echo('<i class="fa-regular w3-text-green fa-circle-check"></i> Sim');
+                            echo '<i class="fa-regular w3-text-green fa-circle-check"></i> Sim';
                         } else {
-                            echo('<i class="fa-regular w3-text-red fa-circle-xmark"></i> Não');
+                            echo '<i class="fa-regular w3-text-red fa-circle-xmark"></i> Não';
                         }?>
                     </p>
                     <p>
@@ -305,7 +305,7 @@ mysqli_close($con);
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom">
                     <h2>Painel</h2>
                     <div class="w3-container">
-                        <div style="<?php if(!isset($output['revision']['timestamp'])) echo('display:none;');?>">
+                        <div style="<?php if(!isset($output['revision']['timestamp'])) echo 'display:none;';?>">
                             <h6 class="w3-center">Você está avaliando uma edição do dia</h6>
                             <h4 class="w3-center"><?=@substr($output['revision']['timestamp'], 0, 10);?></h4>
                         </div>
@@ -379,7 +379,7 @@ mysqli_close($con);
                         </div>
                     </div>
                 </div>
-                <div <?php if(!isset($output['revision']['timestamp'])) echo('style="display:none;"');?>>
+                <div <?php if(!isset($output['revision']['timestamp'])) echo 'style="display:none;"';?>>
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom">
                         <h2>Avaliação</h2>
                         <form method="post">
@@ -394,17 +394,17 @@ mysqli_close($con);
                             <div class="w3-container w3-cell w3-half">
                                 <p>Imagem?</p>
                                 <?php if ($contest['pictures_mode'] == 2) {
-                                    echo('
+                                    echo '
                                         <input class="w3-input w3-border" type="number" id="pic" name="pic" value="0" min="0" max="9" required>
                                         <label for="pic">Quantidade</label><br><br>
-                                    ');
+                                    ';
                                 } else {
-                                    echo('
+                                    echo '
                                         <input class="w3-radio w3-section" type="radio" id="pic-sim" name="pic" value="sim" required>
                                         <label for="pic-sim">Sim</label><br>
                                         <input class="w3-radio w3-section" type="radio" id="pic-nao" name="pic" value="nao" required>
                                         <label for="pic-nao">Não</label><br><br>
-                                    ');
+                                    ';
                                 }
                                 ?>
                             </div>
@@ -452,7 +452,7 @@ mysqli_close($con);
                 </div>
             </div>
             <div class="w3-threequarter">
-                <div <?php if(!isset($output['compare']['*'])) echo('style="display:none;"'); ?>>
+                <div <?php if(!isset($output['compare']['*'])) echo 'style="display:none;"'; ?>>
                     <h3>Diferencial de edição</h3>
                     <table class="diff diff-contentalign-left diff-editfont-monospace" style="word-wrap: break-word;white-space: pre-wrap;word-break: break-word;">
                         <?php print_r(@$output['compare']['*']); ?>

@@ -147,7 +147,7 @@ if (mysqli_num_rows($count_query) == 0) die("No users");
 
 //Loop para exibição de cada linha
 while ($row = mysqli_fetch_assoc($count_query)) {
-    echo("<tr>\n");
+    echo "<tr>\n";
     echo("<td>".$row["user"]."</td>\n");
     echo("<td>".$row["sum"]."</td>\n");
     echo("<td>".$row["total edits"]."</td>\n");
@@ -155,7 +155,7 @@ while ($row = mysqli_fetch_assoc($count_query)) {
     echo("<td>".$row["total pictures"]."</td>\n");
     echo("<td>".$row["pictures points"]."</td>\n");
     echo("<td>".$row["total points"]."</td>\n");
-    echo("</tr>\n");
+    echo "</tr>\n";
 }
 ?>
             </table>

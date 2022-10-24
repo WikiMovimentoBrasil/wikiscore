@@ -1,5 +1,5 @@
 <?php
-echo("<pre>");
+echo "<pre>";
 
 //Conecta ao banco de dados
 require_once "connect.php";
@@ -50,4 +50,4 @@ while ($row = mysqli_fetch_assoc($edits_query)) {
 
 //Encerra conexão
 mysqli_close($con);
-echo("Concluido! (3/3)");
+echo "Concluido! (3/3)";

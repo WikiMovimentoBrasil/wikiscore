@@ -1,5 +1,5 @@
 <?php
-echo("<pre>");
+echo "<pre>";
 
 //Aumenta tempo limite de execução do script
 set_time_limit(1200);

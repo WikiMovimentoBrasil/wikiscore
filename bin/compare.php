@@ -153,9 +153,9 @@ $wd_query = mysqli_query($con,
                         <li>Os artigos abaixos estão inseridos na categoria, porém não estão inseridos na lista oficial</li>
                         <?php foreach ($adicionar as $artigo_add) {
                             $artigo_add_encoded = urlencode($artigo_add);
-                            echo("<li>");
-                            echo("<a target='_blank' href='{$contest['endpoint']}?title={$artigo_add_encoded}'>{$artigo_add}</a>");
-                            echo("</li>\n");
+                            echo "<li>";
+                            echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_add_encoded}'>{$artigo_add}</a>";
+                            echo "</li>\n";
                         }?>
                     </ul>
                 </div>
@@ -178,9 +178,9 @@ $wd_query = mysqli_query($con,
                             if (isset($artigo_rem_api)) continue;
 
                             $artigo_rem_encode = urlencode($artigo_rem);
-                            echo("<li>");
-                            echo("<a target='_blank' href='{$contest['endpoint']}?title={$artigo_rem_encode}'>{$artigo_rem}</a>");
-                            echo("</li>\n");
+                            echo "<li>";
+                            echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_rem_encode}'>{$artigo_rem}</a>";
+                            echo "</li>\n";
                         }?>
                     </ul>
                 </div>
@@ -194,9 +194,9 @@ $wd_query = mysqli_query($con,
                         <li>Os artigos abaixos estão inseridos na categoria e estão marcados em alguma modalidade de eliminação (rápida, semirrápida, por consenso ou por candidatura). Adicionalmente, também exibe artigos novos sem item no Wikidata.</li>
                         <?php foreach ($eliminar as $artigo_del) {
                             $artigo_del_encode = urlencode($artigo_del);
-                            echo("<li>");
-                            echo("<a target='_blank' href='{$contest['endpoint']}?title={$artigo_del_encode}'>{$artigo_del}</a>");
-                            echo("</li>\n");
+                            echo "<li>";
+                            echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_del_encode}'>{$artigo_del}</a>";
+                            echo "</li>\n";
                         }
                         while ($row = mysqli_fetch_assoc($wd_query)) {
                             $wd_params = [
@@ -211,9 +211,9 @@ $wd_query = mysqli_query($con,
                             if (isset($wd["pageprops"]["wikibase_item"])) continue;
 
                             $wd_encode = urlencode($wd['pageid']);
-                            echo("<li class='w3-green'>");
-                            echo("<a target='_blank' href='{$contest['endpoint']}?curid={$wd_encode}'>{$wd['title']}</a> <small>(Sem Wikidata)</small>");
-                            echo("</li>\n");
+                            echo "<li class='w3-green'>";
+                            echo "<a target='_blank' href='{$contest['endpoint']}?curid={$wd_encode}'>{$wd['title']}</a> <small>(Sem Wikidata)</small>";
+                            echo "</li>\n";
                         }
                         ?>
                     </ul>
@@ -230,11 +230,11 @@ $wd_query = mysqli_query($con,
                         while ($row = mysqli_fetch_assoc($inconsistency_query)) {
                             $diff_encode = urlencode($row['diff']);
                             
-                            echo("<li class='");
-                            if ($row['valid_edit'] == '1') echo("w3-red");
-                            echo("'>");
-                            echo("<a target='_blank' href='{$contest['endpoint']}?diff={$diff_encode}'>{$row['diff']}</a> <small>em {$row['timestamp']}</small>");
-                            echo("</li>\n");
+                            echo "<li class='";
+                            if ($row['valid_edit'] == '1') echo "w3-red";
+                            echo "'>";
+                            echo "<a target='_blank' href='{$contest['endpoint']}?diff={$diff_encode}'>{$row['diff']}</a> <small>em {$row['timestamp']}</small>";
+                            echo "</li>\n";
                         }
                         ?>
                     </ul>

@@ -75,27 +75,27 @@ if (isset($_POST['diff'])) {
             </div>
             <?php 
             foreach ($output["backtrack"] as $user => $case) {
-                echo('<div class="w3-margin-top w3-card">');
-                    echo("<header class='w3-container w3-{$contest['theme']}'><h1>{$user}</h1></header>");
-                    echo('<div class="w3-container">');
-                        echo('<ul class="w3-ul">');
+                echo '<div class="w3-margin-top w3-card">';
+                    echo "<header class='w3-container w3-{$contest['theme']}'><h1>{$user}</h1></header>";
+                    echo '<div class="w3-container">';
+                        echo '<ul class="w3-ul">';
 
                         foreach ($case["diffs"] as $diff) {
-                            echo('<li class="w3-bar">');
-                                echo('<div class="w3-bar-item">');
-                                    echo("<span class='w3-large'><a href='{$contest['endpoint']}?diff={$diff['diff']}' target='_blank'>{$diff['diff']}</a></span><br>");
-                                    echo("<span>Edição  em {$diff['timestamp']} - {$diff['bytes']} bytes</span>");
-                                echo('</div>');
-                                echo('<form method="post">');
-                                    echo("<input type='hidden' name='diff' value='{$diff['diff']}'>");
+                            echo '<li class="w3-bar">';
+                                echo '<div class="w3-bar-item">';
+                                    echo "<span class='w3-large'><a href='{$contest['endpoint']}?diff={$diff['diff']}' target='_blank'>{$diff['diff']}</a></span><br>";
+                                    echo "<span>Edição  em {$diff['timestamp']} - {$diff['bytes']} bytes</span>";
+                                echo '</div>';
+                                echo '<form method="post">';
+                                    echo "<input type='hidden' name='diff' value='{$diff['diff']}'>";
                                     echo("<button type='submit' onclick=\"return confirm('Tem certeza?')\" class='w3-bar-item w3-right w3-button w3-section w3-green'>Aceitar edição</button>");
-                                echo('</form>');
-                            echo('</li>');
+                                echo '</form>';
+                            echo '</li>';
                         }
-                        echo('</ul>');
-                    echo('</div>');
-                    echo("<footer class='w3-container w3-{$contest['theme']}' style='filter: hue-rotate(180deg);'><h5>Participante se inscreveu em <b>{$case['enrollment_timestamp']}</b></h5></footer>");
-                echo('</div>');
+                        echo '</ul>';
+                    echo '</div>';
+                    echo "<footer class='w3-container w3-{$contest['theme']}' style='filter: hue-rotate(180deg);'><h5>Participante se inscreveu em <b>{$case['enrollment_timestamp']}</b></h5></footer>";
+                echo '</div>';
             }
             ?>
         </div>
@@ -103,9 +103,9 @@ if (isset($_POST['diff'])) {
     <?php 
     if (@array_key_exists('diff', $output['success'])) {
         if (is_null($output['success']['diff'])) { 
-            echo("<script>alert('Erro ao aceitar edição');</script>");
+            echo "<script>alert('Erro ao aceitar edição');</script>";
         } else {
-            echo("<script>alert('Edição aceita com sucesso!');window.location.href = window.location.href;</script>");
+            echo "<script>alert('Edição aceita com sucesso!');window.location.href = window.location.href;</script>";
         }
     }
     ?>

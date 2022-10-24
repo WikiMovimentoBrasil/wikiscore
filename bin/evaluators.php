@@ -101,14 +101,14 @@ $icon = '<svg class="w3-bar-item" width="85" height="85" stroke-width="1.5" view
                 <div class="w3-container">
                     <ul class="w3-ul">
                         <?php foreach ($output["evaluators"]["G"] as $user => $data) {
-                            echo('<li class="w3-bar">');
+                            echo '<li class="w3-bar">';
                                 echo($icon);
-                                echo('<div class="w3-bar-item">');
-                                    echo("<span class='w3-large'>{$user}</span><br>");
-                                    echo("<span>{$data['email']}</span><br>");
-                                    echo("<span>{$data['evaluated']} avaliações efetuadas</span>");
-                                echo('</div>');
-                            echo('</li>');
+                                echo '<div class="w3-bar-item">';
+                                    echo "<span class='w3-large'>{$user}</span><br>";
+                                    echo "<span>{$data['email']}</span><br>";
+                                    echo "<span>{$data['evaluated']} avaliações efetuadas</span>";
+                                echo '</div>';
+                            echo '</li>';
                         }?>
                     </ul>
                 </div>
@@ -118,21 +118,21 @@ $icon = '<svg class="w3-bar-item" width="85" height="85" stroke-width="1.5" view
                 <div class="w3-container">
                     <ul class="w3-ul">
                         <?php foreach ($output["evaluators"]["A"] as $user => $data) {
-                            echo('<li class="w3-bar">');
+                            echo '<li class="w3-bar">';
                                 echo($icon);
-                                echo('<div class="w3-bar-item">');
-                                    echo("<span class='w3-large'>{$user}</span><br>");
-                                    echo("<span>{$data['email']}</span><br>");
-                                    echo("<span>{$data['evaluated']} avaliações efetuadas</span>");
-                                echo('</div>');
+                                echo '<div class="w3-bar-item">';
+                                    echo "<span class='w3-large'>{$user}</span><br>";
+                                    echo "<span>{$data['email']}</span><br>";
+                                    echo "<span>{$data['evaluated']} avaliações efetuadas</span>";
+                                echo '</div>';
                                 if ($_SESSION['user']["user_status"] == 'G') {
-                                    echo('<form method="post">');
-                                        echo("<input type='hidden' name='off' value='1'>");
-                                        echo("<input type='hidden' name='user' value='{$user}'>");
+                                    echo '<form method="post">';
+                                        echo "<input type='hidden' name='off' value='1'>";
+                                        echo "<input type='hidden' name='user' value='{$user}'>";
                                         echo("<button type='submit' onclick=\"return confirm('Tem certeza?')\" class='w3-bar-item w3-right w3-button w3-section w3-red'>Desabilitar</button>");
-                                    echo('</form>');
+                                    echo '</form>';
                                 }
-                            echo('</li>');
+                            echo '</li>';
                         }?>
                     </ul>
                 </div>
@@ -142,21 +142,21 @@ $icon = '<svg class="w3-bar-item" width="85" height="85" stroke-width="1.5" view
                 <div class="w3-container">
                     <ul class="w3-ul">
                         <?php foreach ($output["evaluators"]["P"] as $user => $data) {
-                            echo('<li class="w3-bar">');
+                            echo '<li class="w3-bar">';
                                 echo($icon);
-                                echo('<div class="w3-bar-item">');
-                                    echo("<span class='w3-large'>{$user}</span><br>");
-                                    echo("<span>{$data['email']}</span><br>");
-                                    echo("<span>{$data['evaluated']} avaliações efetuadas</span>");
-                                echo('</div>');
+                                echo '<div class="w3-bar-item">';
+                                    echo "<span class='w3-large'>{$user}</span><br>";
+                                    echo "<span>{$data['email']}</span><br>";
+                                    echo "<span>{$data['evaluated']} avaliações efetuadas</span>";
+                                echo '</div>';
                                 if ($_SESSION['user']["user_status"] == 'G') {
-                                    echo('<form method="post">');
-                                        echo("<input type='hidden' name='on' value='1'>");
-                                        echo("<input type='hidden' name='user' value='{$user}'>");
+                                    echo '<form method="post">';
+                                        echo "<input type='hidden' name='on' value='1'>";
+                                        echo "<input type='hidden' name='user' value='{$user}'>";
                                         echo("<button type='submit' onclick=\"return confirm('Tem certeza?')\" class='w3-bar-item w3-right w3-button w3-section w3-green'>Habilitar</button>");
-                                    echo('</form>');
+                                    echo '</form>';
                                 }
-                            echo('</li>');
+                            echo '</li>';
                         }?>
                     </ul>
                 </div>
@@ -166,9 +166,9 @@ $icon = '<svg class="w3-bar-item" width="85" height="85" stroke-width="1.5" view
     <?php 
     if (isset($output['success'])) {
         if (is_null($output['success']['diff'])) { 
-            echo("<script>alert('Status do avaliador autalizado com sucesso!');window.location.href = window.location.href;</script>");
+            echo "<script>alert('Status do avaliador autalizado com sucesso!');window.location.href = window.location.href;</script>";
         } else {
-            echo("<script>alert('Erro ao atualizar status do avaliador');</script>");
+            echo "<script>alert('Erro ao atualizar status do avaliador');</script>";
         }
     }
     ?>
