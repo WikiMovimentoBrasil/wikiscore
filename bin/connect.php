@@ -1,7 +1,7 @@
 <?php
 
 //Coleta dados do concurso
-require "data.php";
+require_once "data.php";
 
 //Conecta ao banco de dados
 $con = mysqli_connect($db_host, $db_user, $db_pass, $database);

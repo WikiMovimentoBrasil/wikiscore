@@ -112,7 +112,7 @@ class credentials {
 }
 
 // (F) DATABASE SETTINGS - CHANGE TO YOUR OWN!
-require "data.php";
+require_once "data.php";
 define('DB_HOST', $db_host);
 define('DB_NAME', $database);
 define('DB_CHARSET', 'utf8');

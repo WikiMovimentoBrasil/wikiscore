@@ -2,7 +2,7 @@
 // (A) PROCESS LOGIN ON SUBMIT
 session_start();
 if (isset($_POST['email'])) {
-    require "credentials-lib.php";
+    require_once "credentials-lib.php";
 
     if (isset($_POST['do_create'])) {
         $USR->save($_POST['email'], $_POST['password']);
@@ -25,10 +25,10 @@ if (isset($_POST['do_login'])) {
 }
 
 //Coleta informações do concurso
-require "data.php";
+require_once "data.php";
 
 //Conecta ao banco de dados
-require "connect.php";
+require_once "connect.php";
 
 //Calcula número total de dias do wikiconcurso e monta eixo X dos gráficos
 $elapsed_days = floor((time() - $contest['start_time']) / 60 / 60 / 24 );

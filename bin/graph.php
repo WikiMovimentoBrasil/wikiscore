@@ -1,10 +1,10 @@
 <?php
 
 //Coleta informações do concurso
-require "data.php";
+require_once "data.php";
 
 //Conecta ao banco de dados
-require "connect.php";
+require_once "connect.php";
 
 //Função para query de cálculo de pontuação
 function query_points ($time_sql) {

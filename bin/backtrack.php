@@ -1,9 +1,9 @@
 <?php
 //Protetor de login
-require "protect.php";
+require_once "protect.php";
 
 //Conecta ao banco de dados
-require "connect.php";
+require_once "connect.php";
 
 //Coleta lista de edições para retroceder inscrição
 $backtrack_query = mysqli_query($con, "

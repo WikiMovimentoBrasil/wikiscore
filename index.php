@@ -1,7 +1,7 @@
 <?php
 
 //Coleta lista de concursos
-require __DIR__.'/bin/data.php';
+require_once __DIR__.'/bin/data.php';
 
 //Verifica se algum concurso existente foi definido. Caso contrario, retorna lista de concursos e encerra o script
 if (isset($contests_array[@$_GET['contest']])) {
@@ -41,10 +41,10 @@ $accepted_pages = array(
 //Carrega página solicitada ou redireciona para página de login
 if (isset($_GET['page'])) {
 	if (in_array($_GET['page'], $accepted_pages)) {
-		require __DIR__.'/bin/'.$_GET['page'].'.php';
+		require_once __DIR__.'/bin/'.$_GET['page'].'.php';
 	} else {
-		require __DIR__.'/bin/login.php';
+		require_once __DIR__.'/bin/login.php';
 	}
 } else {
-	require __DIR__.'/bin/login.php';
+	require_once __DIR__.'/bin/login.php';
 }

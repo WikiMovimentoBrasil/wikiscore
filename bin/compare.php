@@ -1,10 +1,10 @@
 <?php
 
 //Protetor de login
-require "protect.php";
+require_once "protect.php";
 
 //Coleta informações do concurso
-require "data.php";
+require_once "data.php";
 
 //Verifica se a lista oficial e a categoria foram definidas
 if (isset($contest['official_list_pageid']) AND isset($contest['category_pageid'])) {
@@ -100,7 +100,7 @@ $eliminar = array_intersect($deletion, $list_cat);
 asort($eliminar);
 
 //Conecta ao banco de dados
-require "connect.php";
+require_once "connect.php";
 
 //Coleta lista de diffs e artigos novos
 $inconsistency_query = mysqli_query($con, 

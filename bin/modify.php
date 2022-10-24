@@ -1,9 +1,9 @@
 <?php
 //Protetor de login
-require "protect.php";
+require_once "protect.php";
 
 //Conecta ao banco de dados
-require "connect.php";
+require_once "connect.php";
 
 //Processa informações caso formulário tenha sido submetido
 if ($_POST) {
