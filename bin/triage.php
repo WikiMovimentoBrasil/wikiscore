@@ -18,11 +18,11 @@ if ($_POST) {
     //Atualiza edição que o avaliador tenha pulado edição
     if (isset($_POST['skip']) and isset($_POST['diff'])) {
         mysqli_query($con, "
-            UPDATE 
-                `{$contest['name_id']}__edits` 
-            SET 
-                `by` = 'skip-{$slashed_username}' 
-            WHERE 
+            UPDATE
+                `{$contest['name_id']}__edits`
+            SET
+                `by` = 'skip-{$slashed_username}'
+            WHERE
                 `diff`='{$post['diff']}' AND `by` = 'hold-{$slashed_username}'
         ;");
         if (mysqli_affected_rows($con) == 0) die("<br>Erro ao pular edição. Atualize a página para tentar novamente.");
@@ -54,11 +54,11 @@ if ($_POST) {
             //Busca número de bytes no banco de dados
             $query = mysqli_fetch_assoc(
                 mysqli_query($con, "
-                    SELECT 
+                    SELECT
                         `bytes`
-                    FROM 
-                        `{$contest['name_id']}__edits` 
-                    WHERE 
+                    FROM
+                        `{$contest['name_id']}__edits`
+                    WHERE
                         `diff` = '{$post['diff']}'
                     LIMIT 1
                 ;")
@@ -67,17 +67,17 @@ if ($_POST) {
             //Verifica se há diferença. Caso sim, altera o número de bytes e adiciona comentário
             if ($query['bytes'] != $post['overwrite']) {
                 mysqli_query($con, "
-                    UPDATE 
-                        `{$contest['name_id']}__edits` 
-                    SET 
+                    UPDATE
+                        `{$contest['name_id']}__edits`
+                    SET
                         `bytes`  = '{$post['overwrite']}'
-                    WHERE 
+                    WHERE
                         `diff` = '{$post['diff']}';
                 ");
                 $post['overwrited'] = TRUE;
             }
         }
-        
+
         //Processa observação inserida no formulário
         if (!isset($_POST['obs']) OR $_POST['obs'] == '') {
             $post['obs'] = '';
@@ -90,14 +90,14 @@ if ($_POST) {
         }
 
         //Monta query para atualizar banco de dados
-        $when = date('Y-m-d H:i:s'); 
+        $when = date('Y-m-d H:i:s');
         $sql_update = "
-            UPDATE 
-                `{$contest['name_id']}__edits` 
-            SET 
+            UPDATE
+                `{$contest['name_id']}__edits`
+            SET
                 `valid_edit`    = '{$post['valid']}',
-                `pictures`      = '{$post['pic']}', 
-                `by`            = '{$slashed_username}', 
+                `pictures`      = '{$post['pic']}',
+                `by`            = '{$slashed_username}',
                 `when`          = '{$when}',
                 `obs`           = CONCAT(IFNULL(`obs`, ''), '{$post['obs']}')
             WHERE `diff`        = '{$post['diff']}';
@@ -113,11 +113,11 @@ if ($_POST) {
 
             //Destrava edições do usuário que porventura ainda estejam travadas
             mysqli_query($con, "
-                UPDATE 
-                    `{$contest['name_id']}__edits` 
-                SET 
-                    `by` = NULL 
-                WHERE 
+                UPDATE
+                    `{$contest['name_id']}__edits`
+                SET
+                    `by` = NULL
+                WHERE
                     `by` = 'hold-{$slashed_username}'
             ;");
 
@@ -134,16 +134,16 @@ $revert_time = date('Y-m-d H:i:s', strtotime("-{$contest['revert_time']} hours")
 
 //Conta edições faltantes
 $count_query = mysqli_query($con, "
-    SELECT 
+    SELECT
         COUNT(*) AS `total_count`,
-        IFNULL(SUM(CASE WHEN `timestamp` < '{$revert_time}' THEN 1 ELSE 0 END), 0) AS `count` 
-    FROM 
-        `{$contest['name_id']}__edits` 
-    WHERE 
-        `reverted` IS NULL AND 
-        `valid_edit` IS NULL AND 
-        `valid_user` IS NOT NULL AND 
-        `by` IS NULL AND 
+        IFNULL(SUM(CASE WHEN `timestamp` < '{$revert_time}' THEN 1 ELSE 0 END), 0) AS `count`
+    FROM
+        `{$contest['name_id']}__edits`
+    WHERE
+        `reverted` IS NULL AND
+        `valid_edit` IS NULL AND
+        `valid_user` IS NOT NULL AND
+        `by` IS NULL AND
         CASE WHEN '{$bytes}' = '-1' THEN `bytes` IS NOT NULL ELSE `bytes` > {$bytes} END
 ;");
 $count_query = mysqli_fetch_assoc($count_query);
@@ -152,37 +152,37 @@ $output['total_count'] = $count_query['total_count'] - $count_query['count'];
 
 //Captura horário de última edição inserida no banco de dados
 $lastedit_query = mysqli_query($con, "
-    SELECT 
+    SELECT
         `timestamp` AS `lastedit`
-    FROM 
+    FROM
         `{$contest['name_id']}__edits`
-    ORDER BY 
-        `timestamp` DESC 
-    LIMIT 
+    ORDER BY
+        `timestamp` DESC
+    LIMIT
         1
 ;");
 $output['lastedit'] = strtotime(mysqli_fetch_assoc($lastedit_query)["lastedit"]);
 
 //Coleta edição para avaliação
 $revision_query = mysqli_query($con, "
-    SELECT 
-        `diff`, 
-        `bytes`, 
-        `user`, 
-        `summary`, 
-        `article`, 
-        `timestamp` 
-    FROM 
-        `{$contest['name_id']}__edits` 
-    WHERE 
-        `reverted` IS NULL AND 
-        `valid_edit` IS NULL AND 
-        `valid_user` IS NOT NULL AND 
+    SELECT
+        `diff`,
+        `bytes`,
+        `user`,
+        `summary`,
+        `article`,
+        `timestamp`
+    FROM
+        `{$contest['name_id']}__edits`
+    WHERE
+        `reverted` IS NULL AND
+        `valid_edit` IS NULL AND
+        `valid_user` IS NOT NULL AND
         CASE WHEN '{$bytes}' = '-1' THEN `bytes` IS NOT NULL ELSE `bytes` > {$bytes} END AND
-        `by` IS NULL AND 
-        `timestamp` < '{$revert_time}' 
-    ORDER BY 
-        `timestamp` ASC 
+        `by` IS NULL AND
+        `timestamp` < '{$revert_time}'
+    ORDER BY
+        `timestamp` ASC
     LIMIT 1
 ;");
 $output['revision'] = mysqli_fetch_assoc($revision_query);
@@ -190,11 +190,11 @@ $output['revision'] = mysqli_fetch_assoc($revision_query);
 //Trava edição para evitar que dois avaliadores avaliem a mesma edição ao mesmo tempo
 if ($output['revision'] != NULL) {
     mysqli_query($con, "
-        UPDATE 
-            `{$contest['name_id']}__edits` 
-        SET 
-            `by` = 'hold-{$slashed_username}' 
-        WHERE 
+        UPDATE
+            `{$contest['name_id']}__edits`
+        SET
+            `by` = 'hold-{$slashed_username}'
+        WHERE
             `diff`='{$output['revision']['diff']}'
     ;");
     if (mysqli_affected_rows($con) == 0) die("<br>Erro ao travar edição. Atualize a página para tentar novamente.");
@@ -221,7 +221,7 @@ if ($output['revision'] != NULL) {
     ];
     $history = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($history_params)), true)["query"]["pages"];
 
-    //Verifica situação da primeira edição. 
+    //Verifica situação da primeira edição.
     //Se for a primeira edição, insere pseudo-edição anterior com tamanho zero
     //Se existir edição anterior, busca na API o tamanho da edição imediatamente anterior e insere pseudo-edição com tamanho correspondente
     $history = end($history)["revisions"];
@@ -432,7 +432,7 @@ mysqli_close($con);
                             <br><strong>Diferença:</strong> <?=@$output['revision']['bytes'];?> bytes
                             <br><strong>Horário:</strong> <?=@$output['revision']['timestamp'];?> (UTC)
                             <br><strong>Sumário:</strong> <?=@$output['revision']['summary'];?>
-                            <br><strong>Diff:</strong> 
+                            <br><strong>Diff:</strong>
                             <a href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>" target="_blank"><?=@$output['revision']['diff'];?></a> - <a target="_blank" href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>">Copyvio Detector</a>
                         </p>
                     </div>

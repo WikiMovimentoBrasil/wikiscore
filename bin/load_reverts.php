@@ -6,12 +6,12 @@ require_once "connect.php";
 
 //Coleta lista de edições
 $edits_query = mysqli_query($con, "
-	SELECT 
-		`diff` 
-	FROM 
-		`{$contest['name_id']}__edits` 
-	WHERE 
-		`valid_user` IS NOT NULL AND 
+	SELECT
+		`diff`
+	FROM
+		`{$contest['name_id']}__edits`
+	WHERE
+		`valid_user` IS NOT NULL AND
 		`reverted` IS NULL
 	;");
 if (mysqli_num_rows($edits_query) == 0) die("No edits");
@@ -32,16 +32,16 @@ while ($row = mysqli_fetch_assoc($edits_query)) {
 
 	//Marca edição caso tenha sido revertida ou eliminada
 	if (
-		in_array('mw-reverted',$revision['tags']) 
-		OR isset($revisions_api['badrevids']) 
+		in_array('mw-reverted',$revision['tags'])
+		OR isset($revisions_api['badrevids'])
 		OR isset($revision['sha1hidden'])
-	) { 
+	) {
 		mysqli_query($con, "
-			UPDATE 
-				`{$contest['name_id']}__edits` 
-			SET 
-				`reverted` = '1' 
-			WHERE 
+			UPDATE
+				`{$contest['name_id']}__edits`
+			SET
+				`reverted` = '1'
+			WHERE
 				`diff` = '".$row["diff"]."'
 			;");
 		echo("Marcada edição ".$row["diff"]." como revertida.<br>");

@@ -10,22 +10,22 @@ require_once "connect.php";
 
 //Coleta lista de avaliadores
 $evaluators_query = mysqli_query($con, "
-    SELECT 
-        `{$contest['name_id']}__credentials`.`user_name`, 
-        `{$contest['name_id']}__credentials`.`user_email`, 
-        `{$contest['name_id']}__credentials`.`user_status`, 
-        COUNT(`{$contest['name_id']}__edits`.`by`) AS `evaluated` 
-    FROM 
-        `{$contest['name_id']}__credentials` 
-        LEFT JOIN `{$contest['name_id']}__edits` ON `{$contest['name_id']}__edits`.`by` = `{$contest['name_id']}__credentials`.`user_name` 
-    GROUP BY 
+    SELECT
+        `{$contest['name_id']}__credentials`.`user_name`,
+        `{$contest['name_id']}__credentials`.`user_email`,
+        `{$contest['name_id']}__credentials`.`user_status`,
+        COUNT(`{$contest['name_id']}__edits`.`by`) AS `evaluated`
+    FROM
+        `{$contest['name_id']}__credentials`
+        LEFT JOIN `{$contest['name_id']}__edits` ON `{$contest['name_id']}__edits`.`by` = `{$contest['name_id']}__credentials`.`user_name`
+    GROUP BY
         `{$contest['name_id']}__credentials`.`user_name`;
 ");
 if (mysqli_num_rows($evaluators_query) == 0) die("Sem avaliadores");
 
 while ($row = mysqli_fetch_assoc($evaluators_query)) {
     $output["evaluators"][$row['user_status']][$row['user_name']] = [
-        "email" => $row['user_email'], 
+        "email" => $row['user_email'],
         "status" => $row['user_status'],
         "evaluated" => $row['evaluated']
     ];
@@ -48,21 +48,21 @@ if ($_POST) {
     //Processa query
     if (isset($_POST['off'])) {
         mysqli_query($con, "
-            UPDATE 
-                `{$contest['name_id']}__credentials` 
-            SET 
-                `user_status` = 'P' 
-            WHERE 
+            UPDATE
+                `{$contest['name_id']}__credentials`
+            SET
+                `user_status` = 'P'
+            WHERE
                 `user_name` = '{$post['user_name']}'
                 AND `user_status` = 'A';
         ");
     } elseif (isset($_POST['on'])) {
         mysqli_query($con, "
-            UPDATE 
-                `{$contest['name_id']}__credentials` 
-            SET 
-                `user_status` = 'A' 
-            WHERE 
+            UPDATE
+                `{$contest['name_id']}__credentials`
+            SET
+                `user_status` = 'A'
+            WHERE
                 `user_name` = '{$post['user_name']}'
                 AND `user_status` = 'P';
         ");
@@ -163,9 +163,9 @@ $icon = '<svg class="w3-bar-item" width="85" height="85" stroke-width="1.5" view
             </div>
         </div>
     </body>
-    <?php 
+    <?php
     if (isset($output['success'])) {
-        if (is_null($output['success']['diff'])) { 
+        if (is_null($output['success']['diff'])) {
             echo "<script>alert('Status do avaliador autalizado com sucesso!');window.location.href = window.location.href;</script>";
         } else {
             echo "<script>alert('Erro ao atualizar status do avaliador');</script>";

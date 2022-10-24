@@ -60,13 +60,13 @@ if (isset($contest['category_petscan'])) {
 //Monta e executa query para atualização da tabela de artigos
 $list = implode("'), ('", $list);
 mysqli_query($con, "
-	TRUNCATE 
+	TRUNCATE
 		`{$contest['name_id']}__articles`
 	;");
 mysqli_query($con, "
-	INSERT INTO 
-		`{$contest['name_id']}__articles` (`articleID`) 
-	VALUES 
+	INSERT INTO
+		`{$contest['name_id']}__articles` (`articleID`)
+	VALUES
 		('{$list}')
 	;");
 
@@ -77,11 +77,11 @@ if (mysqli_num_rows($articles_query) == 0) die("No articles");
 //Coleta revisões já inseridas no banco de dados
 $revision_list = array();
 $revision_query = mysqli_query($con, "
-	SELECT 
-		`diff` 
-	FROM 
-		`{$contest['name_id']}__edits` 
-	ORDER BY 
+	SELECT
+		`diff`
+	FROM
+		`{$contest['name_id']}__edits`
+	ORDER BY
 		`diff`
 	;");
 foreach (mysqli_fetch_all($revision_query, MYSQLI_ASSOC) as $diff) $revision_list[] = $diff['diff'];
@@ -127,14 +127,14 @@ while ($row = mysqli_fetch_assoc($articles_query)) {
 		//como nulos, executa a query e continua para o próximo loop
 		if (!isset($compare_api['compare'])) {
 			mysqli_query($con, "
-				INSERT IGNORE INTO 
+				INSERT IGNORE INTO
 					`{$contest['name_id']}__edits` (
-						`diff`, 
+						`diff`,
 						`article`
-					) 
-				VALUES 
+					)
+				VALUES
 					(
-						'{$revision['revid']}', 
+						'{$revision['revid']}',
 						'{$row["articleID"]}'
 					)
 			;");
@@ -143,7 +143,7 @@ while ($row = mysqli_fetch_assoc($articles_query)) {
 			$compare_api = $compare_api['compare'];
 		}
 
-		//Verifica se página é nova. Caso sim, define valor inicial 
+		//Verifica se página é nova. Caso sim, define valor inicial
 		//como zero para evitar erros e programa "UPDATE" após "INSERT"
 		if (!isset($compare_api['fromsize'])) {
 			$compare_api['fromsize'] = 0;
@@ -152,22 +152,22 @@ while ($row = mysqli_fetch_assoc($articles_query)) {
 
 		//Prepara query de inserção da revisão no banco de dados
 		$sql_compare = "
-			INSERT IGNORE INTO 
+			INSERT IGNORE INTO
 				`{$contest['name_id']}__edits` (
-					`diff`, 
-					`article`, 
-					`timestamp`, 
-					`user`, 
-					`bytes`, 
+					`diff`,
+					`article`,
+					`timestamp`,
+					`user`,
+					`bytes`,
 					`summary`
-				) 
-			VALUES 
+				)
+			VALUES
 				(
-					'{$revision['revid']}', 
-					'{$row["articleID"]}', 
-					'{$compare_api['totimestamp']}', 
-					'".addslashes($compare_api['touser'])."', 
-					'".($compare_api['tosize'] - $compare_api['fromsize'])."', 
+					'{$revision['revid']}',
+					'{$row["articleID"]}',
+					'{$compare_api['totimestamp']}',
+					'".addslashes($compare_api['touser'])."',
+					'".($compare_api['tosize'] - $compare_api['fromsize'])."',
 					'".addslashes($compare_api['tocomment'])."'
 				)
 			;";
@@ -180,7 +180,7 @@ while ($row = mysqli_fetch_assoc($articles_query)) {
 		if (isset($compare_api['new_page'])) {
 			mysqli_query($con, "UPDATE `{$contest['name_id']}__edits` SET `new_page` = '1' WHERE `diff` = '".$revision['revid']."';");
 			if (mysqli_affected_rows($con) != 0) echo("<br> Marcada como nova página a revisão ".$revision['revid']);
-		} 
+		}
 	}
 }
 

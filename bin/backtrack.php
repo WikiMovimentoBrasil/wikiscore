@@ -7,19 +7,19 @@ require_once "connect.php";
 
 //Coleta lista de edições para retroceder inscrição
 $backtrack_query = mysqli_query($con, "
-    SELECT 
-      `{$contest['name_id']}__edits`.`diff`, 
+    SELECT
+      `{$contest['name_id']}__edits`.`diff`,
       `{$contest['name_id']}__edits`.`bytes`,
-      `{$contest['name_id']}__edits`.`timestamp` AS `edit_timestamp`, 
-      `{$contest['name_id']}__users`.`user`, 
-      `{$contest['name_id']}__users`.`timestamp` AS `enrollment_timestamp` 
-    FROM 
-      `{$contest['name_id']}__edits` 
-      INNER JOIN `{$contest['name_id']}__users` ON `{$contest['name_id']}__edits`.`user` = `{$contest['name_id']}__users`.`user` 
-    WHERE 
+      `{$contest['name_id']}__edits`.`timestamp` AS `edit_timestamp`,
+      `{$contest['name_id']}__users`.`user`,
+      `{$contest['name_id']}__users`.`timestamp` AS `enrollment_timestamp`
+    FROM
+      `{$contest['name_id']}__edits`
+      INNER JOIN `{$contest['name_id']}__users` ON `{$contest['name_id']}__edits`.`user` = `{$contest['name_id']}__users`.`user`
+    WHERE
       `{$contest['name_id']}__edits`.valid_user IS NULL
-    ORDER BY 
-      `user`, 
+    ORDER BY
+      `user`,
       `edit_timestamp`
 ;");
 
@@ -31,19 +31,19 @@ while ($edit = mysqli_fetch_assoc($backtrack_query)) {
 
 //Processa informações caso formulário tenha sido submetido
 if (isset($_POST['diff'])) {
-    
+
     //Monta query para atualizar banco de dados
     $slashed_diff = addslashes($_POST['diff']);
     $slashed_username = addslashes($_SESSION['user']['user_name']);
     $time = date('Y-m-d H:i:s');
     $sql_update = "
-        UPDATE 
-            `{$contest['name_id']}__edits` 
-        SET 
+        UPDATE
+            `{$contest['name_id']}__edits`
+        SET
             `valid_user`    = '1',
             `obs`           = CONCAT(IFNULL(`obs`, ''), 'Backtrack: {$slashed_username} em {$time}\n')
-        WHERE 
-            `diff`        = '{$slashed_diff}' AND 
+        WHERE
+            `diff`        = '{$slashed_diff}' AND
             `valid_user`  IS NULL;
     ";
 
@@ -73,7 +73,7 @@ if (isset($_POST['diff'])) {
                     <p>Essa página lista as edições que foram feitas por usuários participantes no âmbito do wikiconcurso mas foram realizadas antes da efetivação da inscrição no Outreach Dashboard. Se necessário, clique no botão para aceitar a edição. Após a aceitação, a edição estará disponível na fila de avaliação.</p>
                 </div>
             </div>
-            <?php 
+            <?php
             foreach ($output["backtrack"] as $user => $case) {
                 echo '<div class="w3-margin-top w3-card">';
                     echo "<header class='w3-container w3-{$contest['theme']}'><h1>{$user}</h1></header>";
@@ -100,9 +100,9 @@ if (isset($_POST['diff'])) {
             ?>
         </div>
     </body>
-    <?php 
+    <?php
     if (@array_key_exists('diff', $output['success'])) {
-        if (is_null($output['success']['diff'])) { 
+        if (is_null($output['success']['diff'])) {
             echo "<script>alert('Erro ao aceitar edição');</script>";
         } else {
             echo "<script>alert('Edição aceita com sucesso!');window.location.href = window.location.href;</script>";

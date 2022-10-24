@@ -40,12 +40,12 @@ if ($_POST) {
 	//Busca número de bytes e nome do avaliador no banco de dados
 	$query = mysqli_fetch_assoc(
 		mysqli_query($con, "
-			SELECT 
+			SELECT
 				`bytes`,
 				`by`
-			FROM 
-				`{$contest['name_id']}__edits` 
-			WHERE 
+			FROM
+				`{$contest['name_id']}__edits`
+			WHERE
 				`diff` = '{$post['diff']}'
 			LIMIT 1
 		;")
@@ -61,12 +61,12 @@ if ($_POST) {
 			$post['overwrite'] = addslashes($_POST['overwrite']);
 			$obs = "Modif: por {$_SESSION['user']['user_name']} de {$query['bytes']} para {$post['overwrite']} em {$time} com justificativa \"{$post['obs']}\"\n";
 			$sql_update = "
-				UPDATE 
-					`{$contest['name_id']}__edits` 
-				SET 
+				UPDATE
+					`{$contest['name_id']}__edits`
+				SET
 					`bytes`	 		= '{$post['overwrite']}'
 					`valid_edit`	= '{$post['valid']}',
-					`pictures`		= '{$post['pic']}', 
+					`pictures`		= '{$post['pic']}',
 					`obs` 			= CONCAT(IFNULL(`obs`, ''), '{$obs}')
 				WHERE `diff` = '{$post['diff']}';
 			";	
@@ -76,11 +76,11 @@ if ($_POST) {
 
 			$obs = "Modif: por {$_SESSION['user']['user_name']} em {$time} com justificativa \"{$post['obs']}\"\n";
 			$sql_update = "
-				UPDATE 
-					`{$contest['name_id']}__edits` 
-				SET 
+				UPDATE
+					`{$contest['name_id']}__edits`
+				SET
 					`valid_edit`	= '{$post['valid']}',
-					`pictures`		= '{$post['pic']}', 
+					`pictures`		= '{$post['pic']}',
 					`obs` 			= CONCAT(IFNULL(`obs`, ''), '{$obs}')
 				WHERE `diff` = '{$post['diff']}';
 			";
@@ -103,11 +103,11 @@ if (isset($_GET['diff'])) {
 
 	//Coleta edição
 	$revision_query = mysqli_query($con, "
-		SELECT 
+		SELECT
 			*
-		FROM 
-			`{$contest['name_id']}__edits` 
-		WHERE 
+		FROM
+			`{$contest['name_id']}__edits`
+		WHERE
 			`diff`		= '".addslashes($_GET['diff'])."'
 		LIMIT 1
 	;");
@@ -230,9 +230,9 @@ mysqli_close($con);
                     <hr>
                 </div>
                 <?php
-	                if (!$output['compare']) echo "<script>alert('Edição não encontrada no banco de dados!');</script>"; 
+	                if (!$output['compare']) echo "<script>alert('Edição não encontrada no banco de dados!');</script>";
 	                if (@array_key_exists('diff', $output['success'])) {
-						if (is_null($output['success']['diff'])) { 
+						if (is_null($output['success']['diff'])) {
 							echo "<script>alert('Você não pode modificar uma avaliação de terceiro!');</script>";
 						} else {
 							echo "<script>alert('Modificação realizada com sucesso!');</script>";

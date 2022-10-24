@@ -10,14 +10,14 @@ if (isset($_POST['email'])) {
         $USR->login($_POST['email'], $_POST['password']);
     }
 }
- 
+
 // (B) REDIRECT USER IF SIGNED IN
 if (isset($_SESSION['user'])) {
     header("Location: index.php?contest=".$_GET['contest']."&page=triage");
     exit();
 }
- 
-// (C) SHOW LOGIN FORM OTHERWISE 
+
+// (C) SHOW LOGIN FORM OTHERWISE
 if (isset($_POST['do_login'])) {
     echo "<script>alert('E-mail/senha inválidos');</script>";
 } elseif (isset($_POST['do_create'])) {
@@ -37,7 +37,7 @@ for ($i=1; $i < $total_days; $i++) $all_days[] = $i;
 $all_days = implode(", ", $all_days);
 
 //Define faixa de dias para queries dos gráficos
-$start_day = date('Y-m-d', $contest['start_time']); 
+$start_day = date('Y-m-d', $contest['start_time']);
 $end_day = date('Y-m-d', $contest['end_time']);
 mysqli_query($con, "SET @date_min = '{$start_day}';");
 mysqli_query($con, "SET @date_max = '{$end_day}';");
@@ -129,7 +129,7 @@ if (isset($lastedit["lastedit"])) {
             <h1><?=$contest['name'];?></h1>
         </header>
         <div class="w3-container w3-padding-32">
-            <div class="w3-row-padding"> 
+            <div class="w3-row-padding">
                 <div class="w3-third w3-section">
                     <div class="w3-card-4 w3-padding">
                         <canvas id="total_edits"></canvas>

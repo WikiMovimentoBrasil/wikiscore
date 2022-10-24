@@ -67,7 +67,7 @@ class credentials {
   function login ($email, $password) {
     // (D1) ALREADY SIGNED IN
     if (isset($_SESSION['user'])) { return true; }
-    
+
     // (D2) GET USER
     $user = $this->getByEmail($email);
     if (!is_array($user)) { return false; }
@@ -92,7 +92,7 @@ class credentials {
     $name = strstr($email, "@", true);
     if ($name == false) return false;
     $name = trim($name, "@");
-    
+
     if ($id===null) {
       $sql = "INSERT INTO `{$contest['name_id']}__credentials` (`user_name`, `user_email`, `user_password`) VALUES (?,?,?)";
       $data = [$name, $email, password_hash($pass, PASSWORD_DEFAULT)];

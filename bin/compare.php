@@ -40,7 +40,7 @@ if (isset($contest['official_list_pageid']) AND isset($contest['category_pageid'
         ];
         $list_api = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params)), true);
         $listmembers = end($list_api['query']['pages'])['links'];
-        foreach ($listmembers as $pagetitle) $list_official[] = $pagetitle['title'];    
+        foreach ($listmembers as $pagetitle) $list_official[] = $pagetitle['title'];
     }
 
     //Coleta lista de artigos na categoria
@@ -103,32 +103,32 @@ asort($eliminar);
 require_once "connect.php";
 
 //Coleta lista de diffs e artigos novos
-$inconsistency_query = mysqli_query($con, 
-    "SELECT 
-      `diff`, 
+$inconsistency_query = mysqli_query($con,
+    "SELECT
+      `diff`,
       `valid_edit`,
       `timestamp`
-    FROM 
-      `{$contest['name_id']}__edits` 
-    WHERE 
+    FROM
+      `{$contest['name_id']}__edits`
+    WHERE
       `article` NOT IN (
-        SELECT 
-          `articleID` 
-        FROM 
+        SELECT
+          `articleID`
+        FROM
           `{$contest['name_id']}__articles`
-      ) 
+      )
       AND `valid_user` = '1'
       AND `reverted` IS NULL
     ORDER BY `timestamp` ASC;");
 $wd_query = mysqli_query($con,
-    "SELECT 
-      `article` 
-    FROM 
-      `{$contest['name_id']}__edits` 
-      INNER JOIN `{$contest['name_id']}__articles` ON `{$contest['name_id']}__edits`.`article` = `{$contest['name_id']}__articles`.`articleID` 
-    WHERE 
-      `{$contest['name_id']}__edits`.`new_page` = '1' 
-    ORDER BY 
+    "SELECT
+      `article`
+    FROM
+      `{$contest['name_id']}__edits`
+      INNER JOIN `{$contest['name_id']}__articles` ON `{$contest['name_id']}__edits`.`article` = `{$contest['name_id']}__articles`.`articleID`
+    WHERE
+      `{$contest['name_id']}__edits`.`new_page` = '1'
+    ORDER BY
       `{$contest['name_id']}__edits`.`timestamp` ASC;");
 ?>
 
@@ -226,10 +226,10 @@ $wd_query = mysqli_query($con,
                     </div>
                     <ul class="w3-ul w3-border-top">
                         <li>As edições listadas abaixo pertecem a artigos que estavam listados na categoria mas foram removidos. Caso estejam marcadas de vermelho, a edição foi validada e conferiu pontos ao participante.</li>
-                        <?php 
+                        <?php
                         while ($row = mysqli_fetch_assoc($inconsistency_query)) {
                             $diff_encode = urlencode($row['diff']);
-                            
+
                             echo "<li class='";
                             if ($row['valid_edit'] == '1') echo "w3-red";
                             echo "'>";
