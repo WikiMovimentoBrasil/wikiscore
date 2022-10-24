@@ -118,7 +118,7 @@ if (isset($lastedit["lastedit"])) {
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
     <title><?=$contest['name'];?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="./bin/w3.css">
@@ -164,17 +164,17 @@ if (isset($lastedit["lastedit"])) {
                         </header>
                         <div class="w3-container">
                             <p class="w3-small">
-                                <b>Horário de início do wikiconcurso</b>
+                                <strong>Horário de início do wikiconcurso</strong>
                                 <br>
                                 <?=date('d/m/Y H:i:s (\U\T\C)', $contest['start_time']);?>
                             </p>
                             <p class="w3-small">
-                                <b>Horário de término do wikiconcurso</b>
+                                <strong>Horário de término do wikiconcurso</strong>
                                 <br>
                                 <?=date('d/m/Y H:i:s (\U\T\C)', $contest['end_time']);?>
                             </p>
                             <p class="w3-small">
-                                <b>Horário da última edição avaliada</b>
+                                <strong>Horário da última edição avaliada</strong>
                                 <br>
                                 <?=date('d/m/Y H:i:s (\U\T\C)', $lastedit);?>
                             </p>
@@ -200,11 +200,11 @@ if (isset($lastedit["lastedit"])) {
                     <form class="w3-container" id="login" method="post">
                         <div class="w3-section">
                             <label>
-                                <b>E-mail</b>
+                                <strong>E-mail</strong>
                             </label>
                             <input class="w3-input w3-border w3-margin-bottom" type="email" placeholder="Insira seu e-mail" name="email" required>
                             <label>
-                                <b>Senha</b>
+                                <strong>Senha</strong>
                             </label>
                             <input class="w3-input w3-border" type="password" placeholder="Insira sua senha" name="password" required>
                             <button class="w3-button w3-block w3-<?=$contest['theme'];?> w3-section w3-padding" name="do_login" type="submit">Entrar</button>

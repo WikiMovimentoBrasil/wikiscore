@@ -80,7 +80,7 @@ $icon = '<svg class="w3-bar-item" width="85" height="85" stroke-width="1.5" view
 //Exibe página
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
     <title>Avaliadores - <?=$contest['name'];?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bin/w3.css">

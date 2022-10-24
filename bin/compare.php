@@ -133,7 +133,7 @@ $wd_query = mysqli_query($con,
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
     <title>Comparador - <?=$contest['name'];?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bin/w3.css">

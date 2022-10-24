@@ -109,7 +109,7 @@ $all_days = implode(", ", $all_days);
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
     <title>Gráfico de pontos - <?=$contest['name'];?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bin/w3.css">

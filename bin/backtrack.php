@@ -57,7 +57,7 @@ if (isset($_POST['diff'])) {
 //Exibe página
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
     <title>Retroceder - <?=$contest['name'];?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bin/w3.css">
@@ -94,7 +94,7 @@ if (isset($_POST['diff'])) {
                         }
                         echo '</ul>';
                     echo '</div>';
-                    echo "<footer class='w3-container w3-{$contest['theme']}' style='filter: hue-rotate(180deg);'><h5>Participante se inscreveu em <b>{$case['enrollment_timestamp']}</b></h5></footer>";
+                    echo "<footer class='w3-container w3-{$contest['theme']}' style='filter: hue-rotate(180deg);'><h5>Participante se inscreveu em <strong>{$case['enrollment_timestamp']}</strong></h5></footer>";
                 echo '</div>';
             }
             ?>

@@ -134,7 +134,7 @@ mysqli_close($con);
 //Exibe edição e formulário de avaliação
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
     <title>Modificar - <?=$contest['name'];?></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bin/w3.css">

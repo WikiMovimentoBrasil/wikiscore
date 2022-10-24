@@ -250,7 +250,7 @@ if ($output['revision'] != NULL) {
             $delta_color = "grey";
         }
         $timestamp = date('d/m/Y H:i:s (\U\T\C)', strtotime($edit['timestamp']));
-        $output['history'][] = str_repeat(" ", 24)."<p class='w3-small'><b>{$edit['user']}</b><br>{$timestamp}<br><span class='w3-text-{$delta_color}'>{$delta} bytes</span></p>\n";
+        $output['history'][] = str_repeat(" ", 24)."<p class='w3-small'><strong>{$edit['user']}</strong><br>{$timestamp}<br><span class='w3-text-{$delta_color}'>{$delta} bytes</span></p>\n";
     }
 
     //Remove pseudo-edição
@@ -286,20 +286,20 @@ mysqli_close($con);
                     </p>
                     <p>
                         Edição válida: <?php if(@$output['success']['valid']){
-                            echo '<i class="fa-regular w3-text-green fa-circle-check"></i> Sim';
+                            echo '<i class="fa-regular w3-text-green fa-circle-check" aria-hidden="true"></i> Sim';
                         } else {
-                            echo '<i class="fa-regular w3-text-red fa-circle-xmark"></i> Não';
+                            echo '<i class="fa-regular w3-text-red fa-circle-xmark" aria-hidden="true"></i> Não';
                         }?>
                     </p>
                     <p>
                         Com imagem: <?php if(@$output['success']['pic']){
-                            echo '<i class="fa-regular w3-text-green fa-circle-check"></i> Sim';
+                            echo '<i class="fa-regular w3-text-green fa-circle-check" aria-hidden="true"></i> Sim';
                         } else {
-                            echo '<i class="fa-regular w3-text-red fa-circle-xmark"></i> Não';
+                            echo '<i class="fa-regular w3-text-red fa-circle-xmark" aria-hidden="true"></i> Não';
                         }?>
                     </p>
                     <p>
-                        <button class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=modify&diff=<?=@$output['success']['diff'];?>', '_blank');"><i class="fa-solid fa-eraser w3-medium"></i> Corrigir</button>
+                        <button class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=modify&diff=<?=@$output['success']['diff'];?>', '_blank');"><i class="fa-solid fa-eraser w3-medium" aria-hidden="true"></i> Corrigir</button>
                     </p>
                 </div>
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom">
@@ -326,36 +326,36 @@ mysqli_close($con);
                         <div class="w3-row">
                             <div class="w3-half">
                                 <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(40deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=counter', '_blank');">
-                                    <i class="fa-solid fa-chart-line w3-xxlarge"></i><br>Contador
+                                    <i class="fa-solid fa-chart-line w3-xxlarge" aria-hidden="true"></i><br>Contador
                                 </button>
                             </div>
                             <div class="w3-half">
                                 <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(80deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=modify', '_blank');">
-                                    <i class="fa-solid fa-pen-to-square w3-xxlarge"></i><br>Modificar
+                                    <i class="fa-solid fa-pen-to-square w3-xxlarge" aria-hidden="true"></i><br>Modificar
                                 </button>
                             </div>
                         </div>
                         <div class="w3-row">
                             <div class="w3-half">
                                 <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(120deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=compare', '_blank');">
-                                    <i class="fa-solid fa-code-compare w3-xxlarge"></i><br>Comparador
+                                    <i class="fa-solid fa-code-compare w3-xxlarge" aria-hidden="true"></i><br>Comparador
                                 </button>
                             </div>
                             <div class="w3-half">
                                 <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(160deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=edits', '_blank');">
-                                    <i class="fa-solid fa-list-check w3-xxlarge"></i><br>Avaliadas
+                                    <i class="fa-solid fa-list-check w3-xxlarge" aria-hidden="true"></i><br>Avaliadas
                                 </button>
                             </div>
                         </div>
                         <div class="w3-row">
                             <div class="w3-half">
                                 <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(200deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=backtrack', '_blank');">
-                                    <i class="fa-solid fa-history w3-xxlarge"></i><br>Retroceder
+                                    <i class="fa-solid fa-history w3-xxlarge" aria-hidden="true"></i><br>Retroceder
                                 </button>
                             </div>
                             <div class="w3-half">
                                 <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(240deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=evaluators', '_blank');">
-                                    <i class="fa-solid fa-users w3-xxlarge"></i><br>Avaliadores
+                                    <i class="fa-solid fa-users w3-xxlarge" aria-hidden="true"></i><br>Avaliadores
                                 </button>
                             </div>
                         </div>
@@ -365,14 +365,14 @@ mysqli_close($con);
                                     <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
                                     <input type="hidden" name="skip" value="true">
                                     <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(280deg);" type="submit" value="Pular edição">
-                                        <i class="fa-solid fa-forward w3-xxlarge"></i><br>Pular
+                                        <i class="fa-solid fa-forward w3-xxlarge" aria-hidden="true"></i><br>Pular
                                     </button>
                                 </form>
                             </div>
                             <div class="w3-half">
                                 <form method="post">
                                     <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(320deg);" type="submit" name="logout" value="Logout">
-                                        <i class="fa-solid fa-door-open w3-xxlarge"></i><br>Sair
+                                        <i class="fa-solid fa-door-open w3-xxlarge" aria-hidden="true"></i><br>Sair
                                     </button>
                                 </form>
                             </div>
@@ -427,12 +427,12 @@ mysqli_close($con);
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                         <h2>Detalhes da edição</h2>
                         <p style="overflow-wrap: break-word;">
-                            <b>Usuário:</b> <span style="font-weight:bolder;color:red;"><?=@$output['revision']['user'];?></span>
-                            <br><b>Artigo:</b> <?=@$output['compare']['totitle'];?>
-                            <br><b>Diferença:</b> <?=@$output['revision']['bytes'];?> bytes
-                            <br><b>Horário:</b> <?=@$output['revision']['timestamp'];?> (UTC)
-                            <br><b>Sumário:</b> <?=@$output['revision']['summary'];?>
-                            <br><b>Diff:</b> 
+                            <strong>Usuário:</strong> <span style="font-weight:bolder;color:red;"><?=@$output['revision']['user'];?></span>
+                            <br><strong>Artigo:</strong> <?=@$output['compare']['totitle'];?>
+                            <br><strong>Diferença:</strong> <?=@$output['revision']['bytes'];?> bytes
+                            <br><strong>Horário:</strong> <?=@$output['revision']['timestamp'];?> (UTC)
+                            <br><strong>Sumário:</strong> <?=@$output['revision']['summary'];?>
+                            <br><strong>Diff:</strong> 
                             <a href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>" target="_blank"><?=@$output['revision']['diff'];?></a> - <a target="_blank" href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>">Copyvio Detector</a>
                         </p>
                     </div>
@@ -443,12 +443,12 @@ mysqli_close($con);
                 </div>
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                     <h2>Informações gerais</h2>
-                    <p class="w3-small"><b>Nome do wikiconcurso</b><br><?=$contest['name'];?></p>
-                    <p class="w3-small"><b>Nome do atual avaliador</b><br><?=ucfirst($_SESSION['user']['user_name']);?></p>
-                    <p class="w3-small"><b>Horário de início do wikiconcurso</b><br><?=date('d/m/Y H:i:s (\U\T\C)', $contest['start_time']);?></p>
-                    <p class="w3-small"><b>Horário de término do wikiconcurso</b><br><?=date('d/m/Y H:i:s (\U\T\C)', $contest['end_time']);?></p>
-                    <p class="w3-small"><b>Última atualização do banco de dados</b><br><?=date('d/m/Y H:i:s (\U\T\C)', $output['lastedit']);?></p>
-                    <p class="w3-small"><b>Delay no registro das edições</b><br><?=$contest['revert_time'];?> horas</p>
+                    <p class="w3-small"><strong>Nome do wikiconcurso</strong><br><?=$contest['name'];?></p>
+                    <p class="w3-small"><strong>Nome do atual avaliador</strong><br><?=ucfirst($_SESSION['user']['user_name']);?></p>
+                    <p class="w3-small"><strong>Horário de início do wikiconcurso</strong><br><?=date('d/m/Y H:i:s (\U\T\C)', $contest['start_time']);?></p>
+                    <p class="w3-small"><strong>Horário de término do wikiconcurso</strong><br><?=date('d/m/Y H:i:s (\U\T\C)', $contest['end_time']);?></p>
+                    <p class="w3-small"><strong>Última atualização do banco de dados</strong><br><?=date('d/m/Y H:i:s (\U\T\C)', $output['lastedit']);?></p>
+                    <p class="w3-small"><strong>Delay no registro das edições</strong><br><?=$contest['revert_time'];?> horas</p>
                 </div>
             </div>
             <div class="w3-threequarter">
