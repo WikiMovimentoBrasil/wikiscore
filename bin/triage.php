@@ -107,7 +107,7 @@ if ($_POST) {
         $update_query = mysqli_query($con, $sql_update);
         if (mysqli_affected_rows($con) != 0) {
 
-            $output['success']['diff'] = addslashes($_POST['diff']);
+            $output['success']['diff'] = htmlspecialchars($_POST['diff']);
             $output['success']['valid'] = $post['valid'];
             $output['success']['pic'] = $post['pic'];
 
@@ -320,7 +320,7 @@ mysqli_close($con);
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom">
                     <h2>Painel</h2>
                     <div class="w3-container">
-                        <div style="<?php if(!isset($output['revision']['timestamp'])) echo 'display:none;';?>">
+                        <div style="display:<?=(isset($output['revision']['timestamp']))?'initial':'none';?>;">
                             <h6 class="w3-center">Você está avaliando uma edição do dia</h6>
                             <h4 class="w3-center"><?=@substr($output['revision']['timestamp'], 0, 10);?></h4>
                         </div>
