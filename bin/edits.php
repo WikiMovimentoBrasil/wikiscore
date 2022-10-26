@@ -30,25 +30,41 @@ $csv =  "Diff da edição;".
         "Comentário do avaliador"."\r\n";
 
 //Coleta lista de edições
-$edits_query = mysqli_query($con, "SELECT * FROM `{$contest['name_id']}__edits` WHERE `valid_edit` IS NOT NULL;");
-if (mysqli_num_rows($edits_query) == 0) die("No edits");
+$edits_statement = "
+    SELECT
+        *
+    FROM
+        `{$contest['name_id']}__edits`
+    WHERE
+        `valid_user` IS NOT NULL
+;";
+$edits_query = mysqli_prepare($con, $edits_statement);
+mysqli_stmt_execute($edits_query);
+$edits_result = mysqli_stmt_get_result($edits_query);
+mysqli_stmt_close($edits_query);
 
-while ($query = mysqli_fetch_assoc($edits_query)) {
-    $csv .= "\"".
-            $query["diff"]."\";\"".
-            $query["article"]."\";\"".
-            $query["timestamp"]."\";\"".
-            $query["user"]."\";\"".
-            $query["bytes"]."\";\"".
-            str_replace('"', '""', $query["summary"])."\";\"".
-            $query["new_page"]."\";\"".
-            $query["valid_edit"]."\";\"".
-            $query["valid_user"]."\";\"".
-            $query["pictures"]."\";\"".
-            $query["reverted"]."\";\"".
-            $query["by"]."\";\"".
-            $query["when"]."\";\"".
+//Verifica se existem edições cadastradas bo banco de dados
+$rows = mysqli_num_rows($edits_result);
+if ($rows == 0) die("No edits");
+
+$sep = '";"';
+
+while ($query = mysqli_fetch_assoc($edits_result)) {
+    $csv .= '"'.
+            $query["diff"].$sep.
+            $query["article"].$sep.
+            $query["timestamp"].$sep.
+            $query["user"].$sep.
+            $query["bytes"].$sep.
+            str_replace('"', '""', $query["summary"]).$sep.
+            $query["new_page"].$sep.
+            $query["valid_edit"].$sep.
+            $query["valid_user"].$sep.
+            $query["pictures"].$sep.
+            $query["reverted"].$sep.
+            $query["by"].$sep.
+            $query["when"].$sep.
             str_replace('"', '""', $query["obs"])."\"\r\n";
 }
 
-echo(mb_convert_encoding($csv, 'CP1252', 'UTF-8'));
+echo mb_convert_encoding($csv, 'CP1252', 'UTF-8');

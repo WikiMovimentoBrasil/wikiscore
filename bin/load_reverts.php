@@ -46,7 +46,7 @@ while ($row = mysqli_fetch_assoc($edits_result)) {
         "rvprop"    => "sha1|tags",
         "revids"    => $row["diff"]
     ];
-    $revisions_api = file_get_contents($contest['api_endpoint']."?".http_build_query($revisions_api_params);
+    $revisions_api = file_get_contents($contest['api_endpoint']."?".http_build_query($revisions_api_params));
     $revisions_api = unserialize($revisions_api)['query'];
     $revision = end($revisions_api['pages'])['revisions']['0'];
 
