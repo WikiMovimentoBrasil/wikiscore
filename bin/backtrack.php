@@ -83,7 +83,9 @@ if (isset($_POST['diff'])) {
                         foreach ($case["diffs"] as $diff) {
                             echo '<li class="w3-bar">';
                                 echo '<div class="w3-bar-item">';
-                                    echo "<span class='w3-large'><a href='{$contest['endpoint']}?diff={$diff['diff']}' target='_blank'>{$diff['diff']}</a></span><br>";
+                                    echo '<span class="w3-large">';
+                                        echo "<a href='{$contest['endpoint']}?diff={$diff['diff']}' target='_blank'>{$diff['diff']}</a>";
+                                    echo '</span><br>';
                                     echo "<span>Edição  em {$diff['timestamp']} - {$diff['bytes']} bytes</span>";
                                 echo '</div>';
                                 echo '<form method="post">';
@@ -92,9 +94,12 @@ if (isset($_POST['diff'])) {
                                 echo '</form>';
                             echo '</li>';
                         }
+                        
                         echo '</ul>';
                     echo '</div>';
-                    echo "<footer class='w3-container w3-{$contest['theme']}' style='filter: hue-rotate(180deg);'><h5>Participante se inscreveu em <strong>{$case['enrollment_timestamp']}</strong></h5></footer>";
+                    echo "<footer class='w3-container w3-{$contest['theme']}' style='filter: hue-rotate(180deg);'>";
+                        echo "<h5>Participante se inscreveu em <strong>{$case['enrollment_timestamp']}</strong></h5>";
+                    echo '</footer>';
                 echo '</div>';
             }
             ?>

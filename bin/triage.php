@@ -250,7 +250,14 @@ if ($output['revision'] != NULL) {
             $delta_color = "grey";
         }
         $timestamp = date('d/m/Y H:i:s (\U\T\C)', strtotime($edit['timestamp']));
-        $output['history'][] = str_repeat(" ", 24)."<p class='w3-small'><strong>{$edit['user']}</strong><br>{$timestamp}<br><span class='w3-text-{$delta_color}'>{$delta} bytes</span></p>\n";
+        $output['history'][] = "
+            <p class='w3-small'>
+                <strong>{$edit['user']}</strong>
+                <br>
+                {$timestamp}
+                <br>
+                <span class='w3-text-{$delta_color}'>{$delta} bytes</span>
+            </p>\n";
     }
 
     //Remove pseudo-edição
@@ -279,7 +286,10 @@ mysqli_close($con);
         </div>
         <div class="w3-row-padding w3-content" style="max-width:1400px">
             <div class="w3-quarter">
-                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" <?php if(!isset($output['success']['diff'])) echo 'style="display:none;"';?>>
+                <div 
+                class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" 
+                style="display:<?=(isset($output['success']['diff']))?'initial':'none';?>;"
+                >
                     <h2>Última avaliação</h2>
                     <p>
                         Diff: <a href="<?=$contest['endpoint'];?>?diff=<?=@$output['success']['diff'];?>" target="_blank"><?=@$output['success']['diff'];?></a>
@@ -299,7 +309,12 @@ mysqli_close($con);
                         }?>
                     </p>
                     <p>
-                        <button class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=modify&diff=<?=@$output['success']['diff'];?>', '_blank');"><i class="fa-solid fa-eraser w3-medium" aria-hidden="true"></i> Corrigir</button>
+                        <button 
+                        class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small" 
+                        type="button" 
+                        onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=modify&diff=<?=@$output['success']['diff'];?>', '_blank');"
+                        >
+                        <i class="fa-solid fa-eraser w3-medium" aria-hidden="true"></i> Corrigir</button>
                     </p>
                 </div>
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom">
@@ -427,12 +442,21 @@ mysqli_close($con);
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                         <h2>Detalhes da edição</h2>
                         <p style="overflow-wrap: break-word;">
-                            <strong>Usuário:</strong> <span style="font-weight:bolder;color:red;"><?=@$output['revision']['user'];?></span>
-                            <br><strong>Artigo:</strong> <?=@$output['compare']['totitle'];?>
-                            <br><strong>Diferença:</strong> <?=@$output['revision']['bytes'];?> bytes
-                            <br><strong>Horário:</strong> <?=@$output['revision']['timestamp'];?> (UTC)
-                            <br><strong>Sumário:</strong> <?=@$output['revision']['summary'];?>
-                            <br><strong>Diff:</strong>
+                            <strong>Usuário:</strong>
+                            &nbsp;
+                            <span style="font-weight:bolder;color:red;">
+                                <?=@$output['revision']['user'];?>
+                            </span>
+                            <br>
+                            <strong>Artigo:</strong> <?=@$output['compare']['totitle'];?>
+                            <br>
+                            <strong>Diferença:</strong> <?=@$output['revision']['bytes'];?> bytes
+                            <br>
+                            <strong>Horário:</strong> <?=@$output['revision']['timestamp'];?> (UTC)
+                            <br>
+                            <strong>Sumário:</strong> <?=@$output['revision']['summary'];?>
+                            <br>
+                            <strong>Diff:</strong>
                             <a href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>" target="_blank"><?=@$output['revision']['diff'];?></a> - <a target="_blank" href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>">Copyvio Detector</a>
                         </p>
                     </div>
@@ -443,12 +467,36 @@ mysqli_close($con);
                 </div>
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                     <h2>Informações gerais</h2>
-                    <p class="w3-small"><strong>Nome do wikiconcurso</strong><br><?=$contest['name'];?></p>
-                    <p class="w3-small"><strong>Nome do atual avaliador</strong><br><?=ucfirst($_SESSION['user']['user_name']);?></p>
-                    <p class="w3-small"><strong>Horário de início do wikiconcurso</strong><br><?=date('d/m/Y H:i:s (\U\T\C)', $contest['start_time']);?></p>
-                    <p class="w3-small"><strong>Horário de término do wikiconcurso</strong><br><?=date('d/m/Y H:i:s (\U\T\C)', $contest['end_time']);?></p>
-                    <p class="w3-small"><strong>Última atualização do banco de dados</strong><br><?=date('d/m/Y H:i:s (\U\T\C)', $output['lastedit']);?></p>
-                    <p class="w3-small"><strong>Delay no registro das edições</strong><br><?=$contest['revert_time'];?> horas</p>
+                    <p class="w3-small">
+                        <strong>Nome do wikiconcurso</strong>
+                        <br>
+                        <?=$contest['name'];?>
+                    </p>
+                    <p class="w3-small">
+                        <strong>Nome do atual avaliador</strong>
+                        <br>
+                        <?=ucfirst($_SESSION['user']['user_name']);?>
+                    </p>
+                    <p class="w3-small">
+                        <strong>Horário de início do wikiconcurso</strong>
+                        <br>
+                        <?=date('d/m/Y H:i:s (\U\T\C)', $contest['start_time']);?>
+                    </p>
+                    <p class="w3-small">
+                        <strong>Horário de término do wikiconcurso</strong>
+                        <br>
+                        <?=date('d/m/Y H:i:s (\U\T\C)', $contest['end_time']);?>
+                    </p>
+                    <p class="w3-small">
+                        <strong>Última atualização do banco de dados</strong>
+                        <br>
+                        <?=date('d/m/Y H:i:s (\U\T\C)', $output['lastedit']);?>
+                    </p>
+                    <p class="w3-small">
+                        <strong>Delay no registro das edições</strong>
+                        <br>
+                        <?=$contest['revert_time'];?> horas
+                    </p>
                 </div>
             </div>
             <div class="w3-threequarter">

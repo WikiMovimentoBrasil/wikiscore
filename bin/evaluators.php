@@ -166,7 +166,8 @@ $icon = '<svg class="w3-bar-item" width="85" height="85" stroke-width="1.5" view
     <?php
     if (isset($output['success'])) {
         if (is_null($output['success']['diff'])) {
-            echo "<script>alert('Status do avaliador autalizado com sucesso!');window.location.href = window.location.href;</script>";
+            echo "<script>alert('Status do avaliador autalizado com sucesso!');";
+            echo "window.location.href = window.location.href;</script>";
         } else {
             echo "<script>alert('Erro ao atualizar status do avaliador');</script>";
         }

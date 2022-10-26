@@ -154,7 +154,9 @@ $wd_query = mysqli_query($con,
                         <?php foreach ($adicionar as $artigo_add) {
                             $artigo_add_encoded = urlencode($artigo_add);
                             echo "<li>";
-                            echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_add_encoded}'>{$artigo_add}</a>";
+                                echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_add_encoded}'>";
+                                    echo $artigo_add;
+                                echo "</a>";
                             echo "</li>\n";
                         }?>
                     </ul>
@@ -179,7 +181,9 @@ $wd_query = mysqli_query($con,
 
                             $artigo_rem_encode = urlencode($artigo_rem);
                             echo "<li>";
-                            echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_rem_encode}'>{$artigo_rem}</a>";
+                                echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_rem_encode}'>";
+                                    echo $artigo_rem;
+                                echo "</a>";
                             echo "</li>\n";
                         }?>
                     </ul>
@@ -195,7 +199,9 @@ $wd_query = mysqli_query($con,
                         <?php foreach ($eliminar as $artigo_del) {
                             $artigo_del_encode = urlencode($artigo_del);
                             echo "<li>";
-                            echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_del_encode}'>{$artigo_del}</a>";
+                                echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_del_encode}'>";
+                                    echo $artigo_del;
+                                echo "</a>";
                             echo "</li>\n";
                         }
                         while ($row = mysqli_fetch_assoc($wd_query)) {
@@ -212,7 +218,10 @@ $wd_query = mysqli_query($con,
 
                             $wd_encode = urlencode($wd['pageid']);
                             echo "<li class='w3-green'>";
-                            echo "<a target='_blank' href='{$contest['endpoint']}?curid={$wd_encode}'>{$wd['title']}</a> <small>(Sem Wikidata)</small>";
+                                echo "<a target='_blank' href='{$contest['endpoint']}?curid={$wd_encode}'>";
+                                    echo $wd['title'];
+                                echo "</a>";
+                                echo " <small>(Sem Wikidata)</small>";
                             echo "</li>\n";
                         }
                         ?>
@@ -233,7 +242,10 @@ $wd_query = mysqli_query($con,
                             echo "<li class='";
                             if ($row['valid_edit'] == '1') echo "w3-red";
                             echo "'>";
-                            echo "<a target='_blank' href='{$contest['endpoint']}?diff={$diff_encode}'>{$row['diff']}</a> <small>em {$row['timestamp']}</small>";
+                                echo "<a target='_blank' href='{$contest['endpoint']}?diff={$diff_encode}'>";
+                                    echo $row['diff'];
+                                echo "</a>";
+                                echo " <small>em {$row['timestamp']}</small>";
                             echo "</li>\n";
                         }
                         ?>
