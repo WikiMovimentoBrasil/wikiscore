@@ -5,49 +5,63 @@ echo "<pre>";
 require_once "connect.php";
 
 //Coleta lista de edições
-$edits_query = mysqli_query($con, "
-	SELECT
-		`diff`
-	FROM
-		`{$contest['name_id']}__edits`
-	WHERE
-		`valid_user` IS NOT NULL AND
-		`reverted` IS NULL
-	;");
-if (mysqli_num_rows($edits_query) == 0) die("No edits");
+$edits_statement = "
+    SELECT
+        `diff`
+    FROM
+        `{$contest['name_id']}__edits`
+    WHERE
+        `valid_user` IS NOT NULL AND
+        `reverted` IS NULL
+;";
+$edits_query = mysqli_prepare($con, $edits_statement);
+mysqli_stmt_execute($edits_query);
+$edits_result = mysqli_stmt_get_result($edits_query);
+mysqli_stmt_close($edits_query);
+
+//Verifica se existem edições cadastradas bo banco de dados
+$rows = mysqli_num_rows($edits_result);
+if ($rows == 0) die("No edits");
+
+//Prepara query para atualizações no banco de dados
+$update_statement = "
+    UPDATE
+        `{$contest['name_id']}__edits`
+    SET
+        `reverted` = '1'
+    WHERE
+        `diff` = ?
+;";
+$update_query = mysqli_prepare($con, $update_statement);
+mysqli_stmt_bind_param($update_query, "i", $row["diff"]);
 
 //Loop para análise de cada edição
-while ($row = mysqli_fetch_assoc($edits_query)) {
+while ($row = mysqli_fetch_assoc($edits_result)) {
 
-	//Coleta tags da revisão
-	$revisions_api_params = [
-		"action" 	=> "query",
-		"format"	=> "json",
-		"prop"		=> "revisions",
-		"rvprop"	=> "sha1|tags",
-		"revids"	=> $row["diff"]
-	];
-	$revisions_api = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($revisions_api_params)), true)['query'];
-	$revision = end($revisions_api['pages'])['revisions']['0'];
+    //Coleta tags da revisão
+    $revisions_api_params = [
+        "action"    => "query",
+        "format"    => "php",
+        "prop"      => "revisions",
+        "rvprop"    => "sha1|tags",
+        "revids"    => $row["diff"]
+    ];
+    $revisions_api = file_get_contents($contest['api_endpoint']."?".http_build_query($revisions_api_params);
+    $revisions_api = unserialize($revisions_api)['query'];
+    $revision = end($revisions_api['pages'])['revisions']['0'];
 
-	//Marca edição caso tenha sido revertida ou eliminada
-	if (
-		in_array('mw-reverted',$revision['tags'])
-		OR isset($revisions_api['badrevids'])
-		OR isset($revision['sha1hidden'])
-	) {
-		mysqli_query($con, "
-			UPDATE
-				`{$contest['name_id']}__edits`
-			SET
-				`reverted` = '1'
-			WHERE
-				`diff` = '".$row["diff"]."'
-			;");
-		echo("Marcada edição ".$row["diff"]." como revertida.<br>");
-	}
+    //Marca edição caso tenha sido revertida ou eliminada
+    if (
+        in_array('mw-reverted', $revision['tags'])
+        || isset($revisions_api['badrevids'])
+        || isset($revision['sha1hidden'])
+    ) {
+        mysqli_stmt_execute($update_query);
+        echo "Marcada edição {$row["diff"]} como revertida.<br>";
+    }
 }
 
 //Encerra conexão
+mysqli_stmt_close($update_query);
 mysqli_close($con);
 echo "Concluido! (3/3)";
