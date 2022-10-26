@@ -7,13 +7,129 @@ require_once "data.php";
 require_once "connect.php";
 
 //Função para query de cálculo de pontuação
-function query_points ($time_sql) {
+function querypoints($time)
+{
     global $contest;
     global $con;
 
-    $time_sql .= ' 23:59:59';
+    $time .= ' 23:59:59';
 
-    $query = "SELECT `user_table`.`user`, IFNULL(`points`.`total points`, 0) AS `total points` FROM( SELECT DISTINCT `{$contest['name_id']}__edits`.`user` FROM `{$contest['name_id']}__edits` INNER JOIN `{$contest['name_id']}__users` ON `{$contest['name_id']}__users`.`user` = `{$contest['name_id']}__edits`.`user`) AS `user_table` LEFT JOIN ( SELECT t1.`user`, t1.`bytes points`, t2.`pictures points`, ( t1.`bytes points` + t2.`pictures points` ) AS `total points` FROM ( SELECT edits_ruled.`user`, SUM(edits_ruled.`bytes`) AS `sum`, SUM(edits_ruled.`valid_edits`) AS `total edits`, FLOOR( SUM(edits_ruled.`bytes`) / ${contest['bytes_per_points']} ) AS `bytes points` FROM ( SELECT `{$contest['name_id']}__edits`.`article`, `{$contest['name_id']}__edits`.`user`, CASE WHEN SUM(`{$contest['name_id']}__edits`.`bytes`) > ${contest['max_bytes_per_article']} THEN ${contest['max_bytes_per_article']} ELSE SUM(`{$contest['name_id']}__edits`.`bytes`) END AS `bytes`, COUNT(`{$contest['name_id']}__edits`.`valid_edit`) AS `valid_edits` FROM `{$contest['name_id']}__edits` WHERE `{$contest['name_id']}__edits`.`valid_edit` IS NOT NULL AND `{$contest['name_id']}__edits`.`timestamp` < ( CASE WHEN '${time_sql}' = '0' THEN NOW() ELSE '${time_sql}' END) GROUP BY `user`, `article` ORDER BY NULL ) AS edits_ruled GROUP BY edits_ruled.`user` ORDER BY NULL ) AS t1 LEFT JOIN ( SELECT `distinct`.`user`, `distinct`.`article`, SUM(`distinct`.`pictures`) AS `total pictures`, CASE WHEN ${contest['pictures_per_points']} = 0 THEN 0 ELSE FLOOR(SUM(`distinct`.`pictures`) / ${contest['pictures_per_points']}) END AS `pictures points` FROM ( SELECT `{$contest['name_id']}__edits`.`user`, `{$contest['name_id']}__edits`.`article`, `{$contest['name_id']}__edits`.`pictures`, `{$contest['name_id']}__edits`.`n` FROM `{$contest['name_id']}__edits` WHERE `{$contest['name_id']}__edits`.`pictures` IS NOT NULL AND `{$contest['name_id']}__edits`.`timestamp` < ( CASE WHEN '${time_sql}' = '0' THEN NOW() ELSE '${time_sql}' END) GROUP BY CASE WHEN ${contest['pictures_mode']} = 0 THEN `{$contest['name_id']}__edits`.`user` END, CASE WHEN ${contest['pictures_mode']} = 0 THEN `{$contest['name_id']}__edits`.`article` END, CASE WHEN ${contest['pictures_mode']} = 0 THEN `{$contest['name_id']}__edits`.`pictures` ELSE `{$contest['name_id']}__edits`.`n` END ) AS `distinct` GROUP BY `distinct`.`user` ORDER BY NULL ) AS t2 ON t1.`user` = t2.`user` ) AS `points` ON `user_table`.`user` = `points`.`user` ORDER BY `total points` DESC, `user_table`.`user` ASC;";
+    $query = "
+    SELECT
+        `user_table`.`user`,
+        IFNULL(`points`.`total points`, 0) AS `total points`
+    FROM
+        (
+            SELECT
+                DISTINCT `{$contest['name_id']}__edits`.`user`
+            FROM
+                `{$contest['name_id']}__edits`
+                INNER JOIN
+                    `{$contest['name_id']}__users`
+                ON `{$contest['name_id']}__users`.`user` = `{$contest['name_id']}__edits`.`user`
+        ) AS `user_table`
+        LEFT JOIN (
+            SELECT
+                t1.`user`,
+                t1.`bytes points`,
+                t2.`pictures points`,
+                (t1.`bytes points` + t2.`pictures points`) AS `total points`
+            FROM
+                (
+                    SELECT
+                        edits_ruled.`user`,
+                        SUM(edits_ruled.`bytes`) AS `sum`,
+                        SUM(edits_ruled.`valid_edits`) AS `total edits`,
+                        FLOOR(
+                            SUM(edits_ruled.`bytes`) / {$contest['bytes_per_points']}
+                        ) AS `bytes points`
+                    FROM
+                        (
+                            SELECT
+                                `{$contest['name_id']}__edits`.`article`,
+                                `{$contest['name_id']}__edits`.`user`,
+                                CASE
+                                    WHEN SUM(`{$contest['name_id']}__edits`.`bytes`)
+                                        > {$contest['max_bytes_per_article']}
+                                    THEN {$contest[ 'max_bytes_per_article' ]}
+                                    ELSE SUM(`{$contest['name_id']}__edits`.`bytes`)
+                                END AS `bytes`,
+                                COUNT(`{$contest['name_id']}__edits`.`valid_edit`) AS `valid_edits`
+                            FROM
+                                `{$contest['name_id']}__edits`
+                            WHERE
+                                `{$contest['name_id']}__edits`.`valid_edit` IS NOT NULL
+                                AND `{$contest['name_id']}__edits`.`timestamp` < (
+                                    CASE
+                                        WHEN '{$time}' = '0'
+                                        THEN NOW()
+                                        ELSE '{$time}'
+                                    END
+                                )
+                            GROUP BY
+                                `user`,
+                                `article`
+                            ORDER BY
+                                NULL
+                        ) AS edits_ruled
+                    GROUP BY
+                        edits_ruled.`user`
+                    ORDER BY
+                        NULL
+                ) AS t1
+                LEFT JOIN (
+                    SELECT
+                        `distinct`.`user`,
+                        `distinct`.`article`,
+                        SUM(`distinct`.`pictures`) AS `total pictures`,
+                        CASE
+                            WHEN {$contest['pictures_per_points']} = 0
+                            THEN 0
+                            ELSE FLOOR(SUM(`distinct`.`pictures`) / {$contest['pictures_per_points']}
+                        ) END AS `pictures points`
+                    FROM
+                        (
+                            SELECT
+                                `{$contest['name_id']}__edits`.`user`,
+                                `{$contest['name_id']}__edits`.`article`,
+                                `{$contest['name_id']}__edits`.`pictures`,
+                                `{$contest['name_id']}__edits`.`n`
+                            FROM
+                                `{$contest['name_id']}__edits`
+                            WHERE
+                                `{$contest['name_id']}__edits`.`pictures` IS NOT NULL
+                                AND `{$contest['name_id']}__edits`.`timestamp` < (
+                                    CASE
+                                        WHEN '{$time}' = '0'
+                                        THEN NOW()
+                                        ELSE '{$time}'
+                                    END
+                                )
+                            GROUP BY
+                                CASE
+                                    WHEN {$contest[ 'pictures_mode' ]} = 0
+                                    THEN `{$contest['name_id']}__edits`.`user`
+                                END,
+                                CASE
+                                    WHEN {$contest[ 'pictures_mode' ]} = 0
+                                    THEN `{$contest['name_id']}__edits`.`article`
+                                    END,
+                                CASE
+                                    WHEN {$contest[ 'pictures_mode' ]} = 0
+                                    THEN `{$contest['name_id']}__edits`.`pictures`
+                                    ELSE `{$contest['name_id']}__edits`.`n`
+                                END
+                        ) AS `distinct`
+                    GROUP BY
+                        `distinct`.`user`
+                    ORDER BY
+                        NULL
+                ) AS t2 ON t1.`user` = t2.`user`
+        ) AS `points` ON `user_table`.`user` = `points`.`user`
+    ORDER BY
+        `total points` DESC,
+        `user_table`.`user` ASC;
+";
 
     $run_query = mysqli_query($con, $query);
 
@@ -39,20 +155,26 @@ if (time() > $contest['end_time']) {
 
 //Monta lista de dias em uma array
 $days = array();
-for ($i = -1; end($days) != $start_day; $i--) $days[] = date('Y-m-d', strtotime("{$i} days", strtotime($end_time)));
+for ($i = -1; end($days) != $start_day; $i--) {
+    $days[] = date('Y-m-d', strtotime("{$i} days", strtotime($end_time)));
+}
 $days = array_reverse($days);
 
 //Separa último dia da lista
 $last_day = array_pop($days);
 
 //Coleta pontuação dos demais dias via query
-foreach ($days as $time_sql) $data_graph[$time_sql] = query_points($time_sql);
+foreach ($days as $time_sql) {
+    $data_graph[$time_sql] = querypoints($time_sql);
+}
 
 //Coleta pontuação do último dia do último dia do wikiconcurso, caso ainda esteja ocorrendo
-if ($finished) $data_graph[$last_day] = query_points($last_day);
+if ($finished) {
+    $data_graph[$last_day] = querypoints($last_day);
+}
 
 //Coleta lista dos 9 primeiros colocados do último dia via query
-$last_day = query_points($last_day);
+$last_day = querypoints($last_day);
 $last_day = array_keys($last_day);
 $user_list = array_slice($last_day, 0, 9);
 
@@ -101,20 +223,23 @@ foreach ($user_list as $user) {
 $datasets_graph = implode(',', $datasets_graph);
 
 //Calcula número total de dias do wikiconcurso e monta eixo X dos gráficos
-$elapsed_days = floor((time() - $contest['start_time']) / 60 / 60 / 24 );
-$total_days = ceil(($contest['end_time'] - $contest['start_time']) / 60 / 60 / 24 ) + 2;
-for ($i=1; $i < $total_days; $i++) $all_days[] = $i;
+$elapsed_days = floor((time() - $contest['start_time']) / 60 / 60 / 24);
+$total_days = ceil(($contest['end_time'] - $contest['start_time']) / 60 / 60 / 24) + 2;
+$all_days = array();
+for ($i=1; $i < $total_days; $i++) array_push($all_days, $i);
 $all_days = implode(", ", $all_days);
 
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
-    <title>Gráfico de pontos - <?=$contest['name'];?></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="bin/w3.css">
-    <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
-    <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <head>
+        <title>Gráfico de pontos - <?=$contest['name'];?></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="bin/w3.css">
+        <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
+        <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    </head>
     <body>
         <header class="w3-container w3-<?=$contest['theme'];?>">
             <h1>Gráfico de pontos - <?=$contest['name'];?></h1>
@@ -123,7 +248,13 @@ $all_days = implode(", ", $all_days);
         <div class="w3-row-padding w3-content" style="max-width:700px">
             <div class="w3-container w3-margin-top w3-card-4">
                 <div class="w3-container">
-                    <p>O gráfico abaixo exibe a evolução das pontuações recebidas pelos 9 participantes melhores classificados durante o wikiconcurso. Esse gráfico é gerado de forma automática e não consiste em uma classificação final ou oficial. Observe que os organizadores podem reavaliar edições anteriores e os pontos exibidos podem ser recalculados sem aviso prévio. Em caso de discrepância, apenas a tabela inserida pelos organizadores do wikiconcurso na sua página oficial deve ser considerada.</p>
+                    <p>
+                        O gráfico abaixo exibe a evolução das pontuações recebidas pelos 9 participantes melhores
+                        classificados durante o wikiconcurso. Esse gráfico é gerado de forma automática e não
+                        consiste em uma classificação final ou oficial. Observe que os organizadores podem
+                        reavaliar edições anteriores e os pontos exibidos podem ser recalculados sem aviso
+                        prévio. Em caso de discrepância, apenas a tabela inserida pelos organizadores do
+                        wikiconcurso na sua página oficial deve ser considerada.</p>
                 </div>
             </div>
             <div class="w3-container w3-section w3-card-4">
