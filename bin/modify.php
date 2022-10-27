@@ -159,18 +159,18 @@ mysqli_close($con);
 						<button class="w3-button w3-section w3-green w3-ripple" style="width:100%">Carregar edição</button>
 					</p>
 				</form>
-				<form 
-				class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" 
-				id="modify" 
-				method="post" 
+				<form
+				class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom"
+				id="modify"
+				method="post"
 				style="display:<?php
 					if (
-						$_SESSION['user']['user_name']   == @$output['revision']['by'] OR 
+						$_SESSION['user']['user_name']   == @$output['revision']['by'] OR
 						$_SESSION['user']['user_status'] == 'G'
 					) {
-						echo 'none';
+						echo 'block';
 					} else {
-						echo 'initial';
+						echo 'none';
 					}
 					?>"
 				>
@@ -215,9 +215,9 @@ mysqli_close($con);
 						<input class="w3-button w3-orange w3-border-orange w3-border w3-block w3-margin-top" type="submit" value="Modificar">
 					</p>
 				</form>
-				<div 
-				class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" 
-				style="display: <?=(isset($output['compare']['*']))?'initial':'none';?>;"
+				<div
+				class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom"
+				style="display: <?=(isset($output['compare']['*']))?'block':'none';?>;"
 				>
 					<h2>Dados da edição</h2>
 					<ul class="w3-ul w3-margin-bottom">
@@ -230,13 +230,13 @@ mysqli_close($con);
 						<li>Artigo novo:<br><?=(@$output['revision']['new_page'])?"Sim":"Não";?></li>
 						<li>Edição válida:<br><?=(@$output['revision']['valid_edit'])?"Sim":"Não";?></li>
 						<li>Usuário inscrito:<br><?=(@$output['revision']['valid_user'])?"Sim":"Não";?></li>
-						<li>Imagem:<br><?php 
-						if ($contest['pictures_mode'] == 2) { 
-							echo(@$output['revision']['pictures']); 
-						} else { 
-							echo ($output['revision']['pictures'])?"Sim":"Não"; 
-						}
-						}?></li>
+						<li>Imagem:<br><?php
+							if ($contest['pictures_mode'] == 2) {
+								echo(@$output['revision']['pictures']);
+							} else {
+								echo ($output['revision']['pictures'])?"Sim":"Não";
+							}
+						?></li>
 						<li>Edição revertida:<br><?=(@$output['revision']['reverted'])?"Sim":"Não";?></li>
 						<li>Avaliador:<br><?=@$output['revision']['by'];?></li>
 						<li>Horário da avaliação:<br><?=@$output['revision']['when'];?></li>

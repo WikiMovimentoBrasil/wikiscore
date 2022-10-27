@@ -286,9 +286,9 @@ mysqli_close($con);
         </div>
         <div class="w3-row-padding w3-content" style="max-width:1400px">
             <div class="w3-quarter">
-                <div 
-                class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" 
-                style="display:<?=(isset($output['success']['diff']))?'initial':'none';?>;"
+                <div
+                class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom"
+                style="display:<?=(isset($output['success']['diff']))?'block':'none';?>;"
                 >
                     <h2>Última avaliação</h2>
                     <p>
@@ -309,9 +309,9 @@ mysqli_close($con);
                         }?>
                     </p>
                     <p>
-                        <button 
-                        class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small" 
-                        type="button" 
+                        <button
+                        class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small"
+                        type="button"
                         onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=modify&diff=<?=@$output['success']['diff'];?>', '_blank');"
                         >
                         <i class="fa-solid fa-eraser w3-medium" aria-hidden="true"></i> Corrigir</button>
@@ -320,7 +320,7 @@ mysqli_close($con);
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom">
                     <h2>Painel</h2>
                     <div class="w3-container">
-                        <div style="display:<?=(isset($output['revision']['timestamp']))?'initial':'none';?>;">
+                        <div style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>;">
                             <h6 class="w3-center">Você está avaliando uma edição do dia</h6>
                             <h4 class="w3-center"><?=@substr($output['revision']['timestamp'], 0, 10);?></h4>
                         </div>

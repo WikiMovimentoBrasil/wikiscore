@@ -15,9 +15,9 @@ $backtrack_statement = "
         `{$contest['name_id']}__users`.`timestamp` AS `enrollment_timestamp`
     FROM
         `{$contest['name_id']}__edits`
-        INNER JOIN 
-            `{$contest['name_id']}__users` 
-        ON 
+        INNER JOIN
+            `{$contest['name_id']}__users`
+        ON
             `{$contest['name_id']}__edits`.`user` = `{$contest['name_id']}__users`.`user`
     WHERE
         `{$contest['name_id']}__edits`.`valid_user` IS NULL
@@ -33,9 +33,9 @@ mysqli_stmt_close($backtrack_query);
 //Insere edições em uma array
 while ($edit = mysqli_fetch_assoc($backtrack_result)) {
     $output["backtrack"][$edit["user"]]["enrollment_timestamp"] = $edit['enrollment_timestamp'];
-    $output["backtrack"][$edit["user"]]["diffs"][] = [ 
-        "diff" => $edit['diff'], 
-        "bytes" => $edit['bytes'], 
+    $output["backtrack"][$edit["user"]]["diffs"][] = [
+        "diff" => $edit['diff'],
+        "bytes" => $edit['bytes'],
         'timestamp' => $edit['edit_timestamp']
     ];
 }
@@ -50,11 +50,11 @@ if (isset($_POST['diff'])) {
         SET
             `valid_user`    = '1',
             `obs`           = CONCAT(
-                IFNULL(`obs`, ''), 
-                'Backtrack: ', 
-                ?, 
-                ' em ', 
-                ?, 
+                IFNULL(`obs`, ''),
+                'Backtrack: ',
+                ?,
+                ' em ',
+                ?,
                 '\n'
             )
         WHERE
@@ -63,8 +63,8 @@ if (isset($_POST['diff'])) {
     ";
     $update_query = mysqli_prepare($con, $update_statement);
     mysqli_stmt_bind_param(
-        $update_query, 
-        "ssi", 
+        $update_query,
+        "ssi",
         $_SESSION['user']['user_name'],
         date('Y-m-d H:i:s'),
         $_POST['diff']
@@ -99,7 +99,8 @@ if (isset($_POST['diff'])) {
                 <div class="w3-container">
                     <p>
                         Essa página lista as edições que foram feitas por usuários participantes no âmbito do
-                        wikiconcurso mas foram realizadas antes da efetivação da inscrição no Outreach Dashboard. Se necessário, clique no botão para aceitar a edição. 
+                        wikiconcurso mas foram realizadas antes da efetivação da inscrição no Outreach Dashboard.
+                        Se necessário, clique no botão para aceitar a edição.
                         Após a aceitação, a edição estará disponível na fila de avaliação.
                     </p>
                 </div>
@@ -115,8 +116,8 @@ if (isset($_POST['diff'])) {
                             echo '<li class="w3-bar">';
                                 echo '<div class="w3-bar-item">';
                                     echo '<span class="w3-large">';
-                                        echo "<a 
-                                            href='{$contest['endpoint']}?diff={$diff['diff']}' 
+                                        echo "<a
+                                            href='{$contest['endpoint']}?diff={$diff['diff']}'
                                             target='_blank'
                                             >{$diff['diff']}</a>";
                                     echo '</span><br>';
@@ -124,15 +125,15 @@ if (isset($_POST['diff'])) {
                                 echo '</div>';
                                 echo '<form method="post">';
                                     echo "<input type='hidden' name='diff' value='{$diff['diff']}'>";
-                                    echo "<button 
-                                        type='submit' 
-                                        onclick=\"return confirm('Tem certeza?')\" 
+                                    echo "<button
+                                        type='submit'
+                                        onclick=\"return confirm('Tem certeza?')\"
                                         class='w3-bar-item w3-right w3-button w3-section w3-green'
                                         >Aceitar edição</button>";
                                 echo '</form>';
                             echo '</li>';
                         }
-                        
+
                         echo '</ul>';
                     echo '</div>';
                     echo "<footer class='w3-container w3-{$contest['theme']}' style='filter: hue-rotate(180deg);'>";

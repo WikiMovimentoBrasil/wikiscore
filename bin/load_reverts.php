@@ -19,7 +19,7 @@ mysqli_stmt_execute($edits_query);
 $edits_result = mysqli_stmt_get_result($edits_query);
 mysqli_stmt_close($edits_query);
 
-//Verifica se existem edições cadastradas bo banco de dados
+//Verifica se existem edições cadastradas no banco de dados
 $rows = mysqli_num_rows($edits_result);
 if ($rows == 0) die("No edits");
 
