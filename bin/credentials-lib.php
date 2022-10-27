@@ -32,36 +32,33 @@ MORE
 Please visit https://code-boxx.com/ for more!
 */
 
-class Credentials 
+class Credentials
 {
   // (A) CONSTRUCTOR - CONNECT DATABASE
   private $pdo = null;
   private $stmt = null;
   public $error = null;
-  public function __construct() 
+  public function __construct()
   {
     try {
       $this->pdo = new PDO(
         "mysql:host=".DB_HOST.";dbname=".DB_NAME.";charset=".DB_CHARSET,
-        DB_USER, 
-        DB_PASSWORD, 
-        [
-          PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-          PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-        ]
+        DB_USER,
+        DB_PASSWORD,
+        [ PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC ]
       );
     } catch (Exception $ex) { exit($ex->getMessage()); }
   }
 
   // (B) DESTRUCTOR - CLOSE CONNECTION
-  public function __destruct() 
+  public function __destruct()
   {
     if ($this->stmt !== null) { $this->stmt = null; }
     if ($this->pdo !== null) { $this->pdo = null; }
   }
 
   // (C) GET USER BY EMAIL
-  public function getByEmail($email) 
+  public function getByEmail($email)
   {
     $this->stmt = $this->pdo->prepare("SELECT * FROM `".CONTEST."__credentials` WHERE `user_email`=?");
     $this->stmt->execute([$email]);
@@ -70,49 +67,55 @@ class Credentials
 
   // (D) VERIFY EMAIL PASSWORD
   // SESSION MUST BE STARTED!
-  public function login($email, $password) 
+  public function login($email, $password)
   {
     // (D1) ALREADY SIGNED IN
     if (isset($_SESSION['user'])) { return true; }
 
     // (D2) GET USER
     $user = $this->getByEmail($email);
-    if (!is_array($user)) { return false; }
+    if (is_array($user)) {
 
-    // (D3) USER STATUS
-    if ($user['user_status']=="P") { return false; }
+      // (D3) USER STATUS
+      if ($user['user_status']!="P") {
 
-    // (D4) VERIFY PASSWORD + REGISTER SESSION
-    if (password_verify($password, $user['user_password'])) {
-      $_SESSION['user'] = [];
-      foreach ($user as $k => $v) {
-        if ($k!="user_password") { $_SESSION['user'][$k] = $v; }
+        // (D4) VERIFY PASSWORD + REGISTER SESSION
+        if (password_verify($password, $user['user_password'])) {
+          $_SESSION['user'] = [];
+          foreach ($user as $k => $v) {
+            if ($k!="user_password") { $_SESSION['user'][$k] = $v; }
+          }
+          $_SESSION['user']['contest'] = CONTEST;
+          return true;
+        }
+
       }
-      $_SESSION['user']['contest'] = CONTEST;
-      return true;
+
     }
+
+    // (D5) AUTH FAIL
     return false;
   }
 
   // (E) SAVE USER
-  public function save($email, $pass, $id=null) 
+  public function save($email, $pass, $id=null)
   {
     $name = strstr($email, "@", true);
-    if (!$name) return false;
+    if (!$name) { return false; }
     $name = trim($name, "@");
-    $contest_id = CONTEST;
+    $contestid = CONTEST;
 
     if ($id===null) {
       $sql = "
-        INSERT INTO `{$contest_id}__credentials` 
-          (`user_name`, `user_email`, `user_password`) 
-        VALUES 
+        INSERT INTO `{$contestid}__credentials`
+          (`user_name`, `user_email`, `user_password`)
+        VALUES
           (?,?,?)";
       $data = [$name, $email, password_hash($pass, PASSWORD_DEFAULT)];
     } else {
       $sql = "
-        UPDATE `{$contest_id}__credentials` 
-        SET `user_name`=?, `user_email`=?, `user_password`=? 
+        UPDATE `{$contestid}__credentials`
+        SET `user_name`=?, `user_email`=?, `user_password`=?
         WHERE `user_id`=?
       ";
       $data = [$name, $email, password_hash($pass, PASSWORD_DEFAULT), $id];
