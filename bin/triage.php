@@ -7,6 +7,7 @@ require_once "connect.php";
 
 //Escapa variável para uso no SQL
 if (isset($_SESSION['user']['user_name'])) $slashed_username = addslashes($_SESSION['user']['user_name']);
+$utc_format = 'd/m/Y H:i:s (\U\T\C)';
 
 //Processa informações caso formulário tenha sido submetido
 if ($_POST) {
@@ -17,15 +18,27 @@ if ($_POST) {
 
     //Atualiza edição que o avaliador tenha pulado edição
     if (isset($_POST['skip']) and isset($_POST['diff'])) {
-        mysqli_query($con, "
-            UPDATE
+        $jump_query = mysqli_prepare(
+            $con, 
+            "UPDATE
                 `{$contest['name_id']}__edits`
             SET
-                `by` = 'skip-{$slashed_username}'
+                `by` = CONCAT('skip-',?)
             WHERE
-                `diff`='{$post['diff']}' AND `by` = 'hold-{$slashed_username}'
-        ;");
-        if (mysqli_affected_rows($con) == 0) die("<br>Erro ao pular edição. Atualize a página para tentar novamente.");
+                `by` = CONCAT('hold-',?) AND 
+                `diff`= ?
+            ");
+        mysqli_stmt_bind_param(
+            $jump_query, 
+            "ssi", 
+            $_SESSION['user']['user_name'],
+            $_SESSION['user']['user_name'],
+            $_POST['diff']
+        );
+        mysqli_stmt_execute($jump_query);
+        if (mysqli_affected_rows($con) == 0) {
+            die("<br>Erro ao pular edição. Atualize a página para tentar novamente.");
+        }
 
     //Salva avaliação da edição
     } else {
@@ -52,17 +65,19 @@ if ($_POST) {
         if (isset($_POST['overwrite'])) {
 
             //Busca número de bytes no banco de dados
-            $query = mysqli_fetch_assoc(
-                mysqli_query($con, "
-                    SELECT
-                        `bytes`
-                    FROM
-                        `{$contest['name_id']}__edits`
-                    WHERE
-                        `diff` = '{$post['diff']}'
-                    LIMIT 1
-                ;")
+            $eval_query = mysqli_prepare(
+                $con,
+                "SELECT
+                    `bytes`
+                FROM
+                    `{$contest['name_id']}__edits`
+                WHERE
+                    `diff` = ?
+                LIMIT 1"
             );
+            mysqli_stmt_bind_param($eval_query, "i", $_POST['diff']);
+            mysqli_stmt_execute($eval_query);
+            $query = mysqli_fetch_assoc(mysqli_stmt_get_result($eval_query));
 
             //Verifica se há diferença. Caso sim, altera o número de bytes e adiciona comentário
             if ($query['bytes'] != $post['overwrite']) {
@@ -89,37 +104,37 @@ if ($_POST) {
             $post['obs'] = "Aval: \"{$obs}\"\n";
         }
 
-        //Monta query para atualizar banco de dados
+        //Prepara query
         $when = date('Y-m-d H:i:s');
-        $sql_update = "
+        $update_statement = "
             UPDATE
                 `{$contest['name_id']}__edits`
             SET
-                `valid_edit`    = '{$post['valid']}',
-                `pictures`      = '{$post['pic']}',
-                `by`            = '{$slashed_username}',
-                `when`          = '{$when}',
-                `obs`           = CONCAT(IFNULL(`obs`, ''), '{$post['obs']}')
-            WHERE `diff`        = '{$post['diff']}';
-        ";
+                `valid_edit`    = ?,
+                `pictures`      = ?,
+                `by`            = ?,
+                `when`          = ?,
+                `obs`           = CONCAT(IFNULL(`obs`, ''), ?)
+            WHERE `diff`        = ?";
+        $update_query = mysqli_prepare($con, $update_statement);
+        mysqli_stmt_bind_param(
+            $update_query,
+            "iisssi",
+            $post['valid'],
+            $post['pic'],
+            $_SESSION['user']['user_name'],
+            $when,
+            $post['obs'],
+            $_POST['diff']
+        );
 
         //Executa query e retorna o resultado para o avaliador
-        $update_query = mysqli_query($con, $sql_update);
+        mysqli_stmt_execute($update_query);
         if (mysqli_affected_rows($con) != 0) {
 
             $output['success']['diff'] = htmlspecialchars($_POST['diff']);
             $output['success']['valid'] = $post['valid'];
             $output['success']['pic'] = $post['pic'];
-
-            //Destrava edições do usuário que porventura ainda estejam travadas
-            mysqli_query($con, "
-                UPDATE
-                    `{$contest['name_id']}__edits`
-                SET
-                    `by` = NULL
-                WHERE
-                    `by` = 'hold-{$slashed_username}'
-            ;");
 
         }
     }
@@ -127,32 +142,42 @@ if ($_POST) {
 
 //Define número mínimo de bytes necessários de acordo com com configuração do concurso
 $bytes = 0;
-if (isset($contest['minimum_bytes'])) $bytes = $contest['minimum_bytes'];
+if (isset($contest['minimum_bytes'])) {
+    $bytes = $contest['minimum_bytes'];
+}
 
 //Converte prazo de reversão para formato compatível com SQL
 $revert_time = date('Y-m-d H:i:s', strtotime("-{$contest['revert_time']} hours"));
 
 //Conta edições faltantes
-$count_query = mysqli_query($con, "
-    SELECT
+$count_query = mysqli_prepare(
+    $con,
+    "SELECT
         COUNT(*) AS `total_count`,
-        IFNULL(SUM(CASE WHEN `timestamp` < '{$revert_time}' THEN 1 ELSE 0 END), 0) AS `count`
+        IFNULL(SUM(CASE WHEN `timestamp` < ? THEN 1 ELSE 0 END), 0) AS `count`
     FROM
         `{$contest['name_id']}__edits`
     WHERE
-        `reverted` IS NULL AND
-        `valid_edit` IS NULL AND
-        `valid_user` IS NOT NULL AND
-        `by` IS NULL AND
-        CASE WHEN '{$bytes}' = '-1' THEN `bytes` IS NOT NULL ELSE `bytes` > {$bytes} END
-;");
-$count_query = mysqli_fetch_assoc($count_query);
-$output['count'] = $count_query['count'];
-$output['total_count'] = $count_query['total_count'] - $count_query['count'];
+        `reverted` IS null AND
+        `valid_edit` IS null AND
+        `valid_user` IS NOT null AND
+        `by` IS null AND
+        CASE 
+            WHEN ? = '-1' 
+            THEN `bytes` IS NOT null 
+            ELSE `bytes` > ? 
+        END"
+);
+mysqli_stmt_bind_param($count_query, "sii", $revert_time, $bytes, $bytes);
+mysqli_stmt_execute($count_query);
+$count_result = mysqli_fetch_assoc(mysqli_stmt_get_result($count_query));
+$output['count'] = $count_result['count'];
+$output['total_count'] = $count_result['total_count'] - $count_result['count'];
 
 //Captura horário de última edição inserida no banco de dados
-$lastedit_query = mysqli_query($con, "
-    SELECT
+$lastedit_query = mysqli_prepare(
+    $con, 
+    "SELECT
         `timestamp` AS `lastedit`
     FROM
         `{$contest['name_id']}__edits`
@@ -161,11 +186,13 @@ $lastedit_query = mysqli_query($con, "
     LIMIT
         1
 ;");
-$output['lastedit'] = strtotime(mysqli_fetch_assoc($lastedit_query)["lastedit"]);
+mysqli_stmt_execute($lastedit_query);
+$output['lastedit'] = strtotime(mysqli_fetch_assoc(mysqli_stmt_get_result($lastedit_query))["lastedit"]);
 
 //Coleta edição para avaliação
-$revision_query = mysqli_query($con, "
-    SELECT
+$revision_query = mysqli_prepare(
+    $con, 
+    "SELECT
         `diff`,
         `bytes`,
         `user`,
@@ -175,67 +202,88 @@ $revision_query = mysqli_query($con, "
     FROM
         `{$contest['name_id']}__edits`
     WHERE
-        `reverted` IS NULL AND
-        `valid_edit` IS NULL AND
-        `valid_user` IS NOT NULL AND
-        CASE WHEN '{$bytes}' = '-1' THEN `bytes` IS NOT NULL ELSE `bytes` > {$bytes} END AND
-        `by` IS NULL AND
-        `timestamp` < '{$revert_time}'
+        `reverted` IS null AND
+        `valid_edit` IS null AND
+        `valid_user` IS NOT null AND
+        CASE 
+            WHEN ? = '-1' 
+            THEN `bytes` IS NOT null 
+            ELSE `bytes` > ? 
+        END AND
+        `timestamp` < '{$revert_time}' AND
+        (
+            `by` IS null OR 
+            `by` = CONCAT('hold-', ?)
+        )
     ORDER BY
         `timestamp` ASC
-    LIMIT 1
-;");
-$output['revision'] = mysqli_fetch_assoc($revision_query);
+    LIMIT 1"
+);
+mysqli_stmt_bind_param($revision_query, "iiss", $bytes, $bytes, $revert_time, $_SESSION['user']['user_name']);
+mysqli_stmt_execute($revision_query);
+$output['revision'] = mysqli_fetch_assoc(mysqli_stmt_get_result($revision_query));
 
 //Trava edição para evitar que dois avaliadores avaliem a mesma edição ao mesmo tempo
-if ($output['revision'] != NULL) {
-    mysqli_query($con, "
-        UPDATE
+if ($output['revision'] != null) {
+    $hold_query = mysqli_prepare(
+        $con, 
+        "UPDATE
             `{$contest['name_id']}__edits`
         SET
-            `by` = 'hold-{$slashed_username}'
+            `by` = CONCAT('hold-', ?)
         WHERE
-            `diff`='{$output['revision']['diff']}'
-    ;");
-    if (mysqli_affected_rows($con) == 0) die("<br>Erro ao travar edição. Atualize a página para tentar novamente.");
+            `diff`= ?"
+    );
+    mysqli_stmt_bind_param($hold_query, "si", $_SESSION['user']['user_name'], $output['revision']['diff']);
+    mysqli_stmt_execute($hold_query);
+    if (mysqli_affected_rows($con) == 0) {
+        die("<br>Erro ao travar edição. Atualize a página para tentar novamente.");
+    }
 
     //Coleta informações da edição via API do MediaWiki
     $compare_api_params = [
         "action"    => "compare",
         "prop"      => "title|diff",
-        "format"    => "json",
+        "format"    => "php",
         "fromrev"   => $output['revision']['diff'],
         "torelative"=> "prev"
     ];
-    $output['compare'] = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($compare_api_params)), true)['compare'];
+    $output['compare'] = unserialize(
+        file_get_contents($contest['api_endpoint']."?".http_build_query($compare_api_params))
+    )['compare'];
 
     //Coleta histórico recente do artigo até o início do concurso
     $history_params = [
         "action"    => "query",
-        "format"    => "json",
+        "format"    => "php",
         "prop"      => "revisions",
         "pageids"   => $output['revision']['article'],
         "rvprop"    => "timestamp|user|size|ids",
         "rvlimit"   => "max",
         "rvend"     => date('Y-m-d\TH:i:s.000\Z', $contest['start_time'])
     ];
-    $history = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($history_params)), true)["query"]["pages"];
+    $history = unserialize(
+        file_get_contents($contest['api_endpoint']."?".http_build_query($history_params))
+    )["query"]["pages"];
 
     //Verifica situação da primeira edição.
     //Se for a primeira edição, insere pseudo-edição anterior com tamanho zero
-    //Se existir edição anterior, busca na API o tamanho da edição imediatamente anterior e insere pseudo-edição com tamanho correspondente
+    //Se existir edição anterior, busca na API o tamanho da edição 
+    //imediatamente anterior e insere pseudo-edição com tamanho correspondente
     $history = end($history)["revisions"];
     if (end($history)["parentid"] == 0) {
         $history[] = ["size" => "0"];
     } else {
         $lastdiff_params = [
             "action"        => "compare",
-            "format"        => "json",
+            "format"        => "php",
             "fromrev"       => end($history)["revid"],
             "torelative"    => "prev",
             "prop"          => "size"
         ];
-        $lastdiff = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($lastdiff_params)), true)["compare"];
+        $lastdiff = unserialize(
+            file_get_contents($contest['api_endpoint']."?".http_build_query($lastdiff_params))
+        )["compare"];
         $history[] = ["size" => $lastdiff["fromsize"]];
     }
 
@@ -249,7 +297,7 @@ if ($output['revision'] != NULL) {
         } else {
             $delta_color = "grey";
         }
-        $timestamp = date('d/m/Y H:i:s (\U\T\C)', strtotime($edit['timestamp']));
+        $timestamp = date($utc_format, strtotime($edit['timestamp']));
         $output['history'][] = "
             <p class='w3-small'>
                 <strong>{$edit['user']}</strong>
@@ -294,17 +342,19 @@ mysqli_close($con);
                 >
                     <h2>Última avaliação</h2>
                     <p>
-                        Diff: <a href="<?=$contest['endpoint'];?>?diff=<?=@$output['success']['diff'];?>" target="_blank"><?=@$output['success']['diff'];?></a>
+                        Diff: <a 
+                            href="<?=$contest['endpoint'];?>?diff=<?=@$output['success']['diff'];?>" 
+                            target="_blank"><?=@$output['success']['diff'];?></a>
                     </p>
                     <p>
-                        Edição válida: <?php if(@$output['success']['valid']){
+                        Edição válida: <?php if (@$output['success']['valid']) {
                             echo '<i class="fa-regular w3-text-green fa-circle-check" aria-hidden="true"></i> Sim';
                         } else {
                             echo '<i class="fa-regular w3-text-red fa-circle-xmark" aria-hidden="true"></i> Não';
                         }?>
                     </p>
                     <p>
-                        Com imagem: <?php if(@$output['success']['pic']){
+                        Com imagem: <?php if (@$output['success']['pic']) {
                             echo '<i class="fa-regular w3-text-green fa-circle-check" aria-hidden="true"></i> Sim';
                         } else {
                             echo '<i class="fa-regular w3-text-red fa-circle-xmark" aria-hidden="true"></i> Não';
@@ -314,9 +364,10 @@ mysqli_close($con);
                         <button
                         class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small"
                         type="button"
-                        onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=modify&diff=<?=@$output['success']['diff'];?>', '_blank');"
-                        >
-                        <i class="fa-solid fa-eraser w3-medium" aria-hidden="true"></i> Corrigir</button>
+                        onclick="window.open(
+                            'index.php?contest=<?=$contest['name_id'];?>&page=modify&diff=<?=@$output['success']['diff'];?>', 
+                            '_blank'
+                        );"><i class="fa-solid fa-eraser w3-medium" aria-hidden="true"></i> Corrigir</button>
                     </p>
                 </div>
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom">
@@ -342,36 +393,78 @@ mysqli_close($con);
                     <div class="w3-container w3-margin-bottom">
                         <div class="w3-row">
                             <div class="w3-half">
-                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(40deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=counter', '_blank');">
+                                <button 
+                                class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small"
+                                style="filter: hue-rotate(40deg);" 
+                                type="button" 
+                                onclick="window.open(
+                                    'index.php?contest=<?=$contest['name_id'];?>&page=counter', 
+                                    '_blank'
+                                );">
                                     <i class="fa-solid fa-chart-line w3-xxlarge" aria-hidden="true"></i><br>Contador
                                 </button>
                             </div>
                             <div class="w3-half">
-                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(80deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=modify', '_blank');">
+                                <button 
+                                class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small"
+                                style="filter: hue-rotate(80deg);" 
+                                type="button" 
+                                onclick="window.open(
+                                    'index.php?contest=<?=$contest['name_id'];?>&page=modify', 
+                                    '_blank'
+                                );">
                                     <i class="fa-solid fa-pen-to-square w3-xxlarge" aria-hidden="true"></i><br>Modificar
                                 </button>
                             </div>
                         </div>
                         <div class="w3-row">
                             <div class="w3-half">
-                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(120deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=compare', '_blank');">
+                                <button 
+                                class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small"
+                                style="filter: hue-rotate(120deg);" 
+                                type="button" 
+                                onclick="window.open(
+                                    'index.php?contest=<?=$contest['name_id'];?>&page=compare', 
+                                    '_blank'
+                                );">
                                     <i class="fa-solid fa-code-compare w3-xxlarge" aria-hidden="true"></i><br>Comparador
                                 </button>
                             </div>
                             <div class="w3-half">
-                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(160deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=edits', '_blank');">
+                                <button 
+                                class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small"
+                                style="filter: hue-rotate(160deg);" 
+                                type="button" 
+                                onclick="window.open(
+                                    'index.php?contest=<?=$contest['name_id'];?>&page=edits', 
+                                    '_blank'
+                                );">
                                     <i class="fa-solid fa-list-check w3-xxlarge" aria-hidden="true"></i><br>Avaliadas
                                 </button>
                             </div>
                         </div>
                         <div class="w3-row">
                             <div class="w3-half">
-                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(200deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=backtrack', '_blank');">
+                                <button 
+                                class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small"
+                                style="filter: hue-rotate(200deg);" 
+                                type="button" 
+                                onclick="window.open(
+                                    'index.php?contest=<?=$contest['name_id'];?>&page=backtrack', 
+                                    '_blank'
+                                );">
                                     <i class="fa-solid fa-history w3-xxlarge" aria-hidden="true"></i><br>Retroceder
                                 </button>
                             </div>
                             <div class="w3-half">
-                                <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(240deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=evaluators', '_blank');">
+                                <button 
+                                class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" 
+                                style="filter: hue-rotate(240deg);" 
+                                type="button" 
+                                onclick="window.open(
+                                    'index.php?contest=<?=$contest['name_id'];?>&page=evaluators', 
+                                    '_blank'
+                                );">
                                     <i class="fa-solid fa-users w3-xxlarge" aria-hidden="true"></i><br>Avaliadores
                                 </button>
                             </div>
@@ -381,14 +474,23 @@ mysqli_close($con);
                                 <form method="post">
                                     <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
                                     <input type="hidden" name="skip" value="true">
-                                    <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(280deg);" type="submit" value="Pular edição">
+                                    <button 
+                                    class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" 
+                                    style="filter: hue-rotate(280deg);" 
+                                    type="submit" 
+                                    value="Pular edição">
                                         <i class="fa-solid fa-forward w3-xxlarge" aria-hidden="true"></i><br>Pular
                                     </button>
                                 </form>
                             </div>
                             <div class="w3-half">
                                 <form method="post">
-                                    <button class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" style="filter: hue-rotate(320deg);" type="submit" name="logout" value="Logout">
+                                    <button 
+                                    class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small" 
+                                    style="filter: hue-rotate(320deg);" 
+                                    type="submit" 
+                                    name="logout" 
+                                    value="Logout">
                                         <i class="fa-solid fa-door-open w3-xxlarge" aria-hidden="true"></i><br>Sair
                                     </button>
                                 </form>
@@ -396,39 +498,84 @@ mysqli_close($con);
                         </div>
                     </div>
                 </div>
-                <div <?php if(!isset($output['revision']['timestamp'])) echo 'style="display:none;"';?>>
+                <div style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>">
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom">
                         <h2>Avaliação</h2>
                         <form method="post">
                             <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
                             <div class="w3-container w3-cell w3-half">
                                 <p>Edição válida?</p>
-                                <input class="w3-radio w3-section" type="radio" id="valid-sim" name="valid" value="sim" onclick="document.getElementById('obs').required = false" required>
+                                <input 
+                                class="w3-radio w3-section" 
+                                type="radio" 
+                                id="valid-sim" 
+                                name="valid" 
+                                value="sim" 
+                                onclick="document.getElementById('obs').required = false"
+                                required>
                                 <label for="valid-sim">Sim</label><br>
-                                <input class="w3-radio w3-section" type="radio" id="valid-nao" name="valid" value="nao" onclick="document.getElementById('obs').required = true" required>
+                                <input 
+                                class="w3-radio w3-section" 
+                                type="radio" 
+                                id="valid-nao" 
+                                name="valid" 
+                                value="nao" 
+                                onclick="document.getElementById('obs').required = true" 
+                                required>
                                 <label for="valid-nao">Não</label><br><br>
                             </div>
                             <div class="w3-container w3-cell w3-half">
                                 <p>Imagem?</p>
                                 <?php if ($contest['pictures_mode'] == 2) {
                                     echo '
-                                        <input class="w3-input w3-border" type="number" id="pic" name="pic" value="0" min="0" max="9" required>
+                                        <input 
+                                        class="w3-input w3-border" 
+                                        type="number" 
+                                        id="pic" 
+                                        name="pic" 
+                                        value="0" 
+                                        min="0" 
+                                        max="9" 
+                                        required>
                                         <label for="pic">Quantidade</label><br><br>
                                     ';
                                 } else {
                                     echo '
-                                        <input class="w3-radio w3-section" type="radio" id="pic-sim" name="pic" value="sim" required>
+                                        <input 
+                                        class="w3-radio w3-section" 
+                                        type="radio" 
+                                        id="pic-sim" 
+                                        name="pic" 
+                                        value="sim" 
+                                        required>
                                         <label for="pic-sim">Sim</label><br>
-                                        <input class="w3-radio w3-section" type="radio" id="pic-nao" name="pic" value="nao" required>
+                                        <input 
+                                        class="w3-radio w3-section" 
+                                        type="radio" 
+                                        id="pic-nao" 
+                                        name="pic" 
+                                        value="nao" 
+                                        required>
                                         <label for="pic-nao">Não</label><br><br>
                                     ';
                                 }
                                 ?>
                             </div>
                             <p>
-                                <input class="w3-input w3-border" name="obs" id="obs" type="text" placeholder="Observação">
+                                <input 
+                                class="w3-input w3-border" 
+                                name="obs" 
+                                id="obs" 
+                                type="text" 
+                                placeholder="Observação">
                                 <br>
-                                <input class="w3-button w3-border w3-block w3-red" name="overwrite" id="overwrite" type="button" value="Alterar bytes" onclick="
+                                <input 
+                                class="w3-button w3-border w3-block w3-red" 
+                                name="overwrite" 
+                                id="overwrite" 
+                                ype="button" 
+                                value="Alterar bytes" 
+                                onclick="
                                     document.getElementById('overwrite').removeAttribute('value');
                                     document.getElementById('overwrite').type = 'number';
                                     document.getElementById('overwrite').className = 'w3-input w3-border';
@@ -437,7 +584,10 @@ mysqli_close($con);
                                     document.getElementById('overwrite').removeAttribute('id');
                                     document.getElementById('obs').required = true;
                                 ">
-                                <input class="w3-button w3-green w3-border-green w3-border w3-block w3-margin-top" type="submit" value="Salvar">
+                                <input 
+                                class="w3-button w3-green w3-border-green w3-border w3-block w3-margin-top" 
+                                type="submit" 
+                                value="Salvar">
                             </p>
                         </form>
                     </div>
@@ -459,7 +609,13 @@ mysqli_close($con);
                             <strong>Sumário:</strong> <?=@$output['revision']['summary'];?>
                             <br>
                             <strong>Diff:</strong>
-                            <a href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>" target="_blank"><?=@$output['revision']['diff'];?></a> - <a target="_blank" href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>">Copyvio Detector</a>
+                            <a 
+                            href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>" 
+                            target="_blank"
+                            ><?=@$output['revision']['diff'];?></a> - <a 
+                            target="_blank" 
+                            href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>"
+                            >Copyvio Detector</a>
                         </p>
                     </div>
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
@@ -482,17 +638,17 @@ mysqli_close($con);
                     <p class="w3-small">
                         <strong>Horário de início do wikiconcurso</strong>
                         <br>
-                        <?=date('d/m/Y H:i:s (\U\T\C)', $contest['start_time']);?>
+                        <?=date($utc_format, $contest['start_time']);?>
                     </p>
                     <p class="w3-small">
                         <strong>Horário de término do wikiconcurso</strong>
                         <br>
-                        <?=date('d/m/Y H:i:s (\U\T\C)', $contest['end_time']);?>
+                        <?=date($utc_format, $contest['end_time']);?>
                     </p>
                     <p class="w3-small">
                         <strong>Última atualização do banco de dados</strong>
                         <br>
-                        <?=date('d/m/Y H:i:s (\U\T\C)', $output['lastedit']);?>
+                        <?=date($utc_format, $output['lastedit']);?>
                     </p>
                     <p class="w3-small">
                         <strong>Delay no registro das edições</strong>
@@ -502,9 +658,13 @@ mysqli_close($con);
                 </div>
             </div>
             <div class="w3-threequarter">
-                <div <?php if(!isset($output['compare']['*'])) echo 'style="display:none;"'; ?>>
+                <div style="display:<?=(isset($output['compare']['*']))?'block':'none';?>">
                     <h3>Diferencial de edição</h3>
-                    <table class="diff diff-contentalign-left diff-editfont-monospace" style="word-wrap: break-word;white-space: pre-wrap;word-break: break-word;">
+                    <table 
+                    role="presentation"
+                    aria-label="Diferencial de edição"
+                    class="diff diff-contentalign-left diff-editfont-monospace"
+                    >
                         <?php print_r(@$output['compare']['*']); ?>
                     </table>
                     <hr>
