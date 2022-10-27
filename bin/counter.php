@@ -113,10 +113,12 @@ if (mysqli_num_rows($count_query) == 0) die("No users");
 
 <!DOCTYPE html>
 <html lang="pt-br">
-    <title>Contador - <?=$contest['name'];?></title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="bin/w3.css">
-    <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
+    <head>
+        <title>Contador - <?=$contest['name'];?></title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="bin/w3.css">
+        <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
+    </head> 
     <body>
         <header class="w3-container w3-<?=$contest['theme'];?>">
             <h1>Contador - <?=$contest['name'];?></h1>
