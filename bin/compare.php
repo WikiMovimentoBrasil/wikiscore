@@ -173,7 +173,7 @@ $wd_query = mysqli_query(
       `article`
     FROM
       `{$contest['name_id']}__edits`
-      INNER JOIN 
+      INNER JOIN
         `{$contest['name_id']}__articles`
       ON `{$contest['name_id']}__edits`.`article` = `{$contest['name_id']}__articles`.`articleID`
     WHERE

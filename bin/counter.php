@@ -110,8 +110,8 @@ $count_query = mysqli_query(
                             FROM
                                 `{$contest['name_id']}__edits`
                             WHERE
-                                `{$contest['name_id']}__edits`.`pictures` IS NOT NULL AND 
-                                `{$contest['name_id']}__edits`.`timestamp` < ( 
+                                `{$contest['name_id']}__edits`.`pictures` IS NOT NULL AND
+                                `{$contest['name_id']}__edits`.`timestamp` < (
                                     CASE WHEN '${time_sql}' = '0' THEN NOW() ELSE '${time_sql}' END
                                 )
                             GROUP BY

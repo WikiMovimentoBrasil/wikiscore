@@ -72,13 +72,13 @@ class Credentials
     // (D1) ALREADY SIGNED IN
     if (isset($_SESSION['user'])) { return true; }
 
-    // (D2) GET USER      
+    // (D2) GET USER
     // (D3) USER STATUS
     // (D4) VERIFY PASSWORD + REGISTER SESSION
     $user = $this->getByEmail($email);
     if (
-      is_array($user) && 
-      $user['user_status']!="P" && 
+      is_array($user) &&
+      $user['user_status']!="P" &&
       password_verify($password, $user['user_password'])
     ) {
           $_SESSION['user'] = [];
@@ -89,7 +89,7 @@ class Credentials
           return true;
         }
     }
-    
+
     // (D5) AUTH FAIL
     return false;
   }

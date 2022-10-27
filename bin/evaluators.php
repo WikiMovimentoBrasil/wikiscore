@@ -48,7 +48,7 @@ if ($_POST) {
     //Escapa nome de usuário submetido no formulário, ou encerra script caso nenhum nome tenha sido submetido
     if (
         !isset($_POST['user']) && (
-            !isset($_POST['on']) || 
+            !isset($_POST['on']) ||
             !isset($_POST['off'])
         )
     ) {

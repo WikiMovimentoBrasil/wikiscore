@@ -38,7 +38,7 @@ if ($_POST) {
     }
 
     //Busca número de bytes e nome do avaliador no banco de dados
-    $avaliaded_query = mysqli_prepare(
+    $evaluated_query = mysqli_prepare(
         $con,
         "SELECT
             `bytes`,
@@ -49,9 +49,9 @@ if ($_POST) {
             `diff` = ?
         LIMIT 1"
     );
-    mysqli_stmt_bind_param($avaliaded_query, "i", $_POST['diff']);
-    mysqli_stmt_execute($avaliaded_query);
-    $query = mysqli_fetch_assoc(mysqli_stmt_get_result($avaliaded_query));
+    mysqli_stmt_bind_param($evaluated_query, "i", $_POST['diff']);
+    mysqli_stmt_execute($evaluated_query);
+    $query = mysqli_fetch_assoc(mysqli_stmt_get_result($evaluated_query));
 
     //Verifica se diff pertence ao avaliador atual ou o usuário atual é o gestor do concurso
     if ($query['by'] == $_SESSION['user']['user_name'] || $_SESSION['user']['user_status'] == 'G') {
@@ -69,7 +69,7 @@ if ($_POST) {
         $obs .= "em {$time} com justificativa \"{$post['obs']}\"\n";
 
 
-        //Prepata query
+        //Prepara query
         $update_statement = "
             UPDATE
                 `{$contest['name_id']}__edits`
@@ -236,20 +236,20 @@ mysqli_close($con);
                             ';
                         } else {
                             echo '
-                                <input 
-                                class="w3-radio w3-section" 
-                                type="radio" 
-                                id="pic-sim" 
-                                name="pic" 
-                                value="sim" 
+                                <input
+                                class="w3-radio w3-section"
+                                type="radio"
+                                id="pic-sim"
+                                name="pic"
+                                value="sim"
                                 required>
                                 <label for="pic-sim">Sim</label><br>
-                                <input 
-                                class="w3-radio w3-section" 
-                                type="radio" 
-                                id="pic-nao" 
-                                name="pic" 
-                                value="nao" 
+                                <input
+                                class="w3-radio w3-section"
+                                type="radio"
+                                id="pic-nao"
+                                name="pic"
+                                value="nao"
                                 required>
                                 <label for="pic-nao">Não</label><br><br>
                             ';
