@@ -1,3 +1,9 @@
+.diff {
+    word-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
 .diff-addedline,.diff-deletedline,.diff-context {
     font-size: 13px;
     line-height: 1.6;
@@ -10,7 +16,7 @@
 }
 
 .diff-editfont-monospace .diff-addedline,.diff-editfont-monospace .diff-deletedline,.diff-editfont-monospace .diff-context {
-    font-family: monospace,monospace
+    font-family: monospace,
 }
 
 .diff-editfont-sans-serif .diff-addedline,.diff-editfont-sans-serif .diff-deletedline,.diff-editfont-sans-serif .diff-context {

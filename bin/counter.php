@@ -61,7 +61,9 @@ $count_query = mysqli_query(
                                 `{$contest['name_id']}__edits`.`article`,
                                 `{$contest['name_id']}__edits`.`user`,
                                 CASE
-                                    WHEN SUM(`{$contest['name_id']}__edits`.`bytes`) > ${contest['max_bytes_per_article']}
+                                    WHEN SUM(
+                                        `{$contest['name_id']}__edits`.`bytes`
+                                    ) > ${contest['max_bytes_per_article']}
                                     THEN ${contest['max_bytes_per_article']}
                                     ELSE SUM(`{$contest['name_id']}__edits`.`bytes`)
                                 END AS `bytes`,
@@ -108,7 +110,10 @@ $count_query = mysqli_query(
                             FROM
                                 `{$contest['name_id']}__edits`
                             WHERE
-                                `{$contest['name_id']}__edits`.`pictures` IS NOT NULL AND `{$contest['name_id']}__edits`.`timestamp` < ( CASE WHEN '${time_sql}' = '0' THEN NOW() ELSE '${time_sql}' END)
+                                `{$contest['name_id']}__edits`.`pictures` IS NOT NULL AND 
+                                `{$contest['name_id']}__edits`.`timestamp` < ( 
+                                    CASE WHEN '${time_sql}' = '0' THEN NOW() ELSE '${time_sql}' END
+                                )
                             GROUP BY
                                 CASE
                                     WHEN ${contest['pictures_mode']} = 0

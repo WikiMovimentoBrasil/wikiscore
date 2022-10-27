@@ -231,7 +231,7 @@ if ($output['revision'] != NULL) {
         $lastdiff_params = [
             "action"        => "compare",
             "format"        => "json",
-            "fromrev"       => end($history)["parentid"],
+            "fromrev"       => end($history)["revid"],
             "torelative"    => "prev",
             "prop"          => "size"
         ];

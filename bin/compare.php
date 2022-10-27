@@ -173,7 +173,9 @@ $wd_query = mysqli_query(
       `article`
     FROM
       `{$contest['name_id']}__edits`
-      INNER JOIN `{$contest['name_id']}__articles` ON `{$contest['name_id']}__edits`.`article` = `{$contest['name_id']}__articles`.`articleID`
+      INNER JOIN 
+        `{$contest['name_id']}__articles`
+      ON `{$contest['name_id']}__edits`.`article` = `{$contest['name_id']}__articles`.`articleID`
     WHERE
       `{$contest['name_id']}__edits`.`new_page` = '1'
     ORDER BY
@@ -211,7 +213,8 @@ $wd_query = mysqli_query(
                                 echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_add_encoded}'>";
                                     echo $artigo_add;
                                 echo "</a>";
-                            echo "</li>\n";
+                            echo "</li>";
+                            echo "\n";
                         }?>
                     </ul>
                 </div>
@@ -243,7 +246,8 @@ $wd_query = mysqli_query(
                                 echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_rem_encode}'>";
                                     echo urlencode($artigo_rem);
                                 echo "</a>";
-                            echo "</li>\n";
+                            echo "</li>";
+                            echo "\n";
                         }?>
                     </ul>
                 </div>
@@ -266,7 +270,8 @@ $wd_query = mysqli_query(
                                 echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_del_encode}'>";
                                     echo $artigo_del;
                                 echo "</a>";
-                            echo "</li>\n";
+                            echo "</li>";
+                            echo "\n";
                         }
                         while ($row = mysqli_fetch_assoc($wd_query)) {
                             $wd_params = [
@@ -286,7 +291,8 @@ $wd_query = mysqli_query(
                                     echo $wd['title'];
                                 echo "</a>";
                                 echo " <small>(Sem Wikidata)</small>";
-                            echo "</li>\n";
+                            echo "</li>";
+                            echo "\n";
                         }
                         ?>
                     </ul>
@@ -314,7 +320,8 @@ $wd_query = mysqli_query(
                                     echo $row['diff'];
                                 echo "</a>";
                                 echo " <small>em {$row['timestamp']}</small>";
-                            echo "</li>\n";
+                            echo "</li>";
+                            echo "\n";
                         }
                         ?>
                     </ul>

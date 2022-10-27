@@ -51,7 +51,7 @@ if ($_POST) {
     );
     mysqli_stmt_bind_param($avaliaded_query, "i", $_POST['diff']);
     mysqli_stmt_execute($avaliaded_query);
-    $query = mysqli_stmt_get_result($avaliaded_query);
+    $query = mysqli_fetch_assoc(mysqli_stmt_get_result($avaliaded_query));
 
     //Verifica se diff pertence ao avaliador atual ou o usuário atual é o gestor do concurso
     if ($query['by'] == $_SESSION['user']['user_name'] || $_SESSION['user']['user_status'] == 'G') {
@@ -74,7 +74,7 @@ if ($_POST) {
             UPDATE
                 `{$contest['name_id']}__edits`
             SET
-                `bytes`         = ?
+                `bytes`         = ?,
                 `valid_edit`    = ?,
                 `pictures`      = ?,
                 `obs`           = CONCAT(IFNULL(`obs`, ''), ?)
@@ -98,7 +98,7 @@ if ($_POST) {
 
     //Caso o avaliador não seja autorizado, define diff do resultado como null
     } else {
-        $output['success']['diff'] = NULL;
+        $output['success']['diff'] = null;
     }
 }
 
@@ -174,7 +174,10 @@ mysqli_close($con);
                         <label>Diff</label>
                     </p>
                     <p>
-                        <button class="w3-button w3-section w3-green w3-ripple" style="width:100%">Carregar edição</button>
+                        <button
+                        class="w3-button w3-section w3-green w3-ripple"
+                        style="width:100%"
+                        >Carregar edição</button>
                     </p>
                 </form>
                 <form
@@ -220,14 +223,34 @@ mysqli_close($con);
                         <p>Imagem?</p>
                         <?php if ($contest['pictures_mode'] == 2) {
                             echo '
-                                <input class="w3-input w3-border" type="number" id="pic" name="pic" value="0" min="0" max="9" required>
+                                <input
+                                class="w3-input w3-border"
+                                type="number"
+                                id="pic"
+                                name="pic"
+                                value="0"
+                                min="0"
+                                max="9"
+                                required>
                                 <label for="pic">Quantidade</label><br><br>
                             ';
                         } else {
                             echo '
-                                <input class="w3-radio w3-section" type="radio" id="pic-sim" name="pic" value="sim" required>
+                                <input 
+                                class="w3-radio w3-section" 
+                                type="radio" 
+                                id="pic-sim" 
+                                name="pic" 
+                                value="sim" 
+                                required>
                                 <label for="pic-sim">Sim</label><br>
-                                <input class="w3-radio w3-section" type="radio" id="pic-nao" name="pic" value="nao" required>
+                                <input 
+                                class="w3-radio w3-section" 
+                                type="radio" 
+                                id="pic-nao" 
+                                name="pic" 
+                                value="nao" 
+                                required>
                                 <label for="pic-nao">Não</label><br><br>
                             ';
                         }
@@ -315,7 +338,6 @@ mysqli_close($con);
                     role="presentation"
                     aria-label="Diferencial de edição"
                     class="diff diff-contentalign-left diff-editfont-monospace"
-                    style="word-wrap: break-word;white-space: pre-wrap;word-break: break-word;"
                     >
                         <?php print_r(@$output['compare']['*']); ?>
                     </table>

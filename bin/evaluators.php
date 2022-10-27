@@ -26,11 +26,11 @@ $evaluators_query = mysqli_prepare(
 );
 mysqli_stmt_execute($evaluators_query);
 $evaluators_result = mysqli_stmt_get_result($evaluators_query);
-if (mysqli_num_rows($evaluators_query) == 0) {
+if (mysqli_num_rows($evaluators_result) == 0) {
     die("Sem avaliadores");
 }
 
-while ($row = mysqli_fetch_assoc($evaluators_query)) {
+while ($row = mysqli_fetch_assoc($evaluators_result)) {
     $output["evaluators"][$row['user_status']][$row['user_name']] = [
         "email"     => $row['user_email'],
         "status"    => $row['user_status'],
@@ -46,7 +46,12 @@ if ($_POST) {
     if ($_SESSION['user']['user_status'] != 'G') die("Ação não permitida. Não é gestor do concurso.");
 
     //Escapa nome de usuário submetido no formulário, ou encerra script caso nenhum nome tenha sido submetido
-    if (!isset($_POST['user']) && (!isset($_POST['on'] || !isset($_POST['off'])) {
+    if (
+        !isset($_POST['user']) && (
+            !isset($_POST['on']) || 
+            !isset($_POST['off'])
+        )
+    ) {
         die("Nome de usuário não submetido no formulário.");
     }
 

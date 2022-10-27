@@ -72,15 +72,15 @@ class Credentials
     // (D1) ALREADY SIGNED IN
     if (isset($_SESSION['user'])) { return true; }
 
-    // (D2) GET USER
+    // (D2) GET USER      
+    // (D3) USER STATUS
+    // (D4) VERIFY PASSWORD + REGISTER SESSION
     $user = $this->getByEmail($email);
-    if (is_array($user)) {
-
-      // (D3) USER STATUS
-      if ($user['user_status']!="P") {
-
-        // (D4) VERIFY PASSWORD + REGISTER SESSION
-        if (password_verify($password, $user['user_password'])) {
+    if (
+      is_array($user) && 
+      $user['user_status']!="P" && 
+      password_verify($password, $user['user_password'])
+    ) {
           $_SESSION['user'] = [];
           foreach ($user as $k => $v) {
             if ($k!="user_password") { $_SESSION['user'][$k] = $v; }
@@ -88,11 +88,8 @@ class Credentials
           $_SESSION['user']['contest'] = CONTEST;
           return true;
         }
-
-      }
-
     }
-
+    
     // (D5) AUTH FAIL
     return false;
   }

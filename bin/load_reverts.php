@@ -21,7 +21,7 @@ mysqli_stmt_close($edits_query);
 
 //Verifica se existem edições cadastradas no banco de dados
 $rows = mysqli_num_rows($edits_result);
-if ($rows == 0) die("No edits");
+if ($rows == 0) { die("No edits") };
 
 //Prepara query para atualizações no banco de dados
 $update_statement = "
