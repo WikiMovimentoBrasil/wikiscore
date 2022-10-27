@@ -131,9 +131,9 @@ function querypoints($time)
         `user_table`.`user` ASC;
 ";
 
-    $run_query = mysqli_query($con, $query);
+    $run = mysqli_query($con, $query);
 
-    while ($row = mysqli_fetch_assoc($run_query)) {
+    while ($row = mysqli_fetch_assoc($run)) {
         $data[$row["user"]] = $row["total points"];
     }
 
@@ -226,7 +226,7 @@ $datasets_graph = implode(',', $datasets_graph);
 $elapsed_days = floor((time() - $contest['start_time']) / 60 / 60 / 24);
 $total_days = ceil(($contest['end_time'] - $contest['start_time']) / 60 / 60 / 24) + 2;
 $all_days = array();
-for ($i=1; $i < $total_days; $i++) array_push($all_days, $i);
+for ($i=1; $i < $total_days; $i++) { array_push($all_days, $i); }
 $all_days = implode(", ", $all_days);
 
 ?>

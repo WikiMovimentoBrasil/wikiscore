@@ -9,18 +9,17 @@ require_once "connect.php";
 
 //Verifica se PSID do PetScan foi fornecido ao invés de uma categoria comum
 if (isset($contest['category_petscan'])) {
- 
+
     //Recupera lista do PetScan
     $petscan_list = json_decode(
-        file_get_contents(
-            "https://petscan.wmflabs.org/?format=json&psid=".$contest['category_petscan']
-        ), true
+        file_get_contents("https://petscan.wmflabs.org/?format=json&psid=".$contest['category_petscan']),
+        true
     );
     $petscan_list = $petscan_list['*']['0']['a']['*'];
 
     //Insere lista em uma array
     $list = array();
-    foreach ($petscan_list as $petscan_id) $list[] = $petscan_id['id'];
+    foreach ($petscan_list as $petscan_id) { $list[] = $petscan_id['id']; }
 
 } else {
 
@@ -34,11 +33,13 @@ if (isset($contest['category_petscan'])) {
         "cmprop"        => "ids",
         "cmlimit"       => "max"
     ];
-    $categorymembers_api = unserialize(file_get_contents($contest['api_endpoint']."?".http_build_query($categorymembers_api_params)));
+    $categorymembers_api = unserialize(
+        file_get_contents($contest['api_endpoint']."?".http_build_query($categorymembers_api_params))
+    );
 
     //Insere lista em uma array
     $list = array();
-    foreach ($categorymembers_api['query']['categorymembers'] as $pageid) $list[] = $pageid['pageid'];
+    foreach ($categorymembers_api['query']['categorymembers'] as $pageid) { $list[] = $pageid['pageid']; }
 
     //Coleta segunda página da lista, caso exista
     while (isset($categorymembers_api['continue'])) {
@@ -52,8 +53,10 @@ if (isset($contest['category_petscan'])) {
             "cmlimit"       => "max",
             "cmcontinue"    => $categorymembers_api['continue']['cmcontinue']
         ];
-        $categorymembers_api = unserialize(file_get_contents($contest['api_endpoint']."?".http_build_query($categorymembers_api_params)));
-        foreach ($categorymembers_api['query']['categorymembers'] as $pageid) $list[] = $pageid['pageid'];
+        $categorymembers_api = unserialize(
+            file_get_contents($contest['api_endpoint']."?".http_build_query($categorymembers_api_params))
+        );
+        foreach ($categorymembers_api['query']['categorymembers'] as $pageid) { $list[] = $pageid['pageid']; }
     }
 }
 
@@ -77,19 +80,21 @@ $articles_query = mysqli_prepare($con, "SELECT * FROM `{$contest['name_id']}__ar
 mysqli_stmt_execute($articles_query);
 $articles_result = mysqli_stmt_get_result($articles_query);
 mysqli_stmt_close($articles_query);
-if (mysqli_num_rows($articles_result) == 0) die("No articles");
+if (mysqli_num_rows($articles_result) == 0) { die("No articles"); }
 
 //Coleta revisões já inseridas no banco de dados
 $revision_list = array();
-$revision_query = mysqli_query($con, "
-    SELECT
+$revision_query = mysqli_query(
+    $con,
+    "SELECT
         `diff`
     FROM
         `{$contest['name_id']}__edits`
     ORDER BY
         `diff`
-    ;");
-foreach (mysqli_fetch_all($revision_query, MYSQLI_ASSOC) as $diff) $revision_list[] = $diff['diff'];
+    ;"
+);
+foreach (mysqli_fetch_all($revision_query, MYSQLI_ASSOC) as $diff) { $revision_list[] = $diff['diff']; }
 
 //Loop para análise de cada artigo
 while ($row = mysqli_fetch_assoc($articles_result)) {
@@ -97,7 +102,7 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
     //Coleta revisões do artigo
     $revisions_api_params = [
         "action"    => "query",
-        "format"    => "json",
+        "format"    => "php",
         "prop"      => "revisions",
         "rvprop"    => "ids",
         "rvlimit"   => "max",
@@ -106,10 +111,13 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
         "pageids"   => $row["articleID"]
     ];
 
-    $revisions_api = end(json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($revisions_api_params)), true)['query']['pages']);
+    $revisions_api = unserialize(
+        file_get_contents($contest['api_endpoint']."?".http_build_query($revisions_api_params))
+    );
+    $revisions_api = $revisions_api['query']['pages']["0"];
 
     //Verifica se artigo possui revisões dentro dos parâmetros escolhidos
-    if (!isset($revisions_api['revisions'])) continue;
+    if (!isset($revisions_api['revisions'])) { continue; }
 
     //Prepara query para atualizações no banco de dados
     $addedit_statement = "
@@ -143,25 +151,29 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
     foreach ($revisions_api['revisions'] as $revision) {
 
         //Verifica se revisão ainda não existe no banco de dados
-        if (in_array($revision['revid'], $revision_list)) continue;
+        if (in_array($revision['revid'], $revision_list)) { continue; }
 
         //Coleta dados de diferenciais da revisão
         $compare_api_params = [
             "action"    => "compare",
-            "format"    => "json",
+            "format"    => "php",
             "torelative"=> "prev",
             "prop"      => "diffsize|comment|size|title|user|timestamp",
             "fromrev"   => $revision['revid']
         ];
-        $compare_api = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($compare_api_params)), true);
+        $compare_api = unserialize(
+            file_get_contents(
+                $contest['api_endpoint']."?".http_build_query($compare_api_params)
+            )
+        );
 
         //Verifica se edição foi ocultada. Caso sim, define valores da edição como nulos
         if (!isset($compare_api['compare'])) {
-            $compare_api['touser']      = NULL;
-            $compare_api['tosize']      = NULL;
-            $compare_api['new_page']    = NULL;
-            $compare_api['tocomment']   = NULL;
-            $compare_api['totimestamp'] = NULL;
+            $compare_api['touser']      = null;
+            $compare_api['tosize']      = null;
+            $compare_api['new_page']    = null;
+            $compare_api['tocomment']   = null;
+            $compare_api['totimestamp'] = null;
         } else {
 
             //Acessa subarray
@@ -173,7 +185,7 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
             if (!isset($compare_api['fromsize'])) {
                 $compare_api['new_page'] = 1;
             } else {
-                $compare_api['new_page'] = NULL;
+                $compare_api['new_page'] = null;
                 $compare_api['tosize'] = $compare_api['tosize'] - $compare_api['fromsize'];
             }
 
@@ -188,7 +200,7 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
         $addedit_summary    = $compare_api['tocomment'];
         $addedit_newpage    = $compare_api['new_page'];
         mysqli_stmt_execute($addedit_query);
-        if (mysqli_affected_rows($con) != 0) echo "<br> Inserida revisão {$revision['revid']}";
+        if (mysqli_affected_rows($con) != 0) { echo "<br> Inserida revisão {$revision['revid']}"; }
     }
 }
 

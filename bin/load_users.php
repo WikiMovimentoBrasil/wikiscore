@@ -8,7 +8,9 @@ require_once "connect.php";
 $outreach_params = [
     "course"    => $contest['outreach_name']
 ];
-$csv = file_get_contents('https://outreachdashboard.wmflabs.org/course_students_csv?'.http_build_query($outreach_params));
+$csv = file_get_contents(
+    'https://outreachdashboard.wmflabs.org/course_students_csv?'.http_build_query($outreach_params)
+);
 if (is_null($csv)) {
     die("Não foi possível encontrar a lista de usuários no Outreach.");
 }
@@ -75,12 +77,15 @@ while ($user = mysqli_fetch_assoc($check_renamed)) {
         "lestart"       => date('Y-m-d\TH:i:s.000\Z', $contest['start_time']),
         "letitle"       => "User:{$user['user']}",
     ];
-    $check_renamed_api = file_get_contents("https://meta.wikimedia.org/w/api.php?".http_build_query($check_renamed_api_params));
+    $check_renamed_api = file_get_contents(
+        "https://meta.wikimedia.org/w/api.php?".http_build_query($check_renamed_api_params)
+    );
     $check_renamed_api = unserialize($check_renamed_api)["query"]["logevents"];
     if (!empty($check_renamed_api)) {
         echo "<br>Usuário renomeado: ";
         echo "{$check_renamed_api['0']['params']['olduser']} -> {$check_renamed_api['0']['params']['newuser']}";
-        mysqli_query($con,
+        mysqli_query(
+            $con,
             "UPDATE
               `{$contest['name_id']}__edits`
             SET
