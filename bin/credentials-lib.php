@@ -88,7 +88,7 @@ class Credentials
           $_SESSION['user']['contest'] = CONTEST;
           return true;
     }
-    
+
     // (D5) AUTH FAIL
     return false;
   }

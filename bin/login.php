@@ -106,7 +106,19 @@ array_splice($valid_bytes_rows, $elapsed_days);
 $valid_bytes_rows = implode(", ", $valid_bytes_rows);
 
 //Captura horário de última edição avaliada no banco de dados
-$lastedit_query = mysqli_query($con, "SELECT `timestamp` AS `lastedit` FROM `{$contest['name_id']}__edits` WHERE `valid_edit` IS NOT NULL ORDER BY `timestamp` DESC LIMIT 1;");
+$lastedit_query = mysqli_query(
+    $con,
+    "SELECT
+        `timestamp` AS `lastedit`
+    FROM
+        `{$contest['name_id']}__edits`
+    WHERE
+        `valid_edit` IS NOT NULL
+    ORDER BY
+        `timestamp` DESC
+    LIMIT
+        1;"
+);
 $lastedit = mysqli_fetch_assoc($lastedit_query);
 if (isset($lastedit["lastedit"])) {
     $lastedit = strtotime($lastedit["lastedit"]);
@@ -124,7 +136,10 @@ if (isset($lastedit["lastedit"])) {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="./bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
-        <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+        <script
+        src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/Chart.js/3.9.1/chart.min.js"
+        integrity="sha384-9MhbyIRcBVQiiC7FSd7T38oJNj2Zh+EfxS7/vjhBi4OOT78NlHSnzM31EZRWR1LZ"
+        crossorigin="anonymous"></script>
     </head>
     <body>
         <header class="w3-<?=$contest['theme'];?> w3-container">

@@ -81,8 +81,8 @@ if ($_POST) {
 
             //Verifica se há diferença. Caso sim, altera o número de bytes e adiciona comentário
             if ($query['bytes'] != $post['overwrite']) {
-                $overwrite_query = mysqli_query(
-                    $con, 
+                $overwrite_query = mysqli_prepare(
+                    $con,
                     "UPDATE
                         `{$contest['name_id']}__edits`
                     SET
@@ -347,6 +347,7 @@ mysqli_close($con);
                     <p>
                         Diff: <a
                             href="<?=$contest['endpoint'];?>?diff=<?=@$output['success']['diff'];?>"
+                            rel="noopener"
                             target="_blank"><?=@$output['success']['diff'];?></a>
                     </p>
                     <p>
@@ -615,8 +616,10 @@ mysqli_close($con);
                             <a
                             href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>"
                             target="_blank"
+                            rel="noopener"
                             ><?=@$output['revision']['diff'];?></a> - <a
                             target="_blank"
+                            rel="noopener"
                             href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>"
                             >Copyvio Detector</a>
                         </p>

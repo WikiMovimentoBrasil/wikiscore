@@ -238,7 +238,10 @@ $all_days = implode(", ", $all_days);
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
-        <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+        <script
+        src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/Chart.js/3.9.1/chart.min.js"
+        integrity="sha384-9MhbyIRcBVQiiC7FSd7T38oJNj2Zh+EfxS7/vjhBi4OOT78NlHSnzM31EZRWR1LZ"
+        crossorigin="anonymous"></script>
     </head>
     <body>
         <header class="w3-container w3-<?=$contest['theme'];?>">

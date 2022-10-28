@@ -298,6 +298,7 @@ mysqli_close($con);
                             <a
                             href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>"
                             target="_blank"
+                            rel="noopener"
                             >
                                 <?=@$output['revision']['diff'];?>
                             </a>
@@ -306,6 +307,7 @@ mysqli_close($con);
                             <a
                             href="<?=$contest['endpoint'];?>?curid=<?=@$output['revision']['article'];?>"
                             target="_blank"
+                            rel="noopener"
                             >
                                 <?=@$output['revision']['article'];?>
                             </a>
