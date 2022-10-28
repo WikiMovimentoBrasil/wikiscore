@@ -81,14 +81,17 @@ if ($_POST) {
 
             //Verifica se há diferença. Caso sim, altera o número de bytes e adiciona comentário
             if ($query['bytes'] != $post['overwrite']) {
-                mysqli_query($con, "
-                    UPDATE
+                $overwrite_query = mysqli_query(
+                    $con, 
+                    "UPDATE
                         `{$contest['name_id']}__edits`
                     SET
-                        `bytes`  = '{$post['overwrite']}'
+                        `bytes` = ?
                     WHERE
-                        `diff` = '{$post['diff']}';
-                ");
+                        `diff` = ?"
+                );
+                mysqli_stmt_bind_param($overwrite_query, "ii", $post['overwrite'], $_POST['diff']);
+                mysqli_stmt_execute($overwrite_query);
                 $post['overwrited'] = TRUE;
             }
         }
