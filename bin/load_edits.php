@@ -203,8 +203,8 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
         $addedit_summary    = $compare_api['tocomment'];
         $addedit_newpage    = $compare_api['new_page'];
         mysqli_stmt_execute($addedit_query);
-        if (mysqli_affected_rows($con) != 0) { 
-            echo " -> feito!"; 
+        if (mysqli_affected_rows($con) != 0) {
+            echo " -> feito!";
         }
     }
 }

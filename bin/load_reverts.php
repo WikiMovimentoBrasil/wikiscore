@@ -57,7 +57,7 @@ while ($row = mysqli_fetch_assoc($edits_result)) {
     ) {
         $diff = $row["diff"];
         mysqli_stmt_execute($update_query);
-        if (mysqli_affected_rows($con) != 0) { 
+        if (mysqli_affected_rows($con) != 0) {
             echo "Marcada edição {$row["diff"]} como revertida.<br>";
         }
     }
