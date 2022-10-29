@@ -43,7 +43,9 @@ while ($row = mysqli_fetch_assoc($evaluators_result)) {
 if ($_POST) {
 
     //Encerra script caso usuário não seja gestor
-    if ($_SESSION['user']['user_status'] != 'G') die("Ação não permitida. Não é gestor do concurso.");
+    if ($_SESSION['user']['user_status'] != 'G') {
+        die("Ação não permitida. Não é gestor do concurso.");
+    }
 
     //Escapa nome de usuário submetido no formulário, ou encerra script caso nenhum nome tenha sido submetido
     if (
