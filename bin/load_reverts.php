@@ -17,7 +17,6 @@ $edits_statement = "
 $edits_query = mysqli_prepare($con, $edits_statement);
 mysqli_stmt_execute($edits_query);
 $edits_result = mysqli_stmt_get_result($edits_query);
-mysqli_stmt_close($edits_query);
 
 //Verifica se existem edições cadastradas no banco de dados
 $rows = mysqli_num_rows($edits_result);
@@ -33,7 +32,7 @@ $update_statement = "
         `diff` = ?
 ";
 $update_query = mysqli_prepare($con, $update_statement);
-mysqli_stmt_bind_param($update_query, "i", $row["diff"]);
+mysqli_stmt_bind_param($update_query, "i", $diff);
 
 //Loop para análise de cada edição
 while ($row = mysqli_fetch_assoc($edits_result)) {
@@ -56,8 +55,11 @@ while ($row = mysqli_fetch_assoc($edits_result)) {
         || isset($revisions_api['badrevids'])
         || isset($revision['sha1hidden'])
     ) {
+        $diff = $row["diff"];
         mysqli_stmt_execute($update_query);
-        echo "Marcada edição {$row["diff"]} como revertida.<br>";
+        if (mysqli_affected_rows($con) != 0) { 
+            echo "Marcada edição {$row["diff"]} como revertida.<br>";
+        }
     }
 }
 

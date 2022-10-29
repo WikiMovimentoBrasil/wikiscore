@@ -242,9 +242,10 @@ $wd_query = mysqli_query(
                             $artigo_rem_api = unserialize($artigo_rem_api)['query']['pages']['-1'];
                             if (isset($artigo_rem_api)) { continue; }
 
+                            $artigo_rem_encode = urlencode($artigo_rem);
                             echo "<li>";
                                 echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_rem_encode}'>";
-                                    echo urlencode($artigo_rem);
+                                    echo $artigo_rem;
                                 echo "</a>";
                             echo "</li>";
                             echo "\n";

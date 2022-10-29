@@ -100,6 +100,7 @@ foreach (mysqli_fetch_all($revision_query, MYSQLI_ASSOC) as $diff) { $revision_l
 while ($row = mysqli_fetch_assoc($articles_result)) {
 
     //Coleta revisões do artigo
+    echo "\nCurID: ".$row["articleID"];
     $revisions_api_params = [
         "action"    => "query",
         "format"    => "php",
@@ -114,7 +115,7 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
     $revisions_api = unserialize(
         file_get_contents($contest['api_endpoint']."?".http_build_query($revisions_api_params))
     );
-    $revisions_api = $revisions_api['query']['pages']["0"];
+    $revisions_api = $revisions_api['query']['pages'][$row['articleID']];
 
     //Verifica se artigo possui revisões dentro dos parâmetros escolhidos
     if (!isset($revisions_api['revisions'])) { continue; }
@@ -151,7 +152,9 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
     foreach ($revisions_api['revisions'] as $revision) {
 
         //Verifica se revisão ainda não existe no banco de dados
+        echo "\n- Diff: ".$revision['revid'];
         if (in_array($revision['revid'], $revision_list)) { continue; }
+        echo " -> inserindo";
 
         //Coleta dados de diferenciais da revisão
         $compare_api_params = [
@@ -200,7 +203,9 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
         $addedit_summary    = $compare_api['tocomment'];
         $addedit_newpage    = $compare_api['new_page'];
         mysqli_stmt_execute($addedit_query);
-        if (mysqli_affected_rows($con) != 0) { echo "<br> Inserida revisão {$revision['revid']}"; }
+        if (mysqli_affected_rows($con) != 0) { 
+            echo " -> feito!"; 
+        }
     }
 }
 

@@ -20,7 +20,8 @@ $backtrack_statement = "
         ON
             `{$contest['name_id']}__edits`.`user` = `{$contest['name_id']}__users`.`user`
     WHERE
-        `{$contest['name_id']}__edits`.`valid_user` IS NULL
+        `{$contest['name_id']}__edits`.`valid_user` IS NULL AND
+        `{$contest['name_id']}__edits`.`reverted` IS NULL
     ORDER BY
         `user`,
         `edit_timestamp`
