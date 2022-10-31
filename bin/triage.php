@@ -213,7 +213,7 @@ $revision_query = mysqli_prepare(
             THEN `bytes` IS NOT null
             ELSE `bytes` > ?
         END AND
-        `timestamp` < '{$revert_time}' AND
+        `timestamp` < ? AND
         (
             `by` IS null OR
             `by` = CONCAT('hold-', ?)
