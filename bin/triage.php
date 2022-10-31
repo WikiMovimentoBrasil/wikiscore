@@ -233,7 +233,8 @@ if ($output['revision'] != null) {
         "UPDATE
             `{$contest['name_id']}__edits`
         SET
-            `by` = CONCAT('hold-', ?)
+            `by` = CONCAT('hold-', ?),
+            `when` = NOW()
         WHERE
             `diff`= ?"
     );
