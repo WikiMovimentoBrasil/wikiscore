@@ -54,6 +54,14 @@ foreach ($lines as $row) {
     $row_timestamp = $row['1'];
     mysqli_stmt_execute($adduser_query);
     mysqli_stmt_execute($validedit_query);
+
+    if (mysqli_stmt_affected_rows($adduser_query) != 0) { 
+        echo "\nInserido participante {$row_user}";
+    }
+
+    if (mysqli_stmt_affected_rows($validedit_query) != 0) { 
+        echo "\n- Ativando ".mysqli_stmt_affected_rows($validedit_query)." edições";
+    }
 }
 
 //Encerra queries

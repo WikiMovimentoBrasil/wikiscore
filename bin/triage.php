@@ -36,7 +36,7 @@ if ($_POST) {
             $_POST['diff']
         );
         mysqli_stmt_execute($jump_query);
-        if (mysqli_affected_rows($con) == 0) {
+        if (mysqli_stmt_affected_rows($jump_query) == 0) {
             die("<br>Erro ao pular edição. Atualize a página para tentar novamente.");
         }
 
@@ -133,7 +133,7 @@ if ($_POST) {
 
         //Executa query e retorna o resultado para o avaliador
         mysqli_stmt_execute($update_query);
-        if (mysqli_affected_rows($con) != 0) {
+        if (mysqli_stmt_affected_rows($update_query) != 0) {
 
             $output['success']['diff'] = htmlspecialchars($_POST['diff']);
             $output['success']['valid'] = $post['valid'];
@@ -240,7 +240,7 @@ if ($output['revision'] != null) {
     );
     mysqli_stmt_bind_param($hold_query, "si", $_SESSION['user']['user_name'], $output['revision']['diff']);
     mysqli_stmt_execute($hold_query);
-    if (mysqli_affected_rows($con) == 0) {
+    if (mysqli_stmt_affected_rows($hold_query) == 0) {
         die("<br>Erro ao travar edição. Atualize a página para tentar novamente.");
     }
 

@@ -92,7 +92,7 @@ if ($_POST) {
 
         //Executa query e retorna o resultado para o reavaliador
         mysqli_stmt_execute($update_query);
-        if (mysqli_affected_rows($con) != 0) {
+        if (mysqli_stmt_affected_rows($update_query) != 0) {
             $output['success']['diff'] = addslashes($_POST['diff']);
         }
 
