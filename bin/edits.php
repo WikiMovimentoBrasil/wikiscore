@@ -32,8 +32,6 @@ $edits_statement = "
         *
     FROM
         `{$contest['name_id']}__edits`
-    WHERE
-        `valid_user` IS NOT NULL
 ";
 $edits_query = mysqli_prepare($con, $edits_statement);
 mysqli_stmt_execute($edits_query);
