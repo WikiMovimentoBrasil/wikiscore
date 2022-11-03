@@ -3,9 +3,6 @@
 //Protetor de login
 require_once "protect.php";
 
-//Coleta informações do concurso
-require_once "data.php";
-
 //Verifica se a lista oficial e a categoria foram definidas
 if (isset($contest['official_list_pageid']) && isset($contest['category_pageid'])) {
 

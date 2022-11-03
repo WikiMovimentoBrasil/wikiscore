@@ -1,8 +1,5 @@
 <?php
 
-//Coleta informações do concurso
-require_once "data.php";
-
 //Função para query de cálculo de pontuação
 function querypoints($time)
 {

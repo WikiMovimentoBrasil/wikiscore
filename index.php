@@ -16,12 +16,40 @@ if (mysqli_connect_errno()) {
 }
 
 //Coleta lista de concursos
-require_once __DIR__.'/bin/data.php';
+$contests_statement = '
+    SELECT
+        `name_id`,
+        UNIX_TIMESTAMP(`start_time`) AS `start_time`,
+        UNIX_TIMESTAMP(`end_time`) AS `end_time`,
+        `name`,
+        `revert_time`,
+        `official_list_pageid`,
+        `category_pageid`,
+        `category_petscan`,
+        `endpoint`,
+        `api_endpoint`,
+        `outreach_name`,
+        `bytes_per_points`,
+        `max_bytes_per_article`,
+        `minimum_bytes`,
+        `pictures_per_points`,
+        `pictures_mode`,
+        `max_pic_per_article`,
+        `theme`,
+        `color`
+    FROM
+        `contests`
+';
+$contests_query = mysqli_prepare($con, $contests_statement);
+mysqli_stmt_execute($contests_query);
+$contests_result = mysqli_stmt_get_result($contests_query);
+while ($row = mysqli_fetch_assoc($contests_result)) {
+    $contests_array[$row['name_id']] = $row;
+}
 
 //Verifica se algum concurso existente foi definido. Caso contrario, retorna lista de concursos e encerra o script
 if (isset($contests_array[@$_GET['contest']])) {
     $contest = $contests_array[$_GET['contest']];
-    $contest['name_id'] = $_GET['contest'];
 } else {
     readfile("top.html");
     foreach ($contests_array as $name_id => $contest) {
