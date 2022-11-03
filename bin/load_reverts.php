@@ -1,9 +1,6 @@
 <?php
 echo "<pre>";
 
-//Conecta ao banco de dados
-require_once "connect.php";
-
 //Coleta lista de edições
 $edits_statement = "
     SELECT

@@ -2,9 +2,6 @@
 //Protetor de login
 require_once "protect.php";
 
-//Conecta ao banco de dados
-require_once "connect.php";
-
 //Escapa variável para uso no SQL
 if (isset($_SESSION['user']['user_name'])) $slashed_username = addslashes($_SESSION['user']['user_name']);
 $utc_format = 'd/m/Y H:i:s (\U\T\C)';

@@ -1,9 +1,6 @@
 <?php
 echo "<pre>";
 
-//Conecta ao banco de dados
-require_once "connect.php";
-
 //Coleta planilha com usuarios inscritos
 $outreach_params = [
     "course"    => $contest['outreach_name']

@@ -2,9 +2,6 @@
 //Protetor de login
 require_once "protect.php";
 
-//Conecta ao banco de dados
-require_once "connect.php";
-
 //Coleta lista de edições para retroceder inscrição
 $backtrack_statement = "
     SELECT

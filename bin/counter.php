@@ -2,9 +2,6 @@
 //Protetor de login
 require_once "protect.php";
 
-//Conecta ao banco de dados
-require_once "connect.php";
-
 //Coleta horário personalizado de consulta
 if (isset($_POST['time_round'])) {
     $time_unix = strtotime($_POST['time_round']);

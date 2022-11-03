@@ -4,9 +4,6 @@ echo "<pre>";
 //Aumenta tempo limite de execução do script
 set_time_limit(1200);
 
-//Conecta ao banco de dados
-require_once "connect.php";
-
 //Verifica se PSID do PetScan foi fornecido ao invés de uma categoria comum
 if (isset($contest['category_petscan'])) {
 

@@ -5,9 +5,6 @@ require_once "protect.php";
 //Coleta informações do concurso
 require_once "data.php";
 
-//Conecta ao banco de dados
-require_once "connect.php";
-
 //Coleta lista de avaliadores
 $evaluators_query = mysqli_prepare(
     $con,

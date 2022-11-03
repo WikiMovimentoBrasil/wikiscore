@@ -2,9 +2,6 @@
 //Protetor de login
 require_once "protect.php";
 
-//Conecta ao banco de dados
-require_once "connect.php";
-
 //Cria header especial para exportar arquivo
 header("Expires: 0");
 header("Cache-Control: must-revalidate, post-check=0, pre-check=0");

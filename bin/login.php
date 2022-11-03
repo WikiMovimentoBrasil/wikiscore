@@ -27,9 +27,6 @@ if (isset($_POST['do_login'])) {
 //Coleta informações do concurso
 require_once "data.php";
 
-//Conecta ao banco de dados
-require_once "connect.php";
-
 //Calcula número total de dias do wikiconcurso e monta eixo X dos gráficos
 $elapsed_days = floor((time() - $contest['start_time']) / 60 / 60 / 24);
 $total_days = ceil(($contest['end_time'] - $contest['start_time']) / 60 / 60 / 24) + 2;

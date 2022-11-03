@@ -144,9 +144,6 @@ foreach ($other_dels as $del_curid) {
 $eliminar = array_intersect($deletion, $list_cat);
 asort($eliminar);
 
-//Conecta ao banco de dados
-require_once "connect.php";
-
 //Coleta lista de diffs e artigos novos
 $inconsistency_query = mysqli_query(
     $con,
