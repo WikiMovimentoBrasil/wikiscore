@@ -97,49 +97,51 @@ if (isset($contest['official_list_pageid']) && isset($contest['category_pageid']
 }
 
 //Seleciona categoria de páginas pendentes de eliminação
-$ec_curid   = '1001045';
-$other_dels = [ '3501865' , '2419924' , '5857294' ];
+if ($contest['api_endpoint'] == 'https://pt.wikipedia.org/w/api.php') {
+    $ec_curid   = '1001045';
+    $other_dels = [ '3501865' , '2419924' , '5857294' ];
 
-//Coleta páginas em EC
-$ec_list_params = [
-    "action"        => "query",
-    "format"        => "php",
-    "list"          => "categorymembers",
-    "cmpageid"      => $ec_curid,
-    "cmnamespace"   => "4",
-    "cmlimit"       => "max",
-    "cmprop"        => "title"
-];
-$ec_list = unserialize(
-    file_get_contents($contest['api_endpoint']."?".http_build_query($ec_list_params))
-)['query']['categorymembers'];
-foreach ($ec_list as $page) {
-    $deletion[] = substr($page['title'], 34);
-}
-
-//Coleta outras páginas
-foreach ($other_dels as $del_curid) {
-    $list_params = [
+    //Coleta páginas em EC
+    $ec_list_params = [
         "action"        => "query",
         "format"        => "php",
         "list"          => "categorymembers",
-        "cmpageid"      => $del_curid,
-        "cmnamespace"   => "0",
+        "cmpageid"      => $ec_curid,
+        "cmnamespace"   => "4",
         "cmlimit"       => "max",
         "cmprop"        => "title"
     ];
-    $list = unserialize(
-        file_get_contents($contest['api_endpoint']."?".http_build_query($list_params))
+    $ec_list = unserialize(
+        file_get_contents($contest['api_endpoint']."?".http_build_query($ec_list_params))
     )['query']['categorymembers'];
-    foreach ($list as $page) {
-        $deletion[] = $page['title'];
+    foreach ($ec_list as $page) {
+        $deletion[] = substr($page['title'], 34);
     }
+
+    //Coleta outras páginas
+    foreach ($other_dels as $del_curid) {
+        $list_params = [
+            "action"        => "query",
+            "format"        => "php",
+            "list"          => "categorymembers",
+            "cmpageid"      => $del_curid,
+            "cmnamespace"   => "0",
+            "cmlimit"       => "max",
+            "cmprop"        => "title"
+        ];
+        $list = unserialize(
+            file_get_contents($contest['api_endpoint']."?".http_build_query($list_params))
+        )['query']['categorymembers'];
+        foreach ($list as $page) {
+            $deletion[] = $page['title'];
+        }
+    }
+
+
+    //Processa listagem
+    $eliminar = array_intersect($deletion, $list_cat);
+    asort($eliminar);
 }
-
-
-//Processa listagem
-$eliminar = array_intersect($deletion, $list_cat);
-asort($eliminar);
 
 //Coleta lista de diffs e artigos novos
 $inconsistency_query = mysqli_query(
@@ -259,7 +261,7 @@ $wd_query = mysqli_query(
                             ou por candidatura). Adicionalmente, também exibe artigos novos sem
                             item no Wikidata.
                         </li>
-                        <?php foreach ($eliminar as $artigo_del) {
+                        <?php foreach ($eliminar ?? array() as $artigo_del) {
                             $artigo_del_encode = urlencode($artigo_del);
                             echo "<li>";
                                 echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_del_encode}'>";
