@@ -39,12 +39,25 @@ $contests_statement = '
         `color`
     FROM
         `contests`
+    ORDER BY
+        `start_time` DESC
 ';
 $contests_query = mysqli_prepare($con, $contests_statement);
 mysqli_stmt_execute($contests_query);
 $contests_result = mysqli_stmt_get_result($contests_query);
 while ($row = mysqli_fetch_assoc($contests_result)) {
     $contests_array[$row['name_id']] = $row;
+}
+
+//Verifica se página de gerenciamento foi chamada
+if (isset($_GET['manage'])) {
+    $contest['name_id'] = 'manage';
+    if (isset($_GET['page']) && $_GET['page'] == 'contests') {
+        require_once __DIR__.'/bin/manage_contests.php';
+    } else {
+        require_once __DIR__.'/bin/manage_login.php';
+    }
+    exit();
 }
 
 //Verifica se algum concurso existente foi definido. Caso contrario, retorna lista de concursos e encerra o script
@@ -56,7 +69,7 @@ if (isset($contests_array[@$_GET['contest']])) {
         echo "<p><a href='index.php?contest=".$name_id."'>".$contest['name']."</a></p>\n";
     }
     readfile("bottom.html");
-    die();
+    exit();
 }
 
 //Lista páginas disponíveis para uso
