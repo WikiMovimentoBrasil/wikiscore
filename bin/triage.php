@@ -273,7 +273,11 @@ if ($output['revision'] != null) {
     //imediatamente anterior e insere pseudo-edição com tamanho correspondente
     $history = end($history)["revisions"];
     if (end($history)["parentid"] == 0) {
-        $history[] = ["size" => "0"];
+        $history[] = [
+            "size"      => "0",
+            "timestamp" => "1970-01-01T00:00:00",
+            "user"      => "None"
+        ];
     } else {
         $lastdiff_params = [
             "action"        => "compare",
@@ -290,7 +294,7 @@ if ($output['revision'] != null) {
 
     //Loop para retornar o código HTML do histórico da página
     foreach ($history as $i => $edit) {
-        $delta = $history[$i]['size'] - $history[$i+1]['size'];
+        $delta = $history[$i]['size'] - @$history[$i+1]['size'];
         if ($delta < 0) {
             $delta_color = "red";
         } elseif ($delta > 0) {
@@ -529,11 +533,11 @@ mysqli_close($con);
                                 <label for="valid-nao">Não</label><br><br>
                             </div>
                             <div class="w3-container w3-cell w3-half">
-                                <p>Imagem?</p>
                                 <?php if ($contest['pictures_mode'] == 2) {
+                                    echo '<p>Imagens?</p>';
                                     echo '
                                         <input
-                                        class="w3-input w3-border"
+                                        class="w3-input w3-section"
                                         type="number"
                                         id="pic"
                                         name="pic"
@@ -541,9 +545,10 @@ mysqli_close($con);
                                         min="0"
                                         max="9"
                                         required>
-                                        <label for="pic">Quantidade</label><br><br>
+                                        <label for="pic">Quantidade</label><br>
                                     ';
                                 } else {
+                                    echo '<p>Imagem?</p>';
                                     echo '
                                         <input
                                         class="w3-radio w3-section"

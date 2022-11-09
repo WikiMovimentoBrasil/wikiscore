@@ -131,7 +131,7 @@ function querypoints($time)
         $data[$row["user"]] = $row["total points"];
     }
 
-    return $data;
+    return $data ?? false;
 }
 
 
@@ -169,6 +169,7 @@ if ($finished) {
 
 //Coleta lista dos 9 primeiros colocados do último dia via query
 $last_day = querypoints($last_day);
+if (!$last_day) die("Erro durante consulta. Há edições avaliadas?");
 $last_day = array_keys($last_day);
 $user_list = array_slice($last_day, 0, 9);
 

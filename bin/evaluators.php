@@ -135,7 +135,7 @@ $icon = '
                 </header>
                 <div class="w3-container">
                     <ul class="w3-ul">
-                        <?php foreach ($output["evaluators"]["G"] as $user => $data) {
+                        <?php foreach ($output["evaluators"]["G"] ?? array() as $user => $data) {
                             echo '<li class="w3-bar">';
                                 echo $icon;
                                 echo '<div class="w3-bar-item">';
@@ -154,7 +154,7 @@ $icon = '
                 </header>
                 <div class="w3-container">
                     <ul class="w3-ul">
-                        <?php foreach ($output["evaluators"]["A"] as $user => $data) {
+                        <?php foreach ($output["evaluators"]["A"] ?? array() as $user => $data) {
                             echo '<li class="w3-bar">';
                                 echo $icon;
                                 echo '<div class="w3-bar-item">';
@@ -184,7 +184,7 @@ $icon = '
                 </header>
                 <div class="w3-container">
                     <ul class="w3-ul">
-                        <?php foreach ($output["evaluators"]["P"] as $user => $data) {
+                        <?php foreach ($output["evaluators"]["P"] ?? array() as $user => $data) {
                             echo '<li class="w3-bar">';
                                 echo $icon;
                                 echo '<div class="w3-bar-item">';

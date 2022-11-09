@@ -58,9 +58,14 @@ $total_edits = mysqli_query(
     left join `{$contest['name_id']}__edits` on DATE(`timestamp`) = date_generator.date
     GROUP BY date;
 ");
-while ($row = mysqli_fetch_assoc($total_edits)) $total_edits_rows[] = $row['count'];
-array_splice($total_edits_rows, $elapsed_days);
-$total_edits_rows = implode(", ", $total_edits_rows);
+if ($total_edits != false) {
+    while ($row = mysqli_fetch_assoc($total_edits)) $total_edits_rows[] = $row['count'];
+    array_splice($total_edits_rows, $elapsed_days);
+    $total_edits_rows = implode(", ", $total_edits_rows);
+} else {
+    $total_edits_rows = '';
+}
+
 
 $valid_edits = mysqli_query($con, "
     SELECT
@@ -71,9 +76,13 @@ $valid_edits = mysqli_query($con, "
         WHERE `valid_edit` = 1) AS queried on date_timestamp = date_generator.date
     GROUP BY date;
 ");
-while ($row = mysqli_fetch_assoc($valid_edits)) $valid_edits_rows[] = $row['count'];
-array_splice($valid_edits_rows, $elapsed_days);
-$valid_edits_rows = implode(", ", $valid_edits_rows);
+if ($valid_edits != false) {
+    while ($row = mysqli_fetch_assoc($valid_edits)) $valid_edits_rows[] = $row['count'];
+    array_splice($valid_edits_rows, $elapsed_days);
+    $valid_edits_rows = implode(", ", $valid_edits_rows);
+} else {
+    $valid_edits_rows = '';
+}
 
 $new_articles = mysqli_query($con, "
     SELECT
@@ -84,9 +93,13 @@ $new_articles = mysqli_query($con, "
         WHERE `new_page` = 1) AS queried on date_timestamp = date_generator.date
     GROUP BY date;
 ");
-while ($row = mysqli_fetch_assoc($new_articles)) $new_articles_rows[] = $row['count'];
-array_splice($new_articles_rows, $elapsed_days);
-$new_articles_rows = implode(", ", $new_articles_rows);
+if ($new_articles != false) {
+    while ($row = mysqli_fetch_assoc($new_articles)) $new_articles_rows[] = $row['count'];
+    array_splice($new_articles_rows, $elapsed_days);
+    $new_articles_rows = implode(", ", $new_articles_rows);
+} else {
+    $new_articles_rows = '';
+}
 
 $new_bytes = mysqli_query($con, "
     SELECT
@@ -97,9 +110,13 @@ $new_bytes = mysqli_query($con, "
         WHERE `bytes` > 0) as `queried` on `queried`.date_timestamp = date_generator.date
     GROUP BY date;
 ");
-while ($row = mysqli_fetch_assoc($new_bytes)) $new_bytes_rows[] = $row['count'];
-array_splice($new_bytes_rows, $elapsed_days);
-$new_bytes_rows = implode(", ", $new_bytes_rows);
+if ($new_bytes != false) {
+    while ($row = mysqli_fetch_assoc($new_bytes)) $new_bytes_rows[] = $row['count'];
+    array_splice($new_bytes_rows, $elapsed_days);
+    $new_bytes_rows = implode(", ", $new_bytes_rows);
+} else {
+    $new_bytes_rows = '';
+}
 
 $valid_bytes = mysqli_query($con, "
     SELECT
@@ -110,9 +127,13 @@ $valid_bytes = mysqli_query($con, "
         WHERE `valid_edit` = 1) as `queried` on `queried`.date_timestamp = date_generator.date
     GROUP BY date;
 ");
-while ($row = mysqli_fetch_assoc($valid_bytes)) $valid_bytes_rows[] = $row['count'];
-array_splice($valid_bytes_rows, $elapsed_days);
-$valid_bytes_rows = implode(", ", $valid_bytes_rows);
+if ($valid_bytes != false) {
+    while ($row = mysqli_fetch_assoc($valid_bytes)) $valid_bytes_rows[] = $row['count'];
+    array_splice($valid_bytes_rows, $elapsed_days);
+    $valid_bytes_rows = implode(", ", $valid_bytes_rows);
+} else {
+    $valid_bytes_rows = '';
+}
 
 //Captura horário de última edição avaliada no banco de dados
 $lastedit_query = mysqli_query(
@@ -128,11 +149,12 @@ $lastedit_query = mysqli_query(
     LIMIT
         1;"
 );
-$lastedit = mysqli_fetch_assoc($lastedit_query);
-if (isset($lastedit["lastedit"])) {
-    $lastedit = strtotime($lastedit["lastedit"]);
-} else {
-    $lastedit = "-";
+$lastedit = "-";
+if ($lastedit_query != false) {
+    $lastedit_query = mysqli_fetch_assoc($lastedit_query);
+    if (isset($lastedit_query["lastedit"]) && !is_null($lastedit_query["lastedit"])) {
+        $lastedit = date('d/m/Y H:i:s (\U\T\C)', strtotime($lastedit_query["lastedit"]));
+    }
 }
 
 
@@ -202,7 +224,7 @@ if (isset($lastedit["lastedit"])) {
                             <p class="w3-small">
                                 <strong>Horário da última edição avaliada</strong>
                                 <br>
-                                <?=date('d/m/Y H:i:s (\U\T\C)', $lastedit);?>
+                                <?=$lastedit;?>
                             </p>
                         </div>
                         <div class="w3-container w3-padding-small">

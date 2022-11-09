@@ -104,7 +104,7 @@ if (isset($_POST['diff'])) {
                 </div>
             </div>
             <?php
-            foreach ($output["backtrack"] as $user => $case) {
+            foreach ($output["backtrack"] ?? array() as $user => $case) {
                 echo '<div class="w3-margin-top w3-card">';
                     echo "<header class='w3-container w3-{$contest['theme']}'><h1>{$user}</h1></header>";
                     echo '<div class="w3-container">';

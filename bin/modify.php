@@ -343,7 +343,7 @@ mysqli_close($con);
                     <hr>
                 </div>
                 <?php
-                    if (!$output['compare']) {
+                    if (!@$output['compare']) {
                         echo "<script>alert('Edição não encontrada no banco de dados!');</script>";
                     }
                     if (@array_key_exists('diff', $output['success'])) {
