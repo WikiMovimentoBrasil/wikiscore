@@ -480,7 +480,9 @@ mysqli_close($con);
                                     class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small"
                                     style="filter: hue-rotate(280deg);"
                                     type="submit"
-                                    value="Pular edição">
+                                    value="Pular edição"
+                                    <?=(isset($output['revision']['diff']))?'':'disabled';?>
+                                    >
                                         <i class="fa-solid fa-forward w3-xxlarge" aria-hidden="true"></i><br>Pular
                                     </button>
                                 </form>
