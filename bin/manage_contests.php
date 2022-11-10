@@ -10,14 +10,14 @@ if ($_POST) {
     $name_id = $name_id['0'];
 
     //Verifica se tabelas existem
-    $exist_statement = 
-        "SELECT 
+    $exist_statement =
+        "SELECT
             COUNT(`table_name`) AS `count`
-        FROM 
+        FROM
             information_schema.tables
-        WHERE 
+        WHERE
             `table_schema` = ? AND
-            `table_name` LIKE ?"; 
+            `table_name` LIKE ?";
     $exist_query = mysqli_prepare($con, $exist_statement);
     mysqli_stmt_bind_param(
         $exist_query,
@@ -31,53 +31,53 @@ if ($_POST) {
     if ($exist_result["count"] !== 0) die("Erro: Tabelas já existem!");
 
     //Insere linha com informações do concurso
-    $create_statement = 
-        "INSERT INTO 
+    $create_statement =
+        "INSERT INTO
             `contests` (
-                `name_id`, 
-                `start_time`, 
-                `end_time`, 
-                `name`, 
-                `revert_time`, 
-                `official_list_pageid`, 
-                `category_pageid`, 
-                `category_petscan`, 
-                `endpoint`, 
-                `api_endpoint`, 
-                `outreach_name`, 
-                `bytes_per_points`, 
-                `max_bytes_per_article`, 
-                `minimum_bytes`, 
-                `pictures_per_points`, 
-                `pictures_mode`, 
-                `max_pic_per_article`, 
-                `theme`, 
+                `name_id`,
+                `start_time`,
+                `end_time`,
+                `name`,
+                `revert_time`,
+                `official_list_pageid`,
+                `category_pageid`,
+                `category_petscan`,
+                `endpoint`,
+                `api_endpoint`,
+                `outreach_name`,
+                `bytes_per_points`,
+                `max_bytes_per_article`,
+                `minimum_bytes`,
+                `pictures_per_points`,
+                `pictures_mode`,
+                `max_pic_per_article`,
+                `theme`,
                 `color`
-            ) 
+            )
         VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
 
     $create_query = mysqli_prepare($con, $create_statement);
     mysqli_stmt_bind_param(
         $create_query,
         "ssssiiiisssiiiiiiss",
-        $_POST['name_id'], 
-        $_POST['start_time'], 
-        $_POST['end_time'], 
-        $_POST['name'], 
-        $_POST['revert_time'], 
-        $_POST['official_list_pageid'], 
-        $_POST['category_pageid'], 
-        $_POST['category_petscan'], 
-        $_POST['endpoint'], 
-        $_POST['api_endpoint'],  
-        $_POST['outreach_name'], 
-        $_POST['bytes_per_points'],  
-        $_POST['max_bytes_per_article'],  
-        $_POST['minimum_bytes'], 
-        $_POST['pictures_per_points'],  
-        $_POST['pictures_mode'], 
-        $_POST['max_pic_per_article'],  
-        $_POST['theme'], 
+        $_POST['name_id'],
+        $_POST['start_time'],
+        $_POST['end_time'],
+        $_POST['name'],
+        $_POST['revert_time'],
+        $_POST['official_list_pageid'],
+        $_POST['category_pageid'],
+        $_POST['category_petscan'],
+        $_POST['endpoint'],
+        $_POST['api_endpoint'],
+        $_POST['outreach_name'],
+        $_POST['bytes_per_points'],
+        $_POST['max_bytes_per_article'],
+        $_POST['minimum_bytes'],
+        $_POST['pictures_per_points'],
+        $_POST['pictures_mode'],
+        $_POST['max_pic_per_article'],
+        $_POST['theme'],
         $_POST['color']
     );
 
@@ -96,6 +96,7 @@ if ($_POST) {
         die();
     }
 
+    //Cria novas tabelas
     mysqli_query(
         $con,
         "CREATE TABLE IF NOT EXISTS `{$name_id}__articles` (
@@ -105,7 +106,6 @@ if ($_POST) {
             UNIQUE KEY `articleID` (`articleID`)
         ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
     );
-
     mysqli_query(
         $con,
         "CREATE TABLE IF NOT EXISTS `{$name_id}__credentials` (
@@ -121,7 +121,6 @@ if ($_POST) {
             KEY `user_status` (`user_status`)
         ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;"
     );
-
     mysqli_query(
         $con,
         "CREATE TABLE IF NOT EXISTS `{$name_id}__edits` (
@@ -144,7 +143,6 @@ if ($_POST) {
             UNIQUE KEY `diff` (`diff`)
         ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
     );
-
     mysqli_query(
         $con,
         "CREATE TABLE IF NOT EXISTS `{$name_id}__users` (
@@ -156,6 +154,14 @@ if ($_POST) {
         ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
     );
 
+    //Verifica novamente se tabelas existem
+    mysqli_stmt_execute($exist_query);
+    $exist_result = mysqli_fetch_assoc(mysqli_stmt_get_result($exist_query));
+    if ($exist_result["count"] !== 4) {
+        die("Erro: Erro na criação das tabelas!");
+    } else {
+        echo "<script>alert('Concurso criado com sucesso!');window.location.href = window.location.href;</script>";
+    }
 }
 
 ?>
@@ -199,68 +205,68 @@ if ($_POST) {
                 <div class="w3-container">
                     <form id="create" method="post">
                         <div class="w3-section">
-                            
+
                             <label>
                                 <strong>Nome do concurso</strong>
                             </label>
-                            <input 
-                            class="w3-input w3-border w3-margin-bottom" 
-                            type="text" 
-                            placeholder="Insira o nome completo do concurso" 
-                            maxlength="255" 
-                            name="name" 
+                            <input
+                            class="w3-input w3-border w3-margin-bottom"
+                            type="text"
+                            placeholder="Insira o nome completo do concurso"
+                            maxlength="255"
+                            name="name"
                             required>
-                            
+
                             <label>
                                 <strong>Código interno</strong>
                             </label>
-                            <input 
-                            class="w3-input w3-border w3-margin-bottom" 
-                            type="text" 
-                            placeholder="Utilize somente letras minúsculas e underlines" 
+                            <input
+                            class="w3-input w3-border w3-margin-bottom"
+                            type="text"
+                            placeholder="Utilize somente letras minúsculas e underlines"
                             maxlength="30"
-                            pattern="[a-z0_]{1,30}" 
-                            name="name_id" 
+                            pattern="[a-z0_]{1,30}"
+                            name="name_id"
                             required>
-                            
+
                             <label>
                                 <strong>Horário de início</strong>
                             </label>
-                            <input 
-                            class="w3-input w3-border w3-margin-bottom" 
+                            <input
+                            class="w3-input w3-border w3-margin-bottom"
                             type="datetime-local"
-                            name="start_time" 
+                            name="start_time"
                             step="1"
                             required>
-                            
+
                             <label>
                                 <strong>Horário de término</strong>
                             </label>
-                            <input 
-                            class="w3-input w3-border w3-margin-bottom" 
+                            <input
+                            class="w3-input w3-border w3-margin-bottom"
                             type="datetime-local"
-                            name="end_time" 
+                            name="end_time"
                             step="1"
                             required>
-                            
+
                             <label>
                                 <strong>Endereço do endpoint</strong>
                             </label>
-                            <input 
-                            class="w3-input w3-border w3-margin-bottom" 
-                            type="url" 
+                            <input
+                            class="w3-input w3-border w3-margin-bottom"
+                            type="url"
                             placeholder="https://.../w/index.php"
-                            name="endpoint" 
+                            name="endpoint"
                             required>
-                            
+
                             <label>
                                 <strong>Endereço do API</strong>
                             </label>
-                            <input 
-                            class="w3-input w3-border w3-margin-bottom" 
-                            type="url" 
+                            <input
+                            class="w3-input w3-border w3-margin-bottom"
+                            type="url"
                             placeholder="https://.../w/api.php"
-                            name="api_endpoint" 
+                            name="api_endpoint"
                             required>
 
                             <div class="w3-row">
@@ -269,25 +275,25 @@ if ($_POST) {
                                     <label>
                                         <strong>Tempo de reversão em horas</strong>
                                     </label>
-                                    <input 
-                                    class="w3-input w3-border w3-margin-bottom" 
+                                    <input
+                                    class="w3-input w3-border w3-margin-bottom"
                                     type="number"
                                     min="0"
                                     max="99"
-                                    value="24" 
-                                    name="revert_time" 
+                                    value="24"
+                                    name="revert_time"
                                     required>
 
                                     <label>
                                         <strong>PetScan ID dos artigos</strong>
                                     </label>
-                                    <input 
-                                    class="w3-input w3-border w3-margin-bottom" 
+                                    <input
+                                    class="w3-input w3-border w3-margin-bottom"
                                     type="number"
-                                    maxlenght="10" 
-                                    name="category_petscan" 
+                                    maxlenght="10"
+                                    name="category_petscan"
                                     id="category_petscan"
-                                    onclick="document.getElementById('category_pageid').value = '';" 
+                                    onclick="document.getElementById('category_pageid').value = '';"
                                     >
 
                                 </div>
@@ -296,72 +302,72 @@ if ($_POST) {
                                     <label>
                                         <strong>ID da lista de artigos</strong>
                                     </label>
-                                    <input 
-                                    class="w3-input w3-border w3-margin-bottom" 
+                                    <input
+                                    class="w3-input w3-border w3-margin-bottom"
                                     type="number"
-                                    maxlenght="10" 
-                                    name="official_list_pageid" 
+                                    maxlenght="10"
+                                    name="official_list_pageid"
                                     required>
 
                                     <label>
                                         <strong>ID da categoria de artigos</strong>
                                     </label>
-                                    <input 
-                                    class="w3-input w3-border w3-margin-bottom" 
+                                    <input
+                                    class="w3-input w3-border w3-margin-bottom"
                                     type="number"
                                     maxlenght="10"
                                     id="category_pageid"
-                                    name="category_pageid" 
-                                    onclick="document.getElementById('category_petscan').value = '';" 
+                                    name="category_pageid"
+                                    onclick="document.getElementById('category_petscan').value = '';"
                                     >
 
                                 </div>
                             </div>
-                            
+
                             <label>
                                 <strong>Nome do concurso no Outreach Dashboard</strong>
                             </label>
-                            <input 
-                            class="w3-input w3-border w3-margin-bottom" 
-                            type="text" 
+                            <input
+                            class="w3-input w3-border w3-margin-bottom"
+                            type="text"
                             placeholder="Nome_da_campanha/Nome_do_programa"
-                            name="outreach_name" 
+                            name="outreach_name"
                             required>
-                            
+
                             <div class="w3-row">
                                 <div class="w3-half" style="padding-right: 8px;">
 
                                     <label>
                                         <strong>Bytes por ponto</strong>
                                     </label>
-                                    <input 
-                                    class="w3-input w3-border w3-margin-bottom" 
+                                    <input
+                                    class="w3-input w3-border w3-margin-bottom"
                                     type="number"
                                     min="1"
                                     max="999999999"
-                                    name="bytes_per_points" 
+                                    name="bytes_per_points"
                                     required>
 
                                     <label>
                                         <strong>Máximo de bytes por artigo-participante</strong>
                                     </label>
-                                    <input 
-                                    class="w3-input w3-border w3-margin-bottom" 
+                                    <input
+                                    class="w3-input w3-border w3-margin-bottom"
                                     type="number"
                                     min="1"
                                     max="999999999"
-                                    name="max_bytes_per_article" 
+                                    name="max_bytes_per_article"
                                     required>
 
                                     <label>
                                         <strong>Mínimo de bytes por edição</strong>
                                     </label>
-                                    <input 
-                                    class="w3-input w3-border w3-margin-bottom" 
+                                    <input
+                                    class="w3-input w3-border w3-margin-bottom"
                                     type="number"
                                     min="-1"
                                     max="999999999"
-                                    name="minimum_bytes" 
+                                    name="minimum_bytes"
                                     >
 
                                 </div>
@@ -370,23 +376,23 @@ if ($_POST) {
                                     <label>
                                         <strong>Imagens por ponto</strong>
                                     </label>
-                                    <input 
-                                    class="w3-input w3-border w3-margin-bottom" 
+                                    <input
+                                    class="w3-input w3-border w3-margin-bottom"
                                     type="number"
                                     min="0"
                                     max="999999999"
-                                    name="pictures_per_points" 
+                                    name="pictures_per_points"
                                     required>
 
                                     <label>
                                         <strong>Máximo de imagens por artigo-participante</strong>
                                     </label>
-                                    <input 
-                                    class="w3-input w3-border w3-margin-bottom" 
+                                    <input
+                                    class="w3-input w3-border w3-margin-bottom"
                                     type="number"
                                     min="0"
                                     max="999999999"
-                                    name="max_pic_per_article" 
+                                    name="max_pic_per_article"
                                     required>
 
                                     <label>
@@ -450,12 +456,12 @@ if ($_POST) {
                                     <label>
                                         <strong>Cor personalizada (hex)</strong>
                                     </label>
-                                    <input 
-                                    class="w3-input w3-border w3-margin-bottom" 
-                                    type="text" 
+                                    <input
+                                    class="w3-input w3-border w3-margin-bottom"
+                                    type="text"
                                     placeholder="A0B1C2"
                                     maxlength="99"
-                                    pattern="[A-F0-9]{6}" 
+                                    pattern="[A-F0-9]{6}"
                                     name="color"
                                     id="hex"
                                     disabled>
