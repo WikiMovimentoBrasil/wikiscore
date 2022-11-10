@@ -661,7 +661,7 @@ mysqli_close($con);
                         <?=date($utc_format, $contest['end_time']);?>
                     </p>
                     <p class="w3-small">
-                        <strong>Última atualização do banco de dados</strong>
+                        <strong>Última edição inserida no banco de dados</strong>
                         <br>
                         <?=date($utc_format, $output['lastedit']);?>
                     </p>
