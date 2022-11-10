@@ -82,8 +82,8 @@ if ($_POST) {
     );
 
     //Executa query
-    $_POST['start_time'] = date('Y-m-d\TH:i:s', strtotime($_POST['start_time'].":00"));
-    $_POST['end_time']   = date('Y-m-d\TH:i:s', strtotime($_POST['end_time']  .":59"));
+    $_POST['start_time'] = date('Y-m-d\TH:i:s', strtotime($_POST['start_time']));
+    $_POST['end_time']   = date('Y-m-d\TH:i:s', strtotime($_POST['end_time']));
     if ($_POST['category_petscan'] == '0') $_POST['category_pageid'] = null;
     if ($_POST['minimum_bytes'] == '0') $_POST['minimum_bytes'] = null;
     if ($_POST['pictures_mode'] != '2') $_POST['max_pic_per_article'] = null;
@@ -230,6 +230,7 @@ if ($_POST) {
                             class="w3-input w3-border w3-margin-bottom" 
                             type="datetime-local"
                             name="start_time" 
+                            step="1"
                             required>
                             
                             <label>
@@ -239,6 +240,7 @@ if ($_POST) {
                             class="w3-input w3-border w3-margin-bottom" 
                             type="datetime-local"
                             name="end_time" 
+                            step="1"
                             required>
                             
                             <label>

@@ -178,7 +178,8 @@ if (mysqli_num_rows($count_query) == 0) { die("No users"); }
                     class="w3-input w3-border"
                     type="datetime-local"
                     name="time_round"
-                    value="<?=date('Y-m-d\TH:i', $time_unix);?>"
+                    step="1"
+                    value="<?=date('Y-m-d\TH:i:s', $time_unix);?>"
                     >
                     <input class="w3-btn w3-block w3-<?=$contest['theme'];?>" type="submit">
                 </form>
