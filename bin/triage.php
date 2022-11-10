@@ -670,6 +670,57 @@ mysqli_close($con);
                         <br>
                         <?=$contest['revert_time'];?> horas
                     </p>
+                    <p class="w3-small">
+                        <strong>Bytes por ponto</strong>
+                        <br>
+                        <?=$contest['bytes_per_points'];?> bytes
+                    </p>
+                    <p class="w3-small">
+                        <strong>Máximo de bytes por artigo</strong>
+                        <br>
+                        <?=$contest['max_bytes_per_article'];?> bytes
+                    </p>
+                    <p class="w3-small">
+                        <strong>Mínimo de bytes por edição</strong>
+                        <br>
+                        <?=($contest['minimum_bytes'])?($contest['minimum_bytes'].' bytes'):'Indefinido';?>
+                    </p>
+                    <p class="w3-small">
+                        <strong>Imagens por ponto</strong>
+                        <br>
+                        <?=($contest['pictures_per_points']==0)?'Desabilitado':($contest['pictures_per_points'].' imagens');?> 
+                    </p>
+                    <p class="w3-small" style="display:<?=($contest['pictures_per_points']!=0)?'block':'none';?>;">
+                        <strong>Modo de imagens</strong>
+                        <br>
+                        <?php
+                        if ($contest['pictures_per_points'] == 2) {
+                            echo 'Por imagem';
+                        } elseif ($contest['pictures_per_points'] == 1) {
+                            echo 'Por edição';
+                        } else {
+                            echo 'Por artigo';
+                        }?>
+                    </p>
+                    <p class="w3-small" style="display:<?=($contest['max_pic_per_article']!=0)?'block':'none';?>;">
+                        <strong>Máximo de imagens por artigo</strong>
+                        <br>
+                        <?=$contest['max_pic_per_article']??'Indefinido';?> 
+                    </p>
+                    <p class="w3-small">
+                        <strong>Links importantes</strong>
+                        <br>
+                        <a 
+                        href="<?=$contest['endpoint'];?>?curid=<?=$contest['official_list_pageid'];?>"
+                        >Lista oficial</a> e <a 
+                        href="<?php 
+                            if ($contest['category_petscan']) {
+                                echo "https://petscan.wmflabs.org/?psid={$contest['category_petscan']}";
+                            } else {
+                                echo "{$contest['endpoint']}?curid={$contest['category_pageid']}";
+                            }
+                        ?>">categoria de monitoramento</a>
+                    </p>
                 </div>
             </div>
             <div class="w3-threequarter">
