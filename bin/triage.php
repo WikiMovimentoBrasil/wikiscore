@@ -289,7 +289,11 @@ if ($output['revision'] != null) {
         $lastdiff = unserialize(
             file_get_contents($contest['api_endpoint']."?".http_build_query($lastdiff_params))
         )["compare"];
-        $history[] = ["size" => $lastdiff["fromsize"]];
+        $history[] = [
+            "size"      => $lastdiff["fromsize"],
+            "timestamp" => "1970-01-01T00:00:00",
+            "user"      => "None"
+        ];
     }
 
     //Loop para retornar o código HTML do histórico da página
