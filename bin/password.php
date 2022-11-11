@@ -36,7 +36,7 @@ if (isset($_POST['email'])) {
 	    	//Cria corpo do e-mail
 			$message = "Oi!\nUtilize o seguinte token para redefinir sua senha:\n{$token}\n\n\nAtenciosamente,\nWikiconcursos";
 			$emailFile = fopen("php://temp", 'w+');
-			$subject = "Wikiconcursos - Redefinição de senha";
+			$subject = "Wikiconcursos - Nova senha";
 			fwrite($emailFile, "Subject: " . $subject . "\n" . $message);
 			rewind($emailFile);
 			$fstat = fstat($emailFile);

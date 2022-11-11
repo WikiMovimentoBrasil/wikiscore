@@ -159,9 +159,69 @@ if ($_POST) {
     $exist_result = mysqli_fetch_assoc(mysqli_stmt_get_result($exist_query));
     if ($exist_result["count"] !== 4) {
         die("Erro: Erro na criação das tabelas!");
-    } else {
-        echo "<script>alert('Concurso criado com sucesso!');window.location.href = window.location.href;</script>";
     }
+
+    //Extrai nome do gestor via e-mail
+    $name = strstr($_POST['email'], "@", true);
+    if (!$name) { 
+        die("Erro: E-mail inválido!"); 
+    }
+    $name = trim($name, "@");
+
+    //Gera senha para gestor
+    $password = bin2hex(random_bytes(14));
+    $hash = password_hash($password, PASSWORD_DEFAULT);
+
+    //Insere o gestor no banco de dados
+    $mananger_statement =
+        "INSERT INTO 
+            `{$name_id}__credentials` (`user_name`, `user_email`, `user_password`, `user_status`)
+        VALUES
+            (?,?,?)";
+    $mananger_query = mysqli_prepare($con, $mananger_statement);
+    mysqli_stmt_bind_param(
+        $mananger_query,
+        "ssss",
+        $name,
+        $_POST['email'],
+        $hash,
+        'G'
+    );
+
+    //Verifica se linha foi inserida com sucesso
+    mysqli_stmt_execute($mananger_query);
+    if (mysqli_stmt_affected_rows($mananger_query) != 1) {
+        printf("Erro: %s.\n", mysqli_stmt_error($mananger_query));
+        die();
+    }
+
+    //Cria corpo do e-mail para gestor
+    $message  = "Oi!\nUm novo wikiconcurso ({$_POST['name']}) foi criado e seu e-mail foi cadastrado como gestor ou gestora.\n";
+    $message .= "Para acessar, utilize seu e-mail e a seguinte senha: {$password}\n";
+    $message .= "Caso queira, a senha pode ser alterada ao clicar em 'Esqueci a senha' na tela de login.\n";
+    $message .= "Para mais detalhes, consulte nosso manual na wiki do GitHub.\n\n";
+    $message .= "Atenciosamente,\nWikiconcursos";
+    $emailFile = fopen("php://temp", 'w+');
+    $subject = "Wikiconcursos - Novo concurso cadastrado";
+    fwrite($emailFile, "Subject: " . $subject . "\n" . $message);
+    rewind($emailFile);
+    $fstat = fstat($emailFile);
+    $size = $fstat['size'];
+
+    //Envia e-mail ao gestor
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'smtp://mail.tools.wmflabs.org:587');
+    curl_setopt($ch, CURLOPT_MAIL_FROM, "tools.wikiconcursos@tools.wmflabs.org");
+    curl_setopt($ch, CURLOPT_MAIL_RCPT, array($_POST['email']));
+    curl_setopt($ch, CURLOPT_INFILE, $emailFile);
+    curl_setopt($ch, CURLOPT_INFILESIZE, $size);
+    curl_setopt($ch, CURLOPT_UPLOAD, true);
+    curl_exec($ch);
+    fclose($emailFile);
+    curl_close($ch);
+
+    //Retorna mensagem final
+    echo "<script>alert('Concurso criado com sucesso!');window.location.href = window.location.href;</script>";
 }
 
 ?>
@@ -467,6 +527,17 @@ if ($_POST) {
                                     disabled>
                                 </div>
                             </div>
+
+                            <label>
+                                <strong>E-mail do gestor</strong>
+                            </label>
+                            <input
+                            class="w3-input w3-border w3-margin-bottom"
+                            type="email"
+                            placeholder="example@example.com"
+                            name="email"
+                            required>
+
                             <button class="w3-button w3-block w3-deep-green w3-section w3-padding" name="do_create" type="submit">Entrar</button>
                         </div>
                     </form>
