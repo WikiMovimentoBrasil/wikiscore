@@ -688,7 +688,7 @@ mysqli_close($con);
                     <p class="w3-small">
                         <strong>Imagens por ponto</strong>
                         <br>
-                        <?=($contest['pictures_per_points']==0)?'Desabilitado':($contest['pictures_per_points'].' imagens');?> 
+                        <?=($contest['pictures_per_points']==0)?'Desabilitado':($contest['pictures_per_points'].' imagens');?>
                     </p>
                     <p class="w3-small" style="display:<?=($contest['pictures_per_points']!=0)?'block':'none';?>;">
                         <strong>Modo de imagens</strong>
@@ -705,15 +705,15 @@ mysqli_close($con);
                     <p class="w3-small" style="display:<?=($contest['max_pic_per_article']!=0)?'block':'none';?>;">
                         <strong>Máximo de imagens por artigo</strong>
                         <br>
-                        <?=$contest['max_pic_per_article']??'Indefinido';?> 
+                        <?=$contest['max_pic_per_article']??'Indefinido';?>
                     </p>
                     <p class="w3-small">
                         <strong>Links importantes</strong>
                         <br>
-                        <a 
+                        <a
                         href="<?=$contest['endpoint'];?>?curid=<?=$contest['official_list_pageid'];?>"
-                        >Lista oficial</a> e <a 
-                        href="<?php 
+                        >Lista oficial</a> e <a
+                        href="<?php
                             if ($contest['category_petscan']) {
                                 echo "https://petscan.wmflabs.org/?psid={$contest['category_petscan']}";
                             } else {
