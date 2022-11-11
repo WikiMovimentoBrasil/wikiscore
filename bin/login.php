@@ -259,8 +259,20 @@ if ($lastedit_query != false) {
                         </div>
                     </form>
                     <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
-                        <button onclick="document.getElementById('id01').style.display='none'" type="button" class="w3-button w3-red">Cancelar</button>
-                        <button class="w3-right w3-button w3-blue" type="submit" form="login" name="do_create">Pré-cadastrar</button>
+                        <button 
+                        onclick="window.open(
+                            'index.php?contest=<?=$contest['name_id'];?>&page=password',
+                            '_blank'
+                        );" 
+                        type="button" 
+                        class="w3-button w3-red"
+                        >Esqueci minha senha</button>
+                        <button 
+                        class="w3-right w3-button w3-blue" 
+                        type="submit" 
+                        form="login" 
+                        name="do_create"
+                        >Pré-cadastrar</button>
                     </div>
                 </div>
             </div>

@@ -82,6 +82,7 @@ if (isset($_GET['contest'])) {
             "backtrack",
             "evaluators",
             "graph",
+            "password",
             "load_edits",
             "load_reverts",
             "load_users"
