@@ -171,6 +171,7 @@ if ($_POST) {
     //Gera senha para gestor
     $password = bin2hex(random_bytes(14));
     $hash = password_hash($password, PASSWORD_DEFAULT);
+    $mananger_code = 'G';
 
     //Insere o gestor no banco de dados
     $mananger_statement =
@@ -185,7 +186,7 @@ if ($_POST) {
         $name,
         $_POST['email'],
         $hash,
-        'G'
+        $mananger_code
     );
 
     //Verifica se linha foi inserida com sucesso
@@ -538,7 +539,7 @@ if ($_POST) {
                             name="email"
                             required>
 
-                            <button class="w3-button w3-block w3-deep-green w3-section w3-padding" name="do_create" type="submit">Entrar</button>
+                            <button class="w3-button w3-block w3-deep-green w3-section w3-padding" name="do_create" type="submit">Cadastrar</button>
                         </div>
                     </form>
                 </div>
