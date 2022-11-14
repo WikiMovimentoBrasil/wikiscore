@@ -84,10 +84,18 @@ if ($_POST) {
     //Executa query
     $_POST['start_time'] = date('Y-m-d\TH:i:s', strtotime($_POST['start_time']));
     $_POST['end_time']   = date('Y-m-d\TH:i:s', strtotime($_POST['end_time']));
-    if ($_POST['category_petscan'] == '0') $_POST['category_pageid'] = null;
-    if ($_POST['minimum_bytes'] == '0') $_POST['minimum_bytes'] = null;
-    if ($_POST['pictures_mode'] != '2') $_POST['max_pic_per_article'] = null;
-    if ($_POST['theme'] != 'color') $_POST['color'] = null;
+    if ($_POST['category_petscan'] == '0') {
+        $_POST['category_pageid'] = null;
+    }
+    if ($_POST['minimum_bytes'] == '0') {
+        $_POST['minimum_bytes'] = null;
+    }
+    if ($_POST['pictures_mode'] != '2') {
+        $_POST['max_pic_per_article'] = null;
+    }
+    if ($_POST['theme'] != 'color') {
+        $_POST['color'] = null;
+    }
 
     //Verifica se linha foi inserida com sucesso
     mysqli_stmt_execute($create_query);
@@ -162,10 +170,12 @@ if ($_POST) {
     }
 
     //Extrai nome do gestor via e-mail
-    $name = strstr($_POST['email'], "@", true);
-    if (!$name) { 
-        die("Erro: E-mail inválido!"); 
+    if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+        $email =  filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    } else {
+        die("Erro: E-mail inválido!");
     }
+    $name = strstr($email, "@", true);
     $name = trim($name, "@");
 
     //Gera senha para gestor
@@ -175,7 +185,7 @@ if ($_POST) {
 
     //Insere o gestor no banco de dados
     $mananger_statement =
-        "INSERT INTO 
+        "INSERT INTO
             `{$name_id}__credentials` (`user_name`, `user_email`, `user_password`, `user_status`)
         VALUES
             (?,?,?)";
@@ -184,7 +194,7 @@ if ($_POST) {
         $mananger_query,
         "ssss",
         $name,
-        $_POST['email'],
+        $email,
         $hash,
         $mananger_code
     );
@@ -197,7 +207,8 @@ if ($_POST) {
     }
 
     //Cria corpo do e-mail para gestor
-    $message  = "Oi!\nUm novo wikiconcurso ({$_POST['name']}) foi criado e seu e-mail foi cadastrado como gestor ou gestora.\n";
+    $message  = "Oi!\n";
+    $message .= "Um novo wikiconcurso ({$_POST['name']}) foi criado e seu e-mail foi cadastrado como gestor ou gestora.\n";
     $message .= "Para acessar, utilize seu e-mail e a seguinte senha: {$password}\n";
     $message .= "Caso queira, a senha pode ser alterada ao clicar em 'Esqueci a senha' na tela de login.\n";
     $message .= "Para mais detalhes, consulte nosso manual na wiki do GitHub.\n\n";
@@ -213,7 +224,7 @@ if ($_POST) {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, 'smtp://mail.tools.wmflabs.org:587');
     curl_setopt($ch, CURLOPT_MAIL_FROM, "tools.wikiconcursos@tools.wmflabs.org");
-    curl_setopt($ch, CURLOPT_MAIL_RCPT, array($_POST['email']));
+    curl_setopt($ch, CURLOPT_MAIL_RCPT, array($email));
     curl_setopt($ch, CURLOPT_INFILE, $emailFile);
     curl_setopt($ch, CURLOPT_INFILESIZE, $size);
     curl_setopt($ch, CURLOPT_UPLOAD, true);
@@ -539,7 +550,11 @@ if ($_POST) {
                             name="email"
                             required>
 
-                            <button class="w3-button w3-block w3-deep-green w3-section w3-padding" name="do_create" type="submit">Cadastrar</button>
+                            <button
+                            class="w3-button w3-block w3-deep-green w3-section w3-padding"
+                            name="do_create"
+                            type="submit"
+                            >Cadastrar</button>
                         </div>
                     </form>
                 </div>

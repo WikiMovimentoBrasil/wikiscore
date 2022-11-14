@@ -134,7 +134,14 @@ while ($user = mysqli_fetch_assoc($check_renamed)) {
 //Destrava edições que porventura ainda estejam travadas
 mysqli_query(
     $con,
-    "UPDATE `{$contest['name_id']}__edits` SET `by` = NULL, `when` = NULL WHERE `by` LIKE 'hold-%' OR `by` LIKE 'skip-%';"
+    "UPDATE
+        `{$contest['name_id']}__edits`
+    SET
+        `by` = NULL,
+        `when` = NULL
+    WHERE
+        `by` LIKE 'hold-%' OR
+        `by` LIKE 'skip-%';"
 );
 
 //Encerra conexão

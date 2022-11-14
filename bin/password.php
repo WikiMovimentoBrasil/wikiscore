@@ -3,6 +3,13 @@
 //Formulário submetido
 if (isset($_POST['email'])) {
 
+	//Sanitiza e-mail
+	if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+	    $email =  filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+	} else {
+	    die("Erro: E-mail inválido!");
+	}
+
 	//Pedido sem token
 	if (!isset($_POST['token'])) {
 
@@ -27,7 +34,7 @@ if (isset($_POST['email'])) {
 	        WHERE
 	            `user_email` = ?"
 	    );
-	    mysqli_stmt_bind_param($update_query, "ss", $user_data, $_POST['email']);
+	    mysqli_stmt_bind_param($update_query, "ss", $user_data, $email);
 	    mysqli_stmt_execute($update_query);
 
 	    //Verifica se houve alteração (se e-mail foi encontrado, principalmente)
@@ -46,7 +53,7 @@ if (isset($_POST['email'])) {
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, 'smtp://mail.tools.wmflabs.org:587');
 			curl_setopt($ch, CURLOPT_MAIL_FROM, "tools.wikiconcursos@tools.wmflabs.org");
-			curl_setopt($ch, CURLOPT_MAIL_RCPT, array($_POST['email']));
+			curl_setopt($ch, CURLOPT_MAIL_RCPT, array($email));
 			curl_setopt($ch, CURLOPT_INFILE, $emailFile);
 			curl_setopt($ch, CURLOPT_INFILESIZE, $size);
 			curl_setopt($ch, CURLOPT_UPLOAD, true);
@@ -81,7 +88,7 @@ if (isset($_POST['email'])) {
 		    WHERE
 	            `user_email` = ? AND `user_data` IS NOT NULL"
 		);
-		mysqli_stmt_bind_param($verify_query, "s", $_POST['email']);
+		mysqli_stmt_bind_param($verify_query, "s", $email);
 		mysqli_stmt_execute($verify_query);
 		$verify_result = mysqli_stmt_get_result($verify_query);
 
@@ -102,7 +109,7 @@ if (isset($_POST['email'])) {
 					//Grava nova senha
 					session_start();
 				    require_once "credentials-lib.php";
-				    $USR->save($_POST['email'], $_POST['password'], $user_id);
+				    $USR->save($email, $_POST['password'], $user_id);
 
 				    //Gera resultado
 					$status = 'Senha alterada com sucesso!';
@@ -176,7 +183,7 @@ if (isset($_POST['email'])) {
                             placeholder="example@example.com"
                             maxlength="255"
                             name="email"
-                            value="<?=$_POST['email']??''?>"
+                            value="<?=$email??''?>"
                             required>
 
                         	<label>
@@ -210,7 +217,7 @@ if (isset($_POST['email'])) {
         <?php
 	    if ($status == 'Senha alterada com sucesso!') {
 	        echo "<script>alert('{$status}');window.location.replace('index.php?contest={$contest['name_id']}');</script>";
-	    } elseif ($status != false) {
+	    } elseif ($status) {
 	        echo "<script>alert('{$status}');</script>";
 	    }
     ?>
