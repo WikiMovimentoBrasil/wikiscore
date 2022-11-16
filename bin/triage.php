@@ -59,7 +59,7 @@ if ($_POST) {
         }
 
         //Processa alteração do número de bytes, caso informação tenha sido editada pelo avaliador
-        if (isset($_POST['overwrite'])) {
+        if (isset($_POST['overwrite']) && is_numeric($_POST['overwrite'])) {
 
             //Busca número de bytes no banco de dados
             $eval_query = mysqli_prepare(
