@@ -223,6 +223,17 @@ mysqli_stmt_bind_param($revision_query, "iiss", $bytes, $bytes, $revert_time, $_
 mysqli_stmt_execute($revision_query);
 $output['revision'] = mysqli_fetch_assoc(mysqli_stmt_get_result($revision_query));
 
+//Evita avaliação durante atualização do banco de dados
+if ($contest['started_update'] > $contest['finished_update']) {
+    $output['revision'] = null;
+    $output['compare']['*']  = '<div class="w3-panel w3-red w3-display-container w3-border"><p>';
+    $output['compare']['*'] .= '<h3>Banco de dados em atualização.</h3>';
+    $output['compare']['*'] .= 'Por favor, aguarde alguns minutos e atualize a página.';
+    $output['compare']['*'] .= '</p></div>';
+    $output['count'] = '-';
+    $output['total_count'] = '-';
+}
+
 //Trava edição para evitar que dois avaliadores avaliem a mesma edição ao mesmo tempo
 if ($output['revision'] != null) {
     $hold_query = mysqli_prepare(

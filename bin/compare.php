@@ -3,6 +3,30 @@
 //Protetor de login
 require_once "protect.php";
 
+//Verifica se a ultima atualização ocorreu em menos de 30 minutos
+if ((time() - $contest['finished_update']) < 1800) {
+    $early = true;
+}
+
+//Processa informações caso formulário tenha sido submetido
+if ($_POST && !isset($early)) {
+    $refresh_query = mysqli_prepare(
+        $con, 
+        "UPDATE 
+            `manage__contests` 
+        SET 
+            `next_update` = NOW()
+        WHERE 
+            `name_id` = '{$contest['name_id']}'"
+    );
+    mysqli_stmt_execute($refresh_query);
+    if (mysqli_stmt_affected_rows($refresh_query) == 0) {
+        die("<br>Erro ao solicitar atualização. Atualize a página para tentar novamente.");
+    } else {
+        $update = true;
+    }    
+}
+
 //Verifica se a lista oficial e a categoria foram definidas
 if (isset($contest['official_list_pageid']) && isset($contest['category_pageid'])) {
 
@@ -177,6 +201,12 @@ $wd_query = mysqli_query(
     ORDER BY
       `{$contest['name_id']}__edits`.`timestamp` ASC;"
 );
+
+//Calcula contagem regressiva para atualização do banco de dados 
+$countdown = 'até 10 minutos';
+if ($contest['next_update'] > time() && !isset($update)) {
+    $countdown = gmdate('H \h\o\r\a\s \e i \m\i\n\u\t\o\s', $contest['next_update'] - time());
+}
 ?>
 
 <!DOCTYPE html>
@@ -191,6 +221,27 @@ $wd_query = mysqli_query(
         <header class="w3-container w3-<?=$contest['theme'];?>">
             <h1>Comparador - <?=$contest['name'];?></h1>
         </header>
+        <br>
+        <div class="w3-container">
+            <div class="w3-panel w3-pale-blue w3-display-container w3-border">
+                <h3>Próxima atualização em <?=$countdown;?></h3>
+                <form method="post">
+                    <p>
+                        <button
+                        class="w3-button w3-small w3-blue"
+                        type="submit"
+                        name="update"
+                        value="update"
+                        style="display: <?=($countdown=='até 10 minutos'||isset($early))?'none':'block';?>"
+                        >Antecipar atualização</button>
+                        <span style="display: <?=isset($early)?'inline':'none';?>">
+                            A última atualização ocorreu em menos de 30 minutos. Por favor, aguarde esse prazo
+                            antes de solicitar uma nova atualização.
+                        </span>
+                    </p>
+                </form>
+            </div>
+        </div>
         <br>
         <div class="w3-row-padding">
             <div class="w3-quarter">

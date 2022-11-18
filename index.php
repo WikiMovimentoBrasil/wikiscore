@@ -36,7 +36,10 @@ $contests_statement = '
         `pictures_mode`,
         `max_pic_per_article`,
         `theme`,
-        `color`
+        `color`,
+        UNIX_TIMESTAMP(`started_update`) AS `started_update`,
+        UNIX_TIMESTAMP(`finished_update`) AS `finished_update`,
+        UNIX_TIMESTAMP(`next_update`) AS `next_update`
     FROM
         `manage__contests`
     ORDER BY
@@ -83,6 +86,7 @@ if (isset($_GET['contest'])) {
             "evaluators",
             "graph",
             "password",
+            "maintenance",
             "load_edits",
             "load_reverts",
             "load_users"
