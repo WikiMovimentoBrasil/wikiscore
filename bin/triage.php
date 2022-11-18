@@ -174,21 +174,6 @@ $count_result = mysqli_fetch_assoc(mysqli_stmt_get_result($count_query));
 $output['count'] = $count_result['count'];
 $output['total_count'] = $count_result['total_count'] - $count_result['count'];
 
-//Captura horário de última edição inserida no banco de dados
-$lastedit_query = mysqli_prepare(
-    $con,
-    "SELECT
-        `timestamp` AS `lastedit`
-    FROM
-        `{$contest['name_id']}__edits`
-    ORDER BY
-        `timestamp` DESC
-    LIMIT
-        1
-;");
-mysqli_stmt_execute($lastedit_query);
-$output['lastedit'] = strtotime(mysqli_fetch_assoc(mysqli_stmt_get_result($lastedit_query))["lastedit"]);
-
 //Coleta edição para avaliação
 $revision_query = mysqli_prepare(
     $con,
@@ -672,9 +657,9 @@ mysqli_close($con);
                         <?=date($utc_format, $contest['end_time']);?>
                     </p>
                     <p class="w3-small">
-                        <strong>Última edição inserida no banco de dados</strong>
+                        <strong>Última atualização do banco de dados</strong>
                         <br>
-                        <?=date($utc_format, $output['lastedit']);?>
+                        <?=date($utc_format, $contest['finished_update']);?>
                     </p>
                     <p class="w3-small">
                         <strong>Delay no registro das edições</strong>
