@@ -38,7 +38,7 @@ $contests_statement = '
         `theme`,
         `color`
     FROM
-        `contests`
+        `manage__contests`
     ORDER BY
         `start_time` DESC
 ';

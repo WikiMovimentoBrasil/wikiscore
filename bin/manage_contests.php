@@ -33,7 +33,7 @@ if ($_POST) {
     //Insere linha com informações do concurso
     $create_statement =
         "INSERT INTO
-            `contests` (
+            `manage__contests` (
                 `name_id`,
                 `start_time`,
                 `end_time`,
