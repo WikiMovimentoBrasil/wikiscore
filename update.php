@@ -38,46 +38,53 @@ while ($row = mysqli_fetch_assoc($contests_result)) {
 if (!isset($contests_array)) die("Sem atualizações previstas.\n");
 
 //Define comandos a ser executados para cada concurso
-$scripts = ["load_edits", "load_users", "load_reverts"];
+$steps = ["load_edits", "load_users", "load_reverts"];
 
-//Curl para executar de cada comando
-function update_contest($contest, $script) {
-    $ch = curl_init();
+//Define queries
+$start_query = mysqli_prepare(
+    $con, 
+    "UPDATE 
+        `manage__contests` 
+    SET 
+        `started_update` = NOW()
+    WHERE 
+        `name_id` = ?"
+);
+$finish_query = mysqli_prepare(
+    $con, 
+    "UPDATE 
+        `manage__contests` 
+    SET 
+        `finished_update` = NOW(),
+        `next_update` = INTERVAL 1 DAY + NOW() 
+    WHERE 
+        `name_id` = ?"
+);
+mysqli_stmt_bind_param($start_query, 's', $contest);
+mysqli_stmt_bind_param($finish_query, 's', $contest);
 
-    curl_setopt($ch, CURLOPT_URL, "https://wikiconcursos.toolforge.org/index.php?contest={$contest}&page={$script}");
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
-    curl_setopt($ch, CURLOPT_USERAGENT, 'WikiCronJob/1.0');
-
-    $result = curl_exec($ch);
-    if (curl_errno($ch)) $result = curl_error($ch);
-    curl_close($ch);
-
-    print(time()."{$contest}\t{$script}\t{$result}\n");
-}
-
-//Loop para executar comandos
+//Loop de concursos
 foreach ($contests_array as $contest) {
-    mysqli_query(
-        $con, 
-        "UPDATE 
-            `manage__contests` 
-        SET 
-            `started_update` = NOW()
-        WHERE 
-            `name_id` = '{$contest}'"
-    );
-    foreach ($scripts as $script) {
-        update_contest($contest, $script);
+
+    //Grava horário de início
+    mysqli_stmt_execute($start_query);
+
+    //Loop de scripts
+    foreach ($steps as $script) {
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, "https://wikiconcursos.toolforge.org/index.php?contest={$contest}&page={$script}");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
+        curl_setopt($ch, CURLOPT_USERAGENT, 'WikiCronJob/1.0');
+
+        $result = curl_exec($ch);
+        if (curl_errno($ch)) $result = curl_error($ch);
+        curl_close($ch);
+
+        print(time()."{$contest}\t{$script}\n");
     }
-    mysqli_query(
-        $con, 
-        "UPDATE 
-            `manage__contests` 
-        SET 
-            `finished_update` = NOW(),
-            `next_update` = INTERVAL 1 DAY + NOW() 
-        WHERE 
-            `name_id` = '{$contest}'"
-        );
+    
+    //Grava horário de finalização
+    mysqli_stmt_execute($finish_query);
 }
 ?>
