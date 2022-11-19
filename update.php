@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 //Define credenciais do banco de dados
 $ts_pw = posix_getpwuid(posix_getuid());
@@ -42,22 +42,22 @@ $steps = ["load_edits", "load_users", "load_reverts"];
 
 //Define queries
 $start_query = mysqli_prepare(
-    $con, 
-    "UPDATE 
-        `manage__contests` 
-    SET 
+    $con,
+    "UPDATE
+        `manage__contests`
+    SET
         `started_update` = NOW()
-    WHERE 
+    WHERE
         `name_id` = ?"
 );
 $finish_query = mysqli_prepare(
-    $con, 
-    "UPDATE 
-        `manage__contests` 
-    SET 
+    $con,
+    "UPDATE
+        `manage__contests`
+    SET
         `finished_update` = NOW(),
-        `next_update` = INTERVAL 1 DAY + NOW() 
-    WHERE 
+        `next_update` = INTERVAL 1 DAY + NOW()
+    WHERE
         `name_id` = ?"
 );
 mysqli_stmt_bind_param($start_query, 's', $contest);
@@ -83,7 +83,7 @@ foreach ($contests_array as $contest) {
 
         print(time()."{$contest}\t{$script}\n");
     }
-    
+
     //Grava horário de finalização
     mysqli_stmt_execute($finish_query);
 }

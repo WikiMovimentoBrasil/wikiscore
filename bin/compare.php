@@ -11,12 +11,12 @@ if ((time() - $contest['finished_update']) < 1800) {
 //Processa informações caso formulário tenha sido submetido
 if ($_POST && !isset($early)) {
     $refresh_query = mysqli_prepare(
-        $con, 
-        "UPDATE 
-            `manage__contests` 
-        SET 
+        $con,
+        "UPDATE
+            `manage__contests`
+        SET
             `next_update` = NOW()
-        WHERE 
+        WHERE
             `name_id` = '{$contest['name_id']}'"
     );
     mysqli_stmt_execute($refresh_query);
@@ -24,7 +24,7 @@ if ($_POST && !isset($early)) {
         die("<br>Erro ao solicitar atualização. Atualize a página para tentar novamente.");
     } else {
         $update = true;
-    }    
+    }
 }
 
 //Verifica se a lista oficial e a categoria foram definidas
@@ -202,7 +202,7 @@ $wd_query = mysqli_query(
       `{$contest['name_id']}__edits`.`timestamp` ASC;"
 );
 
-//Calcula contagem regressiva para atualização do banco de dados 
+//Calcula contagem regressiva para atualização do banco de dados
 $countdown = 'até 10 minutos';
 if ($contest['next_update'] > time() && !isset($update)) {
     $countdown = gmdate('H \h\o\r\a\s \e i \m\i\n\u\t\o\s', $contest['next_update'] - time());
