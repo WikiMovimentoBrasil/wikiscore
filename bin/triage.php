@@ -184,7 +184,6 @@ $revision_query = mysqli_prepare(
         `diff`,
         `bytes`,
         `user`,
-        `summary`,
         `article`,
         `timestamp`
     FROM
@@ -243,7 +242,7 @@ if ($output['revision'] != null) {
     //Coleta informações da edição via API do MediaWiki
     $compare_api_params = [
         "action"    => "compare",
-        "prop"      => "title|diff",
+        "prop"      => "title|diff|comment",
         "format"    => "php",
         "fromrev"   => $output['revision']['diff'],
         "torelative"=> "prev"
@@ -618,7 +617,7 @@ mysqli_close($con);
                             <br>
                             <strong>Horário:</strong> <?=@$output['revision']['timestamp'];?> (UTC)
                             <br>
-                            <strong>Sumário:</strong> <?=@$output['revision']['summary'];?>
+                            <strong>Sumário:</strong> <?=@$output['compare']['tocomment'];?>
                             <br>
                             <strong>Diff:</strong>
                             <a

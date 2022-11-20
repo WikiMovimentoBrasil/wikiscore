@@ -126,11 +126,10 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
                 `timestamp`,
                 `user`,
                 `bytes`,
-                `summary`,
                 `new_page`
             )
         VALUES
-            ( ? , ? , ? , ? , ? , ? , ? )
+            ( ? , ? , ? , ? , ? , ? )
     ";
     $addedit_query = mysqli_prepare($con, $addedit_statement);
     mysqli_stmt_bind_param(
@@ -141,7 +140,6 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
         $addedit_timestamp,
         $addedit_user,
         $addedit_bytes,
-        $addedit_summary,
         $addedit_newpage
     );
 
@@ -158,7 +156,7 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
             "action"    => "compare",
             "format"    => "php",
             "torelative"=> "prev",
-            "prop"      => "diffsize|comment|size|title|user|timestamp",
+            "prop"      => "diffsize|size|title|user|timestamp",
             "fromrev"   => $revision['revid']
         ];
         $compare_api = unserialize(
@@ -172,7 +170,6 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
             $compare_api['touser']      = null;
             $compare_api['tosize']      = null;
             $compare_api['new_page']    = null;
-            $compare_api['tocomment']   = null;
             $compare_api['totimestamp'] = null;
         } else {
 
@@ -197,7 +194,6 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
         $addedit_timestamp  = $compare_api['totimestamp'];
         $addedit_user       = $compare_api['touser'];
         $addedit_bytes      = $compare_api['tosize'];
-        $addedit_summary    = $compare_api['tocomment'];
         $addedit_newpage    = $compare_api['new_page'];
         mysqli_stmt_execute($addedit_query);
         if (mysqli_stmt_affected_rows($addedit_query) != 0) {

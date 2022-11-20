@@ -122,7 +122,7 @@ if (isset($_GET['diff'])) {
     if (isset($output['revision']['diff'])) {
         $compare_api_params = [
             "action"    => "compare",
-            "prop"      => "title|diff",
+            "prop"      => "title|diff|comment",
             "format"    => "php",
             "fromrev"   => $_GET['diff'],
             "torelative"=> "prev"
@@ -312,7 +312,7 @@ mysqli_close($con);
                         <li>Horário da edição:<br><?=(@$output['revision']['timestamp']);?></li>
                         <li>Usuário:<br><?=(@$output['revision']['user']);?></li>
                         <li>Bytes:<br><?=(@$output['revision']['bytes']);?></li>
-                        <li>Sumário:<br><?=(@$output['revision']['summary']);?>&nbsp;</li>
+                        <li>Sumário:<br><?=(@$output['compare']['tocomment']);?>&nbsp;</li>
                         <li>Artigo novo:<br><?=(@$output['revision']['new_page'])?"Sim":"Não";?></li>
                         <li>Edição válida:<br><?=(@$output['revision']['valid_edit'])?"Sim":"Não";?></li>
                         <li>Usuário inscrito:<br><?=(@$output['revision']['valid_user'])?"Sim":"Não";?></li>

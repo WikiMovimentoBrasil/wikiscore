@@ -138,7 +138,6 @@ if ($_POST) {
             `timestamp` timestamp NULL DEFAULT NULL,
             `user` tinytext COLLATE utf8mb4_unicode_ci,
             `bytes` int(11) DEFAULT NULL,
-            `summary` text COLLATE utf8mb4_unicode_ci,
             `new_page` tinyint(1) unsigned DEFAULT NULL,
             `valid_edit` tinyint(1) unsigned DEFAULT NULL,
             `valid_user` tinyint(1) unsigned DEFAULT NULL,

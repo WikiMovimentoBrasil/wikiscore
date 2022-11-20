@@ -16,7 +16,6 @@ $csv =  "Diff da edição;".
         "Horário da edição;".
         "Usuário;".
         "Bytes;".
-        "Sumário;".
         "Artigo novo;".
         "Edição válida;".
         "Usuário inscrito;".
@@ -51,7 +50,6 @@ while ($query = mysqli_fetch_assoc($edits_result)) {
             $query["timestamp"].$sep.
             $query["user"].$sep.
             $query["bytes"].$sep.
-            str_replace('"', '""', $query["summary"]).$sep.
             $query["new_page"].$sep.
             $query["valid_edit"].$sep.
             $query["valid_user"].$sep.
