@@ -119,7 +119,7 @@ if (isset($_POST['diff'])) {
                                             target='_blank'
                                             >{$diff['diff']}</a>";
                                     echo '</span><br>';
-                                    echo "<span>Edição  em {$diff['timestamp']} - {$diff['bytes']} bytes</span>";
+                                    echo "<span>Edição em {$diff['timestamp']} com {$diff['bytes']} bytes</span>";
                                 echo '</div>';
                                 echo '<form method="post">';
                                     echo "<input type='hidden' name='diff' value='{$diff['diff']}'>";

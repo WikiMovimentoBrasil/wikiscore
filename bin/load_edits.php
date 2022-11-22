@@ -134,7 +134,7 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
     $addedit_query = mysqli_prepare($con, $addedit_statement);
     mysqli_stmt_bind_param(
         $addedit_query,
-        "iississ",
+        "iissii",
         $addedit_diff,
         $addedit_article,
         $addedit_timestamp,
