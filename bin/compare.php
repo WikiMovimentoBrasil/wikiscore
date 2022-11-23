@@ -17,8 +17,9 @@ if ($_POST && !isset($early)) {
         SET
             `next_update` = NOW()
         WHERE
-            `name_id` = '{$contest['name_id']}'"
+            `name_id` = ?"
     );
+    mysqli_stmt_bind_param($refresh_query, "s", $contest['name_id']);
     mysqli_stmt_execute($refresh_query);
     if (mysqli_stmt_affected_rows($refresh_query) == 0) {
         die("<br>Erro ao solicitar atualização. Atualize a página para tentar novamente.");

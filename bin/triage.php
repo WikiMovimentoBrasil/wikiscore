@@ -203,6 +203,7 @@ $revision_query = mysqli_prepare(
             `by` = CONCAT('hold-', ?)
         )
     ORDER BY
+        `by` DESC,
         `timestamp` ASC
     LIMIT 1"
 );
@@ -274,7 +275,8 @@ if ($output['revision'] != null) {
         $history[] = [
             "size"      => "0",
             "timestamp" => "1970-01-01T00:00:00",
-            "user"      => "None"
+            "user"      => "None",
+            "revid"     => "0"
         ];
     } else {
         $lastdiff_params = [
@@ -290,23 +292,35 @@ if ($output['revision'] != null) {
         $history[] = [
             "size"      => $lastdiff["fromsize"],
             "timestamp" => "1970-01-01T00:00:00",
-            "user"      => "None"
+            "user"      => "None",
+            "revid"     => "0"
         ];
     }
 
     //Loop para retornar o código HTML do histórico da página
     foreach ($history as $i => $edit) {
+
+        //Calcula quantidade de bytes e formata timestamp
         $delta = $history[$i]['size'] - @$history[$i+1]['size'];
+        $timestamp = date($utc_format, strtotime($edit['timestamp']));
+
+        //Define cor para número de bytes
+        $delta_color = "grey";
         if ($delta < 0) {
             $delta_color = "red";
         } elseif ($delta > 0) {
             $delta_color = "green";
-        } else {
-            $delta_color = "grey";
         }
-        $timestamp = date($utc_format, strtotime($edit['timestamp']));
+
+        //Insere estilo no parágrafo para destacar edição em avaliação
+        $history_class = 'w3-small';
+        if ($edit['revid'] == $output['revision']['diff']) { 
+            $history_class = 'w3-small w3-leftbar w3-border-grey w3-padding-small';
+        }
+
+        //Monta código da edição
         $output['history'][] = "
-            <p class='w3-small'>
+            <p class='{$history_class}'>
                 <strong>{$edit['user']}</strong>
                 <br>
                 {$timestamp}
