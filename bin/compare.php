@@ -62,16 +62,17 @@ if (isset($contest['official_list_pageid']) && isset($contest['category_pageid']
     //Coleta lista de artigos na página do concurso
     $list_api_params = [
         "action"        => "query",
-        "format"        => "json",
-        "prop"          => "links",
+        "format"        => "php",
+        "generator"     => "links",
         "pageids"       => $contest['official_list_pageid'],
-        "plnamespace"   => "0",
-        "pllimit"       => "500"
+        "gplnamespace"  => "0",
+        "gpllimit"      => "max"
     ];
 
-    $list_api = json_decode(file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params)), true);
-    $listmembers = end($list_api['query']['pages'])['links'];
+    $list_api = unserialize(file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params)));
+    $listmembers = $list_api['query']['pages'];
     foreach ($listmembers as $pagetitle) {
+        if (isset($pagetitle['missing'])) continue;
         $list_official[] = $pagetitle['title'];
     }
 
@@ -80,17 +81,18 @@ if (isset($contest['official_list_pageid']) && isset($contest['category_pageid']
         $list_api_params = [
             "action"        => "query",
             "format"        => "php",
-            "prop"          => "links",
+            "generator"     => "links",
             "pageids"       => $contest['official_list_pageid'],
-            "plnamespace"   => "0",
-            "pllimit"       => "500",
-            "plcontinue"    => $list_api['continue']['plcontinue']
+            "gplnamespace"  => "0",
+            "gpllimit"      => "max",
+            "gplcontinue"   => $list_api['continue']['gplcontinue']
         ];
         $list_api = unserialize(
             file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params))
         );
-        $listmembers = end($list_api['query']['pages'])['links'];
+        $listmembers = $list_api['query']['pages'];
         foreach ($listmembers as $pagetitle) {
+            if (isset($pagetitle['missing'])) continue;
             $list_official[] = $pagetitle['title'];
         }
     }
@@ -99,17 +101,22 @@ if (isset($contest['official_list_pageid']) && isset($contest['category_pageid']
     $categorymembers_api_params = [
         "action"        => "query",
         "format"        => "php",
-        "list"          => "categorymembers",
+        "prop"          => "pageprops",
+        "generator"     => "categorymembers",
+        "ppprop"        => "wikibase_item",
         "cmnamespace"   => "0",
-        "cmpageid"      => $contest['category_pageid'],
-        "cmprop"        => "title",
-        "cmlimit"       => "500"
+        "gcmpageid"     => $contest['category_pageid'],
+        "gcmprop"       => "title",
+        "gcmlimit"      => "max"
     ];
     $categorymembers_api = unserialize(
         file_get_contents($contest['api_endpoint']."?".http_build_query($categorymembers_api_params))
     );
-    foreach ($categorymembers_api['query']['categorymembers'] as $pageid) {
+    foreach ($categorymembers_api['query']['pages'] as $pageid) {
         $list_cat[] = $pageid['title'];
+        if (!isset($pageid['pageprops']['wikibase_item'])) {
+            $list_wd[] = $pageid['title'];
+        }
     }
 
     //Coleta segunda página da categoria, caso exista
@@ -117,18 +124,22 @@ if (isset($contest['official_list_pageid']) && isset($contest['category_pageid']
         $categorymembers_api_params = [
             "action"        => "query",
             "format"        => "php",
-            "list"          => "categorymembers",
+            "prop"          => "pageprops",
+            "generator"     => "categorymembers",
+            "ppprop"        => "wikibase_item",
             "cmnamespace"   => "0",
-            "cmpageid"      => $contest['category_pageid'],
-            "cmprop"        => "title",
-            "cmlimit"       => "500",
-            "cmcontinue"    => $categorymembers_api['continue']['cmcontinue']
+            "gcmpageid"     => $contest['category_pageid'],
+            "gcmprop"       => "title",
+            "gcmcontinue"   => $categorymembers_api['continue']['gcmcontinue']
         ];
         $categorymembers_api = unserialize(
             file_get_contents($contest['api_endpoint']."?".http_build_query($categorymembers_api_params))
         );
-        foreach ($categorymembers_api['query']['categorymembers'] as $pageid) {
+        foreach ($categorymembers_api['query']['pages'] as $pageid) {
             $list_cat[] = $pageid['title'];
+            if (!isset($pageid['pageprops']['wikibase_item'])) {
+                $list_wd[] = $pageid['title'];
+            }
         }
     }
 
@@ -212,20 +223,6 @@ $inconsistency_query = mysqli_query(
       AND `reverted` IS NULL
     ORDER BY `timestamp` ASC;"
 );
-$wd_query = mysqli_query(
-    $con,
-    "SELECT
-      `article`
-    FROM
-      `{$contest['name_id']}__edits`
-      INNER JOIN
-        `{$contest['name_id']}__articles`
-      ON `{$contest['name_id']}__edits`.`article` = `{$contest['name_id']}__articles`.`articleID`
-    WHERE
-      `{$contest['name_id']}__edits`.`new_page` = '1'
-    ORDER BY
-      `{$contest['name_id']}__edits`.`timestamp` ASC;"
-);
 
 //Calcula contagem regressiva para atualização do banco de dados
 $countdown = 'até 10 minutos';
@@ -302,18 +299,6 @@ if ($contest['next_update'] > time() && !isset($update)) {
                             porém não estão inseridos na categoria.
                         </li>
                         <?php foreach ($remover as $artigo_rem) {
-                            $artigo_rem_params = [
-                                "action"        => "query",
-                                "format"        => "php",
-                                "prop"          => "links",
-                                "titles"        => $artigo_rem
-                            ];
-                            $artigo_rem_api = file_get_contents(
-                                $contest['api_endpoint']."?".http_build_query($artigo_rem_params)
-                            );
-                            $artigo_rem_api = unserialize($artigo_rem_api)['query']['pages'];
-                            if (isset($artigo_rem_api['-1'])) { continue; }
-
                             $artigo_rem_encode = urlencode($artigo_rem);
                             echo "<li>";
                                 echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_rem_encode}'>";
@@ -346,22 +331,11 @@ if ($contest['next_update'] > time() && !isset($update)) {
                             echo "</li>";
                             echo "\n";
                         }
-                        while ($row = mysqli_fetch_assoc($wd_query)) {
-                            $wd_params = [
-                                "action"        => "query",
-                                "format"        => "json",
-                                "prop"          => "pageprops",
-                                "ppprop"        => "wikibase_item",
-                                "pageids"       => $row['article']
-                            ];
-                            $wd_api = file_get_contents($contest['api_endpoint']."?".http_build_query($wd_params));
-                            $wd = end(json_decode($wd_api, true)["query"]["pages"]);
-                            if (isset($wd["pageprops"]["wikibase_item"])) { continue; }
-
-                            $wd_encode = urlencode($wd['pageid']);
+                        foreach ($list_wd ?? array() as $artigo_wd) {
+                            $wd_encode = urlencode($artigo_wd);
                             echo "<li class='w3-green'>";
-                                echo "<a target='_blank' href='{$contest['endpoint']}?curid={$wd_encode}'>";
-                                    echo $wd['title'];
+                                echo "<a target='_blank' href='{$contest['endpoint']}?title={$wd_encode}'>";
+                                    echo $artigo_wd;
                                 echo "</a>";
                                 echo " <small>(Sem Wikidata)</small>";
                             echo "</li>";
