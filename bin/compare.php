@@ -9,7 +9,7 @@ if ((time() - $contest['finished_update']) < 1800) {
 }
 
 //Processa informações caso formulário tenha sido submetido
-if ($_POST && !isset($early)) {
+if (isset($_POST['update']) && !isset($early)) {
     $refresh_query = mysqli_prepare(
         $con,
         "UPDATE
@@ -27,6 +27,30 @@ if ($_POST && !isset($early)) {
         $update = true;
     }
 }
+
+if (isset($_POST['diff'])) {
+    $fix_query = mysqli_prepare(
+        $con,
+        "DELETE FROM 
+            `{$contest['name_id']}__edits` 
+        WHERE 
+            `article` NOT IN (
+                SELECT 
+                    `articleID` 
+                FROM 
+                    `{$contest['name_id']}__articles`
+            ) AND 
+            `diff` = ?"
+    );
+    mysqli_stmt_bind_param($fix_query, "i", $_POST['diff']);
+    mysqli_stmt_execute($fix_query);
+    if (mysqli_stmt_affected_rows($fix_query) == 0) {
+        die("<br>Erro ao resolver inconsistência. Atualize a página para tentar novamente.");
+    } else {
+        $fixed = true;
+    }
+}
+
 
 //Verifica se a lista oficial e a categoria foram definidas
 if (isset($contest['official_list_pageid']) && isset($contest['category_pageid'])) {
@@ -365,10 +389,22 @@ if ($contest['next_update'] > time() && !isset($update)) {
                             echo "<li class='";
                             if ($row['valid_edit'] == '1') { echo "w3-red"; }
                             echo "'>";
-                                echo "<a target='_blank' href='{$contest['endpoint']}?diff={$diff_encode}'>";
-                                    echo $row['diff'];
-                                echo "</a>";
-                                echo " <small>em {$row['timestamp']}</small>";
+                            echo "<button
+                                class='w3-btn w3-padding-small w3-{$contest['theme']}'
+                                type='button'
+                                onclick='window.open(
+                                    \"{$contest['endpoint']}?diff={$diff_encode}\",
+                                    \"_blank\"
+                                );'>Ver edição {$row["diff"]}</button>";
+                                echo "<form 
+                                    style='display: inline'
+                                    method='post'
+                                    onSubmit='return confirm(
+                                        \"Essa edição será removida do banco de dados. Deseja prosseguir?\"
+                                    )'>";
+                                        echo "<input type='hidden' name='diff' value='{$row["diff"]}'>";
+                                        echo "<input type='submit' class='w3-btn w3-padding-small w3-red' value='Apagar'>";
+                                    echo "</form>";
                             echo "</li>";
                             echo "\n";
                         }
@@ -378,4 +414,12 @@ if ($contest['next_update'] > time() && !isset($update)) {
             </div>
         </div>
     </body>
+    <?php
+    if (isset($fixed)) {
+        echo "<script>
+            alert('Edições removida com sucesso!');
+            window.location.href = window.location.href;
+        </script>";
+    }
+    ?>
 </html>
