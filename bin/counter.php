@@ -11,6 +11,44 @@ if (isset($_POST['time_round'])) {
     $time_sql = '0';
 }
 
+//Processa redefinição de participantes
+if (isset($_POST['user'])) {
+
+    //Encerra script caso usuário não seja gestor
+    if ($_SESSION['user']['user_status'] != 'G') {
+        die("Ação não permitida. Não é gestor do concurso.");
+    }
+
+    //Processa query
+    $reset_query = mysqli_prepare(
+        $con,
+        "DELETE FROM
+            `{$contest['name_id']}__edits`
+        WHERE
+            `user` = ?"
+    );
+    mysqli_stmt_bind_param($reset_query, "s", $_POST['user']);
+    mysqli_stmt_execute($reset_query);
+
+    //Verifica se query ocorreu normalmente e solicita atualização do banco de dados
+    if (mysqli_stmt_affected_rows($reset_query) != 0) {
+        $refresh_query = mysqli_prepare(
+            $con,
+            "UPDATE
+                `manage__contests`
+            SET
+                `next_update` = NOW()
+            WHERE
+                `name_id` = ?"
+        );
+        mysqli_stmt_bind_param($refresh_query, "s", $contest['name_id']);
+        mysqli_stmt_execute($refresh_query);
+        if (mysqli_stmt_affected_rows($refresh_query) != 0) {
+            $output['success'] = true;
+        }
+    }
+}
+
 //Coleta lista de editores
 $count_query = mysqli_query(
     $con,
@@ -193,22 +231,49 @@ if (mysqli_num_rows($count_query) == 0) { die("No users"); }
                     <th>Artigos com imagens</th>
                     <th>Pontos por imagens</th>
                     <th>Total de pontos</th>
+                    <?=($_SESSION['user']["user_status"]=='G')?'<th>Redefinir</th>':'';?>
                 </tr><?php
 
 //Loop para exibição de cada linha
 while ($row = mysqli_fetch_assoc($count_query)) {
     echo "<tr>\n";
-    echo "<td>{$row["user"]}</td>\n";
-    echo "<td>{$row["sum"]}</td>\n";
-    echo "<td>{$row["total edits"]}</td>\n";
-    echo "<td>{$row["bytes points"]}</td>\n";
-    echo "<td>{$row["total pictures"]}</td>\n";
-    echo "<td>{$row["pictures points"]}</td>\n";
-    echo "<td>{$row["total points"]}</td>\n";
+        echo "<td>{$row["user"]}</td>\n";
+        echo "<td>{$row["sum"]}</td>\n";
+        echo "<td>{$row["total edits"]}</td>\n";
+        echo "<td>{$row["bytes points"]}</td>\n";
+        echo "<td>{$row["total pictures"]}</td>\n";
+        echo "<td>{$row["pictures points"]}</td>\n";
+        echo "<td>{$row["total points"]}</td>\n";
+
+        //Exibe botão para redefinir edições do participante
+        if ($_SESSION['user']["user_status"] == 'G') {
+            echo "<td>";
+                echo "<form 
+                method='post'
+                onSubmit='return confirm(
+                    \"Todas as avaliações nas edições deste participante serão desfeitas. Deseja prosseguir?\"
+                )'>";
+                    echo "<input type='hidden' name='user' value='{$row["user"]}'>";
+                    echo "<input type='submit' class='w3-btn w3-{$contest["theme"]}' value='Redefinir'";
+                        if ($row["total edits"] == 0) echo "disabled";
+                    echo ">";
+                echo "</form>";
+            echo "</td>\n";
+        }
     echo "</tr>\n";
 }
 ?>
             </table>
         </div>
     </body>
+    <?php
+    if (isset($output['success'])) {
+        echo "<script>
+            alert(
+                'Edições redefinidas com sucesso! Uma nova atualização do banco de dados será realizada em breve.'
+            );
+            window.location.href = window.location.href;
+        </script>";
+    }
+    ?>
 </html>
