@@ -135,16 +135,16 @@ $icon = '
                 </header>
                 <div class="w3-container">
                     <ul class="w3-ul">
-                        <?php foreach ($output["evaluators"]["G"] ?? array() as $user => $data) {
-                            echo '<li class="w3-bar">';
-                                echo $icon;
-                                echo '<div class="w3-bar-item">';
-                                    echo "<span class='w3-large'>{$user}</span><br>";
-                                    echo "<span>{$data['email']}</span><br>";
-                                    echo "<span>{$data['evaluated']} avaliações efetuadas</span>";
-                                echo '</div>';
-                            echo '</li>';
-                        }?>
+                        <?php foreach ($output["evaluators"]["G"] ?? array() as $user => $data): ?>
+                            <li class="w3-bar">
+                                <?=$icon?>
+                                <div class="w3-bar-item">
+                                    <span class='w3-large'><?=$user?></span><br>
+                                    <span><?=$data['email']?></span><br>
+                                    <span><?=$data['evaluated']?> avaliações efetuadas</span>
+                                </div>
+                            </li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
             </div>
@@ -154,27 +154,27 @@ $icon = '
                 </header>
                 <div class="w3-container">
                     <ul class="w3-ul">
-                        <?php foreach ($output["evaluators"]["A"] ?? array() as $user => $data) {
-                            echo '<li class="w3-bar">';
-                                echo $icon;
-                                echo '<div class="w3-bar-item">';
-                                    echo "<span class='w3-large'>{$user}</span><br>";
-                                    echo "<span>{$data['email']}</span><br>";
-                                    echo "<span>{$data['evaluated']} avaliações efetuadas</span>";
-                                echo '</div>';
-                                if ($_SESSION['user']["user_status"] == 'G') {
-                                    echo '<form method="post">';
-                                        echo "<input type='hidden' name='off' value='1'>";
-                                        echo "<input type='hidden' name='user' value='{$user}'>";
-                                        echo "<button
-                                                type='submit'
-                                                onclick=\"return confirm('Tem certeza?')\"
-                                                class='w3-bar-item w3-right w3-button w3-section w3-red'
-                                                >Desabilitar</button>";
-                                    echo '</form>';
-                                }
-                            echo '</li>';
-                        }?>
+                        <?php foreach ($output["evaluators"]["A"] ?? array() as $user => $data): ?>
+                            <li class="w3-bar">
+                                <?=$icon?>
+                                <div class="w3-bar-item">
+                                    <span class='w3-large'><?=$user?></span><br>
+                                    <span><?=$data['email']?></span><br>
+                                    <span><?=$data['evaluated']?> avaliações efetuadas</span>
+                                </div>
+                                <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
+                                    <form method="post">
+                                        <input type='hidden' name='off' value='1'>
+                                        <input type='hidden' name='user' value='<?=$user?>'>
+                                        <button
+                                        type='submit'
+                                        onclick="return confirm('Tem certeza?')"
+                                        class='w3-bar-item w3-right w3-button w3-section w3-red'
+                                        >Desabilitar</button>
+                                    </form>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
             </div>
@@ -184,40 +184,40 @@ $icon = '
                 </header>
                 <div class="w3-container">
                     <ul class="w3-ul">
-                        <?php foreach ($output["evaluators"]["P"] ?? array() as $user => $data) {
-                            echo '<li class="w3-bar">';
-                                echo $icon;
-                                echo '<div class="w3-bar-item">';
-                                    echo "<span class='w3-large'>{$user}</span><br>";
-                                    echo "<span>{$data['email']}</span><br>";
-                                    echo "<span>{$data['evaluated']} avaliações efetuadas</span>";
-                                echo '</div>';
-                                if ($_SESSION['user']["user_status"] == 'G') {
-                                    echo '<form method="post">';
-                                        echo "<input type='hidden' name='on' value='1'>";
-                                        echo "<input type='hidden' name='user' value='{$user}'>";
-                                        echo "<button
-                                                type='submit'
-                                                onclick=\"return confirm('Tem certeza?')\"
-                                                class='w3-bar-item w3-right w3-button w3-section w3-green'
-                                                >Habilitar</button>";
-                                    echo '</form>';
-                                }
-                            echo '</li>';
-                        }?>
+                        <?php foreach ($output["evaluators"]["P"] ?? array() as $user => $data): ?>
+                            <li class="w3-bar">
+                                <?=$icon?>
+                                <div class="w3-bar-item">
+                                    <span class='w3-large'><?=$user?></span><br>
+                                    <span><?=$data['email']?></span><br>
+                                    <span><?=$data['evaluated']?> avaliações efetuadas</span>
+                                </div>
+                                <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
+                                    <form method="post">
+                                        <input type='hidden' name='on' value='1'>
+                                        <input type='hidden' name='user' value='{$user}'>
+                                        <button
+                                        type='submit'
+                                        onclick="return confirm('Tem certeza?')"
+                                        class='w3-bar-item w3-right w3-button w3-section w3-green'
+                                        >Habilitar</button>
+                                    </form>
+                                <?php endif; ?>
+                            </li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
             </div>
         </div>
     </body>
-    <?php
-    if (isset($output['success'])) {
-        if (is_null($output['success']['diff'])) {
-            echo "<script>alert('Status do avaliador autalizado com sucesso!');";
-            echo "window.location.href = window.location.href;</script>";
-        } else {
-            echo "<script>alert('Erro ao atualizar status do avaliador');</script>";
-        }
-    }
-    ?>
+    <?php if (isset($output['success'])): ?>
+        <?php if (is_null($output['success']['diff'])): ?>
+            <script>
+                alert('Status do avaliador autalizado com sucesso!');
+                window.location.href = window.location.href;
+            </script>
+        <?php else: ?>
+            <script>alert('Erro ao atualizar status do avaliador');</script>
+        <?php endif; ?>
+    <?php endif; ?>
 </html>

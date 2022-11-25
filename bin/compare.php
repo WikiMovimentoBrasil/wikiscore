@@ -290,15 +290,13 @@ if ($contest['next_update'] > time() && !isset($update)) {
                             Os artigos abaixos estão inseridos na categoria,
                             porém não estão inseridos na lista oficial.
                         </li>
-                        <?php foreach ($adicionar as $artigo_add) {
-                            $artigo_add_encoded = urlencode($artigo_add);
-                            echo "<li>";
-                                echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_add_encoded}'>";
-                                    echo $artigo_add;
-                                echo "</a>";
-                            echo "</li>";
-                            echo "\n";
-                        }?>
+                        <?php foreach ($adicionar as $title): ?>
+                            <li>
+                               <a target='_blank' href='<?=$contest['endpoint']?>?title=<?=urlencode($title)?>'>";
+                                    <?=$title?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
             </div>
@@ -312,15 +310,13 @@ if ($contest['next_update'] > time() && !isset($update)) {
                             Os artigos abaixos estão inseridos na lista oficial,
                             porém não estão inseridos na categoria.
                         </li>
-                        <?php foreach ($remover as $artigo_rem) {
-                            $artigo_rem_encode = urlencode($artigo_rem);
-                            echo "<li>";
-                                echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_rem_encode}'>";
-                                    echo $artigo_rem;
-                                echo "</a>";
-                            echo "</li>";
-                            echo "\n";
-                        }?>
+                        <?php foreach ($remover as $title): ?>
+                            <li>
+                               <a target='_blank' href='<?=$contest['endpoint']?>?title=<?=urlencode($title)?>'>";
+                                    <?=$title?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
             </div>
@@ -335,16 +331,13 @@ if ($contest['next_update'] > time() && !isset($update)) {
                             alguma modalidade de eliminação (rápida, semirrápida, por consenso
                             ou por candidatura).
                         </li>
-                        <?php foreach ($eliminar ?? array() as $artigo_del) {
-                            $artigo_del_encode = urlencode($artigo_del);
-                            echo "<li>";
-                                echo "<a target='_blank' href='{$contest['endpoint']}?title={$artigo_del_encode}'>";
-                                    echo $artigo_del;
-                                echo "</a>";
-                            echo "</li>";
-                            echo "\n";
-                        }
-                        ?>
+                        <?php foreach ($eliminar ?? array() as $title): ?>
+                            <li>
+                                <a target='_blank' href='<?=$contest['endpoint']?>?title=<?=urlencode($title)?>'>
+                                    <?=$title?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
             </div>
@@ -359,16 +352,13 @@ if ($contest['next_update'] > time() && !isset($update)) {
                         <li>
                             Os artigos abaixos estão inseridos na categoria porém não possuem conexão no Wikidata.
                         </li>
-                        <?php foreach ($list_wd ?? array() as $artigo_wd) {
-                            $wd_encode = urlencode($artigo_wd);
-                            echo "<li>";
-                                echo "<a target='_blank' href='{$contest['endpoint']}?title={$wd_encode}'>";
-                                    echo $artigo_wd;
-                                echo "</a>";
-                            echo "</li>";
-                            echo "\n";
-                        }
-                        ?>
+                        <?php foreach ($list_wd ?? array() as $title): ?>
+                            <li>
+                                <a target='_blank' href='<?=$contest['endpoint']?>?title=<?=urlencode($title)?>'>
+                                    <?=$title?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
                     </ul>
                 </div>
             </div>
@@ -383,33 +373,26 @@ if ($contest['next_update'] > time() && !isset($update)) {
                             na categoria mas foram removidos. Caso estejam marcadas de vermelho,
                             a edição foi validada e conferiu pontos ao participante.
                         </li>
-                        <?php
-                        while ($row = mysqli_fetch_assoc($inconsistency_query)) {
-                            $diff_encode = urlencode($row['diff']);
-
-                            echo "<li class='";
-                            if ($row['valid_edit'] == '1') { echo "w3-red"; }
-                            echo "'>";
-                            echo "<button
-                                class='w3-btn w3-padding-small w3-{$contest['theme']}'
+                        <?php while ($row = mysqli_fetch_assoc($inconsistency_query)): ?>
+                            <li class='<?=($row['valid_edit'] == '1')?'w3-red':''?>'>
+                                <button
+                                class='w3-btn w3-padding-small w3-<?=$contest['theme']?>'
                                 type='button'
                                 onclick='window.open(
-                                    \"{$contest['endpoint']}?diff={$diff_encode}\",
-                                    \"_blank\"
-                                );'>Ver edição {$row["diff"]}</button>";
-                                echo "<form 
-                                    style='display: inline'
-                                    method='post'
-                                    onSubmit='return confirm(
-                                        \"Essa edição será removida do banco de dados. Deseja prosseguir?\"
-                                    )'>";
-                                        echo "<input type='hidden' name='diff' value='{$row["diff"]}'>";
-                                        echo "<input type='submit' class='w3-btn w3-padding-small w3-red' value='Apagar'>";
-                                    echo "</form>";
-                            echo "</li>";
-                            echo "\n";
-                        }
-                        ?>
+                                    "<?=$contest['endpoint']?>?diff=<?=urlencode($row['diff'])?>",
+                                    "_blank"
+                                )'>Ver edição <?=$row["diff"]?></button>
+                                <form 
+                                style='display: inline'
+                                method='post'
+                                onSubmit='return confirm(
+                                    "Essa edição será removida do banco de dados. Deseja prosseguir?"
+                                )'>
+                                    <input type='hidden' name='diff' value='<?=$row["diff"]?>'>
+                                    <input type='submit' class='w3-btn w3-padding-small w3-red' value='Apagar'>
+                                </form>
+                            </li>
+                        <?php endwhile; ?>
                     </ul>
                 </div>
             </div>
@@ -422,40 +405,33 @@ if ($contest['next_update'] > time() && !isset($update)) {
                         <li>
                             As edições listadas abaixo foram revertidas após validação.
                         </li>
-                        <?php
-                        while ($row = mysqli_fetch_assoc($reverted_query)) {
-                            $diff_encode = urlencode($row['diff']);
-
-                            echo "<li>";
-                            echo "<button
-                                class='w3-btn w3-padding-small w3-{$contest['theme']}'
+                        <?php while ($row = mysqli_fetch_assoc($reverted_query)): ?>
+                            <li>
+                                <button
+                                class='w3-btn w3-padding-small w3-<?=$contest['theme']?>'
                                 type='button'
                                 onclick='window.open(
-                                    \"{$contest['endpoint']}?diff={$diff_encode}\",
-                                    \"_blank\"
-                                );'>Ver edição {$row["diff"]}</button>";
-                            echo "<button
+                                    "<?=$contest['endpoint']?>?diff=<?=$diff_encode?>",
+                                    "_blank"
+                                )'>Ver edição <?=$row["diff"]?></button>
+                                <button
                                 class='w3-btn w3-padding-small w3-purple'
                                 type='button'
                                 onclick='window.open(
-                                    \"index.php?contest={$contest['name_id']}&page=modify&diff={$diff_encode}\",
-                                    \"_blank\"
+                                    "index.php?contest=<?=$contest['name_id']?>&page=modify&diff=<?=urlencode($row['diff'])?>",
+                                    "_blank"
                                 );'>Reavaliar</button>";
-                            echo "</li>";
-                            echo "\n";
-                        }
-                        ?>
+                            </li>
+                        <?php endwhile; ?>
                     </ul>
                 </div>
             </div>
         </div>
     </body>
-    <?php
-    if (isset($fixed)) {
-        echo "<script>
+    <?php if (isset($fixed)): ?> 
+        <script>
             alert('Edições removida com sucesso!');
             window.location.href = window.location.href;
-        </script>";
-    }
-    ?>
+        </script>
+    <?php endif; ?>
 </html>

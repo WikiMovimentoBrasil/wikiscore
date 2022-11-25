@@ -214,13 +214,14 @@ if (isset($_POST['email'])) {
                 </div>
             </div>
         </div>
-        <?php
-	    if ($status == 'Senha alterada com sucesso!') {
-	        echo "<script>alert('{$status}');window.location.replace('index.php?contest={$contest['name_id']}');</script>";
-	    } elseif ($status) {
-	        echo "<script>alert('{$status}');</script>";
-	    }
-    ?>
+        <?php if ($status == 'Senha alterada com sucesso!'): ?>
+        	<script>
+        		alert('<?=$status?>');
+        		window.location.replace('index.php?contest=<?=$contest['name_id']?>');
+        	</script>
+	    <?php elseif ($status): ?>
+	        <script>alert('<?=$status?>');</script>
+	    <?php endif; ?>
     </body>
 </html>
 

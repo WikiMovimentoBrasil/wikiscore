@@ -231,49 +231,46 @@ if (mysqli_num_rows($count_query) == 0) { die("No users"); }
                     <th>Artigos com imagens</th>
                     <th>Pontos por imagens</th>
                     <th>Total de pontos</th>
-                    <?=($_SESSION['user']["user_status"]=='G')?'<th>Redefinir</th>':'';?>
-                </tr><?php
-
-//Loop para exibição de cada linha
-while ($row = mysqli_fetch_assoc($count_query)) {
-    echo "<tr>\n";
-        echo "<td>{$row["user"]}</td>\n";
-        echo "<td>{$row["sum"]}</td>\n";
-        echo "<td>{$row["total edits"]}</td>\n";
-        echo "<td>{$row["bytes points"]}</td>\n";
-        echo "<td>{$row["total pictures"]}</td>\n";
-        echo "<td>{$row["pictures points"]}</td>\n";
-        echo "<td>{$row["total points"]}</td>\n";
-
-        //Exibe botão para redefinir edições do participante
-        if ($_SESSION['user']["user_status"] == 'G') {
-            echo "<td>";
-                echo "<form 
-                method='post'
-                onSubmit='return confirm(
-                    \"Todas as avaliações nas edições deste participante serão desfeitas. Deseja prosseguir?\"
-                )'>";
-                    echo "<input type='hidden' name='user' value='{$row["user"]}'>";
-                    echo "<input type='submit' class='w3-btn w3-{$contest["theme"]}' value='Redefinir'";
-                        if ($row["total edits"] == 0) echo "disabled";
-                    echo ">";
-                echo "</form>";
-            echo "</td>\n";
-        }
-    echo "</tr>\n";
-}
-?>
+                    <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
+                        <th>Redefinir</th>
+                    <?php endif; ?>
+                </tr>
+                <?php while ($row = mysqli_fetch_assoc($count_query)): ?>
+                    <tr>
+                        <td><?=$row["user"]?></td>
+                        <td><?=$row["sum"]?></td>
+                        <td><?=$row["total edits"]?></td>
+                        <td><?=$row["bytes points"]?></td>
+                        <td><?=$row["total pictures"]?></td>
+                        <td><?=$row["pictures points"]?></td>
+                        <td><?=$row["total points"]?></td>
+                        <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
+                            <td>
+                                <form 
+                                method='post'
+                                onSubmit='return confirm(
+                                    "Todas as avaliações nas edições deste participante serão desfeitas. Deseja prosseguir?"
+                                )'>
+                                    <input type='hidden' name='user' value='<?=$row["user"]?>'>
+                                    <input
+                                    <?=($row["total edits"] == 0)?"disabled":""?>
+                                    type='submit' 
+                                    class='w3-btn w3-<?=$contest["theme"]?>' 
+                                    value='Redefinir'>
+                                </form>
+                            </td>
+                        <?php endif; ?>
+                    </tr>
+                <?php endwhile; ?>
             </table>
         </div>
     </body>
-    <?php
-    if (isset($output['success'])) {
-        echo "<script>
+    <?php if (isset($output['success'])): ?>
+        <script>
             alert(
                 'Edições redefinidas com sucesso! Uma nova atualização do banco de dados será realizada em breve.'
             );
             window.location.href = window.location.href;
-        </script>";
-    }
-    ?>
+        </script>
+    <?php endif; ?>
 </html>

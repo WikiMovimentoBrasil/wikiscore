@@ -1,5 +1,9 @@
 <?php
 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 //Conecta ao banco de dados
 require_once __DIR__.'/bin/connect.php';
 
@@ -140,11 +144,11 @@ if (isset($_GET['contest'])) {
             <h4>Selecione seu concurso</h4>
         </header>
         <div class="w3-padding">
-        <?php
-            foreach ($contests_array as $name_id => $contest) {
-                echo "<p><a href='index.php?contest=".$name_id."'>".$contest['name']."</a></p>\n";
-            }
-        ?>
+        <?php foreach ($contests_array as $name_id => $contest): ?>
+            <p>
+                <a href='index.php?contest=<?=$name_id?>'><?=$contest['name']?></a>
+            </p>
+        <?php endforeach; ?>
         </div>
     </div>
 </div>

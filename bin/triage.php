@@ -369,18 +369,22 @@ mysqli_close($con);
                             target="_blank"><?=@$output['success']['diff'];?></a>
                     </p>
                     <p>
-                        Edição válida: <?php if (@$output['success']['valid']) {
-                            echo '<i class="fa-regular w3-text-green fa-circle-check" aria-hidden="true"></i> Sim';
-                        } else {
-                            echo '<i class="fa-regular w3-text-red fa-circle-xmark" aria-hidden="true"></i> Não';
-                        }?>
+                        Edição válida: <?php if (@$output['success']['valid']): ?><i 
+                        class="fa-regular w3-text-green fa-circle-check" 
+                        aria-hidden="true"
+                        ></i> Sim<?php else: ?><i 
+                        class="fa-regular w3-text-red fa-circle-xmark" 
+                        aria-hidden="true"
+                        ></i> Não<?php endif; ?>
                     </p>
                     <p>
-                        Com imagem: <?php if (@$output['success']['pic']) {
-                            echo '<i class="fa-regular w3-text-green fa-circle-check" aria-hidden="true"></i> Sim';
-                        } else {
-                            echo '<i class="fa-regular w3-text-red fa-circle-xmark" aria-hidden="true"></i> Não';
-                        }?>
+                        Com imagem: <?php if (@$output['success']['pic']): ?><i 
+                        class="fa-regular w3-text-green fa-circle-check" 
+                        aria-hidden="true"
+                        ></i> Sim<?php else: ?><i 
+                        class="fa-regular w3-text-red fa-circle-xmark" 
+                        aria-hidden="true"
+                        ></i> Não<?php endif; ?>
                     </p>
                     <p>
                         <button
@@ -549,42 +553,37 @@ mysqli_close($con);
                                 <label for="valid-nao">Não</label><br><br>
                             </div>
                             <div class="w3-container w3-cell w3-half">
-                                <?php if ($contest['pictures_mode'] == 2) {
-                                    echo '<p>Imagens?</p>';
-                                    echo '
-                                        <input
-                                        class="w3-input w3-section"
-                                        type="number"
-                                        id="pic"
-                                        name="pic"
-                                        value="0"
-                                        min="0"
-                                        max="9"
-                                        required>
-                                        <label for="pic">Quantidade</label><br>
-                                    ';
-                                } else {
-                                    echo '<p>Imagem?</p>';
-                                    echo '
-                                        <input
-                                        class="w3-radio w3-section"
-                                        type="radio"
-                                        id="pic-sim"
-                                        name="pic"
-                                        value="sim"
-                                        required>
-                                        <label for="pic-sim">Sim</label><br>
-                                        <input
-                                        class="w3-radio w3-section"
-                                        type="radio"
-                                        id="pic-nao"
-                                        name="pic"
-                                        value="nao"
-                                        required>
-                                        <label for="pic-nao">Não</label><br><br>
-                                    ';
-                                }
-                                ?>
+                                <?php if ($contest['pictures_mode'] == 2): ?>
+                                    <p>Imagens?</p>
+                                    <input
+                                    class="w3-input w3-section"
+                                    type="number"
+                                    id="pic"
+                                    name="pic"
+                                    value="0"
+                                    min="0"
+                                    max="9"
+                                    required>
+                                    <label for="pic">Quantidade</label><br>
+                                <?php else: ?>
+                                    <p>Imagem?</p>
+                                    <input
+                                    class="w3-radio w3-section"
+                                    type="radio"
+                                    id="pic-sim"
+                                    name="pic"
+                                    value="sim"
+                                    required>
+                                    <label for="pic-sim">Sim</label><br>
+                                    <input
+                                    class="w3-radio w3-section"
+                                    type="radio"
+                                    id="pic-nao"
+                                    name="pic"
+                                    value="nao"
+                                    required>
+                                    <label for="pic-nao">Não</label><br><br>
+                                <?php endif; ?>
                             </div>
                             <p>
                                 <input
@@ -705,14 +704,13 @@ mysqli_close($con);
                     <p class="w3-small" style="display:<?=($contest['pictures_per_points']!=0)?'block':'none';?>;">
                         <strong>Modo de imagens</strong>
                         <br>
-                        <?php
-                        if ($contest['pictures_per_points'] == 2) {
-                            echo 'Por imagem';
-                        } elseif ($contest['pictures_per_points'] == 1) {
-                            echo 'Por edição';
-                        } else {
-                            echo 'Por artigo';
-                        }?>
+                        <?php if ($contest['pictures_per_points'] == 2): ?>
+                            Por imagem
+                        <?php elseif ($contest['pictures_per_points'] == 1): ?>
+                            Por edição
+                        <?php else: ?>
+                            Por artigo
+                        <?php endif; ?>
                     </p>
                     <p class="w3-small" style="display:<?=($contest['max_pic_per_article']!=0)?'block':'none';?>;">
                         <strong>Máximo de imagens por artigo</strong>
@@ -724,14 +722,15 @@ mysqli_close($con);
                         <br>
                         <a
                         href="<?=$contest['endpoint'];?>?curid=<?=$contest['official_list_pageid'];?>"
-                        >Lista oficial</a> e <a
-                        href="<?php
-                            if ($contest['category_petscan']) {
-                                echo "https://petscan.wmflabs.org/?psid={$contest['category_petscan']}";
-                            } else {
-                                echo "{$contest['endpoint']}?curid={$contest['category_pageid']}";
-                            }
-                        ?>">categoria de monitoramento</a>
+                        >Lista oficial</a> e <?php if ($contest['category_petscan']): ?>
+                            <a 
+                            href="https://petscan.wmflabs.org/?psid=<?=$contest['category_petscan']?>"
+                            >categoria de monitoramento</a>
+                        <?php else: ?>
+                            <a 
+                            href="<?=$contest['endpoint']?>?curid=<?=$contest['category_pageid']?>"
+                            >categoria de monitoramento</a>
+                        <?php endif; ?>
                     </p>
                 </div>
             </div>

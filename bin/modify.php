@@ -218,40 +218,35 @@ mysqli_close($con);
                     </div>
                     <div class="w3-container w3-cell w3-half">
                         <p>Imagem?</p>
-                        <?php if ($contest['pictures_mode'] == 2) {
-                            echo '
-                                <input
-                                class="w3-input w3-border"
-                                type="number"
-                                id="pic"
-                                name="pic"
-                                value="0"
-                                min="0"
-                                max="9"
-                                required>
-                                <label for="pic">Quantidade</label><br><br>
-                            ';
-                        } else {
-                            echo '
-                                <input
-                                class="w3-radio w3-section"
-                                type="radio"
-                                id="pic-sim"
-                                name="pic"
-                                value="sim"
-                                required>
-                                <label for="pic-sim">Sim</label><br>
-                                <input
-                                class="w3-radio w3-section"
-                                type="radio"
-                                id="pic-nao"
-                                name="pic"
-                                value="nao"
-                                required>
-                                <label for="pic-nao">Não</label><br><br>
-                            ';
-                        }
-                        ?>
+                        <?php if ($contest['pictures_mode'] == 2): ?>
+                            <input
+                            class="w3-input w3-border"
+                            type="number"
+                            id="pic"
+                            name="pic"
+                            value="0"
+                            min="0"
+                            max="9"
+                            required>
+                            <label for="pic">Quantidade</label><br><br>
+                        <?php else: ?>
+                            <input
+                            class="w3-radio w3-section"
+                            type="radio"
+                            id="pic-sim"
+                            name="pic"
+                            value="sim"
+                            required>
+                            <label for="pic-sim">Sim</label><br>
+                            <input
+                            class="w3-radio w3-section"
+                            type="radio"
+                            id="pic-nao"
+                            name="pic"
+                            value="nao"
+                            required>
+                            <label for="pic-nao">Não</label><br><br>
+                        <?php endif; ?>
                     </div>
                     <p>
                         <input
@@ -342,18 +337,16 @@ mysqli_close($con);
                     </table>
                     <hr>
                 </div>
-                <?php
-                    if (!@$output['compare']) {
-                        echo "<script>alert('Edição não encontrada no banco de dados!');</script>";
-                    }
-                    if (@array_key_exists('diff', $output['success'])) {
-                        if (is_null($output['success']['diff'])) {
-                            echo "<script>alert('Você não pode modificar uma avaliação de terceiro!');</script>";
-                        } else {
-                            echo "<script>alert('Modificação realizada com sucesso!');</script>";
-                        }
-                    }
-                ?>
+                <?php if (!@$output['compare']): ?>
+                    <script>alert('Edição não encontrada no banco de dados!');</script>
+                <?php endif; ?>
+                <?php if (@array_key_exists('diff', $output['success'])): ?>
+                    <?php if (is_null($output['success']['diff'])): ?>
+                        <script>alert('Você não pode modificar uma avaliação de terceiro!');</script>
+                    <?php else: ?>
+                        <script>alert('Modificação realizada com sucesso!');</script>
+                    <?php endif; ?>
+                <?php endif; ?>
             </div>
         </div>
     </body>
