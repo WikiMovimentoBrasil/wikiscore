@@ -72,7 +72,7 @@ if (isset($contest['official_list_pageid']) && isset($contest['category_pageid']
     $list_api = unserialize(file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params)));
     $listmembers = $list_api['query']['pages'];
     foreach ($listmembers as $pagetitle) {
-        if (isset($pagetitle['missing'])) continue;
+        if (isset($pagetitle['missing'])) { continue; }
         $list_official[] = $pagetitle['title'];
     }
 
@@ -92,7 +92,7 @@ if (isset($contest['official_list_pageid']) && isset($contest['category_pageid']
         );
         $listmembers = $list_api['query']['pages'];
         foreach ($listmembers as $pagetitle) {
-            if (isset($pagetitle['missing'])) continue;
+            if (isset($pagetitle['missing'])) { continue; }
             $list_official[] = $pagetitle['title'];
         }
     }
@@ -204,7 +204,7 @@ if ($contest['api_endpoint'] == 'https://pt.wikipedia.org/w/api.php') {
 }
 
 //Coleta lista de diffs inconsistentes
-$inconsistency_query = mysqli_query(
+$inconsistency_query = mysqli_prepare(
     $con,
     "SELECT
       `diff`,
@@ -221,11 +221,13 @@ $inconsistency_query = mysqli_query(
       )
       AND `valid_user` = '1'
       AND `reverted` IS NULL
-    ORDER BY `timestamp` ASC;"
+    ORDER BY `timestamp` ASC"
 );
+mysqli_stmt_execute($inconsistency_query);
+$inconsistency_result = mysqli_stmt_get_result($inconsistency_query);
 
 //Coleta lista de diffs revertidos e validados
-$reverted_query = mysqli_query(
+$reverted_query = mysqli_prepare(
     $con,
     "SELECT
       `diff`,
@@ -235,8 +237,11 @@ $reverted_query = mysqli_query(
     WHERE
       `valid_edit` = '1'
       AND `reverted` IS NOT NULL
-    ORDER BY `timestamp` ASC;"
+    ORDER BY `timestamp` ASC"
 );
+mysqli_stmt_execute($reverted_query);
+$reverted_result = mysqli_stmt_get_result($reverted_query);
+
 
 //Calcula contagem regressiva para atualização do banco de dados
 $countdown = 'até 10 minutos';
@@ -373,7 +378,7 @@ if ($contest['next_update'] > time() && !isset($update)) {
                             na categoria mas foram removidos. Caso estejam marcadas de vermelho,
                             a edição foi validada e conferiu pontos ao participante.
                         </li>
-                        <?php while ($row = mysqli_fetch_assoc($inconsistency_query)): ?>
+                        <?php while ($row = mysqli_fetch_assoc($inconsistency_result)): ?>
                             <li class='<?=($row['valid_edit'] == '1')?'w3-red':''?>'>
                                 <button
                                 class='w3-btn w3-padding-small w3-<?=$contest['theme']?>'
@@ -405,7 +410,7 @@ if ($contest['next_update'] > time() && !isset($update)) {
                         <li>
                             As edições listadas abaixo foram revertidas após validação.
                         </li>
-                        <?php while ($row = mysqli_fetch_assoc($reverted_query)): ?>
+                        <?php while ($row = mysqli_fetch_assoc($reverted_result)): ?>
                             <li>
                                 <button
                                 class='w3-btn w3-padding-small w3-<?=$contest['theme']?>'
@@ -418,7 +423,9 @@ if ($contest['next_update'] > time() && !isset($update)) {
                                 class='w3-btn w3-padding-small w3-purple'
                                 type='button'
                                 onclick='window.open(
-                                    "index.php?contest=<?=$contest['name_id']?>&page=modify&diff=<?=urlencode($row['diff'])?>",
+                                    "index.php?contest=<?=$contest['name_id']?>&page=modify&diff=<?=urlencode(
+                                        $row['diff']
+                                    )?>",
                                     "_blank"
                                 );'>Reavaliar</button>";
                             </li>
