@@ -203,7 +203,7 @@ if ($contest['api_endpoint'] == 'https://pt.wikipedia.org/w/api.php') {
     asort($eliminar);
 }
 
-//Coleta lista de diffs e artigos novos
+//Coleta lista de diffs inconsistentes
 $inconsistency_query = mysqli_query(
     $con,
     "SELECT
@@ -221,6 +221,20 @@ $inconsistency_query = mysqli_query(
       )
       AND `valid_user` = '1'
       AND `reverted` IS NULL
+    ORDER BY `timestamp` ASC;"
+);
+
+//Coleta lista de diffs revertidos e validados
+$reverted_query = mysqli_query(
+    $con,
+    "SELECT
+      `diff`,
+      `timestamp`
+    FROM
+      `{$contest['name_id']}__edits`
+    WHERE
+      `valid_edit` = '1'
+      AND `reverted` IS NOT NULL
     ORDER BY `timestamp` ASC;"
 );
 
@@ -266,7 +280,7 @@ if ($contest['next_update'] > time() && !isset($update)) {
         </div>
         <br>
         <div class="w3-row-padding">
-            <div class="w3-quarter">
+            <div class="w3-third w3-section">
                 <div class="w3-card white">
                     <div class="w3-container w3-purple">
                         <h3>Não listados</h3>
@@ -288,7 +302,7 @@ if ($contest['next_update'] > time() && !isset($update)) {
                     </ul>
                 </div>
             </div>
-            <div class="w3-quarter">
+            <div class="w3-third w3-section">
                 <div class="w3-card white">
                     <div class="w3-container w3-indigo">
                         <h3>Descategorizados</h3>
@@ -310,17 +324,16 @@ if ($contest['next_update'] > time() && !isset($update)) {
                     </ul>
                 </div>
             </div>
-            <div class="w3-quarter">
+            <div class="w3-third w3-section">
                 <div class="w3-card white">
-                    <div class="w3-container w3-teal">
+                    <div class="w3-container w3-red">
                         <h3>Passíveis de eliminação</h3>
                     </div>
                     <ul class="w3-ul w3-border-top">
                         <li>
                             Os artigos abaixos estão inseridos na categoria e estão marcados em
                             alguma modalidade de eliminação (rápida, semirrápida, por consenso
-                            ou por candidatura). Adicionalmente, também exibe artigos novos sem
-                            item no Wikidata.
+                            ou por candidatura).
                         </li>
                         <?php foreach ($eliminar ?? array() as $artigo_del) {
                             $artigo_del_encode = urlencode($artigo_del);
@@ -331,13 +344,27 @@ if ($contest['next_update'] > time() && !isset($update)) {
                             echo "</li>";
                             echo "\n";
                         }
-                        foreach ($list_wd ?? array() as $artigo_wd) {
+                        ?>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="w3-row-padding">
+            <div class="w3-third w3-section">
+                <div class="w3-card white">
+                    <div class="w3-container w3-blue">
+                        <h3>Sem Wikidata</h3>
+                    </div>
+                    <ul class="w3-ul w3-border-top">
+                        <li>
+                            Os artigos abaixos estão inseridos na categoria porém não possuem conexão no Wikidata.
+                        </li>
+                        <?php foreach ($list_wd ?? array() as $artigo_wd) {
                             $wd_encode = urlencode($artigo_wd);
-                            echo "<li class='w3-green'>";
+                            echo "<li>";
                                 echo "<a target='_blank' href='{$contest['endpoint']}?title={$wd_encode}'>";
                                     echo $artigo_wd;
                                 echo "</a>";
-                                echo " <small>(Sem Wikidata)</small>";
                             echo "</li>";
                             echo "\n";
                         }
@@ -345,7 +372,7 @@ if ($contest['next_update'] > time() && !isset($update)) {
                     </ul>
                 </div>
             </div>
-            <div class="w3-quarter">
+            <div class="w3-third w3-section">
                 <div class="w3-card white">
                     <div class="w3-container w3-black">
                         <h3>Inconsistências</h3>
@@ -379,6 +406,41 @@ if ($contest['next_update'] > time() && !isset($update)) {
                                         echo "<input type='hidden' name='diff' value='{$row["diff"]}'>";
                                         echo "<input type='submit' class='w3-btn w3-padding-small w3-red' value='Apagar'>";
                                     echo "</form>";
+                            echo "</li>";
+                            echo "\n";
+                        }
+                        ?>
+                    </ul>
+                </div>
+            </div>
+            <div class="w3-third w3-section">
+                <div class="w3-card white">
+                    <div class="w3-container w3-deep-orange">
+                        <h3>Revertidos</h3>
+                    </div>
+                    <ul class="w3-ul w3-border-top">
+                        <li>
+                            As edições listadas abaixo foram revertidas após validação.
+                        </li>
+                        <?php
+                        while ($row = mysqli_fetch_assoc($reverted_query)) {
+                            $diff_encode = urlencode($row['diff']);
+
+                            echo "<li>";
+                            echo "<button
+                                class='w3-btn w3-padding-small w3-{$contest['theme']}'
+                                type='button'
+                                onclick='window.open(
+                                    \"{$contest['endpoint']}?diff={$diff_encode}\",
+                                    \"_blank\"
+                                );'>Ver edição {$row["diff"]}</button>";
+                            echo "<button
+                                class='w3-btn w3-padding-small w3-purple'
+                                type='button'
+                                onclick='window.open(
+                                    \"index.php?contest={$contest['name_id']}&page=modify&diff={$diff_encode}\",
+                                    \"_blank\"
+                                );'>Reavaliar</button>";
                             echo "</li>";
                             echo "\n";
                         }
