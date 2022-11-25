@@ -3,149 +3,149 @@
 //Formulário submetido
 if (isset($_POST['email'])) {
 
-	//Sanitiza e-mail
-	if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-	    $email =  filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
-	} else {
-	    die("Erro: E-mail inválido!");
-	}
+    //Sanitiza e-mail
+    if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
+        $email =  filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+    } else {
+        die("Erro: E-mail inválido!");
+    }
 
-	//Pedido sem token
-	if (!isset($_POST['token'])) {
+    //Pedido sem token
+    if (!isset($_POST['token'])) {
 
-		//Gera token de redefinição de senha
-		$token = bin2hex(random_bytes(18));
+        //Gera token de redefinição de senha
+        $token = bin2hex(random_bytes(18));
 
-		//Gera código seriado com timestamp e token para gravação no banco de dados
-		$user_data = serialize(
-			array(
-				'timestamp' => time(),
-				'token' => $token
-			)
-		);
+        //Gera código seriado com timestamp e token para gravação no banco de dados
+        $user_data = serialize(
+            array(
+                'timestamp' => time(),
+                'token' => $token
+            )
+        );
 
-	    //Processa query
-	    $update_query = mysqli_prepare(
-	        $con,
-	        "UPDATE
-	            `{$contest['name_id']}__credentials`
-	        SET
-	            `user_data` = ?
-	        WHERE
-	            `user_email` = ?"
-	    );
-	    mysqli_stmt_bind_param($update_query, "ss", $user_data, $email);
-	    mysqli_stmt_execute($update_query);
+        //Processa query
+        $update_query = mysqli_prepare(
+            $con,
+            "UPDATE
+                `{$contest['name_id']}__credentials`
+            SET
+                `user_data` = ?
+            WHERE
+                `user_email` = ?"
+        );
+        mysqli_stmt_bind_param($update_query, "ss", $user_data, $email);
+        mysqli_stmt_execute($update_query);
 
-	    //Verifica se houve alteração (se e-mail foi encontrado, principalmente)
-	    if (mysqli_stmt_affected_rows($update_query) != 0) {
-	    	
-	    	//Cria corpo do e-mail
-			$message = "Oi!\nUtilize o seguinte token para redefinir sua senha:\n{$token}\n\n\nAtenciosamente,\nWikiconcursos";
-			$emailFile = fopen("php://temp", 'w+');
-			$subject = "Wikiconcursos - Nova senha";
-			fwrite($emailFile, "Subject: " . $subject . "\n" . $message);
-			rewind($emailFile);
-			$fstat = fstat($emailFile);
-			$size = $fstat['size'];
+        //Verifica se houve alteração (se e-mail foi encontrado, principalmente)
+        if (mysqli_stmt_affected_rows($update_query) != 0) {
+            
+            //Cria corpo do e-mail
+            $message = "Oi!\nUtilize o seguinte token para redefinir sua senha:\n{$token}\n\n\nAtenciosamente,\nWikiconcursos";
+            $emailFile = fopen("php://temp", 'w+');
+            $subject = "Wikiconcursos - Nova senha";
+            fwrite($emailFile, "Subject: " . $subject . "\n" . $message);
+            rewind($emailFile);
+            $fstat = fstat($emailFile);
+            $size = $fstat['size'];
 
-			//Envia e-mail
-			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, 'smtp://mail.tools.wmflabs.org:587');
-			curl_setopt($ch, CURLOPT_MAIL_FROM, "tools.wikiconcursos@tools.wmflabs.org");
-			curl_setopt($ch, CURLOPT_MAIL_RCPT, array($email));
-			curl_setopt($ch, CURLOPT_INFILE, $emailFile);
-			curl_setopt($ch, CURLOPT_INFILESIZE, $size);
-			curl_setopt($ch, CURLOPT_UPLOAD, true);
-			curl_exec($ch);
-			fclose($emailFile);
-			curl_close($ch);
+            //Envia e-mail
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, 'smtp://mail.tools.wmflabs.org:587');
+            curl_setopt($ch, CURLOPT_MAIL_FROM, "tools.wikiconcursos@tools.wmflabs.org");
+            curl_setopt($ch, CURLOPT_MAIL_RCPT, array($email));
+            curl_setopt($ch, CURLOPT_INFILE, $emailFile);
+            curl_setopt($ch, CURLOPT_INFILESIZE, $size);
+            curl_setopt($ch, CURLOPT_UPLOAD, true);
+            curl_exec($ch);
+            fclose($emailFile);
+            curl_close($ch);
 
-			//Gera resultado
-			$status = 'E-mail enviado. Confira sua caixa de entrada e de spam!';
-			$input['token'] = true;
-			$input['password'] = true;
+            //Gera resultado
+            $status = 'E-mail enviado. Confira sua caixa de entrada e de spam!';
+            $input['token'] = true;
+            $input['password'] = true;
 
-	    } else {
+        } else {
 
-	    	//Gera erro
-			$status = 'Avaliador não encontrado';
-			$input['token'] = false;
-			$input['password'] = false;
-	    }
+            //Gera erro
+            $status = 'Avaliador não encontrado';
+            $input['token'] = false;
+            $input['password'] = false;
+        }
 
-	//Pedido com token
-	} else {
+    //Pedido com token
+    } else {
 
-		//Processa query
-		$verify_query = mysqli_prepare(
-		    $con,
-		    "SELECT
-		    	`user_id`,
-		        `user_data`
-		    FROM
-		        `{$contest['name_id']}__credentials`
-		    WHERE
-	            `user_email` = ? AND `user_data` IS NOT NULL"
-		);
-		mysqli_stmt_bind_param($verify_query, "s", $email);
-		mysqli_stmt_execute($verify_query);
-		$verify_result = mysqli_stmt_get_result($verify_query);
+        //Processa query
+        $verify_query = mysqli_prepare(
+            $con,
+            "SELECT
+                `user_id`,
+                `user_data`
+            FROM
+                `{$contest['name_id']}__credentials`
+            WHERE
+                `user_email` = ? AND `user_data` IS NOT NULL"
+        );
+        mysqli_stmt_bind_param($verify_query, "s", $email);
+        mysqli_stmt_execute($verify_query);
+        $verify_result = mysqli_stmt_get_result($verify_query);
 
-		//Verifica se avaliador existe
-		if (mysqli_num_rows($verify_result) != 0) {
+        //Verifica se avaliador existe
+        if (mysqli_num_rows($verify_result) != 0) {
 
-			//Abre código seriado e coloca informações em uma array
-			$verify_result = mysqli_fetch_assoc($verify_result);
-			$user_id = $verify_result['user_id'];
-			$verify_result = unserialize($verify_result['user_data']);
+            //Abre código seriado e coloca informações em uma array
+            $verify_result = mysqli_fetch_assoc($verify_result);
+            $user_id = $verify_result['user_id'];
+            $verify_result = unserialize($verify_result['user_data']);
 
-			//Verifica se token ainda é válido (prazo de 900 segundos)
-			if ($verify_result['timestamp'] > (time() - 900)) {
-				
-				//Verifica se token é igual
-				if ($verify_result['token'] == trim($_POST['token'])) {
+            //Verifica se token ainda é válido (prazo de 900 segundos)
+            if ($verify_result['timestamp'] > (time() - 900)) {
+                
+                //Verifica se token é igual
+                if ($verify_result['token'] == trim($_POST['token'])) {
 
-					//Grava nova senha
-					session_start();
-				    require_once "credentials-lib.php";
-				    $USR->save($email, $_POST['password'], $user_id);
+                    //Grava nova senha
+                    session_start();
+                    require_once "credentials-lib.php";
+                    $USR->save($email, $_POST['password'], $user_id);
 
-				    //Gera resultado
-					$status = 'Senha alterada com sucesso!';
-					$input['token'] = false;
-					$input['password'] = false;
-				} else {
+                    //Gera resultado
+                    $status = 'Senha alterada com sucesso!';
+                    $input['token'] = false;
+                    $input['password'] = false;
+                } else {
 
-					//Gera erro
-					$status = 'Token inválido';
-					$input['token'] = true;
-					$input['password'] = false;
-				}
-			} else {
+                    //Gera erro
+                    $status = 'Token inválido';
+                    $input['token'] = true;
+                    $input['password'] = false;
+                }
+            } else {
 
-				//Gera erro
-				$status = 'Token expirado. Solicite um novo token';
-				$input['token'] = false;
-				$input['password'] = false;
-			}
-		} else {
+                //Gera erro
+                $status = 'Token expirado. Solicite um novo token';
+                $input['token'] = false;
+                $input['password'] = false;
+            }
+        } else {
 
-	    	//Gera erro
-			$status = 'Avaliador não encontrado ou não solicitou redefinição de senha';
-			$input['token'] = false;
-			$input['password'] = false;
-		}
-	}
+            //Gera erro
+            $status = 'Avaliador não encontrado ou não solicitou redefinição de senha';
+            $input['token'] = false;
+            $input['password'] = false;
+        }
+    }
 } else {
 
-	//Foormulário inicial
-	$status = false;
-	$input['token'] = false;
-	$input['password'] = false;
+    //Foormulário inicial
+    $status = false;
+    $input['token'] = false;
+    $input['password'] = false;
 }
 
-	
+    
 
 ?>
 <!DOCTYPE html>
@@ -174,7 +174,7 @@ if (isset($_POST['email'])) {
                 <div class="w3-container">
                     <form id="create" method="post">
                         <div class="w3-section">
-                        	<label>
+                            <label>
                                 <strong>E-mail</strong>
                             </label>
                             <input
@@ -186,7 +186,7 @@ if (isset($_POST['email'])) {
                             value="<?=$email??''?>"
                             required>
 
-                        	<label>
+                            <label>
                                 <strong>Token</strong>
                             </label>
                             <input
@@ -197,7 +197,7 @@ if (isset($_POST['email'])) {
                             name="token"
                             <?=($input['token'])?'required':'disabled'?>>
 
-                        	<label>
+                            <label>
                                 <strong>Nova senha</strong>
                             </label>
                             <input
@@ -215,13 +215,13 @@ if (isset($_POST['email'])) {
             </div>
         </div>
         <?php if ($status == 'Senha alterada com sucesso!'): ?>
-        	<script>
-        		alert('<?=$status?>');
-        		window.location.replace('index.php?contest=<?=$contest['name_id']?>');
-        	</script>
-	    <?php elseif ($status): ?>
-	        <script>alert('<?=$status?>');</script>
-	    <?php endif; ?>
+            <script>
+                alert('<?=$status?>');
+                window.location.replace('index.php?contest=<?=$contest['name_id']?>');
+            </script>
+        <?php elseif ($status): ?>
+            <script>alert('<?=$status?>');</script>
+        <?php endif; ?>
     </body>
 </html>
 

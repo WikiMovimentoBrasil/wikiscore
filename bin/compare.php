@@ -31,15 +31,15 @@ if (isset($_POST['update']) && !isset($early)) {
 if (isset($_POST['diff'])) {
     $fix_query = mysqli_prepare(
         $con,
-        "DELETE FROM 
-            `{$contest['name_id']}__edits` 
-        WHERE 
+        "DELETE FROM
+            `{$contest['name_id']}__edits`
+        WHERE
             `article` NOT IN (
-                SELECT 
-                    `articleID` 
-                FROM 
+                SELECT
+                    `articleID`
+                FROM
                     `{$contest['name_id']}__articles`
-            ) AND 
+            ) AND
             `diff` = ?"
     );
     mysqli_stmt_bind_param($fix_query, "i", $_POST['diff']);
@@ -382,7 +382,7 @@ if ($contest['next_update'] > time() && !isset($update)) {
                                     "<?=$contest['endpoint']?>?diff=<?=urlencode($row['diff'])?>",
                                     "_blank"
                                 )'>Ver edição <?=$row["diff"]?></button>
-                                <form 
+                                <form
                                 style='display: inline'
                                 method='post'
                                 onSubmit='return confirm(
@@ -428,7 +428,7 @@ if ($contest['next_update'] > time() && !isset($update)) {
             </div>
         </div>
     </body>
-    <?php if (isset($fixed)): ?> 
+    <?php if (isset($fixed)): ?>
         <script>
             alert('Edições removida com sucesso!');
             window.location.href = window.location.href;

@@ -571,12 +571,12 @@ if ($_POST) {
                             <li class="w3-bar">
                                 <div class="w3-bar-item">
                                     Começa(ou) em <?=$contest_info['start_time']?>: <?=date(
-                                        'd/m/Y H:i:s (\U\T\C)', 
+                                        'd/m/Y H:i:s (\U\T\C)',
                                         $contest_info['start_time']
                                     )?>
                                     <br>
                                     Termina(ou) em <?=$contest_info['end_time']?>: <?=date(
-                                        'd/m/Y H:i:s (\U\T\C)', 
+                                        'd/m/Y H:i:s (\U\T\C)',
                                         $contest_info['end_time']
                                     )?>
                                 </div>
@@ -630,7 +630,7 @@ if ($_POST) {
                             </li>
                             <li class="w3-bar">
                                 <div class="w3-bar-item">
-                                    Paleta de cor: 
+                                    Paleta de cor:
                                     <div
                                     class='w3-<?=$contest_info['theme']?>'
                                     style='

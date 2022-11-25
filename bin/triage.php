@@ -314,7 +314,7 @@ if ($output['revision'] != null) {
 
         //Insere estilo no parágrafo para destacar edição em avaliação
         $history_class = 'w3-small';
-        if ($edit['revid'] == $output['revision']['diff']) { 
+        if ($edit['revid'] == $output['revision']['diff']) {
             $history_class = 'w3-small w3-leftbar w3-border-grey w3-padding-small';
         }
 
@@ -369,20 +369,20 @@ mysqli_close($con);
                             target="_blank"><?=@$output['success']['diff'];?></a>
                     </p>
                     <p>
-                        Edição válida: <?php if (@$output['success']['valid']): ?><i 
-                        class="fa-regular w3-text-green fa-circle-check" 
+                        Edição válida: <?php if (@$output['success']['valid']): ?><i
+                        class="fa-regular w3-text-green fa-circle-check"
                         aria-hidden="true"
-                        ></i> Sim<?php else: ?><i 
-                        class="fa-regular w3-text-red fa-circle-xmark" 
+                        ></i> Sim<?php else: ?><i
+                        class="fa-regular w3-text-red fa-circle-xmark"
                         aria-hidden="true"
                         ></i> Não<?php endif; ?>
                     </p>
                     <p>
-                        Com imagem: <?php if (@$output['success']['pic']): ?><i 
-                        class="fa-regular w3-text-green fa-circle-check" 
+                        Com imagem: <?php if (@$output['success']['pic']): ?><i
+                        class="fa-regular w3-text-green fa-circle-check"
                         aria-hidden="true"
-                        ></i> Sim<?php else: ?><i 
-                        class="fa-regular w3-text-red fa-circle-xmark" 
+                        ></i> Sim<?php else: ?><i
+                        class="fa-regular w3-text-red fa-circle-xmark"
                         aria-hidden="true"
                         ></i> Não<?php endif; ?>
                     </p>
@@ -723,11 +723,11 @@ mysqli_close($con);
                         <a
                         href="<?=$contest['endpoint'];?>?curid=<?=$contest['official_list_pageid'];?>"
                         >Lista oficial</a> e <?php if ($contest['category_petscan']): ?>
-                            <a 
+                            <a
                             href="https://petscan.wmflabs.org/?psid=<?=$contest['category_petscan']?>"
                             >categoria de monitoramento</a>
                         <?php else: ?>
-                            <a 
+                            <a
                             href="<?=$contest['endpoint']?>?curid=<?=$contest['category_pageid']?>"
                             >categoria de monitoramento</a>
                         <?php endif; ?>
