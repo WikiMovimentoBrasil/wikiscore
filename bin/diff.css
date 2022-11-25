@@ -27,7 +27,7 @@ table.diff.diff-contentalign-left.diff-editfont-monospace {
     font-family: serif
 }
 .diff td div {
-	word-wrap: break-word;
+    word-wrap: break-word;
 }
 
 .diff-context {
@@ -83,7 +83,7 @@ table.diff.diff-contentalign-left.diff-editfont-monospace {
 }
 
 .diff-lineno {
-	white-space: nowrap;
+    white-space: nowrap;
 }
 
 

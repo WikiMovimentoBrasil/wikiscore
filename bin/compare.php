@@ -297,7 +297,10 @@ if ($contest['next_update'] > time() && !isset($update)) {
                         </li>
                         <?php foreach ($adicionar as $title): ?>
                             <li>
-                               <a target='_blank' href='<?=$contest['endpoint']?>?title=<?=urlencode($title)?>'>";
+                               <a
+                               rel="noopener"
+                               target='_blank'
+                               href='<?=$contest['endpoint']?>?title=<?=urlencode($title)?>'>
                                     <?=$title?>
                                 </a>
                             </li>
@@ -317,7 +320,10 @@ if ($contest['next_update'] > time() && !isset($update)) {
                         </li>
                         <?php foreach ($remover as $title): ?>
                             <li>
-                               <a target='_blank' href='<?=$contest['endpoint']?>?title=<?=urlencode($title)?>'>";
+                               <a
+                               rel="noopener"
+                               target='_blank'
+                               href='<?=$contest['endpoint']?>?title=<?=urlencode($title)?>'>
                                     <?=$title?>
                                 </a>
                             </li>
@@ -338,7 +344,10 @@ if ($contest['next_update'] > time() && !isset($update)) {
                         </li>
                         <?php foreach ($eliminar ?? array() as $title): ?>
                             <li>
-                                <a target='_blank' href='<?=$contest['endpoint']?>?title=<?=urlencode($title)?>'>
+                                <a
+                                rel="noopener"
+                                target='_blank'
+                                href='<?=$contest['endpoint']?>?title=<?=urlencode($title)?>'>
                                     <?=$title?>
                                 </a>
                             </li>
@@ -359,7 +368,10 @@ if ($contest['next_update'] > time() && !isset($update)) {
                         </li>
                         <?php foreach ($list_wd ?? array() as $title): ?>
                             <li>
-                                <a target='_blank' href='<?=$contest['endpoint']?>?title=<?=urlencode($title)?>'>
+                                <a
+                                rel="noopener"
+                                target='_blank'
+                                href='<?=$contest['endpoint']?>?title=<?=urlencode($title)?>'>
                                     <?=$title?>
                                 </a>
                             </li>

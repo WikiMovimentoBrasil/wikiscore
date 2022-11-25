@@ -115,6 +115,7 @@ if (isset($_POST['diff'])) {
                                             <a
                                             href='<?=$contest['endpoint']?>?diff=<?=$diff['diff']?>'
                                             target='_blank'
+                                            rel="noopener"
                                             ><?=$diff['diff']?></a>
                                         </span>
                                         <br>
@@ -150,8 +151,3 @@ if (isset($_POST['diff'])) {
         <?php endif; ?>
     <?php endif; ?>
 </html>
-
-
-
-
-
