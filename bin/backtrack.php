@@ -42,6 +42,7 @@ while ($edit = mysqli_fetch_assoc($backtrack_result)) {
 if (isset($_POST['diff'])) {
 
     //Monta query para atualizar banco de dados
+    $now = date('Y-m-d H:i:s');
     $update_statement = "
         UPDATE
             `{$contest['name_id']}__edits`
@@ -64,7 +65,7 @@ if (isset($_POST['diff'])) {
         $update_query,
         "ssi",
         $_SESSION['user']['user_name'],
-        date('Y-m-d H:i:s'),
+        $now,
         $_POST['diff']
     );
 

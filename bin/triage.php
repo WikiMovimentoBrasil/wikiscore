@@ -35,6 +35,8 @@ if ($_POST) {
         mysqli_stmt_execute($jump_query);
         if (mysqli_stmt_affected_rows($jump_query) == 0) {
             die("<br>Erro ao pular edição. Atualize a página para tentar novamente.");
+        } else {
+            $output['success']['skip'] = true;
         }
 
     //Salva avaliação da edição
@@ -350,6 +352,9 @@ mysqli_close($con);
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
         <link rel="stylesheet" href="bin/diff.css">
         <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/6.2.0/css/all.css">
+        <?php if (isset($output['success']['diff']) || isset($output['success']['skip'])) : ?>
+            <script type="text/javascript">history.replaceState(null, document.title, location.href);</script>
+        <?php endif; ?>
     </head>
     <body>
         <div class="w3-<?=$contest['theme'];?> w3-padding-32 w3-margin-bottom w3-center">
@@ -357,45 +362,47 @@ mysqli_close($con);
         </div>
         <div class="w3-row-padding w3-content" style="max-width:1400px">
             <div class="w3-quarter">
-                <div
-                class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom"
-                style="display:<?=(isset($output['success']['diff']))?'block':'none';?>;"
-                >
-                    <h2>Última avaliação</h2>
-                    <p>
-                        Diff: <a
-                            href="<?=$contest['endpoint'];?>?diff=<?=@$output['success']['diff'];?>"
-                            rel="noopener"
-                            target="_blank"><?=@$output['success']['diff'];?></a>
-                    </p>
-                    <p>
-                        Edição válida: <?php if (@$output['success']['valid']): ?><i
-                        class="fa-regular w3-text-green fa-circle-check"
-                        aria-hidden="true"
-                        ></i> Sim<?php else: ?><i
-                        class="fa-regular w3-text-red fa-circle-xmark"
-                        aria-hidden="true"
-                        ></i> Não<?php endif; ?>
-                    </p>
-                    <p>
-                        Com imagem: <?php if (@$output['success']['pic']): ?><i
-                        class="fa-regular w3-text-green fa-circle-check"
-                        aria-hidden="true"
-                        ></i> Sim<?php else: ?><i
-                        class="fa-regular w3-text-red fa-circle-xmark"
-                        aria-hidden="true"
-                        ></i> Não<?php endif; ?>
-                    </p>
-                    <p>
-                        <button
-                        class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small"
-                        type="button"
-                        onclick="window.open(
-                            'index.php?contest=<?=$contest['name_id'];?>&page=modify&diff=<?=@$output['success']['diff'];?>',
-                            '_blank'
-                        );"><i class="fa-solid fa-eraser w3-medium" aria-hidden="true"></i> Corrigir</button>
-                    </p>
-                </div>
+                <?php if (isset($output['success']['diff'])) : ?>
+                    <div
+                    class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom"
+                    style="display: block"
+                    >
+                        <h2>Última avaliação</h2>
+                        <p>
+                            Diff: <a
+                                href="<?=$contest['endpoint'];?>?diff=<?=@$output['success']['diff'];?>"
+                                rel="noopener"
+                                target="_blank"><?=@$output['success']['diff'];?></a>
+                        </p>
+                        <p>
+                            Edição válida: <?php if (@$output['success']['valid']): ?><i
+                            class="fa-regular w3-text-green fa-circle-check"
+                            aria-hidden="true"
+                            ></i> Sim<?php else: ?><i
+                            class="fa-regular w3-text-red fa-circle-xmark"
+                            aria-hidden="true"
+                            ></i> Não<?php endif; ?>
+                        </p>
+                        <p>
+                            Com imagem: <?php if (@$output['success']['pic']): ?><i
+                            class="fa-regular w3-text-green fa-circle-check"
+                            aria-hidden="true"
+                            ></i> Sim<?php else: ?><i
+                            class="fa-regular w3-text-red fa-circle-xmark"
+                            aria-hidden="true"
+                            ></i> Não<?php endif; ?>
+                        </p>
+                        <p>
+                            <button
+                            class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small"
+                            type="button"
+                            onclick="window.open(
+                                'index.php?contest=<?=$contest['name_id'];?>&page=modify&diff=<?=@$output['success']['diff'];?>',
+                                '_blank'
+                            );"><i class="fa-solid fa-eraser w3-medium" aria-hidden="true"></i> Corrigir</button>
+                        </p>
+                    </div>
+                <?php endif; ?>
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom">
                     <h2>Painel</h2>
                     <div class="w3-container">
