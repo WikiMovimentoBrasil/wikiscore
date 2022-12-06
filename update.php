@@ -11,7 +11,7 @@ $contests_statement = '
         `manage__contests`
     WHERE
         `start_time` < NOW() AND                            #Concurso já começou e
-        `end_time` > INTERVAL 2 DAY + NOW() AND (           #Ainda não terminou e
+        `end_time` + INTERVAL 2 DAY > NOW() AND (           #Ainda não terminou e
             `started_update` IS NULL OR (                       #Ou nunca foi atualizado
                 `started_update` < `finished_update` AND            #Ou não está em atualização e
                 `next_update` < NOW()                               #O prazo de atualização foi atingido

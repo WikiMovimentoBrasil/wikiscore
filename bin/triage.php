@@ -694,9 +694,11 @@ mysqli_close($con);
                         <?=$contest['bytes_per_points'];?> bytes
                     </p>
                     <p class="w3-small">
-                        <strong>Máximo de bytes por artigo</strong>
+                        <strong>Máximo de bytes/pontos por artigo</strong>
                         <br>
                         <?=$contest['max_bytes_per_article'];?> bytes
+                        /
+                        <?=($contest['max_bytes_per_article'] / $contest['bytes_per_points']);?> pontos
                     </p>
                     <p class="w3-small">
                         <strong>Mínimo de bytes por edição</strong>

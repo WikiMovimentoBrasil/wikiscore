@@ -106,7 +106,7 @@ $count_query = mysqli_query(
                             FROM
                                 `{$contest['name_id']}__edits`
                             WHERE
-                                `{$contest['name_id']}__edits`.`valid_edit` IS NOT NULL AND
+                                `{$contest['name_id']}__edits`.`valid_edit` = '1' AND
                                 `{$contest['name_id']}__edits`.`timestamp` < (
                                     CASE
                                         WHEN '${time_sql}' = '0'
@@ -188,6 +188,9 @@ if (mysqli_num_rows($count_query) == 0) { die("No users"); }
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
+        <?php if (isset($output['success'])) : ?>
+            <script type="text/javascript">history.replaceState(null, document.title, location.href);</script>
+        <?php endif; ?>
     </head>
     <body>
         <header class="w3-container w3-<?=$contest['theme'];?>">
