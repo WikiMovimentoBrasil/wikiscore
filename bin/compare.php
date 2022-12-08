@@ -257,6 +257,9 @@ if ($contest['next_update'] > time() && !isset($update)) {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
+        <?php if (isset($update)) : ?>
+            <script type="text/javascript">history.replaceState(null, document.title, location.href);</script>
+        <?php endif; ?>
     </head>
     <body>
         <header class="w3-container w3-<?=$contest['theme'];?>">

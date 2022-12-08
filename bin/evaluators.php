@@ -195,7 +195,7 @@ $icon = '
                                 <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
                                     <form method="post">
                                         <input type='hidden' name='on' value='1'>
-                                        <input type='hidden' name='user' value='{$user}'>
+                                        <input type='hidden' name='user' value='<?=$user?>'>
                                         <button
                                         type='submit'
                                         onclick="return confirm('Tem certeza?')"
