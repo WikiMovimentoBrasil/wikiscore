@@ -178,6 +178,74 @@ $count_query = mysqli_query(
 );
 if (mysqli_num_rows($count_query) == 0) { die("No users"); }
 
+//Realiza query para tabela de estatísticas
+$stats_query = mysqli_prepare(
+    $con,
+    "SELECT
+      SUM(`new_page`) AS `new_pages`,
+      COUNT(DISTINCT `article`) AS `edited_articles`,
+      SUM(`valid_edit`) AS `valid_edits`,
+      (
+        SELECT
+          SUM(`bytes`)
+        FROM
+          `{$contest['name_id']}__edits`
+        WHERE
+          `bytes` > 0
+      ) AS `all_bytes`,
+      (
+        SELECT
+          COUNT(*)
+        FROM
+          `{$contest['name_id']}__users`
+        WHERE
+          `timestamp` != '0'
+      ) AS `all_users`
+    FROM
+      `{$contest['name_id']}__edits`"
+);
+mysqli_stmt_execute($stats_query);
+$stats = mysqli_fetch_assoc(mysqli_stmt_get_result($stats_query));
+
+//Coleta lista de artigos na página do concurso
+$stats['listed_articles'] = 0;
+$list_api_params = [
+    "action"        => "query",
+    "format"        => "php",
+    "generator"     => "links",
+    "pageids"       => $contest['official_list_pageid'],
+    "gplnamespace"  => "0",
+    "gpllimit"      => "max"
+];
+
+$list_api = unserialize(file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params)));
+$listmembers = $list_api['query']['pages'];
+foreach ($listmembers as $pagetitle) {
+    if (isset($pagetitle['missing'])) { continue; }
+    $stats['listed_articles']++;
+}
+
+//Coleta segunda página da lista, caso exista
+while (isset($list_api['continue'])) {
+    $list_api_params = [
+        "action"        => "query",
+        "format"        => "php",
+        "generator"     => "links",
+        "pageids"       => $contest['official_list_pageid'],
+        "gplnamespace"  => "0",
+        "gpllimit"      => "max",
+        "gplcontinue"   => $list_api['continue']['gplcontinue']
+    ];
+    $list_api = unserialize(
+        file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params))
+    );
+    $listmembers = $list_api['query']['pages'];
+    foreach ($listmembers as $pagetitle) {
+        if (isset($pagetitle['missing'])) { continue; }
+        $stats['listed_articles']++;
+    }
+}
+
 
 ?>
 
@@ -225,6 +293,40 @@ if (mysqli_num_rows($count_query) == 0) { die("No users"); }
                     <input class="w3-btn w3-block w3-<?=$contest['theme'];?>" type="submit">
                 </form>
             </div>
+        </div>
+        <div class="w3-container w3-card w3-margin w3-<?=$contest['theme'];?>">
+            <div class="w3-row">
+                <div class="w3-half">
+                    <div class="w3-third">
+                        <h6 class="w3-center">Artigos listados</h6>
+                        <h1 class="w3-center"><?=number_format($stats['listed_articles'], 0, ',', '.');?></h1>
+                    </div>
+                    <div class="w3-third">
+                        <h6 class="w3-center">Artigos editados</h6>
+                        <h1 class="w3-center"><?=number_format($stats['edited_articles'], 0, ',', '.');?></h1>
+                    </div>
+                    <div class="w3-third">
+                        <h6 class="w3-center">Artigos criados</h6>
+                        <h1 class="w3-center"><?=number_format($stats['new_pages'], 0, ',', '.');?></h1>
+                    </div>
+                </div>
+                <div class="w3-half">
+                    <div class="w3-third">
+                        <h6 class="w3-center">Usuários inscritos</h6>
+                        <h1 class="w3-center"><?=number_format($stats['all_users'], 0, ',', '.');?></h1>
+                    </div>
+                    <div class="w3-third">
+                        <h6 class="w3-center">Edições validadas</h6>
+                        <h1 class="w3-center"><?=number_format($stats['valid_edits'], 0, ',', '.');?></h1>
+                    </div>
+                    <div class="w3-third">
+                        <h6 class="w3-center">Bytes adicionados</h6>
+                        <h1 class="w3-center"><?=number_format($stats['all_bytes'], 0, ',', '.');?></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="w3-container">
             <table aria-label="Lista de participantes" class="w3-table-all w3-hoverable w3-card">
                 <tr>
                     <th>Usuário</th>

@@ -39,7 +39,7 @@ if (isset($_POST['email'])) {
 
         //Verifica se houve alteração (se e-mail foi encontrado, principalmente)
         if (mysqli_stmt_affected_rows($update_query) != 0) {
-            
+
             //Cria corpo do e-mail
             $message = "Oi!\nUtilize o seguinte token para redefinir sua senha:\n{$token}\n\n\nAtenciosamente,\nWikiconcursos";
             $emailFile = fopen("php://temp", 'w+');
@@ -102,7 +102,7 @@ if (isset($_POST['email'])) {
 
             //Verifica se token ainda é válido (prazo de 900 segundos)
             if ($verify_result['timestamp'] > (time() - 900)) {
-                
+
                 //Verifica se token é igual
                 if ($verify_result['token'] == trim($_POST['token'])) {
 
@@ -145,7 +145,7 @@ if (isset($_POST['email'])) {
     $input['password'] = false;
 }
 
-    
+
 
 ?>
 <!DOCTYPE html>
