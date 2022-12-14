@@ -219,11 +219,7 @@ $list_api_params = [
 ];
 
 $list_api = unserialize(file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params)));
-$listmembers = $list_api['query']['pages'];
-foreach ($listmembers as $pagetitle) {
-    if (isset($pagetitle['missing'])) { continue; }
-    $stats['listed_articles']++;
-}
+$stats['listed_articles'] = count($list_api['query']['pages']);
 
 //Coleta segunda página da lista, caso exista
 while (isset($list_api['continue'])) {
@@ -239,11 +235,7 @@ while (isset($list_api['continue'])) {
     $list_api = unserialize(
         file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params))
     );
-    $listmembers = $list_api['query']['pages'];
-    foreach ($listmembers as $pagetitle) {
-        if (isset($pagetitle['missing'])) { continue; }
-        $stats['listed_articles']++;
-    }
+    $stats['listed_articles'] += count($list_api['query']['pages']);
 }
 
 
