@@ -2,7 +2,7 @@
 //Protetor de login
 require_once "protect.php";
 
-if ($_POST) {
+if (isset($_POST['do_create'])) {
 
     //Valida código interno submetido
     preg_match('/^[a-z_]{1,30}$/', $_POST['name_id'], $name_id);
@@ -233,6 +233,50 @@ if ($_POST) {
 
     //Retorna mensagem final
     echo "<script>alert('Concurso criado com sucesso!');window.location.href = window.location.href;</script>";
+
+//Processo para reiniciar concurso
+} elseif (isset($_POST['do_restart'])) {
+
+    //Valida código interno submetido
+    preg_match('/^[a-z_]{1,30}$/', $_POST['name_id'], $name_id);
+    if (!isset($name_id['0'])) die("Erro: Código interno inválido!");
+    $name_id = $name_id['0'];
+
+    //Reinicia tabela do concurso, mas mantem a tabela de credenciais
+    mysqli_query($con, "TRUNCATE TABLE `{$name_id}__edits`, `{$name_id}__users`, `{$name_id}__articles`;");
+
+    //Retorna mensagem final
+    echo "<script>alert('Concurso reiniciado com sucesso! Realize a atualização do banco de dados.');window.location.href = window.location.href;</script>";
+
+//Processo para apagar concurso
+} elseif (isset($_POST['do_delete'])) {
+
+    //Valida código interno submetido
+    preg_match('/^[a-z_]{1,30}$/', $_POST['name_id'], $name_id);
+    if (!isset($name_id['0'])) die("Erro: Código interno inválido!");
+    $name_id = $name_id['0'];
+
+    //Apaga tabelas do concurso
+    mysqli_query($con, "DROP TABLE `{$name_id}__edits`, `{$name_id}__users`, `{$name_id}__articles`, `{$name_id}__credentials`;");
+
+    //Apaga registro na tabela de concursos
+    $delete_statement =
+        "DELETE FROM
+            `manage__contests` 
+        WHERE 
+            `name_id` = ?
+        LIMIT 1";
+
+    $create_query = mysqli_prepare($con, $delete_statement);
+    mysqli_stmt_bind_param(
+        $delete_query,
+        "s",
+        $name_id
+    );
+    mysqli_stmt_execute($create_query);
+
+    //Retorna mensagem final
+    echo "<script>alert('Concurso apagado com sucesso!');window.location.href = window.location.href;</script>";
 }
 
 ?>
@@ -648,6 +692,25 @@ if ($_POST) {
                                     Tempo de reversão em horas: <?=$contest_info['revert_time']?>
                                     <br>
                                     Código interno: <?=$contest_info['name_id']?>
+                                </div>
+                            </li>
+                            <li class="w3-bar">
+                                <div class="w3-container">
+                                    <form id="alter" method="post">
+                                        <input type="hidden" name="name_id" value="<?=$contest_info['name_id']?>">
+                                    </form>
+                                    <button 
+                                    class="w3-button w3-orange" 
+                                    name="do_restart"
+                                    form="alter" 
+                                    onclick="return confirm('Ao reiniciar o concurso, todas as avaliações já efetuadas serão eliminadas. Deseja prosseguir?')"
+                                    type="submit">Reiniciar</button>
+                                    <button 
+                                    class="w3-button w3-red w3-right" 
+                                    name="do_delete" 
+                                    form="alter" 
+                                    onclick="return confirm('Ao apagar o concurso, todos os registros relacionados a este concurso serão eliminados. Deseja prosseguir?')"
+                                    type="submit">Apagar</button>
                                 </div>
                             </li>
                         </ul>
