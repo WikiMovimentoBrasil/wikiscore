@@ -13,12 +13,40 @@ if (is_null($csv)) {
 }
 
 //Converte csv em uma array
-$lines = str_getcsv($csv, "\n");
-foreach ($lines as &$row) {
+$csv_lines = str_getcsv($csv, "\n");
+foreach ($csv_lines as &$row) {
     $row = str_getcsv($row, ",");
 }
-array_shift($lines);
 unset($row);
+
+//Separa a linha de cabeçalho da array
+$csv_head = array_shift($csv_lines);
+
+//Conta a quantidade de colunas
+$csv_num_rows = count($csv_head);
+
+//Consolida informações em uma array própria
+$enrollments = array();
+foreach ($csv_lines as $csv_line) {
+
+    //Caso existam linhas com menos colunas que o cabeçalho
+    if (count($csv_line) < $csv_num_rows) {
+        die("Erro! Uma das linhas possui menos colunas que o cabeçalho.");
+    }
+
+    //Caso existam linhas com mais colunas que o cabeçalho
+    //Ocorre essencialmente com usernames contendo vírgulas que foram divididas em colunas diferentes
+    //Nesse caso, ele concatena as primeiras colunas até alcançar a quantidade correta de colunas
+    if (count($csv_line) > $csv_num_rows) {
+        $csv_line_extra_columns = 1 + count($csv_line) - $csv_num_rows;
+        $csv_line_first_column = array_splice($csv_line, 0, $csv_line_extra_columns);
+        $csv_line_first_column = implode(',', $csv_line_first_column);
+        array_unshift($csv_line, $csv_line_first_column);
+    }
+
+    //Combina cabeçalho e linha na array própria
+    $enrollments[] = array_combine($csv_head, $csv_line);
+}
 
 //Limpa tabela de usuários
 mysqli_query($con, "TRUNCATE `{$contest['name_id']}__users`;");
@@ -46,9 +74,11 @@ $validedit_query = mysqli_prepare($con, $validedit_statement);
 mysqli_stmt_bind_param($validedit_query, "ss", $row_user, $row_timestamp);
 
 //Loop de execução das queries
-foreach ($lines as $row) {
-    $row_user = $row['0'];
-    $row_timestamp = $row['1'];
+foreach ($enrollments as $enrollment) {
+    //$row_global_id = $enrollment['global_id']; 
+    //$row_local_id = $enrollment['local_id']; 
+    $row_user = $enrollment['username'];
+    $row_timestamp = $enrollment['enrollment_timestamp'];
     mysqli_stmt_execute($adduser_query);
     mysqli_stmt_execute($validedit_query);
 
