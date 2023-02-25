@@ -209,7 +209,6 @@ mysqli_stmt_execute($stats_query);
 $stats = mysqli_fetch_assoc(mysqli_stmt_get_result($stats_query));
 
 //Coleta lista de artigos na página do concurso
-$stats['listed_articles'] = 0;
 $list_api_params = [
     "action"        => "query",
     "format"        => "php",
@@ -220,7 +219,7 @@ $list_api_params = [
 ];
 
 $list_api = unserialize(file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params)));
-$stats['listed_articles'] = count($list_api['query']['pages']);
+$stats['listed_articles'] = count($list_api['query']['pages']) ?? 0;
 
 //Coleta segunda página da lista, caso exista
 while (isset($list_api['continue'])) {
