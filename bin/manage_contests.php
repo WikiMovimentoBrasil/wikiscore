@@ -136,7 +136,7 @@ if (isset($_POST['do_create'])) {
             `diff` int(9) unsigned NOT NULL,
             `article` mediumint(8) unsigned NOT NULL DEFAULT '0',
             `timestamp` timestamp NULL DEFAULT NULL,
-            `user` tinytext COLLATE utf8mb4_unicode_ci,
+            `user_id` int(11) NOT NULL,
             `bytes` int(11) DEFAULT NULL,
             `new_page` tinyint(1) unsigned DEFAULT NULL,
             `valid_edit` tinyint(1) unsigned DEFAULT NULL,
@@ -156,6 +156,8 @@ if (isset($_POST['do_create'])) {
             `n` int(4) unsigned NOT NULL AUTO_INCREMENT,
             `user` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
             `timestamp` timestamp NULL DEFAULT NULL,
+            `global_id` int(11) NOT NULL,
+            `local_id` int(11) DEFAULT NULL,
             PRIMARY KEY (`n`),
             UNIQUE KEY `user` (`user`)
         ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"

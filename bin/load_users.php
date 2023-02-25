@@ -48,18 +48,70 @@ foreach ($csv_lines as $csv_line) {
     $enrollments[] = array_combine($csv_head, $csv_line);
 }
 
+//Prepara lista de CentralUser IDs
+foreach ($enrollments as $enrollment) {
+    $global_ids[] = $enrollment['global_id'];
+}
+$bindClause = implode(',', array_fill(0, count($global_ids), '?'));
+$bindString = str_repeat('s', count($global_ids) + 1);
+
+//Coleta ID da wiki
+$wiki_id_params = [
+    "action"        => "query",
+    "format"        => "php",
+    "meta"          => "siteinfo"
+];
+$wiki_id = file_get_contents(
+    $contest['api_endpoint'] . "?" . http_build_query($wiki_id_params)
+);
+$wiki_id = unserialize($wiki_id)["query"]["general"]["wikiid"];
+
+//Conecta ao banco de dados do CentralAuth
+$con_centralauth = mysqli_connect('centralauth.analytics.db.svc.wikimedia.cloud', $db_user, $db_pass, 'centralauth_p');
+if (mysqli_connect_errno()) {
+    echo "Failed to connect to MySQL: " . mysqli_connect_error();
+    exit();
+}
+
+//Prepara consulta SQL
+$centralauth_query = mysqli_prepare(
+    $con_centralauth,
+    "SELECT
+        `lu_name`, `lu_local_id`, `lu_global_id`
+    FROM
+        `localuser`
+    WHERE
+        `lu_wiki` = ?
+        AND `lu_global_id` IN (${bindClause})"
+);
+
+//Executa consulta e coleta os resultados
+mysqli_stmt_bind_param($centralauth_query, $bindString, $wiki_id, ...$global_ids);
+mysqli_stmt_execute($centralauth_query);
+$centralauth_result = mysqli_stmt_get_result($centralauth_query);
+mysqli_stmt_close($centralauth_query);
+
+while ($lu = mysqli_fetch_assoc($centralauth_result)) {
+    $centralauth_users[$lu["lu_global_id"]] = [
+        "lu_name"       =>  $lu['lu_name'],
+        "lu_local_id"   =>  $lu['lu_local_id']
+    ];
+}
+
+
+
 //Limpa tabela de usuários
 mysqli_query($con, "TRUNCATE `{$contest['name_id']}__users`;");
 
 //Prepara query de inserção de usuários
 $adduser_statement = "
     INSERT INTO
-        `{$contest['name_id']}__users` (`user`, `timestamp`)
+        `{$contest['name_id']}__users` (`user`, `timestamp`, `global_id`, `local_id`)
     VALUES
-        (?, ?)
+        (?, ?, ?, ?)
 ";
 $adduser_query = mysqli_prepare($con, $adduser_statement);
-mysqli_stmt_bind_param($adduser_query, "ss", $row_user, $row_timestamp);
+mysqli_stmt_bind_param($adduser_query, "ssii", $row_user, $row_timestamp, $row_global_id, $row_local_id);
 
 //Prepara query de validação de edições
 $validedit_statement = "
@@ -75,10 +127,11 @@ mysqli_stmt_bind_param($validedit_query, "ss", $row_user, $row_timestamp);
 
 //Loop de execução das queries
 foreach ($enrollments as $enrollment) {
-    //$row_global_id = $enrollment['global_id']; 
-    //$row_local_id = $enrollment['local_id']; 
-    $row_user = $enrollment['username'];
+    $row_global_id = $enrollment['global_id']; 
     $row_timestamp = $enrollment['enrollment_timestamp'];
+    $row_local_id = $centralauth_users[$enrollment['global_id']]['lu_local_id'] ?? null; 
+    $row_user = $centralauth_users[$enrollment['global_id']]['lu_name'] ?? $enrollment['username'] ?? null;
+
     mysqli_stmt_execute($adduser_query);
     mysqli_stmt_execute($validedit_query);
 
