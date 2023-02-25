@@ -124,7 +124,7 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
                 `diff`,
                 `article`,
                 `timestamp`,
-                `user`,
+                `user_id`,
                 `bytes`,
                 `new_page`
             )
@@ -138,7 +138,7 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
         $addedit_diff,
         $addedit_article,
         $addedit_timestamp,
-        $addedit_user,
+        $addedit_user_id,
         $addedit_bytes,
         $addedit_newpage
     );
@@ -167,7 +167,7 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
 
         //Verifica se edição foi ocultada. Caso sim, define valores da edição como nulos
         if (!isset($compare_api['compare'])) {
-            $compare_api['touser']      = null;
+            $compare_api['touserid']    = null;
             $compare_api['tosize']      = null;
             $compare_api['new_page']    = null;
             $compare_api['totimestamp'] = null;
@@ -192,7 +192,7 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
         $addedit_diff       = $revision['revid'];
         $addedit_article    = $row["articleID"];
         $addedit_timestamp  = $compare_api['totimestamp'];
-        $addedit_user       = $compare_api['touser'];
+        $addedit_user_id    = $compare_api['touserid'];
         $addedit_bytes      = $compare_api['tosize'];
         $addedit_newpage    = $compare_api['new_page'];
         mysqli_stmt_execute($addedit_query);

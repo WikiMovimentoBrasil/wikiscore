@@ -63,16 +63,17 @@ $count_query = mysqli_query(
     FROM
         (
             SELECT
-                DISTINCT `{$contest['name_id']}__edits`.`user`
+                DISTINCT `{$contest['name_id']}__edits`.`user_id`,
+                `{$contest['name_id']}__users`.`user`
             FROM
                 `{$contest['name_id']}__edits`
                 INNER JOIN
                     `{$contest['name_id']}__users`
-                ON `{$contest['name_id']}__users`.`user` = `{$contest['name_id']}__edits`.`user`
+                ON `{$contest['name_id']}__users`.`local_id` = `{$contest['name_id']}__edits`.`user_id`
         ) AS `user_table`
         LEFT JOIN (
             SELECT
-                t1.`user`,
+                t1.`user_id`,
                 t1.`sum`,
                 t1.`total edits`,
                 t1.`bytes points`,
@@ -84,7 +85,7 @@ $count_query = mysqli_query(
             FROM
                 (
                     SELECT
-                        edits_ruled.`user`,
+                        edits_ruled.`user_id`,
                         SUM(edits_ruled.`bytes`) AS `sum`,
                         SUM(edits_ruled.`valid_edits`) AS `total edits`,
                         FLOOR(
@@ -94,7 +95,7 @@ $count_query = mysqli_query(
                         (
                             SELECT
                                 `{$contest['name_id']}__edits`.`article`,
-                                `{$contest['name_id']}__edits`.`user`,
+                                `{$contest['name_id']}__edits`.`user_id`,
                                 CASE
                                     WHEN SUM(
                                         `{$contest['name_id']}__edits`.`bytes`
@@ -115,19 +116,19 @@ $count_query = mysqli_query(
                                     END
                                 )
                             GROUP BY
-                                `user`,
+                                `user_id`,
                                 `article`
                             ORDER BY
                                 NULL
                         ) AS edits_ruled
                     GROUP BY
-                        edits_ruled.`user`
+                        edits_ruled.`user_id`
                     ORDER BY
                         NULL
                 ) AS t1
                 LEFT JOIN (
                     SELECT
-                        `distinct`.`user`,
+                        `distinct`.`user_id`,
                         `distinct`.`article`,
                         SUM(`distinct`.`pictures`) AS `total pictures`,
                     CASE
@@ -138,7 +139,7 @@ $count_query = mysqli_query(
                     FROM
                         (
                             SELECT
-                                `{$contest['name_id']}__edits`.`user`,
+                                `{$contest['name_id']}__edits`.`user_id`,
                                 `{$contest['name_id']}__edits`.`article`,
                                 `{$contest['name_id']}__edits`.`pictures`,
                                 `{$contest['name_id']}__edits`.`n`
@@ -152,7 +153,7 @@ $count_query = mysqli_query(
                             GROUP BY
                                 CASE
                                     WHEN ${contest['pictures_mode']} = 0
-                                    THEN `{$contest['name_id']}__edits`.`user`
+                                    THEN `{$contest['name_id']}__edits`.`user_id`
                                 END,
                                 CASE
                                     WHEN ${contest['pictures_mode']} = 0
@@ -165,11 +166,11 @@ $count_query = mysqli_query(
                                 END
                         ) AS `distinct`
                     GROUP BY
-                        `distinct`.`user`
+                        `distinct`.`user_id`
                     ORDER BY
                         NULL
-                ) AS t2 ON t1.`user` = t2.`user`
-        ) AS `points` ON `user_table`.`user` = `points`.`user`
+                ) AS t2 ON t1.`user_id` = t2.`user_id`
+        ) AS `points` ON `user_table`.`user_id` = `points`.`user_id`
     ORDER BY
         `points`.`total points` DESC,
         `points`.`sum` DESC,

@@ -15,7 +15,7 @@ $backtrack_statement = "
         INNER JOIN
             `{$contest['name_id']}__users`
         ON
-            `{$contest['name_id']}__edits`.`user` = `{$contest['name_id']}__users`.`user`
+            `{$contest['name_id']}__edits`.`user_id` = `{$contest['name_id']}__users`.`local_id`
     WHERE
         `{$contest['name_id']}__edits`.`valid_user` IS NULL AND
         `{$contest['name_id']}__edits`.`reverted` IS NULL

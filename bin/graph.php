@@ -15,114 +15,119 @@ function querypoints($time)
     FROM
         (
             SELECT
-                DISTINCT `{$contest['name_id']}__edits`.`user`
+                DISTINCT `{$contest['name_id']}__edits`.`user_id`,
+                `{$contest['name_id']}__users`.`user`
             FROM
                 `{$contest['name_id']}__edits`
                 INNER JOIN
                     `{$contest['name_id']}__users`
-                ON `{$contest['name_id']}__users`.`user` = `{$contest['name_id']}__edits`.`user`
+                ON `{$contest['name_id']}__users`.`local_id` = `{$contest['name_id']}__edits`.`user_id`
         ) AS `user_table`
         LEFT JOIN (
             SELECT
-                t1.`user`,
+                t1.`user_id`,
+                t1.`sum`,
+                t1.`total edits`,
                 t1.`bytes points`,
+                t2.`total pictures`,
                 t2.`pictures points`,
-                (t1.`bytes points` + t2.`pictures points`) AS `total points`
+                (
+                    t1.`bytes points` + t2.`pictures points`
+                ) AS `total points`
             FROM
                 (
                     SELECT
-                        edits_ruled.`user`,
+                        edits_ruled.`user_id`,
                         SUM(edits_ruled.`bytes`) AS `sum`,
                         SUM(edits_ruled.`valid_edits`) AS `total edits`,
                         FLOOR(
-                            SUM(edits_ruled.`bytes`) / {$contest['bytes_per_points']}
+                            SUM(edits_ruled.`bytes`) / ${contest['bytes_per_points']}
                         ) AS `bytes points`
                     FROM
                         (
                             SELECT
                                 `{$contest['name_id']}__edits`.`article`,
-                                `{$contest['name_id']}__edits`.`user`,
+                                `{$contest['name_id']}__edits`.`user_id`,
                                 CASE
-                                    WHEN SUM(`{$contest['name_id']}__edits`.`bytes`)
-                                        > {$contest['max_bytes_per_article']}
-                                    THEN {$contest[ 'max_bytes_per_article' ]}
+                                    WHEN SUM(
+                                        `{$contest['name_id']}__edits`.`bytes`
+                                    ) > ${contest['max_bytes_per_article']}
+                                    THEN ${contest['max_bytes_per_article']}
                                     ELSE SUM(`{$contest['name_id']}__edits`.`bytes`)
                                 END AS `bytes`,
                                 COUNT(`{$contest['name_id']}__edits`.`valid_edit`) AS `valid_edits`
                             FROM
                                 `{$contest['name_id']}__edits`
                             WHERE
-                                `{$contest['name_id']}__edits`.`valid_edit` IS NOT NULL
-                                AND `{$contest['name_id']}__edits`.`timestamp` < (
+                                `{$contest['name_id']}__edits`.`valid_edit` = '1' AND
+                                `{$contest['name_id']}__edits`.`timestamp` < (
                                     CASE
-                                        WHEN '{$time}' = '0'
+                                        WHEN '${time_sql}' = '0'
                                         THEN NOW()
-                                        ELSE '{$time}'
+                                        ELSE '${time_sql}'
                                     END
                                 )
                             GROUP BY
-                                `user`,
+                                `user_id`,
                                 `article`
                             ORDER BY
                                 NULL
                         ) AS edits_ruled
                     GROUP BY
-                        edits_ruled.`user`
+                        edits_ruled.`user_id`
                     ORDER BY
                         NULL
                 ) AS t1
                 LEFT JOIN (
                     SELECT
-                        `distinct`.`user`,
+                        `distinct`.`user_id`,
                         `distinct`.`article`,
                         SUM(`distinct`.`pictures`) AS `total pictures`,
-                        CASE
-                            WHEN {$contest['pictures_per_points']} = 0
-                            THEN 0
-                            ELSE FLOOR(SUM(`distinct`.`pictures`) / {$contest['pictures_per_points']}
-                        ) END AS `pictures points`
+                    CASE
+                        WHEN ${contest['pictures_per_points']} = 0
+                        THEN 0
+                        ELSE FLOOR(SUM(`distinct`.`pictures`) / ${contest['pictures_per_points']})
+                    END AS `pictures points`
                     FROM
                         (
                             SELECT
-                                `{$contest['name_id']}__edits`.`user`,
+                                `{$contest['name_id']}__edits`.`user_id`,
                                 `{$contest['name_id']}__edits`.`article`,
                                 `{$contest['name_id']}__edits`.`pictures`,
                                 `{$contest['name_id']}__edits`.`n`
                             FROM
                                 `{$contest['name_id']}__edits`
                             WHERE
-                                `{$contest['name_id']}__edits`.`pictures` IS NOT NULL
-                                AND `{$contest['name_id']}__edits`.`timestamp` < (
-                                    CASE
-                                        WHEN '{$time}' = '0'
-                                        THEN NOW()
-                                        ELSE '{$time}'
-                                    END
+                                `{$contest['name_id']}__edits`.`pictures` IS NOT NULL AND
+                                `{$contest['name_id']}__edits`.`timestamp` < (
+                                    CASE WHEN '${time_sql}' = '0' THEN NOW() ELSE '${time_sql}' END
                                 )
                             GROUP BY
                                 CASE
-                                    WHEN {$contest[ 'pictures_mode' ]} = 0
-                                    THEN `{$contest['name_id']}__edits`.`user`
+                                    WHEN ${contest['pictures_mode']} = 0
+                                    THEN `{$contest['name_id']}__edits`.`user_id`
                                 END,
                                 CASE
-                                    WHEN {$contest[ 'pictures_mode' ]} = 0
+                                    WHEN ${contest['pictures_mode']} = 0
                                     THEN `{$contest['name_id']}__edits`.`article`
-                                    END,
+                                END,
                                 CASE
-                                    WHEN {$contest[ 'pictures_mode' ]} = 0
+                                    WHEN ${contest['pictures_mode']} = 0
                                     THEN `{$contest['name_id']}__edits`.`pictures`
                                     ELSE `{$contest['name_id']}__edits`.`n`
                                 END
                         ) AS `distinct`
                     GROUP BY
-                        `distinct`.`user`
+                        `distinct`.`user_id`
                     ORDER BY
                         NULL
-                ) AS t2 ON t1.`user` = t2.`user`
-        ) AS `points` ON `user_table`.`user` = `points`.`user`
+                ) AS t2 ON t1.`user_id` = t2.`user_id`
+        ) AS `points` ON `user_table`.`user_id` = `points`.`user_id`
     ORDER BY
-        `total points` DESC,
-        `user_table`.`user` ASC;
+        `points`.`total points` DESC,
+        `points`.`sum` DESC,
+        `user_table`.`user` ASC
+    ;
 ";
 
     $run = mysqli_query($con, $query);
