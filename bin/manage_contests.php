@@ -84,10 +84,10 @@ if (isset($_POST['do_create'])) {
     //Executa query
     $_POST['start_time'] = date('Y-m-d\TH:i:s', strtotime($_POST['start_time']));
     $_POST['end_time']   = date('Y-m-d\TH:i:s', strtotime($_POST['end_time']));
-    if ($_POST['category_petscan'] == '0') {
-        $_POST['category_pageid'] = null;
+    if (!empty($_POST['category_pageid'])) {
+        $_POST['category_petscan'] = null;
     }
-    if ($_POST['minimum_bytes'] == '0') {
+    if (empty($_POST['minimum_bytes'])) {
         $_POST['minimum_bytes'] = null;
     }
     if ($_POST['pictures_mode'] != '2') {
@@ -189,7 +189,7 @@ if (isset($_POST['do_create'])) {
         "INSERT INTO
             `{$name_id}__credentials` (`user_name`, `user_email`, `user_password`, `user_status`)
         VALUES
-            (?,?,?)";
+            (?,?,?,?)";
     $mananger_query = mysqli_prepare($con, $mananger_statement);
     mysqli_stmt_bind_param(
         $mananger_query,
@@ -269,13 +269,13 @@ if (isset($_POST['do_create'])) {
             `name_id` = ?
         LIMIT 1";
 
-    $create_query = mysqli_prepare($con, $delete_statement);
+    $delete_query = mysqli_prepare($con, $delete_statement);
     mysqli_stmt_bind_param(
         $delete_query,
         "s",
         $name_id
     );
-    mysqli_stmt_execute($create_query);
+    mysqli_stmt_execute($delete_query);
 
     //Retorna mensagem final
     echo "<script>alert('Concurso apagado com sucesso!');window.location.href = window.location.href;</script>";
