@@ -120,15 +120,15 @@ $validedit_statement = "
     SET
         `valid_user`='1'
     WHERE
-        `user` = ? AND `timestamp` >= ?
+        `user_id` = ? AND `timestamp` >= ?
 ";
 $validedit_query = mysqli_prepare($con, $validedit_statement);
-mysqli_stmt_bind_param($validedit_query, "ss", $row_user, $row_timestamp);
+mysqli_stmt_bind_param($validedit_query, "ss", $row_local_id, $row_timestamp);
 
 //Loop de execução das queries
 foreach ($enrollments as $enrollment) {
     $row_global_id = $enrollment['global_id']; 
-    $row_timestamp = $enrollment['enrollment_timestamp'];
+    $row_timestamp = strftime('%Y-%m-%d %H:%M:%S', strtotime($enrollment['enrollment_timestamp']));
     $row_local_id = $centralauth_users[$enrollment['global_id']]['lu_local_id'] ?? null; 
     $row_user = $centralauth_users[$enrollment['global_id']]['lu_name'] ?? $enrollment['username'] ?? null;
 
