@@ -1,12 +1,12 @@
 <?php
 
 //Função para query de cálculo de pontuação
-function querypoints($time)
+function querypoints($time_sql)
 {
     global $contest;
     global $con;
 
-    $time .= ' 23:59:59';
+    $time_sql .= ' 23:59:59';
 
     $query = "
     SELECT
