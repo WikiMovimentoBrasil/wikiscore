@@ -1,4 +1,5 @@
 <?php
+set_time_limit(1790);
 
 //Conecta ao banco de dados
 require_once __DIR__.'/bin/connect.php';
