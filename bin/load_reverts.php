@@ -48,9 +48,9 @@ while ($row = mysqli_fetch_assoc($edits_result)) {
 
     //Marca edição caso tenha sido revertida ou eliminada
     if (
-        in_array('mw-reverted', $revision['tags'])
-        || isset($revisions_api['badrevids'])
+        isset($revisions_api['badrevids'])
         || isset($revision['sha1hidden'])
+        || in_array('mw-reverted', $revision['tags'])
     ) {
         $diff = $row["diff"];
         mysqli_stmt_execute($update_query);
