@@ -244,9 +244,12 @@ $reverted_result = mysqli_stmt_get_result($reverted_query);
 
 
 //Calcula contagem regressiva para atualização do banco de dados
-$countdown = 'até 10 minutos';
-if ($contest['next_update'] > time() && !isset($update)) {
+if ($contest['end_time'] + 172800 < time()) {
+    $countdown = false;
+} elseif ($contest['next_update'] > time() && !isset($update)) {
     $countdown = gmdate('H \h\o\r\a\s \e i \m\i\n\u\t\o\s', $contest['next_update'] - time());
+} else {
+    $countdown = 'até 10 minutos';
 }
 ?>
 
@@ -267,24 +270,30 @@ if ($contest['next_update'] > time() && !isset($update)) {
         </header>
         <br>
         <div class="w3-container">
-            <div class="w3-panel w3-pale-blue w3-display-container w3-border">
-                <h3>Próxima atualização em <?=$countdown;?></h3>
-                <form method="post">
-                    <p>
-                        <button
-                        class="w3-button w3-small w3-blue"
-                        type="submit"
-                        name="update"
-                        value="update"
-                        style="display: <?=($countdown=='até 10 minutos'||isset($early))?'none':'block';?>"
-                        >Antecipar atualização</button>
-                        <span style="display: <?=isset($early)?'inline':'none';?>">
-                            A última atualização ocorreu em menos de 30 minutos. Por favor, aguarde esse prazo
-                            antes de solicitar uma nova atualização.
-                        </span>
-                    </p>
-                </form>
-            </div>
+            <?php if (!$countdown) : ?>
+                <div class="w3-panel w3-pale-red w3-display-container w3-border">
+                    <h3>Concurso encerrado. Não haverão novas atualizações.</h3>
+                </div>
+            <?php else : ?>
+                <div class="w3-panel w3-pale-blue w3-display-container w3-border">
+                    <h3>Próxima atualização em: <?=$countdown;?></h3>
+                    <form method="post">
+                        <p>
+                            <button
+                            class="w3-button w3-small w3-blue"
+                            type="submit"
+                            name="update"
+                            value="update"
+                            style="display: <?=($countdown=='até 10 minutos'||isset($early))?'none':'block';?>"
+                            >Antecipar atualização</button>
+                            <span style="display: <?=isset($early)?'inline':'none';?>">
+                                A última atualização ocorreu em menos de 30 minutos. Por favor, aguarde esse prazo
+                                antes de solicitar uma nova atualização.
+                            </span>
+                        </p>
+                    </form>
+                </div>
+            <?php endif; ?>
         </div>
         <br>
         <div class="w3-row-padding">
