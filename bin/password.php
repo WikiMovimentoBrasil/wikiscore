@@ -1,6 +1,8 @@
 <?php
 
 //Formulário submetido
+$input['token'] = false;
+$input['password'] = false;
 if (isset($_POST['email'])) {
 
     //Sanitiza e-mail
@@ -70,8 +72,6 @@ if (isset($_POST['email'])) {
 
             //Gera erro
             $status = 'Avaliador não encontrado';
-            $input['token'] = false;
-            $input['password'] = false;
         }
 
     //Pedido com token
@@ -113,36 +113,28 @@ if (isset($_POST['email'])) {
 
                     //Gera resultado
                     $status = 'Senha alterada com sucesso!';
-                    $input['token'] = false;
-                    $input['password'] = false;
+                    $reload = true;
                 } else {
 
                     //Gera erro
                     $status = 'Token inválido';
                     $input['token'] = true;
-                    $input['password'] = false;
                 }
             } else {
 
                 //Gera erro
                 $status = 'Token expirado. Solicite um novo token';
-                $input['token'] = false;
-                $input['password'] = false;
             }
         } else {
 
             //Gera erro
             $status = 'Avaliador não encontrado ou não solicitou redefinição de senha';
-            $input['token'] = false;
-            $input['password'] = false;
         }
     }
 } else {
 
-    //Foormulário inicial
+    //Formulário inicial
     $status = false;
-    $input['token'] = false;
-    $input['password'] = false;
 }
 
 
@@ -214,13 +206,13 @@ if (isset($_POST['email'])) {
                 </div>
             </div>
         </div>
-        <?php if ($status == 'Senha alterada com sucesso!'): ?>
-            <script>
-                alert('<?=$status?>');
-                window.location.replace('index.php?contest=<?=$contest['name_id']?>');
-            </script>
-        <?php elseif ($status): ?>
+        <?php if ($status): ?>
             <script>alert('<?=$status?>');</script>
+            <?php if (isset($reload)): ?>
+                <script>
+                    window.location.replace('index.php?contest=<?=$contest['name_id']?>');
+                </script>
+            <?php endif; ?>
         <?php endif; ?>
     </body>
 </html>
