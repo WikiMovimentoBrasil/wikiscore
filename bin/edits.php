@@ -11,7 +11,8 @@ header("Cache-control: private");
 header("Content-type: text/csv; charset=windows-1252");
 
 //Cabeçalho do CSV
-$csv =  "Diff da edição;".
+$csv =  "sep=;\r\n".
+        "Diff da edição;".
         "CurID do artigo;".
         "Horário da edição;".
         "Usuário;".
