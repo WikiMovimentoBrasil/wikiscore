@@ -345,6 +345,21 @@ mysqli_close($con);
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
         <link rel="stylesheet" href="bin/diff.css">
         <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/6.2.0/css/all.css">
+        <script type="text/javascript">
+            function handleOverwriteClick(outputRevisionBytes) {
+                var overwriteElement = document.getElementById('overwrite');
+
+                overwriteElement.removeAttribute('value');
+                overwriteElement.type = 'number';
+                overwriteElement.className = 'w3-input w3-border';
+                overwriteElement.value = outputRevisionBytes;
+                overwriteElement.removeAttribute('onclick');
+                overwriteElement.removeAttribute('id');
+
+                var obsElement = document.getElementById('obs');
+                obsElement.required = true;
+            }
+        </script>
         <?php if (isset($output['success']['diff']) || isset($output['success']['skip'])) : ?>
             <script type="text/javascript">history.replaceState(null, document.title, location.href);</script>
         <?php endif; ?>
@@ -599,15 +614,7 @@ mysqli_close($con);
                                 id="overwrite"
                                 ype="button"
                                 value="Alterar bytes"
-                                onclick="
-                                    document.getElementById('overwrite').removeAttribute('value');
-                                    document.getElementById('overwrite').type = 'number';
-                                    document.getElementById('overwrite').className = 'w3-input w3-border';
-                                    document.getElementById('overwrite').value = '<?=@$output['revision']['bytes'];?>';
-                                    document.getElementById('overwrite').removeAttribute('onclick');
-                                    document.getElementById('overwrite').removeAttribute('id');
-                                    document.getElementById('obs').required = true;
-                                ">
+                                onclick="handleOverwriteClick('<?=@$output['revision']['bytes'];?>')">
                                 <input
                                 class="w3-button w3-green w3-border-green w3-border w3-block w3-margin-top"
                                 type="submit"
