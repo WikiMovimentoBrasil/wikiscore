@@ -247,9 +247,9 @@ $reverted_result = mysqli_stmt_get_result($reverted_query);
 if ($contest['end_time'] + 172800 < time()) {
     $countdown = false;
 } elseif ($contest['next_update'] > time() && !isset($update)) {
-    $countdown = gmdate('H \h\o\r\a\s \e i \m\i\n\u\t\o\s', $contest['next_update'] - time());
+    $countdown = $contest['next_update'] - time();
 } else {
-    $countdown = 'até 10 minutos';
+    $countdown = 0;
 }
 ?>
 
@@ -260,23 +260,59 @@ if ($contest['end_time'] + 172800 < time()) {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
+        <script type="text/javascript">
+            function formatTime(seconds) {
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const secs = seconds % 60;
+
+                return (
+                    String(hours).padStart(2, '0') +
+                    ':' +
+                    String(minutes).padStart(2, '0') +
+                    ':' +
+                    String(secs).padStart(2, '0')
+                );
+            }
+
+            function updateCountdown(targetTime) {
+                const countdownDiv = document.getElementById('countdown');
+                const currentTime = performance.now();
+                const remainingTimeInSeconds = Math.max(0, Math.round((targetTime - currentTime) / 1000));
+
+                if (remainingTimeInSeconds > 0) {
+                    countdownDiv.textContent = formatTime(remainingTimeInSeconds);
+                    requestAnimationFrame(() => updateCountdown(targetTime));
+                } else {
+                    countdownDiv.textContent = 'até 10 minutos';
+                }
+            }
+
+            function startCountdown(totalSeconds) {
+                if (!totalSeconds || isNaN(totalSeconds) || totalSeconds < 0) {
+                    return;
+                }
+                const targetTime = performance.now() + totalSeconds * 1000;
+                updateCountdown(targetTime);
+            }
+        </script>
         <?php if (isset($update)) : ?>
             <script type="text/javascript">history.replaceState(null, document.title, location.href);</script>
         <?php endif; ?>
     </head>
-    <body>
+    <body onload="startCountdown(<?=(is_numeric($countdown)?$countdown:'')?>)">
         <header class="w3-container w3-<?=$contest['theme'];?>">
             <h1>Comparador - <?=$contest['name'];?></h1>
         </header>
         <br>
         <div class="w3-container">
-            <?php if (!$countdown) : ?>
+            <?php if ($countdown === false) : ?>
                 <div class="w3-panel w3-pale-red w3-display-container w3-border">
                     <h3>Concurso encerrado. Não haverão novas atualizações.</h3>
                 </div>
             <?php else : ?>
                 <div class="w3-panel w3-pale-blue w3-display-container w3-border">
-                    <h3>Próxima atualização em: <?=$countdown;?></h3>
+                    <h3>Próxima atualização em: <span id="countdown">...</span></h3>
                     <form method="post">
                         <p>
                             <button
@@ -284,7 +320,7 @@ if ($contest['end_time'] + 172800 < time()) {
                             type="submit"
                             name="update"
                             value="update"
-                            style="display: <?=($countdown=='até 10 minutos'||isset($early))?'none':'block';?>"
+                            style="display: <?=($countdown===0||isset($early))?'none':'block';?>"
                             >Antecipar atualização</button>
                             <span style="display: <?=isset($early)?'inline':'none';?>">
                                 A última atualização ocorreu em menos de 30 minutos. Por favor, aguarde esse prazo
