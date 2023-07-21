@@ -215,10 +215,6 @@ $output['revision'] = mysqli_fetch_assoc(mysqli_stmt_get_result($revision_query)
 //Evita avaliação durante atualização do banco de dados
 if ($contest['started_update'] > $contest['finished_update']) {
     $output['revision'] = null;
-    $output['compare']['*']  = '<div class="w3-panel w3-red w3-display-container w3-border"><p>';
-    $output['compare']['*'] .= '<h3>Banco de dados em atualização.</h3>';
-    $output['compare']['*'] .= 'Por favor, aguarde alguns minutos e atualize a página.';
-    $output['compare']['*'] .= '</p></div>';
     $output['count'] = '-';
     $output['total_count'] = '-';
 }
@@ -320,19 +316,17 @@ if ($output['revision'] != null) {
         }
 
         //Monta código da edição
-        $output['history'][] = "
-            <p class='{$history_class}'>
-                <strong>{$edit['user']}</strong>
-                <br>
-                {$timestamp}
-                <br>
-                <span class='w3-text-{$delta_color}'>{$delta} bytes</span>
-            </p>\n";
+        $output['history'][] = [ 
+            "class"     => $history_class,
+            "user"      => $edit['user'],
+            "timestamp" => $timestamp,
+            "color"     => $delta_color,
+            "bytes"     => $delta
+        ];
     }
 
     //Remove pseudo-edição
     array_pop($output['history']);
-    $output['history'] = implode("", $output['history']);
 
 }
 
@@ -652,7 +646,15 @@ mysqli_close($con);
                     </div>
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                         <h2>Histórico recente</h2>
-                        <?=$output['history'];?>
+                        <?php foreach ($output['history'] as $oldid): ?>
+                            <p class='<?=$oldid['class']?>'>
+                                <strong><?=$oldid['user']?></strong>
+                                <br>
+                                <?=$oldid['timestamp']?>
+                                <br>
+                                <span class='w3-text-<?=$oldid['color']?>'><?=$oldid['bytes']?> bytes</span>
+                            </p>
+                        <?php endforeach; ?>
                     </div>
                 </div>
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
@@ -743,17 +745,30 @@ mysqli_close($con);
                 </div>
             </div>
             <div class="w3-threequarter">
-                <div style="display:<?=(isset($output['compare']['*']))?'block':'none';?>">
-                    <h3>Diferencial de edição</h3>
-                    <table
-                    role="presentation"
-                    aria-label="Diferencial de edição"
-                    class="diff diff-contentalign-left diff-editfont-monospace"
-                    >
-                        <?php print_r(@$output['compare']['*']); ?>
-                    </table>
-                    <hr>
-                </div>
+                <?php if ($output['count'] == '-'): ?>
+                    <div class="w3-panel w3-red w3-display-container w3-border">
+                        <p>
+                            <h3>Banco de dados em atualização.</h3>
+                            Por favor, aguarde alguns minutos e atualize a página.
+                        </p>
+                    </div>
+                <?php elseif (!isset($output['compare']['*'])): ?>
+                    <div class="w3-panel w3-orange w3-display-container w3-border">
+                        <p>
+                            <h3>Não há edição para ser exibida neste momento.</h3>
+                        </p>
+                    </div>
+                <?php else: ?>
+                    <div>
+                        <h3>Diferencial de edição</h3>
+                        <table
+                        role="presentation"
+                        aria-label="Diferencial de edição"
+                        class="diff diff-contentalign-left diff-editfont-monospace"
+                        ><?=$output['compare']['*']?></table>
+                        <hr>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </body>
