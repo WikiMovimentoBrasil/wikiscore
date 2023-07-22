@@ -46,7 +46,7 @@
     "modify-label-evaluator": "Avaliador:",
     "modify-label-evaltimestamp": "Horário da avaliação:",
     "modify-label-comment": "Comentário do avaliador:",
-    "modify-showdiff": "Diferencial de edição",
+    "modify-showdiff": "Diff da edição",
     "modify-notfound": "Edição não encontrada no banco de dados!",
     "modify-denied": "Você não pode modificar uma avaliação de terceiro!",
     "modify-success": "Modificação realizada com sucesso!",
