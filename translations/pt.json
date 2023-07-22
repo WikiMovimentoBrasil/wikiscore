@@ -209,5 +209,6 @@
     "triage-database": "Banco de dados em atualização.",
     "triage-databaseabout": "Por favor, aguarde alguns minutos e atualize a página.",
     "triage-noedit": "Não há edição para ser exibida neste momento.",
-    "triage-differential": "Diferencial de edição"
+    "triage-differential": "Diferencial de edição",
+    "language-select": "Escolha um idioma"
 }
