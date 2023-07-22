@@ -140,7 +140,10 @@ if (isset($_GET['contest'])) {
         @font-face {
             font-family:'LinLibertine';
             src: url("/font/LinLibertine_Re-4.7.3.otf");
-    }
+        }
+        #main-title {
+            visibility: hidden;
+        }
     </style>
 </head>
 <body>
@@ -148,9 +151,17 @@ if (isset($_GET['contest'])) {
 <!-- Header -->
 <header class="w3-container w3-deep-green w3-center" style="padding:128px 16px">
     <h1
-    class="w3-margin w3-jumbo"
+    class="w3-margin w3-jumbo" id="main-title"
     style="font-family: 'LinLibertine', sans-serif;"
     ><?=§('main-title-w')?></h1>
+    <script type="text/javascript">
+        const heading = document.getElementById('main-title');
+        const customFont = new FontFace('LinLibertine', 'url(/font/LinLibertine_Re-4.7.3.otf)');
+        customFont.load().then(() => {
+          document.fonts.add(customFont);
+          heading.style.visibility = 'visible';
+        });
+    </script>
     <p class="w3-xlarge"><?=§('subtitle')?></p>
     <button
     class="w3-button w3-black w3-padding-large w3-large w3-margin-top"
