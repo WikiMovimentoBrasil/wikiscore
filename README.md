@@ -1,5 +1,6 @@
 <img src="https://img.shields.io/github/issues/WikiMovimentoBrasil/wikiconcursos?style=flat"/> <img src="https://img.shields.io/github/license/WikiMovimentoBrasil/wikiconcursos?style=flat"/> <img src="https://img.shields.io/github/languages/top/WikiMovimentoBrasil/wikiconcursos?style=flat"/> <img
-src="https://img.shields.io/github/last-commit/WikiMovimentoBrasil/wikiconcursos?style=flat"/> [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=wikimovimentobrasil_wikiconcursos&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=wikimovimentobrasil_wikiconcursos)
+src="https://img.shields.io/github/last-commit/WikiMovimentoBrasil/wikiconcursos?style=flat"/> [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=wikimovimentobrasil_wikiconcursos&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=wikimovimentobrasil_wikiconcursos) [![Status da tradução](https://hosted.weblate.org/widgets/wikiconcursos/-/main/svg-badge.svg)](https://hosted.weblate.org/engage/wikiconcursos/)
+
 # WikiConcursos
 
 This is an internal tool used to manage the Wiki Contests created and managed by WikiMovimento Brasil. It allows evaluators to validate editions made to articles participating in said contests, and also adds up the points earned by participants. Different contest evaluators can have their own profile, and their own separate validation history of the contributions they have checked.
