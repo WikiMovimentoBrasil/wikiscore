@@ -118,6 +118,7 @@ $langCodes = [
     "nl" => "Nederlands", 
     "nn" => "Norsk nynorsk", 
     "no" => "Norsk", 
+    "nb_NO" => "Norsk bokmål",
     "nr" => "isiNdebele", 
     "nv" => "Diné bizaad", 
     "ny" => "chiCheŵa", 

@@ -41,6 +41,7 @@ while ($row = mysqli_fetch_assoc($contests_result)) {
 }
 
 //Carrega traduções
+require_once './bin/languages.php';
 $acceptedLanguages = str_replace('.json', '', array_diff(scandir('translations'), array('..', '.')));
 $userLang = filter_var($_GET["lang"] ?? "", FILTER_SANITIZE_STRING);
 $browserLang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) ?? '';
@@ -149,10 +150,20 @@ if (isset($_GET['contest'])) {
 <body>
 
 <!-- Header -->
-<header class="w3-container w3-deep-green w3-center" style="padding:128px 16px">
+<header class="w3-container w3-deep-green w3-center" style="padding:16px 16px 128px;">
+    <div style="display: flex; justify-content: flex-end;">
+        <form method="get">
+            <select name="lang" onchange="this.form.submit()" class="w3-select" style="max-width: 16em;">
+                <option value="" disabled selected><?=§('language-select')?></option>
+                <?php foreach ($acceptedLanguages as $optionLanguage): ?>
+                    <option value='<?=$optionLanguage?>'><?=$langCodes[$optionLanguage]?></option>
+                <?php endforeach; ?>
+            </select>
+        </form>
+    </div>
     <h1
-    class="w3-margin w3-jumbo" id="main-title"
-    style="font-family: 'LinLibertine', sans-serif;"
+    class="w3-margin" id="main-title"
+    style="font-family: 'LinLibertine', sans-serif; font-size: calc(2em + 3.5vw);"
     ><?=§('main-title-w')?></h1>
     <script type="text/javascript">
         const heading = document.getElementById('main-title');
@@ -162,7 +173,7 @@ if (isset($_GET['contest'])) {
           heading.style.visibility = 'visible';
         });
     </script>
-    <p class="w3-xlarge"><?=§('subtitle')?></p>
+    <p class="w3-large"><?=§('subtitle')?></p>
     <button
     class="w3-button w3-black w3-padding-large w3-large w3-margin-top"
     onclick="document.getElementById('id01').style.display='block'"
@@ -191,27 +202,6 @@ if (isset($_GET['contest'])) {
         </div>
     </div>
 </div>
-
-<?php if (!$userLang): ?>
-    <?php require_once './bin/languages.php'; ?>
-    <!-- Language -->
-    <div id="id02" class="w3-modal" style="display: block;">
-        <div class="w3-modal-content w3-card-4 w3-animate-top">
-            <header class="w3-container w3-deep-green">
-                <span onclick="document.getElementById('id02').style.display='none'"
-                class="w3-button w3-display-topright">&times;</span>
-                <h4><?=§('language-select')?></h4>
-            </header>
-            <div class="w3-padding">
-            <?php foreach ($acceptedLanguages as $optionLanguage): ?>
-                <p>
-                    <a href='index.php?lang=<?=$optionLanguage?>'><?=$langCodes[$optionLanguage]?></a>
-                </p>
-            <?php endforeach; ?>
-            </div>
-        </div>
-    </div>
-<?php endif; ?>
 
 <!-- First Grid -->
 <div class="w3-row-padding w3-padding-64 w3-container">
