@@ -209,5 +209,6 @@
     "triage-recenthistory": "Historique récent",
     "login-validedits": "Modifications validées par jour",
     "login-newpages": "Nouveaux articles par jour",
-    "login-validbytes": "KBytes validés par jour"
+    "login-validbytes": "KBytes validés par jour",
+    "language-select": "Choisir une langue"
 }
