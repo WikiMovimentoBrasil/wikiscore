@@ -1,1 +1,13 @@
-{}
+{
+    "contest-manage": "Administrer les concours",
+    "contest-select": "Choisir un concours",
+    "index-about-short": "Qu'est-ce que c'est?",
+    "index-enroll-short": "Enregistrer un nouveau wikiconcours",
+    "subtitle": "Compteur de points",
+    "contest-enter": "Rejoindre un concours",
+    "main-title-w": "&#xE02F;IKICONCOURS",
+    "main-title": "WIKICONCOURS",
+    "index-about-intro": "WIKICONCOURS est une plateforme créée pour valider des éditions et compter les résultats de participants de wikiconcours.",
+    "index-about-main": "La plateforme a une interface simple traduisible dans d'autres langues. Elle permet de valider rapidement les modifications dans les articles de n'importe quel wikiconcours. Différents évaluateurs peuvent avoir des profils différents, avec des registres de validation individualisés.",
+    "index-enroll-intro": "Pour demander l'inscription d'un nouveau wikiconcours, le premier contact doit se faire par l'e-mail de contact de Wiki Movimento Brasil."
+}
