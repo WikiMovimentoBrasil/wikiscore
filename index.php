@@ -40,6 +40,39 @@ while ($row = mysqli_fetch_assoc($contests_result)) {
     $contests_array[$row['name_id']] = $row;
 }
 
+//Carrega traduções
+$acceptedLanguages = array_diff(scandir('translations'), array('..', '.'));
+$userLang = filter_var($_GET["lang"] ?? "", FILTER_SANITIZE_STRING);
+$browserLang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) ?? '';
+if (in_array($userLang . '.json', $acceptedLanguages)) {
+    $lang = $userLang;
+} elseif (in_array($browserLang . '.json', $acceptedLanguages)) {
+    $lang = $browserLang;
+} else {
+    $defaultLang = 'pt';
+}
+
+$translationFile = './translations/' . $lang . '.json';
+$trans = file_exists($translationFile) ? json_decode(file_get_contents($translationFile), true) : [];
+
+//Função para exibição de traduções
+function §($item, ...$args) {
+    global $trans;
+    if (isset($trans[$item])) {
+        $translatedString = $trans[$item];
+
+        // Replace placeholders ($1, $2, $3, etc.) with corresponding arguments
+        for ($i = 1; $i <= count($args); $i++) {
+            $placeholder = '$' . $i;
+            $translatedString = str_replace($placeholder, $args[$i - 1], $translatedString);
+        }
+
+        return $translatedString;
+    } else {
+        return 'ERROR!';
+    }
+}
+
 //Verifica se página de gerenciamento foi chamada
 if (isset($_GET['manage'])) {
     $contest['name_id'] = 'manage';
@@ -100,7 +133,7 @@ if (isset($_GET['contest'])) {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>WIKICONCURSOS</title>
+    <title><?=§('main-title')?></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bin/w3.css">
@@ -118,17 +151,17 @@ if (isset($_GET['contest'])) {
     <h1
     class="w3-margin w3-jumbo"
     style="font-family: 'LinLibertine', sans-serif;"
-    >&#xE02F;IKICONCURSOS</h1>
-    <p class="w3-xlarge">Contabilizador de pontos</p>
+    ><?=§('main-title-w')?></h1>
+    <p class="w3-xlarge"><?=§('subtitle')?></p>
     <button
     class="w3-button w3-black w3-padding-large w3-large w3-margin-top"
     onclick="document.getElementById('id01').style.display='block'"
-    >Entrar em um concurso</button>
+    ><?=§('contest-enter')?></button>
     <br>
     <button
     class="w3-button w3-black w3-padding-large w3-large w3-margin-top"
     onclick="location.href='index.php?manage=true'"
-    >Gerenciar concursos</button>
+    ><?=§('contest-manage')?></button>
 </header>
 
 <!-- Modal -->
@@ -137,7 +170,7 @@ if (isset($_GET['contest'])) {
         <header class="w3-container w3-deep-green">
             <span onclick="document.getElementById('id01').style.display='none'"
             class="w3-button w3-display-topright">&times;</span>
-            <h4>Selecione seu concurso</h4>
+            <h4><?=§('contest-select')?></h4>
         </header>
         <div class="w3-padding">
         <?php foreach ($contests_array as $name_id => $contest): ?>
@@ -153,16 +186,12 @@ if (isset($_GET['contest'])) {
 <div class="w3-row-padding w3-padding-64 w3-container">
     <div class="w3-content">
         <div class="w3-twothird">
-            <h1>O que é?</h1>
+            <h1><?=§('index-about-short')?></h1>
             <h5 class="w3-padding-32">
-                WIKICONCURSOS é uma ferramenta criada para validar edições e contabilizar a pontuação de
-                participantes dos wikiconcursos na Wikipédia lusófona.
+                <?=§('index-about-intro')?>
             </h5>
             <p class="w3-text-grey">
-                A ferramenta possui uma interface simples em língua portuguesa, muito embora possa ser traduzida para
-                outros idiomas. Por meio dela, é possível fazer a validação ágil das edições nos artigos relacionados
-                a um wikiconcurso qualquer. Diferentes avaliadores podem ter perfis diferentes, com registros de
-                validação individualizados.
+                <?=§('index-about-main')?>
             </p>
         </div>
         <div class="w3-third w3-center">
@@ -185,15 +214,12 @@ if (isset($_GET['contest'])) {
             src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Editathons.svg/200px-Editathons.svg.png">
         </div>
         <div class="w3-twothird">
-            <h1>Cadastrar novo wikiconcurso</h1>
+            <h1><?=§('index-enroll-short')?></h1>
             <h5 class="w3-padding-32">
-                Para solicitar o cadastramento de um novo wikiconcurso, o contato inicial se dará via
-                e-mail de contato do Wiki Movimento Brasil.
+                <?=§('index-enroll-intro')?>
             </h5>
             <p class="w3-text-grey">
-                Envie um e-mail para wikiconcurso@wmnobrasil.org e forneça as informações básicas sobre seu
-                wikiconcurso, tais como previsão de datas de início e término, escopo, lista de artigos e sistema
-                de pontuação. Solicitaremos informações adicionais posteriormente para os ajustes finais da ferramenta.
+                <?=§('index-enroll-main')?>
             </p>
         </div>
     </div>

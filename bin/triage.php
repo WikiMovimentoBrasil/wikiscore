@@ -4,7 +4,7 @@ require_once "protect.php";
 
 //Escapa variável para uso no SQL
 if (isset($_SESSION['user']['user_name'])) $slashed_username = addslashes($_SESSION['user']['user_name']);
-$utc_format = 'd/m/Y H:i:s (\U\T\C)';
+$utc_format = 'Y/m/d H:i:s (\U\T\C)';
 
 //Processa informações caso formulário tenha sido submetido
 if ($_POST) {
@@ -375,30 +375,30 @@ mysqli_close($con);
                     class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom"
                     style="display: block"
                     >
-                        <h2>Última avaliação</h2>
+                        <h2><?=§('triage-lasteval')?></h2>
                         <p>
-                            Diff: <a
+                            <?=§('triage-diff')?>: <a
                                 href="<?=$contest['endpoint'];?>?diff=<?=@$output['success']['diff'];?>"
                                 rel="noopener"
                                 target="_blank"><?=@$output['success']['diff'];?></a>
                         </p>
                         <p>
-                            Edição válida: <?php if (@$output['success']['valid']): ?><i
+                            <?=§('triage-validedit')?>: <?php if (@$output['success']['valid']): ?><i
                             class="fa-regular w3-text-green fa-circle-check"
                             aria-hidden="true"
-                            ></i> Sim<?php else: ?><i
+                            ></i> <?=§('yes')?><?php else: ?><i
                             class="fa-regular w3-text-red fa-circle-xmark"
                             aria-hidden="true"
-                            ></i> Não<?php endif; ?>
+                            ></i> <?=§('no')?><?php endif; ?>
                         </p>
                         <p>
-                            Com imagem: <?php if (@$output['success']['pic']): ?><i
+                            <?=§('triage-withimage')?>: <?php if (@$output['success']['pic']): ?><i
                             class="fa-regular w3-text-green fa-circle-check"
                             aria-hidden="true"
-                            ></i> Sim<?php else: ?><i
+                            ></i> <?=§('yes')?><?php else: ?><i
                             class="fa-regular w3-text-red fa-circle-xmark"
                             aria-hidden="true"
-                            ></i> Não<?php endif; ?>
+                            ></i> <?=§('no')?><?php endif; ?>
                         </p>
                         <p>
                             <button
@@ -407,24 +407,24 @@ mysqli_close($con);
                             onclick="window.open(
                                 'index.php?contest=<?=$contest['name_id'];?>&page=modify&diff=<?=@$output['success']['diff'];?>',
                                 '_blank'
-                            );"><i class="fa-solid fa-eraser w3-medium" aria-hidden="true"></i> Corrigir</button>
+                            );"><i class="fa-solid fa-eraser w3-medium" aria-hidden="true"></i> <?=§('triage-fix')?></button>
                         </p>
                     </div>
                 <?php endif; ?>
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom">
-                    <h2>Painel</h2>
+                    <h2><?=§('triage-panel')?></h2>
                     <div class="w3-container">
                         <div style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>;">
-                            <h6 class="w3-center">Você está avaliando uma edição do dia</h6>
+                            <h6 class="w3-center"><?=§('triage-editofday')?></h6>
                             <h4 class="w3-center"><?=@substr($output['revision']['timestamp'], 0, 10);?></h4>
                         </div>
                             <div class="w3-row">
                                 <div class="w3-half">
-                                    <h6 class="w3-center">Edições<br>para avaliar</h6>
+                                    <h6 class="w3-center"><?=§('triage-toeval')?></h6>
                                     <h1 class="w3-center"><?=$output['count'];?></h1>
                                 </div>
                                 <div class="w3-half">
-                                    <h6 class="w3-center">Edições<br>em espera</h6>
+                                    <h6 class="w3-center"><?=§('triage-towait')?></h6>
                                     <h1 class="w3-center"><?=$output['total_count'];?></h1>
                                 </div>
                             </div>
@@ -442,7 +442,7 @@ mysqli_close($con);
                                     'index.php?contest=<?=$contest['name_id'];?>&page=counter',
                                     '_blank'
                                 );">
-                                    <i class="fa-solid fa-chart-line w3-xxlarge" aria-hidden="true"></i><br>Contador
+                                    <i class="fa-solid fa-chart-line w3-xxlarge" aria-hidden="true"></i><br><?=§('counter')?>
                                 </button>
                             </div>
                             <div class="w3-half">
@@ -454,7 +454,7 @@ mysqli_close($con);
                                     'index.php?contest=<?=$contest['name_id'];?>&page=modify',
                                     '_blank'
                                 );">
-                                    <i class="fa-solid fa-pen-to-square w3-xxlarge" aria-hidden="true"></i><br>Modificar
+                                    <i class="fa-solid fa-pen-to-square w3-xxlarge" aria-hidden="true"></i><br><?=§('modify')?>
                                 </button>
                             </div>
                         </div>
@@ -468,7 +468,7 @@ mysqli_close($con);
                                     'index.php?contest=<?=$contest['name_id'];?>&page=compare',
                                     '_blank'
                                 );">
-                                    <i class="fa-solid fa-code-compare w3-xxlarge" aria-hidden="true"></i><br>Comparador
+                                    <i class="fa-solid fa-code-compare w3-xxlarge" aria-hidden="true"></i><br><?=§('compare')?>
                                 </button>
                             </div>
                             <div class="w3-half">
@@ -480,7 +480,7 @@ mysqli_close($con);
                                     'index.php?contest=<?=$contest['name_id'];?>&page=edits',
                                     '_blank'
                                 );">
-                                    <i class="fa-solid fa-list-check w3-xxlarge" aria-hidden="true"></i><br>Avaliadas
+                                    <i class="fa-solid fa-list-check w3-xxlarge" aria-hidden="true"></i><br><?=§('triage-evaluated')?>
                                 </button>
                             </div>
                         </div>
@@ -494,7 +494,7 @@ mysqli_close($con);
                                     'index.php?contest=<?=$contest['name_id'];?>&page=backtrack',
                                     '_blank'
                                 );">
-                                    <i class="fa-solid fa-history w3-xxlarge" aria-hidden="true"></i><br>Retroceder
+                                    <i class="fa-solid fa-history w3-xxlarge" aria-hidden="true"></i><br><?=§('backtrack')?>
                                 </button>
                             </div>
                             <div class="w3-half">
@@ -506,7 +506,7 @@ mysqli_close($con);
                                     'index.php?contest=<?=$contest['name_id'];?>&page=evaluators',
                                     '_blank'
                                 );">
-                                    <i class="fa-solid fa-users w3-xxlarge" aria-hidden="true"></i><br>Avaliadores
+                                    <i class="fa-solid fa-users w3-xxlarge" aria-hidden="true"></i><br><?=§('evaluators')?>
                                 </button>
                             </div>
                         </div>
@@ -522,7 +522,7 @@ mysqli_close($con);
                                     value="Pular edição"
                                     <?=(isset($output['revision']['diff']))?'':'disabled';?>
                                     >
-                                        <i class="fa-solid fa-forward w3-xxlarge" aria-hidden="true"></i><br>Pular
+                                        <i class="fa-solid fa-forward w3-xxlarge" aria-hidden="true"></i><br><?=§('triage-jump')?>
                                     </button>
                                 </form>
                             </div>
@@ -534,7 +534,7 @@ mysqli_close($con);
                                     type="submit"
                                     name="logout"
                                     value="Logout">
-                                        <i class="fa-solid fa-door-open w3-xxlarge" aria-hidden="true"></i><br>Sair
+                                        <i class="fa-solid fa-door-open w3-xxlarge" aria-hidden="true"></i><br><?=§('triage-exit')?>
                                     </button>
                                 </form>
                             </div>
@@ -543,11 +543,11 @@ mysqli_close($con);
                 </div>
                 <div style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>">
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom">
-                        <h2>Avaliação</h2>
+                        <h2><?=§('triage-evaluation')?></h2>
                         <form method="post">
                             <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
                             <div class="w3-container w3-cell w3-half">
-                                <p>Edição válida?</p>
+                                <p><?=§('isvalid')?></p>
                                 <input
                                 class="w3-radio w3-section"
                                 type="radio"
@@ -556,7 +556,7 @@ mysqli_close($con);
                                 value="sim"
                                 onclick="document.getElementById('obs').required = false"
                                 required>
-                                <label for="valid-sim">Sim</label><br>
+                                <label for="valid-sim"><?=§('yes')?></label><br>
                                 <input
                                 class="w3-radio w3-section"
                                 type="radio"
@@ -565,11 +565,11 @@ mysqli_close($con);
                                 value="nao"
                                 onclick="document.getElementById('obs').required = true"
                                 required>
-                                <label for="valid-nao">Não</label><br><br>
+                                <label for="valid-nao"><?=§('no')?></label><br><br>
                             </div>
                             <div class="w3-container w3-cell w3-half">
                                 <?php if ($contest['pictures_mode'] == 2): ?>
-                                    <p>Imagens?</p>
+                                    <p><?=§('withimage')?></p>
                                     <input
                                     class="w3-input w3-section"
                                     type="number"
@@ -579,9 +579,9 @@ mysqli_close($con);
                                     min="0"
                                     max="9"
                                     required>
-                                    <label for="pic">Quantidade</label><br>
+                                    <label for="pic"><?=§('quantity')?></label><br>
                                 <?php else: ?>
-                                    <p>Imagem?</p>
+                                    <p><?=§('withimage')?></p>
                                     <input
                                     class="w3-radio w3-section"
                                     type="radio"
@@ -589,7 +589,7 @@ mysqli_close($con);
                                     name="pic"
                                     value="sim"
                                     required>
-                                    <label for="pic-sim">Sim</label><br>
+                                    <label for="pic-sim"><?=§('yes')?></label><br>
                                     <input
                                     class="w3-radio w3-section"
                                     type="radio"
@@ -597,7 +597,7 @@ mysqli_close($con);
                                     name="pic"
                                     value="nao"
                                     required>
-                                    <label for="pic-nao">Não</label><br><br>
+                                    <label for="pic-nao"><?=§('no')?></label><br><br>
                                 <?php endif; ?>
                             </div>
                             <p>
@@ -606,40 +606,40 @@ mysqli_close($con);
                                 name="obs"
                                 id="obs"
                                 type="text"
-                                placeholder="Observação">
+                                placeholder="<?=§('label-observation')?>">
                                 <br>
                                 <input
                                 class="w3-button w3-border w3-block w3-red"
                                 name="overwrite"
                                 id="overwrite"
                                 ype="button"
-                                value="Alterar bytes"
+                                value="<?=§('label-alterbytes')?>"
                                 onclick="handleOverwriteClick('<?=@$output['revision']['bytes'];?>')">
                                 <input
                                 class="w3-button w3-green w3-border-green w3-border w3-block w3-margin-top"
                                 type="submit"
-                                value="Salvar">
+                                value="<?=§('label-save')?>">
                             </p>
                         </form>
                     </div>
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
-                        <h2>Detalhes da edição</h2>
+                        <h2><?=§('triage-details')?></h2>
                         <p style="overflow-wrap: break-word;">
-                            <strong>Usuário:</strong>
+                            <strong><?=§('withimage')?></strong>
                             &nbsp;
                             <span style="font-weight:bolder;color:red;">
                                 <?=@$output['compare']['touser'];?>
                             </span>
                             <br>
-                            <strong>Artigo:</strong> <?=@$output['compare']['totitle'];?>
+                            <strong><?=§('label-page')?></strong> <?=@$output['compare']['totitle'];?>
                             <br>
-                            <strong>Diferença:</strong> <?=@$output['revision']['bytes'];?> bytes
+                            <strong><?=§('label-diff')?></strong> <?=@$output['revision']['bytes'];?> bytes
                             <br>
-                            <strong>Horário:</strong> <?=@$output['revision']['timestamp'];?> (UTC)
+                            <strong><?=§('label-timestamp')?></strong> <?=@$output['revision']['timestamp'];?> (UTC)
                             <br>
-                            <strong>Sumário:</strong> <?=@$output['compare']['tocomment'];?>
+                            <strong><?=§('label-summary')?></strong> <?=@$output['compare']['tocomment'];?>
                             <br>
-                            <strong>Diff:</strong>
+                            <strong><?=§('triage-diff')?>:</strong>
                             <a
                             href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>"
                             target="_blank"
@@ -648,11 +648,11 @@ mysqli_close($con);
                             target="_blank"
                             rel="noopener"
                             href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>"
-                            >Copyvio Detector</a>
+                            ><?=§('triage-copyvio')?></a>
                         </p>
                     </div>
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
-                        <h2>Histórico recente</h2>
+                        <h2><?=§('triage-recenthistory')?></h2>
                         <?php foreach ($output['history'] as $oldid): ?>
                             <p class='<?=$oldid['class']?>'>
                                 <strong><?=$oldid['user']?></strong>
@@ -665,89 +665,92 @@ mysqli_close($con);
                     </div>
                 </div>
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
-                    <h2>Informações gerais</h2>
+                    <h2><?=§('triage-generalinfo')?></h2>
                     <p class="w3-small">
-                        <strong>Nome do wikiconcurso</strong>
+                        <strong><?=§('triage-contestname')?></strong>
                         <br>
                         <?=$contest['name'];?>
                     </p>
                     <p class="w3-small">
-                        <strong>Nome do atual avaliador</strong>
+                        <strong><?=§('triage-loggedname')?></strong>
                         <br>
                         <?=ucfirst($_SESSION['user']['user_name']);?>
                     </p>
                     <p class="w3-small">
-                        <strong>Horário de início do wikiconcurso</strong>
+                        <strong><?=§('triage-conteststart')?></strong>
                         <br>
                         <?=date($utc_format, $contest['start_time']);?>
                     </p>
                     <p class="w3-small">
-                        <strong>Horário de término do wikiconcurso</strong>
+                        <strong><?=§('triage-contestend')?></strong>
                         <br>
                         <?=date($utc_format, $contest['end_time']);?>
                     </p>
                     <p class="w3-small">
-                        <strong>Última atualização do banco de dados</strong>
+                        <strong><?=§('triage-lastupdate')?></strong>
                         <br>
                         <?=date($utc_format, $contest['finished_update']);?>
                     </p>
                     <p class="w3-small">
-                        <strong>Delay no registro das edições</strong>
+                        <strong><?=§('triage-delay')?></strong>
                         <br>
-                        <?=$contest['revert_time'];?> horas
+                        <?=§('triage-hours', $contest['revert_time'])?>
                     </p>
                     <p class="w3-small">
-                        <strong>Bytes por ponto</strong>
+                        <strong><?=§('triage-bpp')?></strong>
                         <br>
-                        <?=$contest['bytes_per_points'];?> bytes
+                        <?=§('triage-bytes', $contest['bytes_per_points'])?>
                     </p>
                     <p class="w3-small">
-                        <strong>Máximo de bytes/pontos por artigo</strong>
+                        <strong><?=§('triage-maxbytes')?></strong>
                         <br>
-                        <?=$contest['max_bytes_per_article'];?> bytes
+                        <?=§('triage-bytes', $contest['max_bytes_per_article'])?>
                         /
-                        <?=($contest['max_bytes_per_article'] / $contest['bytes_per_points']);?> pontos
+                        <?=§('triage-points',($contest['max_bytes_per_article'] / $contest['bytes_per_points']))?>
                     </p>
                     <p class="w3-small">
-                        <strong>Mínimo de bytes por edição</strong>
+                        <strong><?=§('triage-minbytes')?></strong>
                         <br>
-                        <?=($contest['minimum_bytes'])?($contest['minimum_bytes'].' bytes'):'Indefinido';?>
+                        <?= ($contest['minimum_bytes'])
+                            ? §('triage-bytes', $contest['minimum_bytes'])
+                            : §('triage-indef')
+                        ?>
                     </p>
                     <p class="w3-small">
-                        <strong>Imagens por ponto</strong>
+                        <strong><?=§('triage-ipp')?></strong>
                         <br>
-                        <?=($contest['pictures_per_points']==0)?'Desabilitado':($contest['pictures_per_points'].' imagens');?>
+                        <?= ($contest['pictures_per_points'] == 0)
+                            ? §('triage-noimages')
+                            : §('triage-images', $contest['pictures_per_points'])
+                        ?>
                     </p>
                     <p class="w3-small" style="display:<?=($contest['pictures_per_points']!=0)?'block':'none';?>;">
-                        <strong>Modo de imagens</strong>
+                        <strong><?=§('triage-imagemode')?></strong>
                         <br>
-                        <?php if ($contest['pictures_per_points'] == 2): ?>
-                            Por imagem
-                        <?php elseif ($contest['pictures_per_points'] == 1): ?>
-                            Por edição
-                        <?php else: ?>
-                            Por artigo
-                        <?php endif; ?>
+                        <?php
+                            if ($contest['pictures_per_points'] == 2) {
+                                echo §('triage-byimage');
+                            } elseif ($contest['pictures_per_points'] == 1) {
+                                echo §('triage-byedition');
+                            } else {
+                                echo §('triage-bypage');
+                            }
+                        ?>
                     </p>
                     <p class="w3-small" style="display:<?=($contest['max_pic_per_article']!=0)?'block':'none';?>;">
-                        <strong>Máximo de imagens por artigo</strong>
+                        <strong><?=§('triage-maximages')?></strong>
                         <br>
-                        <?=$contest['max_pic_per_article']??'Indefinido';?>
+                        <?=$contest['max_pic_per_article']??§('triage-indef')?>
                     </p>
                     <p class="w3-small">
-                        <strong>Links importantes</strong>
+                        <strong><?=§('triage-links')?></strong>
                         <br>
                         <a
                         href="<?=$contest['endpoint'];?>?curid=<?=$contest['official_list_pageid'];?>"
-                        >Lista oficial</a> e <?php if ($contest['category_petscan']): ?>
-                            <a
-                            href="https://petscan.wmflabs.org/?psid=<?=$contest['category_petscan']?>"
-                            >categoria de monitoramento</a>
-                        <?php else: ?>
-                            <a
-                            href="<?=$contest['endpoint']?>?curid=<?=$contest['category_pageid']?>"
-                            >categoria de monitoramento</a>
-                        <?php endif; ?>
+                        ><?=§('triage-list')?></a> - <a href="<?= ($contest['category_petscan'])
+                            ? 'https://petscan.wmflabs.org/?psid=' . $contest['category_petscan']
+                            : $contest['endpoint'] . '?curid=' . $contest['category_pageid']
+                        ?>"><?=§('triage-cat')?></a>
                     </p>
                 </div>
             </div>
@@ -755,19 +758,19 @@ mysqli_close($con);
                 <?php if ($output['count'] == '-'): ?>
                     <div class="w3-panel w3-red w3-display-container w3-border">
                         <p>
-                            <h3>Banco de dados em atualização.</h3>
-                            Por favor, aguarde alguns minutos e atualize a página.
+                            <h3><?=§('triage-database')?></h3>
+                            <?=§('triage-databaseabout')?>
                         </p>
                     </div>
                 <?php elseif (!isset($output['compare']['*'])): ?>
                     <div class="w3-panel w3-orange w3-display-container w3-border">
                         <p>
-                            <h3>Não há edição para ser exibida neste momento.</h3>
+                            <h3><?=§('triage-noedit')?></h3>
                         </p>
                     </div>
                 <?php else: ?>
                     <div>
-                        <h3>Diferencial de edição</h3>
+                        <h3><?=§('triage-differential')?></h3>
                         <table
                         role="presentation"
                         aria-label="Diferencial de edição"

@@ -9,7 +9,7 @@ if (isset($_POST['email'])) {
     if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         $email =  filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
     } else {
-        die("Erro: E-mail inválido!");
+        die(§('password-notemail'));
     }
 
     //Pedido sem token
@@ -43,9 +43,13 @@ if (isset($_POST['email'])) {
         if (mysqli_stmt_affected_rows($update_query) != 0) {
 
             //Cria corpo do e-mail
-            $message = "Oi!\nUtilize o seguinte token para redefinir sua senha:\n{$token}\n\n\nAtenciosamente,\nWikiconcursos";
+            $message = §('password-greeting');
+            $message .= "\n";
+            $message .= §('password-instruction');
+            $message .= "\n{$token}\n\n\n";
+            $message .= §('password-signature');
             $emailFile = fopen("php://temp", 'w+');
-            $subject = "Wikiconcursos - Nova senha";
+            $subject = §('password-subject');
             fwrite($emailFile, "Subject: " . $subject . "\n" . $message);
             rewind($emailFile);
             $fstat = fstat($emailFile);
@@ -64,14 +68,14 @@ if (isset($_POST['email'])) {
             curl_close($ch);
 
             //Gera resultado
-            $status = 'E-mail enviado. Confira sua caixa de entrada e de spam!';
+            $status = §('password-sent');
             $input['token'] = true;
             $input['password'] = true;
 
         } else {
 
             //Gera erro
-            $status = 'Avaliador não encontrado';
+            $status = §('password-notfound');
         }
 
     //Pedido com token
@@ -112,23 +116,23 @@ if (isset($_POST['email'])) {
                     $USR->save($email, $_POST['password'], $user_id);
 
                     //Gera resultado
-                    $status = 'Senha alterada com sucesso!';
+                    $status = §('password-success');
                     $reload = true;
                 } else {
 
                     //Gera erro
-                    $status = 'Token inválido';
+                    $status = §('password-invalid');
                     $input['token'] = true;
                 }
             } else {
 
                 //Gera erro
-                $status = 'Token expirado. Solicite um novo token';
+                $status = §('password-expired');
             }
         } else {
 
             //Gera erro
-            $status = 'Avaliador não encontrado ou não solicitou redefinição de senha';
+            $status = §('password-notrequested');
         }
     }
 } else {
@@ -143,23 +147,20 @@ if (isset($_POST['email'])) {
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <title>Redefinir senha - <?=$contest['name'];?></title>
+        <title><?=§('password-reset')?> - <?=$contest['name'];?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
     </head>
     <body>
         <header class="w3-container w3-<?=$contest['theme'];?>">
-            <h1>Redefinir senha</h1>
+            <h1><?=§('password-reset')?></h1>
         </header>
         <br>
         <div class="w3-row-padding w3-content" style="max-width:700px">
             <div class="w3-container w3-margin-top w3-card-4">
                 <div class="w3-container">
-                    <p>
-                        Essa página lista os concursos cadastrados no sistema e permite a criação
-                        de novos concursos.
-                    </p>
+                    <p><?=§('password-about')?></p>
                 </div>
             </div>
             <div class="w3-margin-top w3-card-4">
@@ -167,7 +168,7 @@ if (isset($_POST['email'])) {
                     <form id="create" method="post">
                         <div class="w3-section">
                             <label>
-                                <strong>E-mail</strong>
+                                <strong><?=§('password-email')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
@@ -179,7 +180,7 @@ if (isset($_POST['email'])) {
                             required>
 
                             <label>
-                                <strong>Token</strong>
+                                <strong><?=§('password-token')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
@@ -190,17 +191,17 @@ if (isset($_POST['email'])) {
                             <?=($input['token'])?'required':'disabled'?>>
 
                             <label>
-                                <strong>Nova senha</strong>
+                                <strong><?=§('password-newpassword')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
                             type="password"
                             maxlength="255"
-                            placeholder="<?=($input['password'])?'Insira uma nova senha':''?>"
+                            placeholder="<?=($input['password'])?§('password-placeholder'):''?>"
                             name="password"
                             <?=($input['password'])?'required':'disabled'?>>
 
-                            <button class="w3-button w3-block w3-<?=$contest['theme'];?> w3-section w3-padding" name="do_create" type="submit">Enviar</button>
+                            <button class="w3-button w3-block w3-<?=$contest['theme'];?> w3-section w3-padding" name="do_create" type="submit"><?=§('password-send')?></button>
                         </div>
                     </form>
                 </div>

@@ -22,7 +22,7 @@ if (isset($_POST['update']) && !isset($early)) {
     mysqli_stmt_bind_param($refresh_query, "s", $contest['name_id']);
     mysqli_stmt_execute($refresh_query);
     if (mysqli_stmt_affected_rows($refresh_query) == 0) {
-        die("<br>Erro ao solicitar atualização. Atualize a página para tentar novamente.");
+        die("<br>".§('compare-error'));
     } else {
         $update = true;
     }
@@ -45,7 +45,7 @@ if (isset($_POST['diff'])) {
     mysqli_stmt_bind_param($fix_query, "i", $_POST['diff']);
     mysqli_stmt_execute($fix_query);
     if (mysqli_stmt_affected_rows($fix_query) == 0) {
-        die("<br>Erro ao resolver inconsistência. Atualize a página para tentar novamente.");
+        die("<br>".§('compare-inconsistency-error'));
     } else {
         $fixed = true;
     }
@@ -256,7 +256,7 @@ if ($contest['end_time'] + 172800 < time()) {
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <title>Comparador - <?=$contest['name'];?></title>
+        <title><?=§('compare')?> - <?=$contest['name'];?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
@@ -284,7 +284,7 @@ if ($contest['end_time'] + 172800 < time()) {
                     countdownDiv.textContent = formatTime(remainingTimeInSeconds);
                     requestAnimationFrame(() => updateCountdown(targetTime));
                 } else {
-                    countdownDiv.textContent = 'até 10 minutos';
+                    countdownDiv.textContent = '<?=§('compare-soon')?>';
                 }
             }
 
@@ -302,17 +302,17 @@ if ($contest['end_time'] + 172800 < time()) {
     </head>
     <body onload="startCountdown(<?=(is_numeric($countdown)?$countdown:'')?>)">
         <header class="w3-container w3-<?=$contest['theme'];?>">
-            <h1>Comparador - <?=$contest['name'];?></h1>
+            <h1><?=§('compare')?> - <?=$contest['name'];?></h1>
         </header>
         <br>
         <div class="w3-container">
             <?php if ($countdown === false) : ?>
                 <div class="w3-panel w3-pale-red w3-display-container w3-border">
-                    <h3>Concurso encerrado. Não haverão novas atualizações.</h3>
+                    <h3><?=§('compare-ended')?></h3>
                 </div>
             <?php else : ?>
                 <div class="w3-panel w3-pale-blue w3-display-container w3-border">
-                    <h3>Próxima atualização em: <span id="countdown">...</span></h3>
+                    <h3><?=§('compare-next')?> <span id="countdown">...</span></h3>
                     <form method="post">
                         <p>
                             <button
@@ -321,10 +321,9 @@ if ($contest['end_time'] + 172800 < time()) {
                             name="update"
                             value="update"
                             style="display: <?=($countdown===0||isset($early))?'none':'block';?>"
-                            >Antecipar atualização</button>
+                            ><?=§('compare-anticipate')?></button>
                             <span style="display: <?=isset($early)?'inline':'none';?>">
-                                A última atualização ocorreu em menos de 30 minutos. Por favor, aguarde esse prazo
-                                antes de solicitar uma nova atualização.
+                                <?=§('compare-early')?>
                             </span>
                         </p>
                     </form>
@@ -336,12 +335,11 @@ if ($contest['end_time'] + 172800 < time()) {
             <div class="w3-third w3-section">
                 <div class="w3-card white">
                     <div class="w3-container w3-purple">
-                        <h3>Não listados</h3>
+                        <h3><?=§('compare-unlisted')?></h3>
                     </div>
                     <ul class="w3-ul w3-border-top">
                         <li>
-                            Os artigos abaixos estão inseridos na categoria,
-                            porém não estão inseridos na lista oficial.
+                            <?=§('compare-unlisted-about')?>
                         </li>
                         <?php foreach ($adicionar as $title): ?>
                             <li>
@@ -359,12 +357,11 @@ if ($contest['end_time'] + 172800 < time()) {
             <div class="w3-third w3-section">
                 <div class="w3-card white">
                     <div class="w3-container w3-indigo">
-                        <h3>Descategorizados</h3>
+                        <h3><?=§('compare-uncated')?></h3>
                     </div>
                     <ul class="w3-ul w3-border-top">
                         <li>
-                            Os artigos abaixos estão inseridos na lista oficial,
-                            porém não estão inseridos na categoria.
+                            <?=§('compare-uncated-about')?>
                         </li>
                         <?php foreach ($remover as $title): ?>
                             <li>
@@ -382,13 +379,11 @@ if ($contest['end_time'] + 172800 < time()) {
             <div class="w3-third w3-section">
                 <div class="w3-card white">
                     <div class="w3-container w3-red">
-                        <h3>Passíveis de eliminação</h3>
+                        <h3><?=§('compare-deletion')?></h3>
                     </div>
                     <ul class="w3-ul w3-border-top">
                         <li>
-                            Os artigos abaixos estão inseridos na categoria e estão marcados em
-                            alguma modalidade de eliminação (rápida, semirrápida, por consenso
-                            ou por candidatura).
+                            <?=§('compare-deletion-about')?>
                         </li>
                         <?php foreach ($eliminar ?? array() as $title): ?>
                             <li>
@@ -408,11 +403,11 @@ if ($contest['end_time'] + 172800 < time()) {
             <div class="w3-third w3-section">
                 <div class="w3-card white">
                     <div class="w3-container w3-blue">
-                        <h3>Sem Wikidata</h3>
+                        <h3><?=§('compare-nowikidata')?></h3>
                     </div>
                     <ul class="w3-ul w3-border-top">
                         <li>
-                            Os artigos abaixos estão inseridos na categoria porém não possuem conexão no Wikidata.
+                            <?=§('compare-nowikidata-about')?>
                         </li>
                         <?php foreach ($list_wd ?? array() as $title): ?>
                             <li>
@@ -430,13 +425,11 @@ if ($contest['end_time'] + 172800 < time()) {
             <div class="w3-third w3-section">
                 <div class="w3-card white">
                     <div class="w3-container w3-black">
-                        <h3>Inconsistências</h3>
+                        <h3><?=§('compare-inconsistency')?></h3>
                     </div>
                     <ul class="w3-ul w3-border-top">
                         <li>
-                            As edições listadas abaixo pertecem a artigos que estavam listados
-                            na categoria mas foram removidos. Caso estejam marcadas de vermelho,
-                            a edição foi validada e conferiu pontos ao participante.
+                            <?=§('compare-inconsistency-about')?>
                         </li>
                         <?php while ($row = mysqli_fetch_assoc($inconsistency_result)): ?>
                             <li class='<?=($row['valid_edit'] == '1')?'w3-red':''?>'>
@@ -446,15 +439,15 @@ if ($contest['end_time'] + 172800 < time()) {
                                 onclick='window.open(
                                     "<?=$contest['endpoint']?>?diff=<?=urlencode($row['diff'])?>",
                                     "_blank"
-                                )'>Ver edição <?=$row["diff"]?></button>
+                                )'><?=§('compare-seediff')?><?=$row["diff"]?></button>
                                 <form
                                 style='display: inline'
                                 method='post'
                                 onSubmit='return confirm(
-                                    "Essa edição será removida do banco de dados. Deseja prosseguir?"
+                                    "<?=§('compare-areyousure')?>"
                                 )'>
                                     <input type='hidden' name='diff' value='<?=$row["diff"]?>'>
-                                    <input type='submit' class='w3-btn w3-padding-small w3-red' value='Apagar'>
+                                    <input type='submit' class='w3-btn w3-padding-small w3-red' value='<?=§('compare-delete')?>'>
                                 </form>
                             </li>
                         <?php endwhile; ?>
@@ -464,11 +457,11 @@ if ($contest['end_time'] + 172800 < time()) {
             <div class="w3-third w3-section">
                 <div class="w3-card white">
                     <div class="w3-container w3-deep-orange">
-                        <h3>Revertidos</h3>
+                        <h3><?=§('compare-rollback')?></h3>
                     </div>
                     <ul class="w3-ul w3-border-top">
                         <li>
-                            As edições listadas abaixo foram revertidas após validação.
+                            <?=§('compare-rollback-about')?>
                         </li>
                         <?php while ($row = mysqli_fetch_assoc($reverted_result)): ?>
                             <li>
@@ -478,7 +471,7 @@ if ($contest['end_time'] + 172800 < time()) {
                                 onclick='window.open(
                                     "<?=$contest['endpoint']?>?diff=<?=$diff_encode?>",
                                     "_blank"
-                                )'>Ver edição <?=$row["diff"]?></button>
+                                )'><?=§('compare-seediff')?><?=$row["diff"]?></button>
                                 <button
                                 class='w3-btn w3-padding-small w3-purple'
                                 type='button'
@@ -487,7 +480,7 @@ if ($contest['end_time'] + 172800 < time()) {
                                         $row['diff']
                                     )?>",
                                     "_blank"
-                                );'>Reavaliar</button>";
+                                );'><?=§('compare-reevaluate')?></button>
                             </li>
                         <?php endwhile; ?>
                     </ul>
@@ -497,7 +490,7 @@ if ($contest['end_time'] + 172800 < time()) {
     </body>
     <?php if (isset($fixed)): ?>
         <script>
-            alert('Edições removida com sucesso!');
+            alert('<?=§('compare-success')?>');
             window.location.href = window.location.href;
         </script>
     <?php endif; ?>

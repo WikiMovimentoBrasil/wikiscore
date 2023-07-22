@@ -617,12 +617,12 @@ if (isset($_POST['do_create'])) {
                             <li class="w3-bar">
                                 <div class="w3-bar-item">
                                     Começa(ou) em <?=$contest_info['start_time']?>: <?=date(
-                                        'd/m/Y H:i:s (\U\T\C)',
+                                        'Y/m/d H:i:s (\U\T\C)',
                                         $contest_info['start_time']
                                     )?>
                                     <br>
                                     Termina(ou) em <?=$contest_info['end_time']?>: <?=date(
-                                        'd/m/Y H:i:s (\U\T\C)',
+                                        'Y/m/d H:i:s (\U\T\C)',
                                         $contest_info['end_time']
                                     )?>
                                 </div>

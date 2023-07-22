@@ -143,7 +143,7 @@ mysqli_close($con);
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <title>Modificar - <?=$contest['name'];?></title>
+        <title><?=§('modify')?> - <?=$contest['name'];?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
@@ -151,13 +151,13 @@ mysqli_close($con);
     </head>
     <body>
         <header class="w3-container w3-<?=$contest['theme'];?>">
-            <h1>Modificar - <?=$contest['name'];?></h1>
+            <h1><?=§('modify')?> - <?=$contest['name'];?></h1>
         </header>
         <br>
         <div class="w3-row-padding w3-content" style="max-width:1400px">
             <div class="w3-container w3-quarter w3-margin-top">
                 <form class="w3-container w3-card w3-margin-bottom" id="modify" method="get">
-                    <h2>Consultar avaliação</h2>
+                    <h2><?=§('modify-consult')?></h2>
                     <input type="hidden" name="contest" value=<?=$contest['name_id'];?>>
                     <input type="hidden" name="page" value="modify">
                     <p>
@@ -168,13 +168,13 @@ mysqli_close($con);
                         value="<?=htmlspecialchars(@$_GET['diff']);?>"
                         required
                         >
-                        <label>Diff</label>
+                        <label><?=§('modify-diff')?></label>
                     </p>
                     <p>
                         <button
                         class="w3-button w3-section w3-green w3-ripple"
                         style="width:100%"
-                        >Carregar edição</button>
+                        ><?=§('modify-load')?></button>
                     </p>
                 </form>
                 <form
@@ -192,10 +192,10 @@ mysqli_close($con);
                     }
                     ?>"
                 >
-                    <h2>Reavaliação</h2>
+                    <h2><?=§('modify-reavaluate')?></h2>
                     <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
                     <div class="w3-container w3-cell w3-half">
-                        <p>Edição válida?</p>
+                        <p><?=§('isvalid')?></p>
                         <input
                         class="w3-radio w3-section"
                         type="radio"
@@ -205,7 +205,7 @@ mysqli_close($con);
                         onclick="document.getElementById('obs').required = false"
                         required
                         >
-                        <label for="valid-sim">Sim</label><br>
+                        <label for="valid-sim"><?=§('yes')?></label><br>
                         <input
                         class="w3-radio w3-section"
                         type="radio"
@@ -214,10 +214,10 @@ mysqli_close($con);
                         value="nao"
                         onclick="document.getElementById('obs').required = true" required
                         >
-                        <label for="valid-nao">Não</label><br><br>
+                        <label for="valid-nao"><?=§('no')?></label><br><br>
                     </div>
                     <div class="w3-container w3-cell w3-half">
-                        <p>Imagem?</p>
+                        <p><?=§('withimage')?></p>
                         <?php if ($contest['pictures_mode'] == 2): ?>
                             <input
                             class="w3-input w3-border"
@@ -228,7 +228,7 @@ mysqli_close($con);
                             min="0"
                             max="9"
                             required>
-                            <label for="pic">Quantidade</label><br><br>
+                            <label for="pic"><?=§('quantity')?></label><br><br>
                         <?php else: ?>
                             <input
                             class="w3-radio w3-section"
@@ -237,7 +237,7 @@ mysqli_close($con);
                             name="pic"
                             value="sim"
                             required>
-                            <label for="pic-sim">Sim</label><br>
+                            <label for="pic-sim"><?=§('yes')?></label><br>
                             <input
                             class="w3-radio w3-section"
                             type="radio"
@@ -245,7 +245,7 @@ mysqli_close($con);
                             name="pic"
                             value="nao"
                             required>
-                            <label for="pic-nao">Não</label><br><br>
+                            <label for="pic-nao"><?=§('no')?></label><br><br>
                         <?php endif; ?>
                     </div>
                     <p>
@@ -276,7 +276,7 @@ mysqli_close($con);
                         <input
                         class="w3-button w3-orange w3-border-orange w3-border w3-block w3-margin-top"
                         type="submit"
-                        value="Modificar"
+                        value="<?=§('modify')?>"
                         >
                     </p>
                 </form>
@@ -284,9 +284,9 @@ mysqli_close($con);
                 class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom"
                 style="display: <?=(isset($output['compare']['*']))?'block':'none';?>;"
                 >
-                    <h2>Dados da edição</h2>
+                    <h2><?=§('modify-diffstats')?></h2>
                     <ul class="w3-ul w3-margin-bottom">
-                        <li>Edição:<br>
+                        <li><?=§('modify-label-edition')?><br>
                             <a
                             href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>"
                             target="_blank"
@@ -295,7 +295,7 @@ mysqli_close($con);
                                 <?=@$output['revision']['diff'];?>
                             </a>
                         </li>
-                        <li>ID do artigo:<br>
+                        <li><?=§('modify-label-curid')?><br>
                             <a
                             href="<?=$contest['endpoint'];?>?curid=<?=@$output['revision']['article'];?>"
                             target="_blank"
@@ -304,33 +304,33 @@ mysqli_close($con);
                                 <?=@$output['revision']['article'];?>
                             </a>
                         </li>
-                        <li>Horário da edição:<br><?=(@$output['revision']['timestamp']);?></li>
-                        <li>Usuário:<br><?=(@$output['compare']['touser']);?></li>
-                        <li>Bytes:<br><?=(@$output['revision']['bytes']);?></li>
-                        <li>Sumário:<br><?=(@$output['compare']['tocomment']);?>&nbsp;</li>
-                        <li>Artigo novo:<br><?=(@$output['revision']['new_page'])?"Sim":"Não";?></li>
-                        <li>Edição válida:<br><?=(@$output['revision']['valid_edit'])?"Sim":"Não";?></li>
-                        <li>Usuário inscrito:<br><?=(@$output['revision']['valid_user'])?"Sim":"Não";?></li>
-                        <li>Imagem:<br><?php
+                        <li><?=§('label-timestamp')?><br><?=(@$output['revision']['timestamp']);?></li>
+                        <li><?=§('modify-label-user')?><br><?=(@$output['compare']['touser']);?></li>
+                        <li><?=§('modify-label-bytes')?><br><?=(@$output['revision']['bytes']);?></li>
+                        <li><?=§('label-summary')?><br><?=(@$output['compare']['tocomment']);?>&nbsp;</li>
+                        <li><?=§('modify-label-newpage')?><br><?=(@$output['revision']['new_page'])?"Sim":"Não";?></li>
+                        <li><?=§('modify-label-valid')?><br><?=(@$output['revision']['valid_edit'])?"Sim":"Não";?></li>
+                        <li><?=§('modify-label-enrolled')?><br><?=(@$output['revision']['valid_user'])?"Sim":"Não";?></li>
+                        <li><?=§('modify-label-withimage')?><br><?php
                             if ($contest['pictures_mode'] == 2) {
                                 echo @$output['revision']['pictures'];
                             } else {
-                                echo ($output['revision']['pictures'])?"Sim":"Não";
+                                echo ($output['revision']['pictures'])?§('yes'):§('no');
                             }
                         ?></li>
-                        <li>Edição revertida:<br><?=(@$output['revision']['reverted'])?"Sim":"Não";?></li>
-                        <li>Avaliador:<br><?=@$output['revision']['by'];?></li>
-                        <li>Horário da avaliação:<br><?=@$output['revision']['when'];?></li>
-                        <li>Comentário do avaliador:<br><?=@$output['revision']['obs'];?>&nbsp;</li>
+                        <li><?=§('modify-label-reverted')?><br><?=(@$output['revision']['reverted'])?§('yes'):§('no');?></li>
+                        <li><?=§('modify-label-evaluator')?><br><?=@$output['revision']['by'];?></li>
+                        <li><?=§('modify-label-evaltimestamp')?><br><?=@$output['revision']['when'];?></li>
+                        <li><?=§('modify-label-comment')?><br><?=@$output['revision']['obs'];?>&nbsp;</li>
                     </ul>
                 </div>
             </div>
             <div class="w3-threequarter">
                 <div style="display:<?=(isset($output['compare']['*']))?'block':'none';?>">
-                    <h3>Diferencial de edição</h3>
+                    <h3><?=§('modify-showdiff')?></h3>
                     <table
                     role="presentation"
-                    aria-label="Diferencial de edição"
+                    aria-label="<?=§('modify-showdiff')?>"
                     class="diff diff-contentalign-left diff-editfont-monospace"
                     >
                         <?php print_r(@$output['compare']['*']); ?>
@@ -338,13 +338,13 @@ mysqli_close($con);
                     <hr>
                 </div>
                 <?php if (!@$output['compare']): ?>
-                    <script>alert('Edição não encontrada no banco de dados!');</script>
+                    <script>alert('<?=§('modify-notfound')?>');</script>
                 <?php endif; ?>
                 <?php if (@array_key_exists('diff', $output['success'])): ?>
                     <?php if (is_null($output['success']['diff'])): ?>
-                        <script>alert('Você não pode modificar uma avaliação de terceiro!');</script>
+                        <script>alert('<?=§('modify-denied')?>');</script>
                     <?php else: ?>
-                        <script>alert('Modificação realizada com sucesso!');</script>
+                        <script>alert('<?=§('modify-success')?>');</script>
                     <?php endif; ?>
                 <?php endif; ?>
             </div>

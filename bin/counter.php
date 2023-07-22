@@ -16,7 +16,7 @@ if (isset($_POST['user'])) {
 
     //Encerra script caso usuário não seja gestor
     if ($_SESSION['user']['user_status'] != 'G') {
-        die("Ação não permitida. Não é gestor do concurso.");
+        die(§('counter-denied'));
     }
 
     //Processa query
@@ -244,7 +244,7 @@ while (isset($list_api['continue'])) {
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <title>Contador - <?=$contest['name'];?></title>
+        <title><?=§('counter')?> - <?=$contest['name'];?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
@@ -254,26 +254,20 @@ while (isset($list_api['continue'])) {
     </head>
     <body>
         <header class="w3-container w3-<?=$contest['theme'];?>">
-            <h1>Contador - <?=$contest['name'];?></h1>
+            <h1><?=§('counter')?> - <?=$contest['name'];?></h1>
         </header>
         <br>
         <div class="w3-container">
             <div class="w3-threequarter w3-section">
                 <p class="w3-text-darkgrey w3-container">
-                    Este cômputo se refere ao wikiconcurso "<?=$contest['name'];?>" e foi gerado no dia
-                    <?=date('d/m/Y', $time_unix);?>, às <?=date('H:i:s', $time_unix);?> do horário UTC.
-                    A ordem de classificação é realizada de acordo com o total de pontos, calculados com
-                    a pontuação arredondada para baixo, sendo utilizado como critério de desempate o valor
-                    da soma total de bytes adicionados e, caso ainda exista empate, por ordem alfabética.
-                    Todos os usuários inscritos que editaram algum dos artigos da lista deste wikiconcurso
-                    estão listados abaixo, mesmo não tendo edição válida alguma.
+                    <?=§('counter-about',$contest['name'],date('Y/m/d',$time_unix),date('H:i:s',$time_unix))?>
+                    <?=§('counter-description')?>
                 </p>
             </div>
             <div class="w3-quarter w3-section">
                 <form class="w3-container w3-card w3-padding" method="post">
                     <caption>
-                        Caso queira obter um extrato da pontuação até determinado horário,
-                        especifique no formulário abaixo.
+                        <?=§('counter-uptotime')?>
                     </caption>
                     <input
                     class="w3-input w3-border"
@@ -290,29 +284,29 @@ while (isset($list_api['continue'])) {
             <div class="w3-row">
                 <div class="w3-half">
                     <div class="w3-third">
-                        <h6 class="w3-center">Artigos listados</h6>
+                        <h6 class="w3-center"><?=§('counter-allpages')?></h6>
                         <h1 class="w3-center"><?=number_format($stats['listed_articles'], 0, ',', '.');?></h1>
                     </div>
                     <div class="w3-third">
-                        <h6 class="w3-center">Artigos editados</h6>
+                        <h6 class="w3-center"><?=§('counter-alledited')?></h6>
                         <h1 class="w3-center"><?=number_format($stats['edited_articles'], 0, ',', '.');?></h1>
                     </div>
                     <div class="w3-third">
-                        <h6 class="w3-center">Artigos criados</h6>
+                        <h6 class="w3-center"><?=§('counter-allcreated')?></h6>
                         <h1 class="w3-center"><?=number_format($stats['new_pages'], 0, ',', '.');?></h1>
                     </div>
                 </div>
                 <div class="w3-half">
                     <div class="w3-third">
-                        <h6 class="w3-center">Usuários inscritos</h6>
+                        <h6 class="w3-center"><?=§('counter-allenrolled')?></h6>
                         <h1 class="w3-center"><?=number_format($stats['all_users'], 0, ',', '.');?></h1>
                     </div>
                     <div class="w3-third">
-                        <h6 class="w3-center">Edições validadas</h6>
+                        <h6 class="w3-center"><?=§('counter-allvalidated')?></h6>
                         <h1 class="w3-center"><?=number_format($stats['valid_edits'], 0, ',', '.');?></h1>
                     </div>
                     <div class="w3-third">
-                        <h6 class="w3-center">Bytes adicionados</h6>
+                        <h6 class="w3-center"><?=§('counter-allbytes')?></h6>
                         <h1 class="w3-center"><?=number_format($stats['all_bytes'], 0, ',', '.');?></h1>
                     </div>
                 </div>
@@ -321,15 +315,15 @@ while (isset($list_api['continue'])) {
         <div class="w3-container">
             <table aria-label="Lista de participantes" class="w3-table-all w3-hoverable w3-card">
                 <tr>
-                    <th>Usuário</th>
-                    <th>Soma de bytes</th>
-                    <th>Total de edições</th>
-                    <th>Pontos por bytes</th>
-                    <th>Artigos com imagens</th>
-                    <th>Pontos por imagens</th>
-                    <th>Total de pontos</th>
+                    <th><?=§('counter-user')?></th>
+                    <th><?=§('counter-bytes')?></th>
+                    <th><?=§('counter-edits')?></th>
+                    <th><?=§('counter-ppb')?></th>
+                    <th><?=§('counter-images')?></th>
+                    <th><?=§('counter-ppi')?></th>
+                    <th><?=§('counter-points')?></th>
                     <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
-                        <th>Redefinir</th>
+                        <th><?=§('counter-redefine')?></th>
                     <?php endif; ?>
                 </tr>
                 <?php while ($row = mysqli_fetch_assoc($count_query)): ?>
@@ -346,14 +340,14 @@ while (isset($list_api['continue'])) {
                                 <form
                                 method='post'
                                 onSubmit='return confirm(
-                                    "Todas as avaliações nas edições deste participante serão desfeitas. Deseja prosseguir?"
+                                    "<?=§('counter-confirm')?>"
                                 )'>
                                     <input type='hidden' name='user' value='<?=$row["user"]?>'>
                                     <input
                                     <?=($row["total edits"] == 0)?"disabled":""?>
                                     type='submit'
                                     class='w3-btn w3-<?=$contest["theme"]?>'
-                                    value='Redefinir'>
+                                    value='<?=§('counter-redefine')?>'>
                                 </form>
                             </td>
                         <?php endif; ?>
@@ -365,7 +359,7 @@ while (isset($list_api['continue'])) {
     <?php if (isset($output['success'])): ?>
         <script>
             alert(
-                'Edições redefinidas com sucesso! Uma nova atualização do banco de dados será realizada em breve.'
+                '<?=§('counter-success')?>'
             );
             window.location.href = window.location.href;
         </script>

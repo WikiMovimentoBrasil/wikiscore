@@ -236,7 +236,7 @@ $all_days = implode(", ", $all_days);
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <title>Gráfico de pontos - <?=$contest['name'];?></title>
+        <title><?=§('graph')?> - <?=$contest['name'];?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
@@ -247,19 +247,13 @@ $all_days = implode(", ", $all_days);
     </head>
     <body>
         <header class="w3-container w3-<?=$contest['theme'];?>">
-            <h1>Gráfico de pontos - <?=$contest['name'];?></h1>
+            <h1><?=§('graph')?> - <?=$contest['name'];?></h1>
         </header>
         <br>
         <div class="w3-row-padding w3-content" style="max-width:700px">
             <div class="w3-container w3-margin-top w3-card-4">
                 <div class="w3-container">
-                    <p>
-                        O gráfico abaixo exibe a evolução das pontuações recebidas pelos 9 participantes melhores
-                        classificados durante o wikiconcurso. Esse gráfico é gerado de forma automática e não
-                        consiste em uma classificação final ou oficial. Observe que os organizadores podem
-                        reavaliar edições anteriores e os pontos exibidos podem ser recalculados sem aviso
-                        prévio. Em caso de discrepância, apenas a tabela inserida pelos organizadores do
-                        wikiconcurso na sua página oficial deve ser considerada.</p>
+                    <p><?=§('graph-about')?></p>
                 </div>
             </div>
             <div class="w3-container w3-section w3-card-4">
@@ -277,7 +271,7 @@ $all_days = implode(", ", $all_days);
                         plugins: {
                             title: {
                                 display: true,
-                                text: "Ranking dos 9 primeiros colocados por dia decorrido"
+                                text: "<?=§('graph-axis')?>"
                             },
                             legend: {
                                 display: false
@@ -285,7 +279,7 @@ $all_days = implode(", ", $all_days);
                         }
                     },
                     data: {
-                        labels: dias,
+                        labels: <?=§('graph-label')?>,
                         datasets: [ <?=$datasets_graph;?> ]
                     }
                 }

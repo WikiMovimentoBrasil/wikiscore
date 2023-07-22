@@ -14,20 +14,20 @@ if (isset($_SESSION['user'])) {
 
 // (C) SHOW LOGIN FORM OTHERWISE
 if (isset($_POST['do_login'])) {
-    echo "<script>alert('E-mail/senha inválidos');</script>";
+    echo "<script>alert('".§('login-invalid')."');</script>";
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <title>Gerenciamento de concursos</title>
+        <title><?=§('login-manage')?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="./bin/w3.css">
     </head>
     <body onload="document.getElementById('id01').style.display='block'">
         <header class="w3-deep-green w3-container">
-            <h1>Gerenciamento de concursos</h1>
+            <h1><?=§('login-manage')?></h1>
         </header>
         <div id="id01" class="w3-modal">
             <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
@@ -43,18 +43,18 @@ if (isset($_POST['do_login'])) {
                 <form class="w3-container" id="login" method="post">
                     <div class="w3-section">
                         <label>
-                            <strong>E-mail</strong>
+                            <strong><?=§('login-email')?></strong>
                         </label>
                         <input class="w3-input w3-border w3-margin-bottom" type="email" placeholder="Insira seu e-mail" name="email" required>
                         <label>
-                            <strong>Senha</strong>
+                            <strong><?=§('login-password')?></strong>
                         </label>
                         <input class="w3-input w3-border" type="password" placeholder="Insira sua senha" name="password" required>
                         <button class="w3-button w3-block w3-deep-green w3-section w3-padding" name="do_login" type="submit">Entrar</button>
                     </div>
                 </form>
                 <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
-                    <button onclick="document.getElementById('id01').style.display='none'" type="button" class="w3-button w3-red">Cancelar</button>
+                    <button onclick="document.getElementById('id01').style.display='none'" type="button" class="w3-button w3-red"><?=§('login-cancel')?></button>
                 </div>
             </div>
         </div>

@@ -38,7 +38,7 @@ if ($_POST) {
 
     //Encerra script caso usuário não seja gestor
     if ($_SESSION['user']['user_status'] != 'G') {
-        die("Ação não permitida. Não é gestor do concurso.");
+        die(§('evaluators-denied'));
     }
 
     //Escapa nome de usuário submetido no formulário, ou encerra script caso nenhum nome tenha sido submetido
@@ -48,7 +48,7 @@ if ($_POST) {
             !isset($_POST['off'])
         )
     ) {
-        die("Nome de usuário não submetido no formulário.");
+        die(§('evaluators-missing'));
     }
 
     //Processa query
@@ -110,28 +110,25 @@ $icon = '
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <title>Avaliadores - <?=$contest['name'];?></title>
+        <title><?=§('evaluators')?> - <?=$contest['name'];?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
     </head>
     <body>
         <header class="w3-container w3-<?=$contest['theme'];?>">
-            <h1>Avaliadores - <?=$contest['name'];?></h1>
+            <h1><?=§('evaluators')?> - <?=$contest['name'];?></h1>
         </header>
         <br>
         <div class="w3-row-padding w3-content" style="max-width:700px">
             <div class="w3-container w3-margin-top w3-card-4">
                 <div class="w3-container">
-                    <p>
-                        Essa página lista os gestores e os avaliadores deste wikiconcurso.
-                        Ao gestor do concurso também são exibidas opções para habilitar ou desabilitar avaliadores.
-                    </p>
+                    <p><?=§('evaluators-about')?></p>
                 </div>
             </div>
             <div class="w3-margin-top w3-card">
                 <header style="filter: hue-rotate(60deg);" class='w3-container w3-<?=$contest['theme'];?>'>
-                    <h1>Gestores</h1>
+                    <h1><?=§('evaluators-manager')?></h1>
                 </header>
                 <div class="w3-container">
                     <ul class="w3-ul">
@@ -141,7 +138,7 @@ $icon = '
                                 <div class="w3-bar-item">
                                     <span class='w3-large'><?=$user?></span><br>
                                     <span><?=$data['email']?></span><br>
-                                    <span><?=$data['evaluated']?> avaliações efetuadas</span>
+                                    <span><?=§('evaluators-stats',$data['evaluated'])?></span>
                                 </div>
                             </li>
                         <?php endforeach; ?>
@@ -150,7 +147,7 @@ $icon = '
             </div>
             <div class="w3-margin-top w3-card">
                 <header style="filter: hue-rotate(120deg);" class='w3-container w3-<?=$contest['theme'];?>'>
-                    <h1>Avaliadores</h1>
+                    <h1><?=§('evaluators')?></h1>
                 </header>
                 <div class="w3-container">
                     <ul class="w3-ul">
@@ -160,7 +157,7 @@ $icon = '
                                 <div class="w3-bar-item">
                                     <span class='w3-large'><?=$user?></span><br>
                                     <span><?=$data['email']?></span><br>
-                                    <span><?=$data['evaluated']?> avaliações efetuadas</span>
+                                    <span><?=§('evaluators-stats',$data['evaluated'])?></span>
                                 </div>
                                 <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
                                     <form method="post">
@@ -168,9 +165,9 @@ $icon = '
                                         <input type='hidden' name='user' value='<?=$user?>'>
                                         <button
                                         type='submit'
-                                        onclick="return confirm('Tem certeza?')"
+                                        onclick="return confirm('<?=§('evaluators-areyousure')?>')"
                                         class='w3-bar-item w3-right w3-button w3-section w3-red'
-                                        >Desabilitar</button>
+                                        ><?=§('evaluators-disable')?></button>
                                     </form>
                                 <?php endif; ?>
                             </li>
@@ -180,7 +177,7 @@ $icon = '
             </div>
             <div class="w3-margin-top w3-card">
                 <header style="filter: hue-rotate(180deg);" class='w3-container w3-<?=$contest['theme'];?>'>
-                    <h1>Desabilitados</h1>
+                    <h1><?=§('evaluators-disabled')?></h1>
                 </header>
                 <div class="w3-container">
                     <ul class="w3-ul">
@@ -190,7 +187,7 @@ $icon = '
                                 <div class="w3-bar-item">
                                     <span class='w3-large'><?=$user?></span><br>
                                     <span><?=$data['email']?></span><br>
-                                    <span><?=$data['evaluated']?> avaliações efetuadas</span>
+                                    <span><?=§('evaluators-stats',$data['evaluated'])?></span>
                                 </div>
                                 <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
                                     <form method="post">
@@ -198,9 +195,9 @@ $icon = '
                                         <input type='hidden' name='user' value='<?=$user?>'>
                                         <button
                                         type='submit'
-                                        onclick="return confirm('Tem certeza?')"
+                                        onclick="return confirm('<?=§('evaluators-areyousure')?>')"
                                         class='w3-bar-item w3-right w3-button w3-section w3-green'
-                                        >Habilitar</button>
+                                        ><?=§('evaluators-enable')?></button>
                                     </form>
                                 <?php endif; ?>
                             </li>
@@ -213,11 +210,11 @@ $icon = '
     <?php if (isset($output['success'])): ?>
         <?php if (is_null($output['success']['diff'])): ?>
             <script>
-                alert('Status do avaliador autalizado com sucesso!');
+                alert('<?=§('evaluators-success')?>');
                 window.location.href = window.location.href;
             </script>
         <?php else: ?>
-            <script>alert('Erro ao atualizar status do avaliador');</script>
+            <script>alert('<?=§('evaluators-error')?>');</script>
         <?php endif; ?>
     <?php endif; ?>
 </html>

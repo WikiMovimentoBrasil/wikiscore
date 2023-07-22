@@ -11,20 +11,21 @@ header("Cache-control: private");
 header("Content-type: text/csv; charset=windows-1252");
 
 //Cabeçalho do CSV
-$csv =  "sep=;\r\n".
-        "Diff da edição;".
-        "CurID do artigo;".
-        "Horário da edição;".
-        "Usuário;".
-        "Bytes;".
-        "Artigo novo;".
-        "Edição válida;".
-        "Usuário inscrito;".
-        "Com imagem;".
-        "Edição revertida;".
-        "Avaliador;".
-        "Horário da avaliação;".
-        "Comentário do avaliador"."\r\n";
+$sep = '";"';
+$csv =  "sep=;\r\n".'"'.
+        §('edits-diff').$sep.
+        §('edits-curid').$sep.
+        §('edits-timestamp').$sep.
+        §('edits-user').$sep.
+        §('edits-bytes').$sep.
+        §('edits-newpage').$sep.
+        §('edits-valid').$sep.
+        §('edits-enrolled').$sep.
+        §('edits-withimage').$sep.
+        §('edits-reverted').$sep.
+        §('edits-evaluator').$sep.
+        §('edits-evaltimestamp').$sep.
+        §('edits-comment')."\r\n";
 
 //Coleta lista de edições
 $edits_statement = "
@@ -63,8 +64,6 @@ mysqli_stmt_close($edits_query);
 //Verifica se existem edições cadastradas bo banco de dados
 $rows = mysqli_num_rows($edits_result);
 if ($rows == 0) { die("No edits"); }
-
-$sep = '";"';
 
 while ($query = mysqli_fetch_assoc($edits_result)) {
     $csv .= '"'.

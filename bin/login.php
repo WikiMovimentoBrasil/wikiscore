@@ -18,11 +18,6 @@ if (isset($_SESSION['user'])) {
 }
 
 // (C) SHOW LOGIN FORM OTHERWISE
-if (isset($_POST['do_login'])) {
-    echo "<script>alert('E-mail/senha inválidos');</script>";
-} elseif (isset($_POST['do_create'])) {
-    echo "<script>alert('Avaliador pré-cadastrado. Solicite autorização do gestor do wikiconcurso.');</script>";
-}
 
 //Calcula número total de dias do wikiconcurso e monta eixo X dos gráficos
 $elapsed_days = floor((time() - $contest['start_time']) / 60 / 60 / 24);
@@ -153,7 +148,7 @@ $lastedit = "-";
 if ($lastedit_query != false) {
     $lastedit_query = mysqli_fetch_assoc($lastedit_query);
     if (isset($lastedit_query["lastedit"]) && !is_null($lastedit_query["lastedit"])) {
-        $lastedit = date('d/m/Y H:i:s (\U\T\C)', strtotime($lastedit_query["lastedit"]));
+        $lastedit = date('Y/m/d H:i:s (\U\T\C)', strtotime($lastedit_query["lastedit"]));
     }
 }
 
@@ -167,6 +162,11 @@ if ($lastedit_query != false) {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="./bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
+        <?php if (isset($_POST['do_login'])): ?>
+            <script>alert('<?=§('login-invalid')?>');</script>
+        <?php elseif (isset($_POST['do_create'])) : ?>
+            <script>alert('<?=§('login-pending')?>');</script>
+        <?php endif; ?>
         <script
         src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/Chart.js/3.9.1/chart.min.js"
         integrity="sha384-9MhbyIRcBVQiiC7FSd7T38oJNj2Zh+EfxS7/vjhBi4OOT78NlHSnzM31EZRWR1LZ"
@@ -208,28 +208,28 @@ if ($lastedit_query != false) {
                 <div class="w3-third w3-section">
                     <div class="w3-card-4 w3-light-grey w3-justify">
                         <header class="w3-<?=$contest['theme'];?> w3-container">
-                            <h1>Sistema de avaliações</h1>
+                            <h1><?=§('login-about')?></h1>
                         </header>
                         <div class="w3-container">
                             <p class="w3-small">
-                                <strong>Horário de início do wikiconcurso</strong>
+                                <strong><?=§('login-start')?></strong>
                                 <br>
-                                <?=date('d/m/Y H:i:s (\U\T\C)', $contest['start_time']);?>
+                                <?=date('Y/m/d H:i:s (\U\T\C)', $contest['start_time']);?>
                             </p>
                             <p class="w3-small">
-                                <strong>Horário de término do wikiconcurso</strong>
+                                <strong><?=§('login-end')?></strong>
                                 <br>
-                                <?=date('d/m/Y H:i:s (\U\T\C)', $contest['end_time']);?>
+                                <?=date('Y/m/d H:i:s (\U\T\C)', $contest['end_time']);?>
                             </p>
                             <p class="w3-small">
-                                <strong>Horário da última edição avaliada</strong>
+                                <strong><?=§('login-recent')?></strong>
                                 <br>
                                 <?=$lastedit;?>
                             </p>
                         </div>
                         <div class="w3-container w3-padding-small">
-                            <button class="w3-button w3-half w3-<?=$contest['theme'];?> w3-block w3-large" style="filter: hue-rotate(120deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=graph', '_blank');">Gráfico de pontos</button>
-                            <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-half w3-block w3-<?=$contest['theme'];?> w3-large" style="filter: hue-rotate(240deg);">Login</button>
+                            <button class="w3-button w3-half w3-<?=$contest['theme'];?> w3-block w3-large" style="filter: hue-rotate(120deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=graph', '_blank');"><?=§('login-graph')?></button>
+                            <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-half w3-block w3-<?=$contest['theme'];?> w3-large" style="filter: hue-rotate(240deg);"><?=§('login')?></button>
                         </div>
                     </div>
                 </div>
@@ -248,14 +248,14 @@ if ($lastedit_query != false) {
                     <form class="w3-container" id="login" method="post">
                         <div class="w3-section">
                             <label>
-                                <strong>E-mail</strong>
+                                <strong><?=§('login-email')?></strong>
                             </label>
                             <input class="w3-input w3-border w3-margin-bottom" type="email" placeholder="Insira seu e-mail" name="email" required>
                             <label>
-                                <strong>Senha</strong>
+                                <strong><?=§('login-password')?></strong>
                             </label>
                             <input class="w3-input w3-border" type="password" placeholder="Insira sua senha" name="password" required>
-                            <button class="w3-button w3-block w3-<?=$contest['theme'];?> w3-section w3-padding" name="do_login" type="submit">Entrar</button>
+                            <button class="w3-button w3-block w3-<?=$contest['theme'];?> w3-section w3-padding" name="do_login" type="submit"><?=§('login')?></button>
                         </div>
                     </form>
                     <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
@@ -266,13 +266,13 @@ if ($lastedit_query != false) {
                         );"
                         type="button"
                         class="w3-button w3-red"
-                        >Esqueci minha senha</button>
+                        ><?=§('login-recover')?></button>
                         <button
                         class="w3-right w3-button w3-blue"
                         type="submit"
                         form="login"
                         name="do_create"
-                        >Pré-cadastrar</button>
+                        ><?=§('login-enroll')?></button>
                     </div>
                 </div>
             </div>
@@ -289,7 +289,7 @@ if ($lastedit_query != false) {
                         plugins: {
                             title: {
                                 display: true,
-                                text: "Edições por dia"
+                                text: "<?=§('login-alledits')?>"
                             },
                             legend: {
                                 display: false
@@ -300,7 +300,7 @@ if ($lastedit_query != false) {
                         labels: dias,
                         datasets: [
                             {
-                                label: 'Edições por dia',
+                                label: '<?=§('login-alledits')?>',
                                 data: [ <?=$total_edits_rows;?> ],
                                 fill: false,
                                 borderColor: 'rgb(128, 0, 128)',
@@ -320,7 +320,7 @@ if ($lastedit_query != false) {
                         plugins: {
                             title: {
                                 display: true,
-                                text: "Edições validadas por dia"
+                                text: "<?=§('login-validedits')?>"
                             },
                             legend: {
                                 display: false
@@ -331,7 +331,7 @@ if ($lastedit_query != false) {
                         labels: dias,
                         datasets: [
                             {
-                                label: 'Edições validadas por dia',
+                                label: '<?=§('login-validedits')?>',
                                 data: [ <?=$valid_edits_rows;?> ],
                                 fill: false,
                                 borderColor: 'rgb(143, 188, 143)',
@@ -351,7 +351,7 @@ if ($lastedit_query != false) {
                         plugins: {
                             title: {
                                 display: true,
-                                text: "Novos artigos por dia"
+                                text: "<?=§('login-newpages')?>"
                             },
                             legend: {
                                 display: false
@@ -362,7 +362,7 @@ if ($lastedit_query != false) {
                         labels: dias,
                         datasets: [
                             {
-                                label: 'Novos artigos por dia',
+                                label: '<?=§('login-newpages')?>',
                                 data: [ <?=$new_articles_rows;?> ],
                                 fill: false,
                                 borderColor: 'rgb(65, 105, 225)',
@@ -382,7 +382,7 @@ if ($lastedit_query != false) {
                         plugins: {
                             title: {
                                 display: true,
-                                text: "KBytes adicionados por dia"
+                                text: "<?=§('login-newbytes')?>"
                             },
                             legend: {
                                 display: false
@@ -393,7 +393,7 @@ if ($lastedit_query != false) {
                         labels: dias,
                         datasets: [
                             {
-                                label: 'KBytes adicionados por dia',
+                                label: '<?=§('login-newbytes')?>',
                                 data: [ <?=$new_bytes_rows;?> ],
                                 fill: false,
                                 borderColor: 'rgb(219, 112, 147)',
@@ -413,7 +413,7 @@ if ($lastedit_query != false) {
                         plugins: {
                             title: {
                                 display: true,
-                                text: "KBytes validados por dia"
+                                text: "<?=§('login-validbytes')?>"
                             },
                             legend: {
                                 display: false
@@ -424,7 +424,7 @@ if ($lastedit_query != false) {
                         labels: dias,
                         datasets: [
                             {
-                                label: 'KBytes validados por dia',
+                                label: '<?=§('login-validbytes')?>',
                                 data: [ <?=$valid_bytes_rows;?> ],
                                 fill: false,
                                 borderColor: 'rgb(255, 69, 0)',

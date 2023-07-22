@@ -83,24 +83,21 @@ if (isset($_POST['diff'])) {
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <title>Retroceder - <?=$contest['name'];?></title>
+        <title><?=§('backtrack')?> - <?=$contest['name'];?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
     </head>
     <body>
         <header class="w3-container w3-<?=$contest['theme'];?>">
-            <h1>Retroceder - <?=$contest['name'];?></h1>
+            <h1><?=§('backtrack')?> - <?=$contest['name'];?></h1>
         </header>
         <br>
         <div class="w3-row-padding w3-content" style="max-width:700px">
             <div class="w3-container w3-margin-top w3-card-4">
                 <div class="w3-container">
                     <p>
-                        Essa página lista as edições que foram feitas por usuários participantes no âmbito do
-                        wikiconcurso mas foram realizadas antes da efetivação da inscrição no Outreach Dashboard.
-                        Se necessário, clique no botão para aceitar a edição.
-                        Após a aceitação, a edição estará disponível na fila de avaliação.
+                        <?=§('backtrack-about')?>
                     </p>
                 </div>
             </div>
@@ -120,22 +117,22 @@ if (isset($_POST['diff'])) {
                                             ><?=$diff['diff']?></a>
                                         </span>
                                         <br>
-                                        <span>Edição em <?=$diff['timestamp']?> com <?=$diff['bytes']?> bytes</span>
+                                        <span><?=§('backtrack-stats',$diff['timestamp'],$diff['bytes'])?></span>
                                     </div>
                                     <form method="post">
                                         <input type='hidden' name='diff' value='<?=$diff['diff']?>'>
                                         <button
                                         type='submit'
-                                        onclick="return confirm('Tem certeza?')"
+                                        onclick="return confirm('<?=§('backtrack-areyousure')?>')"
                                         class='w3-bar-item w3-right w3-button w3-section w3-green'
-                                        >Aceitar edição</button>
+                                        ><?=§('backtrack-accept')?></button>
                                     </form>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
                     </div>
                     <footer class='w3-container w3-<?=$contest['theme']?>' style='filter: hue-rotate(180deg);'>
-                        <h5>Participante se inscreveu em <strong><?=$case['enrollment_timestamp']?></strong></h5>
+                        <h5><?=§('backtrack-enrollment',"<strong>{$case['enrollment_timestamp']}</strong>")?></h5>
                     </footer>
                 </div>
             <?php endforeach; ?>
@@ -143,10 +140,10 @@ if (isset($_POST['diff'])) {
     </body>
     <?php if (@array_key_exists('diff', $output['success'])): ?>
         <?php if (is_null($output['success']['diff'])): ?>
-            <script>alert('Erro ao aceitar edição');</script>
+            <script>alert('<?=§('backtrack-error')?>');</script>
         <?php else: ?>
             <script>
-                alert('Edição aceita com sucesso!');
+                alert('<?=§('backtrack-success')?>');
                 window.location.href = window.location.href;
             </script>
         <?php endif; ?>
