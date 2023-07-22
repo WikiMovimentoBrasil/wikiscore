@@ -49,28 +49,27 @@ if (in_array($userLang . '.json', $acceptedLanguages)) {
 } elseif (in_array($browserLang . '.json', $acceptedLanguages)) {
     $lang = $browserLang;
 } else {
-    $defaultLang = 'pt';
+    $defaultLang = 'en';
 }
 
 $translationFile = './translations/' . $lang . '.json';
 $trans = file_exists($translationFile) ? json_decode(file_get_contents($translationFile), true) : [];
+$orig = json_decode(file_get_contents('./translations/en.json'), true);
 
 //Função para exibição de traduções
 function §($item, ...$args) {
     global $trans;
-    if (isset($trans[$item])) {
-        $translatedString = $trans[$item];
+    global $orig;
 
-        // Replace placeholders ($1, $2, $3, etc.) with corresponding arguments
-        for ($i = 1; $i <= count($args); $i++) {
-            $placeholder = '$' . $i;
-            $translatedString = str_replace($placeholder, $args[$i - 1], $translatedString);
-        }
-
-        return $translatedString;
-    } else {
-        return 'ERROR!';
+    $translatedString = $trans[$item] ?? $orig[$item] ?? "??";
+    
+    // Replace placeholders ($1, $2, $3, etc.) with corresponding arguments
+    for ($i = 1; $i <= count($args); $i++) {
+        $placeholder = '$' . $i;
+        $translatedString = str_replace($placeholder, $args[$i - 1], $translatedString);
     }
+
+    return $translatedString;
 }
 
 //Verifica se página de gerenciamento foi chamada
