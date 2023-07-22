@@ -13,11 +13,11 @@ if (isset($_SESSION['user'])) {
     // Caso contrário, faz logout automaticamente.
     if ($_SESSION['user']['contest'] != $contest['name_id']) {
         unset($_SESSION['user']);
-        header("Location: index.php?contest=".$_GET['contest']."&page=login");
+        header("Location: index.php?lang=$lang&contest=".$_GET['contest']."&page=login");
         exit();
     }
 
 } else {
-    header("Location: index.php?contest=".$_GET['contest']."&page=login");
+    header("Location: index.php?lang=$lang&contest=".$_GET['contest']."&page=login");
     exit();
 }

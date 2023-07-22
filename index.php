@@ -49,7 +49,7 @@ if (in_array($userLang . '.json', $acceptedLanguages)) {
 } elseif (in_array($browserLang . '.json', $acceptedLanguages)) {
     $lang = $browserLang;
 } else {
-    $defaultLang = 'en';
+    $lang = 'en';
 }
 
 $translationFile = './translations/' . $lang . '.json';
@@ -185,7 +185,7 @@ if (isset($_GET['contest'])) {
         <div class="w3-padding">
         <?php foreach ($contests_array as $name_id => $contest): ?>
             <p>
-                <a href='index.php?contest=<?=$name_id?>'><?=$contest['name']?></a>
+                <a href='index.php?lang=<?=$lang?>&contest=<?=$name_id?>'><?=$contest['name']?></a>
             </p>
         <?php endforeach; ?>
         </div>

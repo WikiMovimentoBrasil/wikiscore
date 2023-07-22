@@ -476,7 +476,7 @@ if ($contest['end_time'] + 172800 < time()) {
                                 class='w3-btn w3-padding-small w3-purple'
                                 type='button'
                                 onclick='window.open(
-                                    "index.php?contest=<?=$contest['name_id']?>&page=modify&diff=<?=urlencode(
+                                    "index.php?lang=<?=$lang?>&contest=<?=$contest['name_id']?>&page=modify&diff=<?=urlencode(
                                         $row['diff']
                                     )?>",
                                     "_blank"

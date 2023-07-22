@@ -211,7 +211,7 @@ if (isset($_POST['email'])) {
             <script>alert('<?=$status?>');</script>
             <?php if (isset($reload)): ?>
                 <script>
-                    window.location.replace('index.php?contest=<?=$contest['name_id']?>');
+                    window.location.replace('index.php?lang=<?=$lang?>&contest=<?=$contest['name_id']?>');
                 </script>
             <?php endif; ?>
         <?php endif; ?>

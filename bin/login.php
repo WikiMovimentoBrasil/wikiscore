@@ -13,7 +13,7 @@ if (isset($_POST['email'])) {
 
 // (B) REDIRECT USER IF SIGNED IN
 if (isset($_SESSION['user'])) {
-    header("Location: index.php?contest=".$_GET['contest']."&page=triage");
+    header("Location: index.php?lang=$lang&contest=".$_GET['contest']."&page=triage");
     exit();
 }
 
@@ -228,7 +228,7 @@ if ($lastedit_query != false) {
                             </p>
                         </div>
                         <div class="w3-container w3-padding-small">
-                            <button class="w3-button w3-half w3-<?=$contest['theme'];?> w3-block w3-large" style="filter: hue-rotate(120deg);" type="button" onclick="window.open('index.php?contest=<?=$contest['name_id'];?>&page=graph', '_blank');"><?=§('login-graph')?></button>
+                            <button class="w3-button w3-half w3-<?=$contest['theme'];?> w3-block w3-large" style="filter: hue-rotate(120deg);" type="button" onclick="window.open('index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=graph', '_blank');"><?=§('login-graph')?></button>
                             <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-half w3-block w3-<?=$contest['theme'];?> w3-large" style="filter: hue-rotate(240deg);"><?=§('login')?></button>
                         </div>
                     </div>
@@ -261,7 +261,7 @@ if ($lastedit_query != false) {
                     <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
                         <button
                         onclick="window.open(
-                            'index.php?contest=<?=$contest['name_id'];?>&page=password',
+                            'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=password',
                             '_blank'
                         );"
                         type="button"

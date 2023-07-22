@@ -405,7 +405,7 @@ mysqli_close($con);
                             class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small"
                             type="button"
                             onclick="window.open(
-                                'index.php?contest=<?=$contest['name_id'];?>&page=modify&diff=<?=@$output['success']['diff'];?>',
+                                'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=modify&diff=<?=@$output['success']['diff'];?>',
                                 '_blank'
                             );"><i class="fa-solid fa-eraser w3-medium" aria-hidden="true"></i> <?=§('triage-fix')?></button>
                         </p>
@@ -439,7 +439,7 @@ mysqli_close($con);
                                 style="filter: hue-rotate(40deg);"
                                 type="button"
                                 onclick="window.open(
-                                    'index.php?contest=<?=$contest['name_id'];?>&page=counter',
+                                    'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=counter',
                                     '_blank'
                                 );">
                                     <i class="fa-solid fa-chart-line w3-xxlarge" aria-hidden="true"></i><br><?=§('counter')?>
@@ -451,7 +451,7 @@ mysqli_close($con);
                                 style="filter: hue-rotate(80deg);"
                                 type="button"
                                 onclick="window.open(
-                                    'index.php?contest=<?=$contest['name_id'];?>&page=modify',
+                                    'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=modify',
                                     '_blank'
                                 );">
                                     <i class="fa-solid fa-pen-to-square w3-xxlarge" aria-hidden="true"></i><br><?=§('modify')?>
@@ -465,7 +465,7 @@ mysqli_close($con);
                                 style="filter: hue-rotate(120deg);"
                                 type="button"
                                 onclick="window.open(
-                                    'index.php?contest=<?=$contest['name_id'];?>&page=compare',
+                                    'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=compare',
                                     '_blank'
                                 );">
                                     <i class="fa-solid fa-code-compare w3-xxlarge" aria-hidden="true"></i><br><?=§('compare')?>
@@ -477,7 +477,7 @@ mysqli_close($con);
                                 style="filter: hue-rotate(160deg);"
                                 type="button"
                                 onclick="window.open(
-                                    'index.php?contest=<?=$contest['name_id'];?>&page=edits',
+                                    'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=edits',
                                     '_blank'
                                 );">
                                     <i class="fa-solid fa-list-check w3-xxlarge" aria-hidden="true"></i><br><?=§('triage-evaluated')?>
@@ -491,7 +491,7 @@ mysqli_close($con);
                                 style="filter: hue-rotate(200deg);"
                                 type="button"
                                 onclick="window.open(
-                                    'index.php?contest=<?=$contest['name_id'];?>&page=backtrack',
+                                    'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=backtrack',
                                     '_blank'
                                 );">
                                     <i class="fa-solid fa-history w3-xxlarge" aria-hidden="true"></i><br><?=§('backtrack')?>
@@ -503,7 +503,7 @@ mysqli_close($con);
                                 style="filter: hue-rotate(240deg);"
                                 type="button"
                                 onclick="window.open(
-                                    'index.php?contest=<?=$contest['name_id'];?>&page=evaluators',
+                                    'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=evaluators',
                                     '_blank'
                                 );">
                                     <i class="fa-solid fa-users w3-xxlarge" aria-hidden="true"></i><br><?=§('evaluators')?>
