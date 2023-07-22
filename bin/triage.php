@@ -606,19 +606,19 @@ mysqli_close($con);
                                 name="obs"
                                 id="obs"
                                 type="text"
-                                placeholder="<?=§('label-observation')?>">
+                                placeholder="<?=§('triage-observation')?>">
                                 <br>
                                 <input
                                 class="w3-button w3-border w3-block w3-red"
                                 name="overwrite"
                                 id="overwrite"
                                 ype="button"
-                                value="<?=§('label-alterbytes')?>"
+                                value="<?=§('triage-alterbytes')?>"
                                 onclick="handleOverwriteClick('<?=@$output['revision']['bytes'];?>')">
                                 <input
                                 class="w3-button w3-green w3-border-green w3-border w3-block w3-margin-top"
                                 type="submit"
-                                value="<?=§('label-save')?>">
+                                value="<?=§('triage-save')?>">
                             </p>
                         </form>
                     </div>
