@@ -1,6 +1,6 @@
 {
-    "modify-label-user": "Brukjer;",
-    "modify-label-bytes": "Byte;",
+    "modify-label-user": "Brukjer:",
+    "modify-label-bytes": "Byte:",
     "modify-label-withimage": "Med bilde:",
     "label-diff": "Forskjell:",
     "modify-label-newpage": "Ny artikke:",
