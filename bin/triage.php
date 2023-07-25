@@ -316,7 +316,7 @@ if ($output['revision'] != null) {
         }
 
         //Monta código da edição
-        $output['history'][] = [ 
+        $output['history'][] = [
             "class"     => $history_class,
             "user"      => $edit['user'],
             "timestamp" => $timestamp,

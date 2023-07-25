@@ -127,9 +127,9 @@ mysqli_stmt_bind_param($validedit_query, "ss", $row_local_id, $row_timestamp);
 
 //Loop de execução das queries
 foreach ($enrollments as $enrollment) {
-    $row_global_id = $enrollment['global_id']; 
+    $row_global_id = $enrollment['global_id'];
     $row_timestamp = strftime('%Y-%m-%d %H:%M:%S', strtotime($enrollment['enrollment_timestamp']));
-    $row_local_id = $centralauth_users[$enrollment['global_id']]['lu_local_id'] ?? null; 
+    $row_local_id = $centralauth_users[$enrollment['global_id']]['lu_local_id'] ?? null;
     $row_user = $centralauth_users[$enrollment['global_id']]['lu_name'] ?? $enrollment['username'] ?? null;
 
     mysqli_stmt_execute($adduser_query);

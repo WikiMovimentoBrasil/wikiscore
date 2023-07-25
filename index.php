@@ -63,7 +63,7 @@ function §($item, ...$args) {
     global $orig;
 
     $translatedString = $trans[$item] ?? $orig[$item] ?? "??";
-    
+
     // Replace placeholders ($1, $2, $3, etc.) with corresponding arguments
     for ($i = 1; $i <= count($args); $i++) {
         $placeholder = '$' . $i;

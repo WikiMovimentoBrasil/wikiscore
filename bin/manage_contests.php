@@ -264,8 +264,8 @@ if (isset($_POST['do_create'])) {
     //Apaga registro na tabela de concursos
     $delete_statement =
         "DELETE FROM
-            `manage__contests` 
-        WHERE 
+            `manage__contests`
+        WHERE
             `name_id` = ?
         LIMIT 1";
 
@@ -701,16 +701,16 @@ if (isset($_POST['do_create'])) {
                                     <form id="alter" method="post">
                                         <input type="hidden" name="name_id" value="<?=$contest_info['name_id']?>">
                                     </form>
-                                    <button 
-                                    class="w3-button w3-orange" 
+                                    <button
+                                    class="w3-button w3-orange"
                                     name="do_restart"
-                                    form="alter" 
+                                    form="alter"
                                     onclick="return confirm('Ao reiniciar o concurso, todas as avaliações já efetuadas serão eliminadas. Deseja prosseguir?')"
                                     type="submit">Reiniciar</button>
-                                    <button 
-                                    class="w3-button w3-red w3-right" 
-                                    name="do_delete" 
-                                    form="alter" 
+                                    <button
+                                    class="w3-button w3-red w3-right"
+                                    name="do_delete"
+                                    form="alter"
                                     onclick="return confirm('Ao apagar o concurso, todos os registros relacionados a este concurso serão eliminados. Deseja prosseguir?')"
                                     type="submit">Apagar</button>
                                 </div>

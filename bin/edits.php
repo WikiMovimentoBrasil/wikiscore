@@ -29,31 +29,31 @@ $csv =  "sep=;\r\n".'"'.
 
 //Coleta lista de edições
 $edits_statement = "
-    SELECT 
-        `{$contest['name_id']}__edits`.`diff`, 
-        `{$contest['name_id']}__edits`.`article`, 
-        `{$contest['name_id']}__edits`.`timestamp`, 
-        `{$contest['name_id']}__edits`.`n`, 
+    SELECT
+        `{$contest['name_id']}__edits`.`diff`,
+        `{$contest['name_id']}__edits`.`article`,
+        `{$contest['name_id']}__edits`.`timestamp`,
+        `{$contest['name_id']}__edits`.`n`,
         IFNULL(
-            `{$contest['name_id']}__users`.`user`, 
+            `{$contest['name_id']}__users`.`user`,
             CONCAT(
                 'Special:Redirect/user/', `{$contest['name_id']}__edits`.`user_id`
             )
         ) AS `user`,
-        `{$contest['name_id']}__edits`.`bytes`, 
-        `{$contest['name_id']}__edits`.`new_page`, 
-        `{$contest['name_id']}__edits`.`valid_edit`, 
-        `{$contest['name_id']}__edits`.`valid_user`, 
-        `{$contest['name_id']}__edits`.`pictures`, 
-        `{$contest['name_id']}__edits`.`reverted`, 
-        `{$contest['name_id']}__edits`.`by`, 
-        `{$contest['name_id']}__edits`.`when`, 
-        `{$contest['name_id']}__edits`.`obs` 
-    FROM 
-        `{$contest['name_id']}__edits` 
-    LEFT JOIN 
-        `{$contest['name_id']}__users` 
-    ON 
+        `{$contest['name_id']}__edits`.`bytes`,
+        `{$contest['name_id']}__edits`.`new_page`,
+        `{$contest['name_id']}__edits`.`valid_edit`,
+        `{$contest['name_id']}__edits`.`valid_user`,
+        `{$contest['name_id']}__edits`.`pictures`,
+        `{$contest['name_id']}__edits`.`reverted`,
+        `{$contest['name_id']}__edits`.`by`,
+        `{$contest['name_id']}__edits`.`when`,
+        `{$contest['name_id']}__edits`.`obs`
+    FROM
+        `{$contest['name_id']}__edits`
+    LEFT JOIN
+        `{$contest['name_id']}__users`
+    ON
         `{$contest['name_id']}__edits`.`user_id` = `{$contest['name_id']}__users`.`local_id`;
 ";
 $edits_query = mysqli_prepare($con, $edits_statement);
