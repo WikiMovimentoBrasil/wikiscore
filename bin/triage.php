@@ -625,7 +625,7 @@ mysqli_close($con);
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                         <h2><?=§('triage-details')?></h2>
                         <p style="overflow-wrap: break-word;">
-                            <strong><?=§('withimage')?></strong>
+                            <strong><?=§('label-user')?></strong>
                             &nbsp;
                             <span style="font-weight:bolder;color:red;">
                                 <?=@$output['compare']['touser'];?>

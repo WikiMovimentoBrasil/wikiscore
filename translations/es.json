@@ -10,7 +10,7 @@
     "index-enroll-main": "Envía un correo electrónico a wikiconcurso@wmnobrasil.org y proporciona información básica sobre tu Wikiconcurso, como posibles fechas de inicio y finalización, alcance, lista de artículos y sistema de puntuación. Más adelante solicitaremos información adicional para los ajustes finales de la herramienta.",
     "backtrack-accept": "Aceptar edición",
     "modify-load": "Cargar edición",
-    "modify-label-user": "Usuaria/o:",
+    "label-user": "Usuaria/o:",
     "graph-axis": "Clasificación de las primeras 9 personas participantes por día transcurrido",
     "edits-valid": "Edición válida",
     "compare-early": "La última actualización ocurrió hace menos de 30 minutos. Espere antes de solicitar una nueva actualización.",

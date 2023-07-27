@@ -305,7 +305,7 @@ mysqli_close($con);
                             </a>
                         </li>
                         <li><?=§('label-timestamp')?><br><?=(@$output['revision']['timestamp']);?></li>
-                        <li><?=§('modify-label-user')?><br><?=(@$output['compare']['touser']);?></li>
+                        <li><?=§('label-user')?><br><?=(@$output['compare']['touser']);?></li>
                         <li><?=§('modify-label-bytes')?><br><?=(@$output['revision']['bytes']);?></li>
                         <li><?=§('label-summary')?><br><?=(@$output['compare']['tocomment']);?>&nbsp;</li>
                         <li><?=§('modify-label-newpage')?><br><?=(@$output['revision']['new_page'])?"Sim":"Não";?></li>

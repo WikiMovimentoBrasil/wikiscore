@@ -25,7 +25,7 @@
     "no": "Non",
     "withimage": "Avec une image ?",
     "quantity": "Quantité",
-    "modify-label-user": "Utilisateur(rice) :",
+    "label-user": "Utilisateur(rice) :",
     "modify-label-bytes": "Bytes :",
     "label-summary": "Sommaire :",
     "modify-label-newpage": "Nouvel article :",
