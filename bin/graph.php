@@ -159,7 +159,7 @@ $all_days = implode(", ", $all_days);
                         }
                     },
                     data: {
-                        labels: <?=§('graph-label')?>,
+                        labels: dias,
                         datasets: [ <?=$datasets_graph;?> ]
                     }
                 }
