@@ -196,6 +196,7 @@
     "triage-ipp": "Imagens por ponto",
     "triage-maxbytes": "Máximo de bytes/pontos por artigo",
     "triage-minbytes": "Mínimo de bytes por edição",
+    "triage-includingall": "Incluindo edições com bytes negativos",
     "triage-indef": "Indefinido",
     "triage-noimages": "Desabilitado",
     "triage-imagemode": "Modo de imagens",

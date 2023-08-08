@@ -471,7 +471,7 @@ if (isset($_POST['do_create'])) {
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
                                     type="number"
-                                    min="1"
+                                    min="0"
                                     max="999999999"
                                     name="max_bytes_per_article"
                                     required>

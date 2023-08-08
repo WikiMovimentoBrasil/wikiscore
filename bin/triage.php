@@ -711,9 +711,14 @@ mysqli_close($con);
                     <p class="w3-small">
                         <strong><?=§('triage-minbytes')?></strong>
                         <br>
-                        <?= ($contest['minimum_bytes'])
-                            ? §('triage-bytes', $contest['minimum_bytes'])
-                            : §('triage-indef')
+                        <?php 
+                            if (!$contest['minimum_bytes']) {
+                                echo §('triage-indef');
+                            } elseif ($contest['minimum_bytes'] == -1) {
+                                echo §('triage-includingall');
+                            } else {
+                                echo §('triage-bytes', $contest['minimum_bytes']);
+                            }
                         ?>
                     </p>
                     <p class="w3-small">
