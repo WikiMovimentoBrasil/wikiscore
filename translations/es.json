@@ -210,5 +210,6 @@
     "triage-alterbytes": "Bytes cambiados",
     "triage-databaseabout": "Espere unos minutos y actualice la página.",
     "triage-imagemode": "Modo imagen",
-    "triage-noimages": "Desactivado"
+    "triage-noimages": "Desactivado",
+    "triage-includingall": "Incluyendo las ediciones con bytes negativos"
 }
