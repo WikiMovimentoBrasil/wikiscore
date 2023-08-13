@@ -158,6 +158,7 @@ if (isset($_POST['do_create'])) {
             `timestamp` timestamp NULL DEFAULT NULL,
             `global_id` int(11) NOT NULL,
             `local_id` int(11) DEFAULT NULL,
+            `attached` timestamp NULL DEFAULT NULL,
             PRIMARY KEY (`n`),
             UNIQUE KEY `user` (`user`)
         ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"

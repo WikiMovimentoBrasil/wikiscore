@@ -1,4 +1,8 @@
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 echo "<pre>";
 
 //Coleta planilha com usuarios inscritos
@@ -77,7 +81,7 @@ if (mysqli_connect_errno()) {
 $centralauth_query = mysqli_prepare(
     $con_centralauth,
     "SELECT
-        `lu_name`, `lu_local_id`, `lu_global_id`
+        `lu_name`, `lu_local_id`, `lu_attached_timestamp`, `lu_global_id`
     FROM
         `localuser`
     WHERE
@@ -94,7 +98,8 @@ mysqli_stmt_close($centralauth_query);
 while ($lu = mysqli_fetch_assoc($centralauth_result)) {
     $centralauth_users[$lu["lu_global_id"]] = [
         "lu_name"       =>  $lu['lu_name'],
-        "lu_local_id"   =>  $lu['lu_local_id']
+        "lu_local_id"   =>  $lu['lu_local_id'],
+        "lu_attached"   =>  $lu['lu_attached_timestamp']
     ];
 }
 
@@ -106,12 +111,12 @@ mysqli_query($con, "TRUNCATE `{$contest['name_id']}__users`;");
 //Prepara query de inserção de usuários
 $adduser_statement = "
     INSERT INTO
-        `{$contest['name_id']}__users` (`user`, `timestamp`, `global_id`, `local_id`)
+        `{$contest['name_id']}__users` (`user`, `timestamp`, `global_id`, `local_id`, `attached`)
     VALUES
-        (?, ?, ?, ?)
+        (?, ?, ?, ?, ?)
 ";
 $adduser_query = mysqli_prepare($con, $adduser_statement);
-mysqli_stmt_bind_param($adduser_query, "ssii", $row_user, $row_timestamp, $row_global_id, $row_local_id);
+mysqli_stmt_bind_param($adduser_query, "ssiis", $row_user, $row_timestamp, $row_global_id, $row_local_id, $row_attached);
 
 //Prepara query de validação de edições
 $validedit_statement = "
@@ -131,6 +136,7 @@ foreach ($enrollments as $enrollment) {
     $row_timestamp = strftime('%Y-%m-%d %H:%M:%S', strtotime($enrollment['enrollment_timestamp']));
     $row_local_id = $centralauth_users[$enrollment['global_id']]['lu_local_id'] ?? null;
     $row_user = $centralauth_users[$enrollment['global_id']]['lu_name'] ?? $enrollment['username'] ?? null;
+    $row_attached = strftime('%Y-%m-%d %H:%M:%S', @strtotime($centralauth_users[$enrollment['global_id']]['lu_attached'])) ?? null;
 
     mysqli_stmt_execute($adduser_query);
     mysqli_stmt_execute($validedit_query);

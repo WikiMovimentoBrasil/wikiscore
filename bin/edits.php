@@ -17,6 +17,7 @@ $csv =  "sep=;\r\n".'"'.
         §('edits-curid').$sep.
         §('edits-timestamp').$sep.
         §('edits-user').$sep.
+        §('edits-attached').$sep.
         §('edits-bytes').$sep.
         §('edits-newpage').$sep.
         §('edits-valid').$sep.
@@ -25,7 +26,7 @@ $csv =  "sep=;\r\n".'"'.
         §('edits-reverted').$sep.
         §('edits-evaluator').$sep.
         §('edits-evaltimestamp').$sep.
-        §('edits-comment')."\r\n";
+        §('edits-comment')."\"\r\n";
 
 //Coleta lista de edições
 $edits_statement = "
@@ -40,6 +41,7 @@ $edits_statement = "
                 'Special:Redirect/user/', `{$contest['name_id']}__edits`.`user_id`
             )
         ) AS `user`,
+        `{$contest['name_id']}__users`.`attached`,
         `{$contest['name_id']}__edits`.`bytes`,
         `{$contest['name_id']}__edits`.`new_page`,
         `{$contest['name_id']}__edits`.`valid_edit`,
@@ -71,6 +73,7 @@ while ($query = mysqli_fetch_assoc($edits_result)) {
             $query["article"].$sep.
             $query["timestamp"].$sep.
             $query["user"].$sep.
+            $query["attached"].$sep.
             $query["bytes"].$sep.
             $query["new_page"].$sep.
             $query["valid_edit"].$sep.
