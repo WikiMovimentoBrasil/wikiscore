@@ -211,5 +211,6 @@
     "triage-databaseabout": "Espere unos minutos y actualice la página.",
     "triage-imagemode": "Modo imagen",
     "triage-noimages": "Desactivado",
-    "triage-includingall": "Incluyendo las ediciones con bytes negativos"
+    "triage-includingall": "Incluyendo las ediciones con bytes negativos",
+    "edits-attached": "Fecha de vinculación de la cuenta"
 }
