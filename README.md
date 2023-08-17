@@ -1,5 +1,5 @@
 <img src="https://img.shields.io/github/issues/WikiMovimentoBrasil/wikiconcursos?style=flat"/> <img src="https://img.shields.io/github/license/WikiMovimentoBrasil/wikiconcursos?style=flat"/> <img src="https://img.shields.io/github/languages/top/WikiMovimentoBrasil/wikiconcursos?style=flat"/> <img
-src="https://img.shields.io/github/last-commit/WikiMovimentoBrasil/wikiconcursos?style=flat"/> [![Bugs](https://sonarcloud.io/api/project_badges/measure?project=wikimovimentobrasil_wikiconcursos&metric=bugs)](https://sonarcloud.io/summary/new_code?id=wikimovimentobrasil_wikiconcursos) [![Status da tradução](https://hosted.weblate.org/widgets/wikiconcursos/-/main/svg-badge.svg)](https://hosted.weblate.org/engage/wikiconcursos/)
+src="https://img.shields.io/github/last-commit/WikiMovimentoBrasil/wikiconcursos?style=flat"/> [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=wikimovimentobrasil_wikiconcursos&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=wikimovimentobrasil_wikiconcursos)
 
 # WikiConcursos
 
