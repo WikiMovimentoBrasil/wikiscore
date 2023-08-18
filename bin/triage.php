@@ -385,7 +385,7 @@ mysqli_close($con);
             <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i> &nbsp;</button>
             <span class="w3-bar-item w3-right"><?=$contest['name'];?></span>
         </div>
-        <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar">
+        <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:230px;" id="mySidebar">
             <br>
             <div class="w3-container w3-row">
                 <div class="w3-col s4">
@@ -464,7 +464,7 @@ mysqli_close($con);
             </div>
         </nav>
         <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
-        <div class="w3-row-padding w3-content w3-main" style="max-width:1400px;margin-left:300px;margin-top:43px;padding-top:16px;">
+        <div class="w3-row-padding w3-content w3-main" style="max-width:1400px;margin-left:230px;margin-top:43px;padding-top:16px;">
             <div class="w3-quarter">
                 <?php if (isset($output['success']['diff'])) : ?>
                     <div
@@ -611,35 +611,6 @@ mysqli_close($con);
                         </div>
                     </div>
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
-                        <h2><?=§('triage-details')?></h2>
-                        <p style="overflow-wrap: break-word;">
-                            <strong><?=§('label-user')?></strong>
-                            &nbsp;
-                            <span style="font-weight:bolder;color:red;">
-                                <?=@$output['compare']['touser'];?>
-                            </span>
-                            <br>
-                            <strong><?=§('label-page')?></strong> <?=@$output['compare']['totitle'];?>
-                            <br>
-                            <strong><?=§('label-diff')?></strong> <?=@$output['revision']['bytes'];?> bytes
-                            <br>
-                            <strong><?=§('label-timestamp')?></strong> <?=@$output['revision']['timestamp'];?> (UTC)
-                            <br>
-                            <strong><?=§('label-summary')?></strong> <?=@$output['compare']['tocomment'];?>
-                            <br>
-                            <strong><?=§('triage-diff')?>:</strong>
-                            <a
-                            href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>"
-                            target="_blank"
-                            rel="noopener"
-                            ><?=@$output['revision']['diff'];?></a> - <a
-                            target="_blank"
-                            rel="noopener"
-                            href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>"
-                            ><?=§('triage-copyvio')?></a>
-                        </p>
-                    </div>
-                    <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                         <h2><?=§('triage-recenthistory')?></h2>
                         <?php foreach ($output['history'] as $oldid): ?>
                             <p class='<?=$oldid['class']?>'>
@@ -762,7 +733,41 @@ mysqli_close($con);
                         </p>
                     </div>
                 <?php else: ?>
-                    <div>
+                    <div class="w3-container w3-justify w3-margin-bottom">
+                        <h3><?=§('triage-details')?></h3>
+                        <div class="w3-half">
+                            <p style="overflow-wrap: break-word;">
+                                <strong><i class="fa-solid fa-user"></i>&nbsp; <?=§('label-user')?></strong>
+                                &nbsp;
+                                <span style="font-weight:bolder;color:red;">
+                                    <?=@$output['compare']['touser'];?>
+                                </span>
+                                <br>
+                                <strong><i class="fa-solid fa-font"></i>&nbsp; <?=§('label-page')?></strong> <?=@$output['compare']['totitle'];?>
+                                <br>
+                                <strong><i class="fa-solid fa-arrow-up-9-1"></i>&nbsp; <?=§('label-diff')?></strong> <?=@$output['revision']['bytes'];?> bytes
+                                <br>
+                                <strong><i class="fa-regular fa-clock"></i>&nbsp; <?=§('label-timestamp')?></strong> <?=@$output['revision']['timestamp'];?> (UTC)
+                            </p>
+                        </div>
+                        <div class="w3-half">
+                            <p style="overflow-wrap: break-word;">
+                                <strong><i class="fa-solid fa-thumbtack"></i>&nbsp; <?=§('triage-diff')?>:</strong>
+                                <a
+                                href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>"
+                                target="_blank"
+                                rel="noopener"
+                                ><?=@$output['revision']['diff'];?></a> - <a
+                                target="_blank"
+                                rel="noopener"
+                                href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>"
+                                ><?=§('triage-copyvio')?></a>
+                                <br>
+                                <strong><i class="fa-solid fa-comment"></i>&nbsp; <?=§('label-summary')?></strong> <?=@$output['compare']['tocomment'];?>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="w3-container">
                         <h3><?=§('triage-differential')?></h3>
                         <table
                         role="presentation"

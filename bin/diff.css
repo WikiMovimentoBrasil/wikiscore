@@ -12,7 +12,8 @@ table.diff.diff-contentalign-left.diff-editfont-monospace {
     white-space: break-spaces;
     border-style: solid;
     border-width: 1px 1px 1px 4px;
-    border-radius: 0.33em
+    border-radius: 0.33em;
+    width: 50%;
 }
 
 .diff-editfont-monospace .diff-addedline,.diff-editfont-monospace .diff-deletedline,.diff-editfont-monospace .diff-context {
