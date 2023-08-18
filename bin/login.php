@@ -3,12 +3,7 @@
 session_start();
 if (isset($_POST['email'])) {
     require_once "credentials-lib.php";
-
-    if (isset($_POST['do_create'])) {
-        $USR->save($_POST['email'], $_POST['password']);
-    } else {
-        $USR->login($_POST['email'], $_POST['password']);
-    }
+    $USR->login($_POST['email'], $_POST['password']);
 }
 
 // (B) REDIRECT USER IF SIGNED IN
@@ -267,12 +262,6 @@ if ($lastedit_query != false) {
                         type="button"
                         class="w3-button w3-red"
                         ><?=§('login-recover')?></button>
-                        <button
-                        class="w3-right w3-button w3-blue"
-                        type="submit"
-                        form="login"
-                        name="do_create"
-                        ><?=§('login-enroll')?></button>
                     </div>
                 </div>
             </div>

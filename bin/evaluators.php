@@ -41,6 +41,67 @@ if ($_POST) {
         die(§('evaluators-denied'));
     }
 
+    //Cria acesso para novo avaliador
+    if (isset($_POST['email'])) {
+
+        $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+        if (!$email) {
+            echo §("password-notemail");
+            die();
+        }
+
+        $password = bin2hex(random_bytes(14));
+
+        require_once "credentials-lib.php";
+        $USR->save($email, $password);
+
+        //Cria corpo do e-mail para avaliador
+        $message  = "Oi!\n";
+        $message .= "Seu e-mail foi cadastrado como avaliador do Wikiconcurso {$contest['name']}.\n";
+        $message .= "Para acessar, utilize seu e-mail e a seguinte senha: {$password}\n";
+        $message .= "Caso queira, a senha pode ser alterada ao clicar em 'Esqueci a senha' na tela de login.\n";
+        $message .= "Para mais detalhes, consulte nosso manual na wiki do GitHub.\n\n";
+        $message .= "Atenciosamente,\nWikiconcursos";
+        $emailFile = fopen("php://temp", 'w+');
+        $subject = "Wikiconcurso {$contest['name']} - Novo avaliador cadastrado";
+        fwrite($emailFile, "Subject: " . $subject . "\n" . $message);
+        rewind($emailFile);
+        $fstat = fstat($emailFile);
+        $size = $fstat['size'];
+
+        //Envia e-mail ao gestor
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'smtp://mail.tools.wmflabs.org:587');
+        curl_setopt($ch, CURLOPT_MAIL_FROM, "tools.wikiconcursos@tools.wmflabs.org");
+        curl_setopt($ch, CURLOPT_MAIL_RCPT, array($email));
+        curl_setopt($ch, CURLOPT_INFILE, $emailFile);
+        curl_setopt($ch, CURLOPT_INFILESIZE, $size);
+        curl_setopt($ch, CURLOPT_UPLOAD, true);
+        curl_exec($ch);
+        fclose($emailFile);
+        curl_close($ch);
+
+        //Processa query
+        $update_query = mysqli_prepare(
+            $con,
+            "UPDATE
+                `{$contest['name_id']}__credentials`
+            SET
+                `user_status` = 'A'
+            WHERE
+                `user_status` = 'P'
+                AND `user_email` = ?"
+        );
+        mysqli_stmt_bind_param($update_query, "s", $email);
+        mysqli_stmt_execute($update_query);
+
+        //Retorna mensagem final
+        if (mysqli_stmt_affected_rows($update_query) != 0) {
+            echo "<script>alert('".§('evaluators-added')."');window.location.href = window.location.href;</script>";
+        }
+        exit();
+    }
+
     //Escapa nome de usuário submetido no formulário, ou encerra script caso nenhum nome tenha sido submetido
     if (
         !isset($_POST['user']) && (
@@ -126,6 +187,30 @@ $icon = '
                     <p><?=§('evaluators-about')?></p>
                 </div>
             </div>
+            <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
+                <div class="w3-margin-top w3-card">
+                    <header class='w3-container w3-<?=$contest['theme'];?>'>
+                        <h1><?=§('evaluators-neweval')?></h1>
+                    </header>
+                    <div class="w3-container">
+                        <ul class="w3-ul">
+                            <li class="w3-bar">
+                                <?=$icon?>
+                                <form method="post">
+                                    <input type="email" placeholder="<?=§('login-email')?>" name="email" 
+                                    class="w3-input w3-border w3-bar-item w3-section"
+                                    >
+                                    <button type='submit' 
+                                    class='w3-bar-item w3-right w3-button w3-section w3-<?=$contest['theme'];?>'
+                                    >
+                                        <?=§('evaluators-register')?>
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            <?php endif; ?>
             <div class="w3-margin-top w3-card">
                 <header style="filter: hue-rotate(60deg);" class='w3-container w3-<?=$contest['theme'];?>'>
                     <h1><?=§('evaluators-manager')?></h1>
