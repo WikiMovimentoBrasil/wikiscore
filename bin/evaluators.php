@@ -81,24 +81,8 @@ if ($_POST) {
         fclose($emailFile);
         curl_close($ch);
 
-        //Processa query
-        $update_query = mysqli_prepare(
-            $con,
-            "UPDATE
-                `{$contest['name_id']}__credentials`
-            SET
-                `user_status` = 'A'
-            WHERE
-                `user_status` = 'P'
-                AND `user_email` = ?"
-        );
-        mysqli_stmt_bind_param($update_query, "s", $email);
-        mysqli_stmt_execute($update_query);
-
         //Retorna mensagem final
-        if (mysqli_stmt_affected_rows($update_query) != 0) {
-            echo "<script>alert('".§('evaluators-added')."');window.location.href = window.location.href;</script>";
-        }
+        echo "<script>alert('".§('evaluators-added')."');window.location.href = window.location.href;</script>";
         exit();
     }
 

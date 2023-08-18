@@ -104,9 +104,9 @@ class Credentials
     if ($id===null) {
       $sql = "
         INSERT INTO `{$contestid}__credentials`
-          (`user_name`, `user_email`, `user_password`)
+          (`user_name`, `user_email`, `user_password`, `user_status`)
         VALUES
-          (?,?,?)";
+          (?,?,?,'A')";
       $data = [$name, $email, password_hash($pass, PASSWORD_DEFAULT)];
     } else {
       $sql = "
