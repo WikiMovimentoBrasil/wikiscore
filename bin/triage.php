@@ -359,16 +359,112 @@ mysqli_close($con);
                 var obsElement = document.getElementById('obs');
                 obsElement.required = true;
             }
+            
+            function w3_open() {
+                var mySidebar = document.getElementById("mySidebar");
+                var overlayBg = document.getElementById("myOverlay");
+                if (mySidebar.style.display === 'block') {
+                    mySidebar.style.display = 'none';
+                    overlayBg.style.display = "none";
+                } else {
+                    mySidebar.style.display = 'block';
+                    overlayBg.style.display = "block";
+                }
+            }
+            function w3_close() {
+                document.getElementById("mySidebar").style.display = "none";
+                document.getElementById("myOverlay").style.display = "none";
+            }
         </script>
         <?php if (isset($output['success']['diff']) || isset($output['success']['skip'])) : ?>
             <script type="text/javascript">history.replaceState(null, document.title, location.href);</script>
         <?php endif; ?>
     </head>
     <body>
-        <div class="w3-<?=$contest['theme'];?> w3-padding-32 w3-margin-bottom w3-center">
-            <h1 class="w3-jumbo"><?=$contest['name'];?></h1>
+        <div class="w3-<?=$contest['theme'];?> w3-large w3-bar w3-top" style="z-index:4">
+            <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i> &nbsp;</button>
+            <span class="w3-bar-item w3-right"><?=$contest['name'];?></span>
         </div>
-        <div class="w3-row-padding w3-content" style="max-width:1400px">
+        <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar">
+            <br>
+            <div class="w3-container w3-row">
+                <div class="w3-col s4">
+                    <svg
+                        class="w3-margin-right"
+                        width="46"
+                        height="46"
+                        stroke-width="1.5"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                            d="M7 18V17C7 14.2386 9.23858 12 12 12V12C14.7614 12 17 14.2386 17 17V18"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                        />
+                        <path
+                            d="M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12Z"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+                        <circle
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            stroke-width="1.5"
+                        />
+                    </svg>
+                </div>
+                <div class="w3-col s8 w3-bar">
+                    <span>Welcome, <strong><?=ucfirst($_SESSION['user']['user_name']);?></strong></span><br>
+                    <a href="#" class="w3-bar-item w3-button"><i class="fa fa-key"></i></a>
+                    <a href="javascript:document.getElementById('logout').submit()" class="w3-bar-item w3-button"><i class="fa-solid fa-door-open"></i></a>
+                    <form method="post" id="logout" style="display: none;">
+                        <input type="hidden" name="logout" value="Logout">
+                    </form>
+                </div>
+            </div>
+            <hr>
+            <div class="w3-container">
+                <h5><?=§('triage-panel')?></h5>
+            </div>
+            <div class="w3-bar-block">
+                <a href="#" rel="noopener" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>&nbsp; Close Menu</a>
+                <a href="#" rel="noopener" class="w3-bar-item w3-button w3-padding w3-blue">
+                    <i class="fa-solid fa-check-to-slot"></i>&nbsp; Triage
+                </a>
+                <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=counter" 
+                target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
+                    <i class="fa-solid fa-chart-line"></i>&nbsp; <?=§('counter')?>
+                </a>
+                <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=modify" 
+                target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
+                    <i class="fa-solid fa-pen-to-square"></i>&nbsp; <?=§('modify')?>
+                </a>
+                <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=compare" 
+                target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
+                    <i class="fa-solid fa-code-compare"></i>&nbsp; <?=§('compare')?>
+                </a>
+                <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=edits" 
+                target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
+                    <i class="fa-solid fa-list-check"></i>&nbsp; <?=§('triage-evaluated')?>
+                </a>
+                <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=backtrack" 
+                target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
+                    <i class="fa-solid fa-history"></i>&nbsp; <?=§('backtrack')?>
+                </a>
+                <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=evaluators" 
+                target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
+                    <i class="fa-solid fa-users"></i>&nbsp; <?=§('evaluators')?>
+                </a>
+                <br><br>
+            </div>
+        </nav>
+        <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+        <div class="w3-row-padding w3-content w3-main" style="max-width:1400px;margin-left:300px;margin-top:43px;padding-top:16px;">
             <div class="w3-quarter">
                 <?php if (isset($output['success']['diff'])) : ?>
                     <div
@@ -411,136 +507,6 @@ mysqli_close($con);
                         </p>
                     </div>
                 <?php endif; ?>
-                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom">
-                    <h2><?=§('triage-panel')?></h2>
-                    <div class="w3-container">
-                        <div style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>;">
-                            <h6 class="w3-center"><?=§('triage-editofday')?></h6>
-                            <h4 class="w3-center"><?=@substr($output['revision']['timestamp'], 0, 10);?></h4>
-                        </div>
-                            <div class="w3-row">
-                                <div class="w3-half">
-                                    <h6 class="w3-center"><?=§('triage-toeval')?></h6>
-                                    <h1 class="w3-center"><?=$output['count'];?></h1>
-                                </div>
-                                <div class="w3-half">
-                                    <h6 class="w3-center"><?=§('triage-towait')?></h6>
-                                    <h1 class="w3-center"><?=$output['total_count'];?></h1>
-                                </div>
-                            </div>
-                        <br>
-                    </div>
-
-                    <div class="w3-container w3-margin-bottom">
-                        <div class="w3-row">
-                            <div class="w3-half">
-                                <button
-                                class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small"
-                                style="filter: hue-rotate(40deg);"
-                                type="button"
-                                onclick="window.open(
-                                    'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=counter',
-                                    '_blank'
-                                );">
-                                    <i class="fa-solid fa-chart-line w3-xxlarge" aria-hidden="true"></i><br><?=§('counter')?>
-                                </button>
-                            </div>
-                            <div class="w3-half">
-                                <button
-                                class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small"
-                                style="filter: hue-rotate(80deg);"
-                                type="button"
-                                onclick="window.open(
-                                    'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=modify',
-                                    '_blank'
-                                );">
-                                    <i class="fa-solid fa-pen-to-square w3-xxlarge" aria-hidden="true"></i><br><?=§('modify')?>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="w3-row">
-                            <div class="w3-half">
-                                <button
-                                class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small"
-                                style="filter: hue-rotate(120deg);"
-                                type="button"
-                                onclick="window.open(
-                                    'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=compare',
-                                    '_blank'
-                                );">
-                                    <i class="fa-solid fa-code-compare w3-xxlarge" aria-hidden="true"></i><br><?=§('compare')?>
-                                </button>
-                            </div>
-                            <div class="w3-half">
-                                <button
-                                class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small"
-                                style="filter: hue-rotate(160deg);"
-                                type="button"
-                                onclick="window.open(
-                                    'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=edits',
-                                    '_blank'
-                                );">
-                                    <i class="fa-solid fa-list-check w3-xxlarge" aria-hidden="true"></i><br><?=§('triage-evaluated')?>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="w3-row">
-                            <div class="w3-half">
-                                <button
-                                class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small"
-                                style="filter: hue-rotate(200deg);"
-                                type="button"
-                                onclick="window.open(
-                                    'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=backtrack',
-                                    '_blank'
-                                );">
-                                    <i class="fa-solid fa-history w3-xxlarge" aria-hidden="true"></i><br><?=§('backtrack')?>
-                                </button>
-                            </div>
-                            <div class="w3-half">
-                                <button
-                                class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small"
-                                style="filter: hue-rotate(240deg);"
-                                type="button"
-                                onclick="window.open(
-                                    'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=evaluators',
-                                    '_blank'
-                                );">
-                                    <i class="fa-solid fa-users w3-xxlarge" aria-hidden="true"></i><br><?=§('evaluators')?>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="w3-row">
-                            <div class="w3-half">
-                                <form method="post">
-                                    <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
-                                    <input type="hidden" name="skip" value="true">
-                                    <button
-                                    class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small"
-                                    style="filter: hue-rotate(280deg);"
-                                    type="submit"
-                                    value="Pular edição"
-                                    <?=(isset($output['revision']['diff']))?'':'disabled';?>
-                                    >
-                                        <i class="fa-solid fa-forward w3-xxlarge" aria-hidden="true"></i><br><?=§('triage-jump')?>
-                                    </button>
-                                </form>
-                            </div>
-                            <div class="w3-half">
-                                <form method="post">
-                                    <button
-                                    class="w3-button w3-<?=$contest['theme'];?> w3-border w3-block w3-small"
-                                    style="filter: hue-rotate(320deg);"
-                                    type="submit"
-                                    name="logout"
-                                    value="Logout">
-                                        <i class="fa-solid fa-door-open w3-xxlarge" aria-hidden="true"></i><br><?=§('triage-exit')?>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>">
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom">
                         <h2><?=§('triage-evaluation')?></h2>
@@ -621,6 +587,28 @@ mysqli_close($con);
                                 value="<?=§('triage-save')?>">
                             </p>
                         </form>
+                        <p>
+                            <form method="post">
+                                <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
+                                <input type="hidden" name="skip" value="true">
+                                <button
+                                class="w3-button w3-purple w3-border w3-block"
+                                type="submit"
+                                value="Pular edição"
+                                <?=(isset($output['revision']['diff']))?'':'disabled';?>
+                                ><?=§('triage-jump')?></button>
+                            </form>
+                        </p>
+                        <div class="w3-row">
+                            <div class="w3-half">
+                                <h6 class="w3-center"><?=§('triage-toeval')?></h6>
+                                <h1 class="w3-center"><?=$output['count'];?></h1>
+                            </div>
+                            <div class="w3-half">
+                                <h6 class="w3-center"><?=§('triage-towait')?></h6>
+                                <h1 class="w3-center"><?=$output['total_count'];?></h1>
+                            </div>
+                        </div>
                     </div>
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                         <h2><?=§('triage-details')?></h2>
