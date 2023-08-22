@@ -259,7 +259,11 @@ if (isset($_GET['contest'])) {
         rel="noopener"
         href="https://www.w3schools.com/w3css/default.asp"
         target="_blank"
-        >w3.css</a> and <a
+        >w3.css</a>, <a
+        rel="noopener"
+        href="https://hosted.weblate.org/projects/wikiconcursos/"
+        target="_blank"
+        >Weblate</a> and <a
         rel="noopener"
         href="https://wikitech.wikimedia.org/wiki/Portal:Toolforge"
         target="_blank">Toolforge</a>.<br>Source-code on <a
