@@ -212,5 +212,8 @@
     "triage-withimage": "Com imagem",
     "withimage": "Imagem?",
     "yes": "Sim",
-    "edits-attached": "Data de unificação da conta"
+    "edits-attached": "Data de unificação da conta",
+    "evaluators-neweval": "Adicionar avaliador(a)",
+    "evaluators-register": "Registrar",
+    "evaluators-added": "Avaliador(a) adicionado(a) com sucesso!"
 }
