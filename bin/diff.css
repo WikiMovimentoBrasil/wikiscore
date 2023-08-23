@@ -31,6 +31,10 @@ table.diff.diff-contentalign-left.diff-editfont-monospace {
     word-wrap: break-word;
 }
 
+.diff td {
+    padding: 0.33em 0.5em;
+}
+
 .diff-context {
     background: #f8f9fa;
     border-color: #eaecf0;
@@ -114,6 +118,18 @@ table.diff.diff-contentalign-left.diff-editfont-monospace {
 
 .mw-diff-movedpara-right:after,.rtl .mw-diff-movedpara-left:after {
     content: '↩';
+}
+
+.diff td.diff-marker::before {
+    content: attr(data-marker)
+}
+
+.diff td.diff-marker {
+    padding: 0.25em;
+    text-align: right;
+    font-weight: bold;
+    font-size: 1.25em;
+    line-height: 1.2
 }
 
 #mw-inlinediff-header #mw-diff-otitle1,#mw-inlinediff-header #mw-diff-otitle2,#mw-inlinediff-header #mw-diff-otitle3,#mw-inlinediff-header #mw-diff-otitle5 {
