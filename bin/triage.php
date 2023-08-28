@@ -484,7 +484,7 @@ mysqli_close($con);
             <div class="w3-bar-block">
                 <a href="#" rel="noopener" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>&nbsp; Close Menu</a>
                 <a href="#" rel="noopener" class="w3-bar-item w3-button w3-padding w3-blue">
-                    <i class="fa-solid fa-check-to-slot"></i>&nbsp; Triage
+                    <i class="fa-solid fa-check-to-slot"></i>&nbsp; <?=§('triage')?>
                 </a>
                 <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=counter" 
                 target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
