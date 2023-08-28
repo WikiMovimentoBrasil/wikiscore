@@ -217,5 +217,8 @@
     "evaluators-register": "Registrar",
     "evaluators-added": "Avaliador(a) adicionado(a) com sucesso!",
     "triage-onskip": "Puladas",
-    "triage-onhold": "Em avaliação"
+    "triage-onhold": "Em avaliação",
+    "triage-edits": "Edições",
+    "triage-release": "Liberar edições puladas",
+    "triage-unhold": "Liberar edições dos avaliadores"
 }
