@@ -155,29 +155,29 @@ $revert_time = date('Y-m-d H:i:s', strtotime("-{$contest['revert_time']} hours")
 $count_query = mysqli_prepare(
     $con,
     "SELECT
-        COUNT(*) AS `total_count`,
-        IFNULL(SUM(CASE WHEN `timestamp` < ? THEN 1 ELSE 0 END), 0) AS `count`
+        IFNULL(SUM(CASE WHEN `by` IS null       THEN 1 ELSE 0 END), 0) AS `onqueue`,
+        IFNULL(SUM(CASE WHEN `timestamp` > ?    THEN 1 ELSE 0 END), 0) AS `onwait`,
+        IFNULL(SUM(CASE WHEN `by` LIKE 'skip-%' THEN 1 ELSE 0 END), 0) AS `onskip`,
+        IFNULL(SUM(CASE WHEN `by` LIKE 'hold-%' THEN 1 ELSE 0 END), 0) AS `onhold`
     FROM
         `{$contest['name_id']}__edits`
     WHERE
         `reverted` IS null AND
         `valid_edit` IS null AND
         `valid_user` IS NOT null AND
-        (
-            `by` IS null OR
-            `by` = CONCAT('hold-', ?)
-        ) AND
         CASE
             WHEN ? = '-1'
             THEN `bytes` IS NOT null
             ELSE `bytes` > ?
         END"
 );
-mysqli_stmt_bind_param($count_query, "ssii", $revert_time, $_SESSION['user']['user_name'], $bytes, $bytes);
+mysqli_stmt_bind_param($count_query, "sii", $revert_time, $bytes, $bytes);
 mysqli_stmt_execute($count_query);
 $count_result = mysqli_fetch_assoc(mysqli_stmt_get_result($count_query));
-$output['count'] = $count_result['count'];
-$output['total_count'] = $count_result['total_count'] - $count_result['count'];
+$output['onwait'] = $count_result['onwait'];
+$output['onskip'] = $count_result['onskip'];
+$output['onhold'] = $count_result['onhold'];
+$output['onqueue'] = $count_result['onqueue'] - $count_result['onwait'];
 
 //Coleta edição para avaliação
 $revision_query = mysqli_prepare(
@@ -602,11 +602,21 @@ mysqli_close($con);
                         <div class="w3-row">
                             <div class="w3-half">
                                 <h6 class="w3-center"><?=§('triage-toeval')?></h6>
-                                <h1 class="w3-center"><?=$output['count'];?></h1>
+                                <h1 class="w3-center"><?=$output['onqueue'];?></h1>
                             </div>
                             <div class="w3-half">
                                 <h6 class="w3-center"><?=§('triage-towait')?></h6>
-                                <h1 class="w3-center"><?=$output['total_count'];?></h1>
+                                <h1 class="w3-center"><?=$output['onwait'];?></h1>
+                            </div>
+                        </div>
+                        <div class="w3-row">
+                            <div class="w3-half">
+                                <h6 class="w3-center"><?=§('triage-onhold')?></h6>
+                                <h1 class="w3-center"><?=$output['onhold'];?></h1>
+                            </div>
+                            <div class="w3-half">
+                                <h6 class="w3-center"><?=§('triage-onskip')?></h6>
+                                <h1 class="w3-center"><?=$output['onskip'];?></h1>
                             </div>
                         </div>
                     </div>
