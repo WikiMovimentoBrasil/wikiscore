@@ -173,8 +173,8 @@
     "triage-fix": "Revisión",
     "triage-panel": "Panel",
     "triage-editofday": "Está evaluando una edición del día:",
-    "triage-toeval": "Ediciones por evaluar",
-    "triage-towait": "Ediciones en espera",
+    "triage-toeval": "Disponible",
+    "triage-towait": "Esperando",
     "triage-evaluated": "Evaluadas",
     "triage-jump": "Saltar",
     "triage-exit": "Salir",
@@ -215,5 +215,11 @@
     "edits-attached": "Fecha de ingreso en cuenta",
     "evaluators-neweval": "Agregar un nuevo evaluador",
     "evaluators-register": "Registro",
-    "evaluators-added": "¡Evaluador añadido correctamente!"
+    "evaluators-added": "¡Evaluador añadido correctamente!",
+    "triage-edits": "Ediciones",
+    "triage-onskip": "Omitido",
+    "triage-onhold": "Evaluando",
+    "triage-unhold": "Publicar las ediciones de todos los evaluadores",
+    "triage-release": "Liberar las ediciones omitidas",
+    "triage": "Clasificar"
 }
