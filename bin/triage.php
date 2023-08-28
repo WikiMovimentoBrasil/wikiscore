@@ -39,6 +39,7 @@ if ($_POST) {
             $output['success']['skip'] = true;
         }
 
+    //Libera edições puladas
     } elseif(isset($_POST['release'])) {
         $release_query = mysqli_prepare(
             $con,
@@ -48,6 +49,33 @@ if ($_POST) {
                 `by` = NULL
             WHERE
                 `by` = CONCAT('skip-',?)
+            ");
+        mysqli_stmt_bind_param(
+            $release_query,
+            "s",
+            $_SESSION['user']['user_name']
+        );
+        mysqli_stmt_execute($release_query);
+        if (mysqli_stmt_affected_rows($release_query) == 0) {
+            die("<br>Erro ao liberar edição. Atualize a página para tentar novamente.");
+        } else {
+            $output['success']['release'] = true;
+        }
+
+    //Libera edições em avaliação (apenas gestores)
+    } elseif(isset($_POST['unhold'])) {
+        if ($_SESSION['user']['user_status'] != 'G') {
+            die(§('evaluators-denied'));
+        }
+
+        $release_query = mysqli_prepare(
+            $con,
+            "UPDATE
+                `{$contest['name_id']}__edits`
+            SET
+                `by` = NULL
+            WHERE
+                `by` LIKE 'skip-%' OR `by` LIKE 'hold-%'
             ");
         mysqli_stmt_bind_param(
             $release_query,
@@ -172,34 +200,6 @@ if (isset($contest['minimum_bytes'])) {
 
 //Converte prazo de reversão para formato compatível com SQL
 $revert_time = date('Y-m-d H:i:s', strtotime("-{$contest['revert_time']} hours"));
-
-//Conta edições faltantes
-$count_query = mysqli_prepare(
-    $con,
-    "SELECT
-        IFNULL(SUM(CASE WHEN `by` IS null       THEN 1 ELSE 0 END), 0) AS `onqueue`,
-        IFNULL(SUM(CASE WHEN `timestamp` > ?    THEN 1 ELSE 0 END), 0) AS `onwait`,
-        IFNULL(SUM(CASE WHEN `by` LIKE 'skip-%' THEN 1 ELSE 0 END), 0) AS `onskip`,
-        IFNULL(SUM(CASE WHEN `by` LIKE 'hold-%' THEN 1 ELSE 0 END), 0) AS `onhold`
-    FROM
-        `{$contest['name_id']}__edits`
-    WHERE
-        `reverted` IS null AND
-        `valid_edit` IS null AND
-        `valid_user` IS NOT null AND
-        CASE
-            WHEN ? = '-1'
-            THEN `bytes` IS NOT null
-            ELSE `bytes` > ?
-        END"
-);
-mysqli_stmt_bind_param($count_query, "sii", $revert_time, $bytes, $bytes);
-mysqli_stmt_execute($count_query);
-$count_result = mysqli_fetch_assoc(mysqli_stmt_get_result($count_query));
-$output['onwait'] = $count_result['onwait'];
-$output['onskip'] = $count_result['onskip'];
-$output['onhold'] = $count_result['onhold'];
-$output['onqueue'] = $count_result['onqueue'] - $count_result['onwait'];
 
 //Coleta edição para avaliação
 $revision_query = mysqli_prepare(
@@ -351,6 +351,34 @@ if ($output['revision'] != null) {
     array_pop($output['history']);
 
 }
+
+//Conta edições faltantes
+$count_query = mysqli_prepare(
+    $con,
+    "SELECT
+        IFNULL(SUM(CASE WHEN `by` IS null       THEN 1 ELSE 0 END), 0) AS `onqueue`,
+        IFNULL(SUM(CASE WHEN `timestamp` > ?    THEN 1 ELSE 0 END), 0) AS `onwait`,
+        IFNULL(SUM(CASE WHEN `by` LIKE 'skip-%' THEN 1 ELSE 0 END), 0) AS `onskip`,
+        IFNULL(SUM(CASE WHEN `by` LIKE 'hold-%' THEN 1 ELSE 0 END), 0) AS `onhold`
+    FROM
+        `{$contest['name_id']}__edits`
+    WHERE
+        `reverted` IS null AND
+        `valid_edit` IS null AND
+        `valid_user` IS NOT null AND
+        CASE
+            WHEN ? = '-1'
+            THEN `bytes` IS NOT null
+            ELSE `bytes` > ?
+        END"
+);
+mysqli_stmt_bind_param($count_query, "sii", $revert_time, $bytes, $bytes);
+mysqli_stmt_execute($count_query);
+$count_result = mysqli_fetch_assoc(mysqli_stmt_get_result($count_query));
+$output['onwait'] = $count_result['onwait'];
+$output['onskip'] = $count_result['onskip'];
+$output['onhold'] = $count_result['onhold'];
+$output['onqueue'] = $count_result['onqueue'] - $count_result['onwait'];
 
 //Encerra conexão
 mysqli_close($con);
@@ -653,6 +681,19 @@ mysqli_close($con);
                                 ><?=§('triage-release')?></button>
                             </form>
                         </p>
+                        <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
+                            <p>
+                                <form method="post"
+                                onsubmit="return confirm('<?=§('evaluators-areyousure')?>');">
+                                    <input type="hidden" name="unhold" value="true">
+                                    <button
+                                    class="w3-button w3-red w3-border w3-block"
+                                    type="submit"
+                                    <?=(($output['onhold'] + $output['onskip']) > 0)?'':'disabled';?>
+                                    ><?=§('triage-unhold')?></button>
+                                </form>
+                            </p>
+                        <?php endif; ?>
                     </div>
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                         <h2><?=§('triage-recenthistory')?></h2>

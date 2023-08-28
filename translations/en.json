@@ -182,6 +182,7 @@
     "triage-evaluated": "Evaluated",
     "triage-jump": "Skip",
     "triage-release": "Release skipped edits",
+    "triage-unhold": "Release edits from all evaluators",
     "triage-exit": "Exit",
     "triage-evaluation": "Evaluation",
     "triage-observation": "Observation",
