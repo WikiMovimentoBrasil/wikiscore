@@ -220,5 +220,6 @@
     "triage-onhold": "Em avaliação",
     "triage-edits": "Edições",
     "triage-release": "Liberar edições puladas",
-    "triage-unhold": "Liberar edições dos avaliadores"
+    "triage-unhold": "Liberar edições dos avaliadores",
+    "triage": "Triagem"
 }
