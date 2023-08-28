@@ -206,8 +206,8 @@
     "triage-points": "$1 pontos",
     "triage-recenthistory": "Histórico recente",
     "triage-save": "Salvar",
-    "triage-toeval": "Edições para avaliar",
-    "triage-towait": "Edições em espera",
+    "triage-toeval": "Disponíveis",
+    "triage-towait": "Em espera",
     "triage-validedit": "Edição válida",
     "triage-withimage": "Com imagem",
     "withimage": "Imagem?",
@@ -215,5 +215,7 @@
     "edits-attached": "Data de unificação da conta",
     "evaluators-neweval": "Adicionar avaliador(a)",
     "evaluators-register": "Registrar",
-    "evaluators-added": "Avaliador(a) adicionado(a) com sucesso!"
+    "evaluators-added": "Avaliador(a) adicionado(a) com sucesso!",
+    "triage-onskip": "Puladas",
+    "triage-onhold": "Em avaliação"
 }
