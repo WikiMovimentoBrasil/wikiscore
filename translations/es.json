@@ -19,7 +19,7 @@
     "index-about-main": "La herramienta tiene una interfaz sencilla y traducida a otros idiomas. Permite validar rápidamente ediciones en los artículos de cualquier Wikiconcurso. Diferentes evaluadores pueden tener diferentes perfiles, con registros de validación individualizados.",
     "index-enroll-short": "Registrar un nuevo Wikiconcurso",
     "index-enroll-intro": "Para solicitar la inscripción de un nuevo Wikiconcurso, el contacto inicial se hará a través del correo electrónico de contacto de Wiki Movimento Brasil.",
-    "backtrack-about": "Esta página enumera las ediciones realizadas por los participantes como parte del Wikiconcurso, pero que se realizaron antes de su registro en el Panel de la extensión. Si es necesario, haz clic en el botón para aceptar la contribución. Después de la aceptación, el cambio estará disponible en la cola de revisión.",
+    "backtrack-about": "Esta página enumera las ediciones realizadas por los participantes como parte del Wikiconcurso, pero que se realizaron antes de su registro en el Outreach Dashboard. Si es necessário, haz clic en el botón para aceptar la contribución. Después de la aceptación, el cambio estará disponible en la cola de revisión.",
     "backtrack-stats": "Editar en $1 con $2 bytes",
     "backtrack-enrollment": "Participante inscrito en $1",
     "backtrack-error": "Error al aceptar la edición",
