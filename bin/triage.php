@@ -469,7 +469,7 @@ mysqli_close($con);
                     </svg>
                 </div>
                 <div class="w3-col s8 w3-bar">
-                    <span>Welcome, <strong><?=ucfirst($_SESSION['user']['user_name']);?></strong></span><br>
+                    <span><?=§('triage-welcome', ucfirst($_SESSION['user']['user_name']))?></span><br>
                     <a href="#" class="w3-bar-item w3-button" style="pointer-events: none;"><i class="fa fa-key"></i></a>
                     <a href="javascript:document.getElementById('logout').submit()" class="w3-bar-item w3-button"><i class="fa-solid fa-door-open"></i></a>
                     <form method="post" id="logout" style="display: none;">

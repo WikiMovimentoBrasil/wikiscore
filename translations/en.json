@@ -169,6 +169,7 @@
     "password-notemail": "Error: Invalid email!",
     "triage": "Triage",
     "triage-lasteval": "Last evaluation",
+    "triage-welcome": "Welcome, $1",
     "triage-diff": "Diff",
     "triage-validedit": "Valid edit",
     "triage-withimage": "With image",
