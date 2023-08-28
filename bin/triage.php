@@ -39,6 +39,28 @@ if ($_POST) {
             $output['success']['skip'] = true;
         }
 
+    } elseif(isset($_POST['release'])) {
+        $release_query = mysqli_prepare(
+            $con,
+            "UPDATE
+                `{$contest['name_id']}__edits`
+            SET
+                `by` = NULL
+            WHERE
+                `by` = CONCAT('skip-',?)
+            ");
+        mysqli_stmt_bind_param(
+            $release_query,
+            "s",
+            $_SESSION['user']['user_name']
+        );
+        mysqli_stmt_execute($release_query);
+        if (mysqli_stmt_affected_rows($release_query) == 0) {
+            die("<br>Erro ao liberar edição. Atualize a página para tentar novamente.");
+        } else {
+            $output['success']['release'] = true;
+        }
+
     //Salva avaliação da edição
     } else {
 
@@ -376,7 +398,7 @@ mysqli_close($con);
                 document.getElementById("myOverlay").style.display = "none";
             }
         </script>
-        <?php if (isset($output['success']['diff']) || isset($output['success']['skip'])) : ?>
+        <?php if (isset($output['success']['diff']) || isset($output['success']['skip']) || isset($output['success']['release'])) : ?>
             <script type="text/javascript">history.replaceState(null, document.title, location.href);</script>
         <?php endif; ?>
     </head>
@@ -594,11 +616,13 @@ mysqli_close($con);
                                 <button
                                 class="w3-button w3-purple w3-border w3-block"
                                 type="submit"
-                                value="Pular edição"
                                 <?=(isset($output['revision']['diff']))?'':'disabled';?>
                                 ><?=§('triage-jump')?></button>
                             </form>
                         </p>
+                    </div>
+                    <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
+                        <h2><?=§('triage-edits')?></h2>
                         <div class="w3-row">
                             <div class="w3-half">
                                 <h6 class="w3-center"><?=§('triage-toeval')?></h6>
@@ -619,6 +643,16 @@ mysqli_close($con);
                                 <h1 class="w3-center"><?=$output['onskip'];?></h1>
                             </div>
                         </div>
+                        <p>
+                            <form method="post">
+                                <input type="hidden" name="release" value="true">
+                                <button
+                                class="w3-button w3-purple w3-border w3-block"
+                                type="submit"
+                                <?=($output['onskip']>0)?'':'disabled';?>
+                                ><?=§('triage-release')?></button>
+                            </form>
+                        </p>
                     </div>
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                         <h2><?=§('triage-recenthistory')?></h2>
