@@ -10,29 +10,62 @@ jobs:
     
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         
       - name: Verify Regex and JSON
         run: |
           # Run regex verification
-          if grep -r -E '(?<=§\(['"])[\w-]*' .; then
+          source_keys=()
+          while IFS= read -r match
+          do
+            # Extract the desired part from the match using awk
+            clean_match=$(echo "$match" | awk -F "['\"]" '{print $2}')
+            source_keys+=("$clean_match")
+          done < <(grep -r -P -o "(?<=§\()['\"]([\w-]+)['\"]" .)
+
+          if [ ${#source_keys[@]} -gt 0 ]
+          then
             echo "Regex pattern found in code."
-            exit 1
           else
             echo "Regex pattern not found."
+            exit 1
           fi
           
-          # Verify JSON keys against regex
-          JSON_KEYS=$(jq -r 'keys[]' translations/en.json)
+          # Verify JSON keys
+          json_keys=($(jq -r 'keys[]' translations/en.json))
+          if [ ${#json_keys[@]} -gt 0 ]
+          then
+            echo "JSON source found."
+          else
+            echo "JSON source not found."
+            exit 1
+          fi
+
+          #Matching keys
           MISMATCH_FOUND=false
-          for KEY in $JSON_KEYS; do
-            if [[ ! "$KEY" =~ ^[a-zA-Z0-9_-]+$ ]]; then
-              echo "Mismatch found: $KEY"
+          for source_key in "${source_keys[@]}"
+          do
+            KEY_FOUND=false
+            for json_key in "${json_keys[@]}"
+            do
+              if [ "$json_key" = "$source_key" ]
+              then
+                KEY_FOUND=true
+                break
+              fi
+            done
+
+            if [ "$KEY_FOUND" = true ]
+            then
+              echo "Key ${source_key} is defined"
+            else
+              echo "Key ${source_key} is not defined"
               MISMATCH_FOUND=true
             fi
           done
           
-          if [ "$MISMATCH_FOUND" = true ]; then
+          if [ "$MISMATCH_FOUND" = true ]
+          then
             echo "Mismatch between regex and JSON keys."
             exit 1
           else
