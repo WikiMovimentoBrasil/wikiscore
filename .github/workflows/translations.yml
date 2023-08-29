@@ -1,0 +1,40 @@
+name: Translation
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  regex-json-verification:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        
+      - name: Verify Regex and JSON
+        run: |
+          # Run regex verification
+          if grep -r -E '(?<=§\(['"])[\w-]*' .; then
+            echo "Regex pattern found in code."
+            exit 1
+          else
+            echo "Regex pattern not found."
+          fi
+          
+          # Verify JSON keys against regex
+          JSON_KEYS=$(jq -r 'keys[]' translations/en.json)
+          MISMATCH_FOUND=false
+          for KEY in $JSON_KEYS; do
+            if [[ ! "$KEY" =~ ^[a-zA-Z0-9_-]+$ ]]; then
+              echo "Mismatch found: $KEY"
+              MISMATCH_FOUND=true
+            fi
+          done
+          
+          if [ "$MISMATCH_FOUND" = true ]; then
+            echo "Mismatch between regex and JSON keys."
+            exit 1
+          else
+            echo "No mismatch found."
+          fi
