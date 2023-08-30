@@ -93,7 +93,20 @@ class Credentials
     return false;
   }
 
-  // (E) SAVE USER
+  // (E) VERIFY USER PASSWORD
+  public function verify($email, $password)
+  {
+    $user = $this->getByEmail($email);
+    if (
+      is_array($user) &&
+      password_verify($password, $user['user_password'])
+    ) {
+          return true;
+    }
+    return false;
+  }
+
+  // (F) SAVE USER
   public function save($email, $pass, $id=null)
   {
     $name = strstr($email, "@", true);
@@ -127,7 +140,7 @@ class Credentials
   }
 }
 
-// (F) DATABASE SETTINGS - CHANGE TO YOUR OWN!
+// (G) DATABASE SETTINGS
 define('DB_HOST', $db_host);
 define('DB_NAME', $database);
 define('DB_CHARSET', 'utf8');
@@ -135,5 +148,5 @@ define('DB_USER', $db_user);
 define('DB_PASSWORD', $db_pass);
 define('CONTEST', $contest['name_id']);
 
-// (G) CREATE USER OBJECT
+// (H) CREATE USER OBJECT
 $USR = new Credentials();

@@ -167,6 +167,8 @@
     "recover-signature": "Sincerely, Wikicontests",
     "recover-subject": "Wikicontests - New password",
     "recover-notemail": "Error: Invalid email!",
+    "password-username": "Username",
+    "password-oldpassword": "Old password",
     "triage": "Triage",
     "triage-lasteval": "Last evaluation",
     "triage-welcome": "Welcome, $1",
