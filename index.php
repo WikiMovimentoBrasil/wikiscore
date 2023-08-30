@@ -3,6 +3,9 @@
 //Conecta ao banco de dados
 require_once __DIR__.'/bin/connect.php';
 
+//Carrega traduções
+require_once __DIR__.'/bin/languages.php';
+
 //Coleta lista de concursos
 $contests_statement = '
     SELECT
@@ -38,39 +41,6 @@ mysqli_stmt_execute($contests_query);
 $contests_result = mysqli_stmt_get_result($contests_query);
 while ($row = mysqli_fetch_assoc($contests_result)) {
     $contests_array[$row['name_id']] = $row;
-}
-
-//Carrega traduções
-require_once './bin/languages.php';
-$acceptedLanguages = str_replace('.json', '', array_diff(scandir('translations'), array('..', '.')));
-$userLang = filter_var($_GET["lang"] ?? "", FILTER_SANITIZE_STRING);
-$browserLang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) ?? '';
-if (in_array($userLang, $acceptedLanguages)) {
-    $lang = $userLang;
-} elseif (in_array($browserLang, $acceptedLanguages)) {
-    $lang = $browserLang;
-} else {
-    $lang = 'en';
-}
-
-$translationFile = './translations/' . $lang . '.json';
-$trans = file_exists($translationFile) ? json_decode(file_get_contents($translationFile), true) : [];
-$orig = json_decode(file_get_contents('./translations/en.json'), true);
-
-//Função para exibição de traduções
-function §($item, ...$args) {
-    global $trans;
-    global $orig;
-
-    $translatedString = $trans[$item] ?? $orig[$item] ?? "??";
-
-    // Replace placeholders ($1, $2, $3, etc.) with corresponding arguments
-    for ($i = 1; $i <= count($args); $i++) {
-        $placeholder = '$' . $i;
-        $translatedString = str_replace($placeholder, $args[$i - 1], $translatedString);
-    }
-
-    return $translatedString;
 }
 
 //Verifica se página de gerenciamento foi chamada
