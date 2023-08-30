@@ -3,9 +3,10 @@
 require_once "protect.php";
 
 //Formulário submetido
-if (isset($_POST)) {
+if (isset($_POST['oldpass'])) {
 
     //Verifica senha anterior
+    require_once "credentials-lib.php";
     if ($USR->verify($_SESSION['user']['user_email'], $_POST['oldpass'])) {
 
         //Troca senha
@@ -67,7 +68,8 @@ if (isset($_POST)) {
                             class="w3-input w3-border w3-margin-bottom"
                             type="password"
                             maxlength="255"
-                            name="oldpass">
+                            name="oldpass"
+                            required>
 
                             <label>
                                 <strong><?=§('recover-newpassword')?></strong>
@@ -76,9 +78,10 @@ if (isset($_POST)) {
                             class="w3-input w3-border w3-margin-bottom"
                             type="password"
                             maxlength="255"
-                            name="newpass">
+                            name="newpass"
+                            required>
 
-                            <button class="w3-button w3-block w3-<?=$contest['theme'];?> w3-section w3-padding" name="do_create" type="submit"><?=§('recover-send')?></button>
+                            <button class="w3-button w3-block w3-<?=$contest['theme'];?> w3-section w3-padding" type="submit"><?=§('recover-send')?></button>
                         </div>
                     </form>
                 </div>

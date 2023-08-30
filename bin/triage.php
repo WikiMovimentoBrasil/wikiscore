@@ -472,7 +472,7 @@ mysqli_close($con);
                     <span><?=§('triage-welcome', ucfirst($_SESSION['user']['user_name']))?></span><br>
                     <a 
                     href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=password" 
-                    class="w3-bar-item w3-button"><i class="fa fa-key"></i></a>
+                    class="w3-bar-item w3-button" target="_blank" rel="noopener"><i class="fa fa-key"></i></a>
                     <a href="javascript:document.getElementById('logout').submit()" class="w3-bar-item w3-button"><i class="fa-solid fa-door-open"></i></a>
                     <form method="post" id="logout" style="display: none;">
                         <input type="hidden" name="logout" value="Logout">

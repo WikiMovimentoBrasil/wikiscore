@@ -77,6 +77,7 @@ if (isset($_GET['contest'])) {
             "evaluators",
             "graph",
             "recover",
+            "password",
             "maintenance",
             "load_edits",
             "load_reverts",
