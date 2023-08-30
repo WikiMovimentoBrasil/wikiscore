@@ -221,5 +221,6 @@
     "triage-edits": "Edições",
     "triage-release": "Liberar edições puladas",
     "triage-unhold": "Liberar edições dos avaliadores",
-    "triage": "Triagem"
+    "triage": "Triagem",
+    "triage-welcome": "Olá, $1"
 }
