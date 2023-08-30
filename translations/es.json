@@ -221,5 +221,6 @@
     "triage-onhold": "Evaluando",
     "triage-unhold": "Publicar las ediciones de todos los evaluadores",
     "triage-release": "Liberar las ediciones omitidas",
-    "triage": "Clasificar"
+    "triage": "Clasificar",
+    "triage-welcome": "Bienvenido, $1"
 }
