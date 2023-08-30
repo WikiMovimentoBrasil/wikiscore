@@ -169,6 +169,8 @@
     "recover-notemail": "Error: Invalid email!",
     "password-username": "Username",
     "password-oldpassword": "Old password",
+    "password-success": "Password modified successfully!",
+    "password-wrongpass": "Incorrect old password!",
     "triage": "Triage",
     "triage-lasteval": "Last evaluation",
     "triage-welcome": "Welcome, $1",
