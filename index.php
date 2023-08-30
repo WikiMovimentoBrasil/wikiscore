@@ -76,7 +76,7 @@ if (isset($_GET['contest'])) {
             "backtrack",
             "evaluators",
             "graph",
-            "password",
+            "recover",
             "maintenance",
             "load_edits",
             "load_reverts",

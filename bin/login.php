@@ -256,7 +256,7 @@ if ($lastedit_query != false) {
                     <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
                         <button
                         onclick="window.open(
-                            'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=password',
+                            'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=recover',
                             '_blank'
                         );"
                         type="button"
