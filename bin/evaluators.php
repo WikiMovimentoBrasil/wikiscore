@@ -46,7 +46,7 @@ if ($_POST) {
 
         $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
         if (!$email) {
-            echo §("password-notemail");
+            echo §("recover-notemail");
             die();
         }
 
