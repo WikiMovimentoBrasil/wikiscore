@@ -9,7 +9,7 @@ if (isset($_POST['email'])) {
     if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         $email =  filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
     } else {
-        die(§('password-notemail'));
+        die(§('recover-notemail'));
     }
 
     //Pedido sem token
@@ -43,13 +43,13 @@ if (isset($_POST['email'])) {
         if (mysqli_stmt_affected_rows($update_query) != 0) {
 
             //Cria corpo do e-mail
-            $message = §('password-greeting');
+            $message = §('recover-greeting');
             $message .= "\n";
-            $message .= §('password-instruction');
+            $message .= §('recover-instruction');
             $message .= "\n{$token}\n\n\n";
-            $message .= §('password-signature');
+            $message .= §('recover-signature');
             $emailFile = fopen("php://temp", 'w+');
-            $subject = §('password-subject');
+            $subject = §('recover-subject');
             fwrite($emailFile, "Subject: " . $subject . "\n" . $message);
             rewind($emailFile);
             $fstat = fstat($emailFile);
@@ -68,14 +68,14 @@ if (isset($_POST['email'])) {
             curl_close($ch);
 
             //Gera resultado
-            $status = §('password-sent');
+            $status = §('recover-sent');
             $input['token'] = true;
             $input['password'] = true;
 
         } else {
 
             //Gera erro
-            $status = §('password-notfound');
+            $status = §('recover-notfound');
         }
 
     //Pedido com token
@@ -116,23 +116,23 @@ if (isset($_POST['email'])) {
                     $USR->save($email, $_POST['password'], $user_id);
 
                     //Gera resultado
-                    $status = §('password-success');
+                    $status = §('recover-success');
                     $reload = true;
                 } else {
 
                     //Gera erro
-                    $status = §('password-invalid');
+                    $status = §('recover-invalid');
                     $input['token'] = true;
                 }
             } else {
 
                 //Gera erro
-                $status = §('password-expired');
+                $status = §('recover-expired');
             }
         } else {
 
             //Gera erro
-            $status = §('password-notrequested');
+            $status = §('recover-notrequested');
         }
     }
 } else {
@@ -147,20 +147,20 @@ if (isset($_POST['email'])) {
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <title><?=§('password-reset')?> - <?=$contest['name'];?></title>
+        <title><?=§('recover-reset')?> - <?=$contest['name'];?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
     </head>
     <body>
         <header class="w3-container w3-<?=$contest['theme'];?>">
-            <h1><?=§('password-reset')?></h1>
+            <h1><?=§('recover-reset')?></h1>
         </header>
         <br>
         <div class="w3-row-padding w3-content" style="max-width:700px">
             <div class="w3-container w3-margin-top w3-card-4">
                 <div class="w3-container">
-                    <p><?=§('password-about')?></p>
+                    <p><?=§('recover-about')?></p>
                 </div>
             </div>
             <div class="w3-margin-top w3-card-4">
@@ -168,7 +168,7 @@ if (isset($_POST['email'])) {
                     <form id="create" method="post">
                         <div class="w3-section">
                             <label>
-                                <strong><?=§('password-email')?></strong>
+                                <strong><?=§('recover-email')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
@@ -180,7 +180,7 @@ if (isset($_POST['email'])) {
                             required>
 
                             <label>
-                                <strong><?=§('password-token')?></strong>
+                                <strong><?=§('recover-token')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
@@ -191,17 +191,17 @@ if (isset($_POST['email'])) {
                             <?=($input['token'])?'required':'disabled'?>>
 
                             <label>
-                                <strong><?=§('password-newpassword')?></strong>
+                                <strong><?=§('recover-newpassword')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
                             type="password"
                             maxlength="255"
-                            placeholder="<?=($input['password'])?§('password-placeholder'):''?>"
+                            placeholder="<?=($input['password'])?§('recover-placeholder'):''?>"
                             name="password"
                             <?=($input['password'])?'required':'disabled'?>>
 
-                            <button class="w3-button w3-block w3-<?=$contest['theme'];?> w3-section w3-padding" name="do_create" type="submit"><?=§('password-send')?></button>
+                            <button class="w3-button w3-block w3-<?=$contest['theme'];?> w3-section w3-padding" name="do_create" type="submit"><?=§('recover-send')?></button>
                         </div>
                     </form>
                 </div>
