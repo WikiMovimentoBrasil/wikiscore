@@ -127,7 +127,7 @@ if (isset($_GET['contest'])) {
             <select name="lang" onchange="this.form.submit()" class="w3-select" style="max-width: 16em;">
                 <option value="" disabled selected><?=§('language-select')?></option>
                 <?php foreach ($acceptedLanguages as $optionLanguage): ?>
-                    <option value='<?=$optionLanguage?>'><?=$langCodes[$optionLanguage]?></option>
+                    <option value='<?=$optionLanguage?>'><?=Locale::getDisplayLanguage($optionLanguage, $optionLanguage)?></option>
                 <?php endforeach; ?>
             </select>
         </form>
