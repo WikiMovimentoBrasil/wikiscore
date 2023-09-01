@@ -222,5 +222,9 @@
     "triage-unhold": "Publicar las ediciones de todos los evaluadores",
     "triage-release": "Liberar las ediciones omitidas",
     "triage": "Clasificar",
-    "triage-welcome": "Bienvenido, $1"
+    "triage-welcome": "Bienvenido, $1",
+    "password-username": "Nombre de usuario",
+    "password-oldpassword": "Contraseña antigua",
+    "password-success": "¡Contraseña modificada con éxito!",
+    "password-wrongpass": "¡Contraseña antigua incorrecta!"
 }
