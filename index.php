@@ -13,6 +13,7 @@ $contests_statement = '
         UNIX_TIMESTAMP(`start_time`) AS `start_time`,
         UNIX_TIMESTAMP(`end_time`) AS `end_time`,
         `name`,
+        `group`,
         `revert_time`,
         `official_list_pageid`,
         `category_pageid`,

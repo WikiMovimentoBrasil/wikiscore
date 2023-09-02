@@ -606,6 +606,7 @@ if (isset($_POST['do_create'])) {
                 </div>
             </div>
             <?php foreach ($contests_array as $name_id => $contest_info): ?>
+                <?php if ($contest_info['group'] != $_SESSION['user']["user_group"]) continue; ?>
                 <div class="w3-margin-top w3-card">
                     <header
                     class='w3-container w3-<?=$contest_info['theme']?>'

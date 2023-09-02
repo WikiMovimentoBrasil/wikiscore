@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS `manage__contests` (
   `start_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `end_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `name` tinytext COLLATE utf8mb4_unicode_ci NOT NULL,
+  `group` tinytext COLLATE utf8mb4_unicode_ci NOT NULL,
   `revert_time` tinyint(4) NOT NULL DEFAULT '24',
   `official_list_pageid` int(11) NOT NULL,
   `category_pageid` int(11) DEFAULT NULL,
@@ -48,6 +49,7 @@ CREATE TABLE IF NOT EXISTS `manage__credentials` (
   `user_email` varchar(255) NOT NULL,
   `user_password` varchar(128) NOT NULL,
   `user_status` varchar(1) NOT NULL DEFAULT 'P',
+  `user_group` tinytext NOT NULL COLLATE utf8_general_ci,
   PRIMARY KEY (`user_id`) USING BTREE,
   UNIQUE KEY `user_email` (`user_email`) USING BTREE,
   KEY `user_name` (`user_name`) USING BTREE
