@@ -221,10 +221,10 @@
     "triage": "Ordonner",
     "triage-release": "Vérifier les contributions omises",
     "evaluators-register": "Inscription",
-    "evaluators-added": "Évaluateur inscrit avec succès!",
+    "evaluators-added": "Évaluateur inscrit avec succès !",
     "password-username": "Nom d'utilisateur",
     "password-oldpassword": "Ancien mot de passe",
-    "password-success": "Mot de passe changé avec succès!",
-    "password-wrongpass": "Mot de passe ancien incorrect!",
+    "password-success": "Mot de passe changé avec succès !",
+    "password-wrongpass": "Mot de passe ancien incorrect !",
     "triage-welcome": "Bienvenue, $1"
 }
