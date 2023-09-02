@@ -222,5 +222,9 @@
     "triage-release": "Liberar edições puladas",
     "triage-unhold": "Liberar edições dos avaliadores",
     "triage": "Triagem",
-    "triage-welcome": "Olá, $1"
+    "triage-welcome": "Olá, $1",
+    "password-username": "Nome de usuário",
+    "password-oldpassword": "Senha antiga",
+    "password-success": "Senha modificada com sucesso!",
+    "password-wrongpass": "Senha antiga incorreta!"
 }
