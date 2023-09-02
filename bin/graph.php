@@ -34,7 +34,7 @@ if (time() > $contest['end_time']) {
 
 //Monta lista de dias em uma array
 $days = array();
-for ($i = -1; end($days) != $start_day or $i > -365; $i--) {
+for ($i = -1; end($days) != $start_day && $i < -365; $i--) {
     $days[] = date('Y-m-d', strtotime("{$i} days", strtotime($end_time)));
 }
 $days = array_reverse($days);
