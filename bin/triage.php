@@ -237,8 +237,7 @@ $output['revision'] = mysqli_fetch_assoc(mysqli_stmt_get_result($revision_query)
 //Evita avaliação durante atualização do banco de dados
 if ($contest['started_update'] > $contest['finished_update']) {
     $output['revision'] = null;
-    $output['count'] = '-';
-    $output['total_count'] = '-';
+    $output['updating'] = true;
 }
 
 //Trava edição para evitar que dois avaliadores avaliem a mesma edição ao mesmo tempo
@@ -699,7 +698,7 @@ mysqli_close($con);
                     </div>
                     <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                         <h2><?=§('triage-recenthistory')?></h2>
-                        <?php foreach ($output['history'] as $oldid): ?>
+                        <?php foreach ($output['history'] ?? [] as $oldid): ?>
                             <p class='<?=$oldid['class']?>'>
                                 <strong><?=$oldid['user']?></strong>
                                 <br>
@@ -806,7 +805,7 @@ mysqli_close($con);
                 </div>
             </div>
             <div class="w3-threequarter">
-                <?php if ($output['count'] == '-'): ?>
+                <?php if (isset($output['updating'])): ?>
                     <div class="w3-panel w3-red w3-display-container w3-border">
                         <p>
                             <h3><?=§('triage-database')?></h3>

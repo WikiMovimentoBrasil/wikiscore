@@ -191,7 +191,7 @@ if ($contest['api_endpoint'] == 'https://pt.wikipedia.org/w/api.php') {
         ];
         $list = unserialize(
             file_get_contents($contest['api_endpoint']."?".http_build_query($list_params))
-        )['query']['categorymembers'];
+        )['query']['categorymembers'] ?? [];
         foreach ($list as $page) {
             $deletion[] = $page['title'];
         }
