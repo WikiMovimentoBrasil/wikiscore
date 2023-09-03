@@ -40,6 +40,7 @@ $contests_statement = '
 $contests_query = mysqli_prepare($con, $contests_statement);
 mysqli_stmt_execute($contests_query);
 $contests_result = mysqli_stmt_get_result($contests_query);
+$contests_array = [];
 while ($row = mysqli_fetch_assoc($contests_result)) {
     $contests_array[$row['name_id']] = $row;
 }
