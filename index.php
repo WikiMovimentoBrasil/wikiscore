@@ -234,17 +234,17 @@ if (isset($_GET['contest'])) {
         target="_blank"
         >w3.css</a>, <a
         rel="noopener"
-        href="https://hosted.weblate.org/projects/wikiconcursos/"
+        href="https://hosted.weblate.org/projects/wikiscore/"
         target="_blank"
         >Weblate</a> and <a
         rel="noopener"
         href="https://wikitech.wikimedia.org/wiki/Portal:Toolforge"
         target="_blank">Toolforge</a>.<br>Source-code on <a
         rel="noopener"
-        href="https://github.com/WikiMovimentoBrasil/wikiconcursos"
+        href="https://github.com/WikiMovimentoBrasil/wikiscore"
         >GitHub</a> under <a
         rel="noopener"
-        href="https://github.com/WikiMovimentoBrasil/wikiconcursos/blob/main/LICENSE">GPL v3.0</a>.<br>Text license: <a
+        href="https://github.com/WikiMovimentoBrasil/wikiscore/blob/main/LICENSE">GPL v3.0</a>.<br>Text license: <a
         rel="noopener"
         href="https://creativecommons.org/licenses/by-sa/4.0/deed"
         >CC-BY-SA 4.0 International</a>.

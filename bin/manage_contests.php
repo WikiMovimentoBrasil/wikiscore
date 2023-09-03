@@ -214,9 +214,9 @@ if (isset($_POST['do_create'])) {
     $message .= "Para acessar, utilize seu e-mail e a seguinte senha: {$password}\n";
     $message .= "Caso queira, a senha pode ser alterada ao clicar em 'Esqueci a senha' na tela de login.\n";
     $message .= "Para mais detalhes, consulte nosso manual na wiki do GitHub.\n\n";
-    $message .= "Atenciosamente,\nWikiconcursos";
+    $message .= "Atenciosamente,\nWikiScore";
     $emailFile = fopen("php://temp", 'w+');
-    $subject = "Wikiconcursos - Novo concurso cadastrado";
+    $subject = "WikiScore - Novo concurso cadastrado";
     fwrite($emailFile, "Subject: " . $subject . "\n" . $message);
     rewind($emailFile);
     $fstat = fstat($emailFile);
@@ -225,7 +225,7 @@ if (isset($_POST['do_create'])) {
     //Envia e-mail ao gestor
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, 'smtp://mail.tools.wmflabs.org:587');
-    curl_setopt($ch, CURLOPT_MAIL_FROM, "tools.wikiconcursos@tools.wmflabs.org");
+    curl_setopt($ch, CURLOPT_MAIL_FROM, get_current_user()."@tools.wmflabs.org");
     curl_setopt($ch, CURLOPT_MAIL_RCPT, array($email));
     curl_setopt($ch, CURLOPT_INFILE, $emailFile);
     curl_setopt($ch, CURLOPT_INFILESIZE, $size);

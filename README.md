@@ -1,9 +1,9 @@
-<img src="https://img.shields.io/github/issues/WikiMovimentoBrasil/wikiconcursos?style=flat"/> <img src="https://img.shields.io/github/license/WikiMovimentoBrasil/wikiconcursos?style=flat"/> <img src="https://img.shields.io/github/languages/top/WikiMovimentoBrasil/wikiconcursos?style=flat"/> <img
-src="https://img.shields.io/github/last-commit/WikiMovimentoBrasil/wikiconcursos?style=flat"/> [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=wikimovimentobrasil_wikiconcursos&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=wikimovimentobrasil_wikiconcursos) [![Status da tradução](https://hosted.weblate.org/widgets/wikiconcursos/-/main/svg-badge.svg)](https://hosted.weblate.org/engage/wikiconcursos/)
+<img src="https://img.shields.io/github/issues/WikiMovimentoBrasil/wikiscore?style=flat"/> <img src="https://img.shields.io/github/license/WikiMovimentoBrasil/wikiscore?style=flat"/> <img src="https://img.shields.io/github/languages/top/WikiMovimentoBrasil/wikiscore?style=flat"/> <img
+src="https://img.shields.io/github/last-commit/WikiMovimentoBrasil/wikiscore?style=flat"/> [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=wikimovimentobrasil_wikiscore&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=wikimovimentobrasil_wikiscore) [![Status da tradução](https://hosted.weblate.org/widgets/wikiscore/-/main/svg-badge.svg)](https://hosted.weblate.org/engage/wikiscore/)
 
-# WikiConcursos
+# WikiScore
 
-This is an internal tool used to manage the Wiki Contests created and managed by WikiMovimento Brasil. It allows evaluators to validate editions made to articles participating in said contests, and also adds up the points earned by participants. Different contest evaluators can have their own profile, and their own separate validation history of the contributions they have checked.
+This is an tool used to manage contests created and managed by WikiMovimento Brasil. It allows evaluators to validate editions made to articles participating in said contests, and also adds up the points earned by participants. Different contest evaluators can have their own profile, and their own separate validation history of the contributions they have checked.
 
 The system's informations comes from local databases, which contain the data on the articles editions. These databases are fed by cron jobs, which must be set up separetely.
 
@@ -41,7 +41,7 @@ Pull requests are welcome. For major changes, please open an issue first to disc
 Please make sure to update tests as appropriate.
 
 ## License
-[GNU General Public License v3.0](https://github.com/WikiMovimentoBrasil/wikimotivos/blob/master/LICENSE)
+[GNU General Public License v3.0](https://github.com/WikiMovimentoBrasil/wikiscore/blob/master/LICENSE)
 
 ## Credits
 This application was developed by the Wiki Movimento Brasil User Group.

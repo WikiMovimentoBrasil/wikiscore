@@ -58,7 +58,7 @@ if (isset($_POST['email'])) {
             //Envia e-mail
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, 'smtp://mail.tools.wmflabs.org:587');
-            curl_setopt($ch, CURLOPT_MAIL_FROM, "tools.wikiconcursos@tools.wmflabs.org");
+            curl_setopt($ch, CURLOPT_MAIL_FROM, get_current_user()."@tools.wmflabs.org");
             curl_setopt($ch, CURLOPT_MAIL_RCPT, array($email));
             curl_setopt($ch, CURLOPT_INFILE, $emailFile);
             curl_setopt($ch, CURLOPT_INFILESIZE, $size);

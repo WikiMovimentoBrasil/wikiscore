@@ -4,7 +4,7 @@ set_time_limit(1790);
 //Atualiza traduções
 $list = array_diff(scandir('translations'), array('..', '.'));
 foreach ($list as $lang) {
-    $json = file_get_contents("https://raw.githubusercontent.com/WikiMovimentoBrasil/wikiconcursos/main/translations/".$lang);
+    $json = file_get_contents("https://raw.githubusercontent.com/WikiMovimentoBrasil/wikiscore/main/translations/".$lang);
     $bytes = file_put_contents('translations/'.$lang, $json);
 }
 
@@ -70,7 +70,7 @@ foreach ($contests_array as $contest) {
     foreach ($steps as $script) {
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, "https://wikiconcursos.toolforge.org/index.php?contest={$contest}&page={$script}");
+        curl_setopt($ch, CURLOPT_URL, "https://wikiscore.toolforge.org/index.php?contest={$contest}&page={$script}");
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true );
         curl_setopt($ch, CURLOPT_USERAGENT, 'WikiCronJob/1.0');
 
