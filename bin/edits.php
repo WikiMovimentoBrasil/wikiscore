@@ -15,6 +15,7 @@ $sep = '";"';
 $csv =  "sep=;\r\n".'"'.
         §('edits-diff').$sep.
         §('edits-curid').$sep.
+        §('edits-title').$sep.
         §('edits-timestamp').$sep.
         §('edits-user').$sep.
         §('edits-attached').$sep.
@@ -33,6 +34,7 @@ $edits_statement = "
     SELECT
         `{$contest['name_id']}__edits`.`diff`,
         `{$contest['name_id']}__edits`.`article`,
+        `{$contest['name_id']}__articles`.`title`,
         `{$contest['name_id']}__edits`.`timestamp`,
         `{$contest['name_id']}__edits`.`n`,
         IFNULL(
@@ -56,7 +58,11 @@ $edits_statement = "
     LEFT JOIN
         `{$contest['name_id']}__users`
     ON
-        `{$contest['name_id']}__edits`.`user_id` = `{$contest['name_id']}__users`.`local_id`;
+        `{$contest['name_id']}__edits`.`user_id` = `{$contest['name_id']}__users`.`local_id`
+    LEFT JOIN 
+        `{$contest['name_id']}__articles`
+    ON
+        `{$contest['name_id']}__edits`.`article` = `{$contest['name_id']}__articles`.`articleID`;
 ";
 $edits_query = mysqli_prepare($con, $edits_statement);
 mysqli_stmt_execute($edits_query);
