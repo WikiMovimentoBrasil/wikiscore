@@ -9,6 +9,7 @@ $db_host = 'tools.db.svc.eqiad.wmflabs';
 $database = $ts_mycnf['user']."__wikiconcursos";
 
 //Conecta ao servidor
+mysqli_report(MYSQLI_REPORT_ERROR);
 $con = mysqli_connect($db_host, $db_user, $db_pass);
 if (mysqli_connect_errno()) {
     echo "Failed to connect to MySQL: " . mysqli_connect_error();
