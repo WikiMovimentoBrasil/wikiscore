@@ -17,12 +17,14 @@ if (mysqli_connect_errno()) {
 }
 
 //Conecta ao banco de dados
-if (!mysqli_select_db($con, $database)){
+if (!@mysqli_select_db($con, $database)) {
     $sql = "CREATE DATABASE $database";
     if (mysqli_query($con, $sql) === TRUE) {
         echo "Database created successfully!";
+        mysqli_select_db($con, $database);
     } else {
         echo "Error creating database.";
+        die();
     }
 } 
 
