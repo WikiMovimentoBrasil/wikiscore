@@ -57,8 +57,10 @@ mysqli_query($con, "
         `next_update` timestamp NULL DEFAULT NULL,
         PRIMARY KEY (`key`),
         UNIQUE KEY `name_id` (`name_id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+");
 
+mysqli_query($con, "
     CREATE TABLE IF NOT EXISTS `manage__credentials` (
         `user_id` int(11) NOT NULL AUTO_INCREMENT,
         `user_name` varchar(255) NOT NULL,
@@ -69,5 +71,5 @@ mysqli_query($con, "
         PRIMARY KEY (`user_id`) USING BTREE,
         UNIQUE KEY `user_email` (`user_email`) USING BTREE,
         KEY `user_name` (`user_name`) USING BTREE
-    ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 ");
