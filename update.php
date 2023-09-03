@@ -2,10 +2,9 @@
 set_time_limit(1790);
 
 //Atualiza traduções
-$list = array_diff(scandir('translations'), array('..', '.'));
-foreach ($list as $lang) {
-    $json = file_get_contents("https://raw.githubusercontent.com/WikiMovimentoBrasil/wikiscore/main/translations/".$lang);
-    $bytes = file_put_contents('translations/'.$lang, $json);
+if (isset($_SERVER['HTTP_X_GITHUB_EVENT'])) { 
+    `git pull`; 
+    exit();
 }
 
 //Conecta ao banco de dados
