@@ -3,7 +3,8 @@ set_time_limit(1790);
 
 //Atualiza traduções
 if (isset($_SERVER['HTTP_X_GITHUB_EVENT'])) { 
-    `git pull`; 
+    $output = `git pull`; 
+    echo $output;
     exit();
 }
 
