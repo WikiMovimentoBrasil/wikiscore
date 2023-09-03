@@ -77,6 +77,7 @@ while ($query = mysqli_fetch_assoc($edits_result)) {
     $csv .= '"'.
             $query["diff"].$sep.
             $query["article"].$sep.
+            $query["title"].$sep.
             $query["timestamp"].$sep.
             $query["user"].$sep.
             $query["attached"].$sep.
