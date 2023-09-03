@@ -16,7 +16,12 @@ if (isset($contest['category_petscan'])) {
 
     //Insere lista em uma array
     $list = array();
-    foreach ($petscan_list as $petscan_id) { $list[] = $petscan_id['id']; }
+    foreach ($petscan_list as $petscan_id) { 
+        $list[] = [
+            "id"    => $petscan_id['id'],
+            "title" => $petscan_id['title']
+        ];
+    }
 
 } else {
 
@@ -27,7 +32,7 @@ if (isset($contest['category_petscan'])) {
         "list"          => "categorymembers",
         "cmnamespace"   => "0",
         "cmpageid"      => $contest['category_pageid'],
-        "cmprop"        => "ids",
+        "cmprop"        => "ids|title",
         "cmlimit"       => "max"
     ];
     $categorymembers_api = unserialize(
@@ -36,7 +41,12 @@ if (isset($contest['category_petscan'])) {
 
     //Insere lista em uma array
     $list = array();
-    foreach ($categorymembers_api['query']['categorymembers'] as $pageid) { $list[] = $pageid['pageid']; }
+    foreach ($categorymembers_api['query']['categorymembers'] as $pageid) { 
+        $list[] = [
+            "id" => $pageid['pageid'],
+            "title"  => $pageid['title']
+        ];
+    }
 
     //Coleta segunda página da lista, caso exista
     while (isset($categorymembers_api['continue'])) {
@@ -46,28 +56,36 @@ if (isset($contest['category_petscan'])) {
             "list"          => "categorymembers",
             "cmnamespace"   => "0",
             "cmpageid"      => $contest['category_pageid'],
-            "cmprop"        => "ids",
+            "cmprop"        => "ids|title",
             "cmlimit"       => "max",
             "cmcontinue"    => $categorymembers_api['continue']['cmcontinue']
         ];
         $categorymembers_api = unserialize(
             file_get_contents($contest['api_endpoint']."?".http_build_query($categorymembers_api_params))
         );
-        foreach ($categorymembers_api['query']['categorymembers'] as $pageid) { $list[] = $pageid['pageid']; }
+        foreach ($categorymembers_api['query']['categorymembers'] as $pageid) { 
+            $list[] = [
+                "id" => $pageid['pageid'],
+                "title"  => $pageid['title']
+            ];
+        }
     }
 }
 
 //Monta e executa query para atualização da tabela de artigos
 mysqli_query($con, "TRUNCATE `{$contest['name_id']}__articles`;");
+mysqli_query($con, "ALTER TABLE `{$contest['name_id']}__articles` ADD COLUMN IF NOT EXISTS `title` VARCHAR(100) NOT NULL AFTER `articleID`;");
 $addarticle_statement = "
     INSERT INTO
-        `{$contest['name_id']}__articles` (`articleID`)
+        `{$contest['name_id']}__articles` (`articleID`, `title`)
     VALUES
-        (?)
+        (?, ?)
 ";
 $addarticle_query = mysqli_prepare($con, $addarticle_statement);
-mysqli_stmt_bind_param($addarticle_query, "i", $articleID);
-foreach ($list as $articleID) {
+mysqli_stmt_bind_param($addarticle_query, "is", $articleID, $title);
+foreach ($list as $add_title) {
+    $articleID  = $add_title['id'];
+    $title      = $add_title['title'];
     mysqli_stmt_execute($addarticle_query);
 }
 mysqli_stmt_close($addarticle_query);
