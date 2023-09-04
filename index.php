@@ -282,7 +282,7 @@ function openGroup(evt, groupName) {
         href="https://creativecommons.org/licenses/by-sa/4.0/deed"
         >CC-BY-SA 4.0 International</a>.
     </p>
-    <p class="w3-small"><?=$git?></p>
+    <p class="w3-small"><em><?=$git?></em></p>
 </footer>
 
 </body>
