@@ -124,7 +124,7 @@ if (isset($_GET['contest'])) {
         }
     </style>
 </head>
-<body>
+<body onload="openGroup(event,'WMB')">
 
 <!-- Header -->
 <header class="w3-container w3-deep-green w3-center" style="padding:16px 16px 128px;">
