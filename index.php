@@ -48,6 +48,7 @@ foreach ($contests_array as $contest) {
     $contests_chooser[$contest['group']][] = [ $contest["name_id"], $contest["name"] ];
 }
 $contests_groups = array_keys($contests_chooser);
+var_dump($contests_chooser);
 
 //Verifica se página de gerenciamento foi chamada
 if (isset($_GET['manage'])) {
