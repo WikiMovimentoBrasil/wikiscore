@@ -105,6 +105,9 @@ if (isset($_GET['contest'])) {
         exit();
     }
 }
+
+//Exibe revisão git atual no rodapé da página
+$git = shell_exec("git log -1 --pretty=format:'%h - %s (%ci)' --abbrev-commit"); 
 ?>
 
 <!DOCTYPE html>
@@ -279,6 +282,7 @@ function openGroup(evt, groupName) {
         href="https://creativecommons.org/licenses/by-sa/4.0/deed"
         >CC-BY-SA 4.0 International</a>.
     </p>
+    <p class="w3-small"><?=$git?></p>
 </footer>
 
 </body>
