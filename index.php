@@ -182,7 +182,7 @@ $git = shell_exec("git log -1 --pretty=format:'%h - %s (%ci)' --abbrev-commit");
                 <?php endforeach; ?>
             </div>
             <?php foreach ($contests_chooser as $group => $contest): ?>
-                <div id="<?=$group?>" class="w3-container w3-border group" style="<?=($group=='WMB')?'':'display: none;'?>">
+                <div id="<?=$group?>" class="w3-container w3-border group" <?=($group=='WMB')?'':'style="display: none;"'?>>
                     <?php foreach ($contest as $contest_data): ?>
                         <p>
                             <a href='index.php?lang=<?=$lang?>&contest=<?=$contest_data["0"]?>'><?=$contest_data["1"]?></a>
