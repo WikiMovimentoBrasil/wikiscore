@@ -174,6 +174,7 @@ if (isset($_GET['contest'])) {
             <div class="w3-bar w3-deep-green">
                 <?php var_dump($contests_groups); ?>
                 <?php foreach ($contests_groups as $group): ?>
+                    <?php var_dump($group); ?>
                     <button 
                     class="w3-bar-item w3-button tablink <?=($group='WMB')?'w3-red':''?>" 
                     onclick="openGroup(event,'<?=$group?>')"><?=$group?></button>
