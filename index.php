@@ -35,7 +35,7 @@ $contests_statement = '
     FROM
         `manage__contests`
     ORDER BY
-        `start_time` DESC
+        `group` ASC, `start_time` DESC
 ';
 $contests_query = mysqli_prepare($con, $contests_statement);
 mysqli_stmt_execute($contests_query);
@@ -44,6 +44,10 @@ $contests_array = [];
 while ($row = mysqli_fetch_assoc($contests_result)) {
     $contests_array[$row['name_id']] = $row;
 }
+foreach ($contests_array as $contest) {
+    $contest_chooser[$contest['group']][] = [ $contest["name_id"], $contest["name"] ];
+}
+var_dump($contest_chooser);die();
 
 //Verifica se página de gerenciamento foi chamada
 if (isset($_GET['manage'])) {
