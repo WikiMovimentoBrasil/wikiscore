@@ -45,9 +45,9 @@ while ($row = mysqli_fetch_assoc($contests_result)) {
     $contests_array[$row['name_id']] = $row;
 }
 foreach ($contests_array as $contest) {
-    $contest_chooser[$contest['group']][] = [ $contest["name_id"], $contest["name"] ];
+    $contests_chooser[$contest['group']][] = [ $contest["name_id"], $contest["name"] ];
 }
-var_dump($contest_chooser);die();
+$contests_groups = array_keys($contests_chooser);
 
 //Verifica se página de gerenciamento foi chamada
 if (isset($_GET['manage'])) {
@@ -171,14 +171,40 @@ if (isset($_GET['contest'])) {
             <h4><?=§('contest-select')?></h4>
         </header>
         <div class="w3-padding">
-        <?php foreach ($contests_array as $name_id => $contest): ?>
-            <p>
-                <a href='index.php?lang=<?=$lang?>&contest=<?=$name_id?>'><?=$contest['name']?></a>
-            </p>
-        <?php endforeach; ?>
+            <div class="w3-bar w3-deep-green">
+                <?php foreach ($contests_groups as $group): ?>
+                    <button 
+                    class="w3-bar-item w3-button tablink" 
+                    onclick="openGroup(event,'<?=$group?>')"><?=$group?></button>
+                <?php endforeach; ?>
+            </div>
+            <?php foreach ($contests_chooser as $group => $contest): ?>
+                <div id="<?=$group?>" class="w3-container w3-border group">
+                    <?php foreach ($contest as $contest_data): ?>
+                        <p>
+                            <a href='index.php?lang=<?=$lang?>&contest=<?=$contest_data["name_id"]?>'><?=$contest_data["name"]?></a>
+                        </p>
+                    <?php endforeach; ?>
+                </div>
+            <?php endforeach; ?>
         </div>
     </div>
 </div>
+<script>
+function openGroup(evt, groupName) {
+    var i, x, tablinks;
+    x = document.getElementsByClassName("group");
+    for (i = 0; i < x.length; i++) {
+        x[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablink");
+    for (i = 0; i < x.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" w3-red", "");
+    }
+    document.getElementById(groupName).style.display = "block";
+    evt.currentTarget.className += " w3-red";
+}
+</script>
 
 <!-- First Grid -->
 <div class="w3-row-padding w3-padding-64 w3-container">
