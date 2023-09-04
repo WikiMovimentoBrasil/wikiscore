@@ -48,7 +48,6 @@ foreach ($contests_array as $contest) {
     $contests_chooser[$contest['group']][] = [ $contest["name_id"], $contest["name"] ];
 }
 $contests_groups = array_keys($contests_chooser);
-var_dump($contests_chooser);var_dump($contests_groups);
 
 //Verifica se página de gerenciamento foi chamada
 if (isset($_GET['manage'])) {
@@ -173,6 +172,7 @@ if (isset($_GET['contest'])) {
         </header>
         <div class="w3-padding">
             <div class="w3-bar w3-deep-green">
+                <?php var_dump($contests_groups); ?>
                 <?php foreach ($contests_groups as $group): ?>
                     <button 
                     class="w3-bar-item w3-button tablink <?=($group='WMB')?'w3-red':''?>" 
