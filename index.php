@@ -35,7 +35,7 @@ $contests_statement = '
     FROM
         `manage__contests`
     ORDER BY
-        `group` ASC, `start_time` DESC
+        `start_time` DESC
 ';
 $contests_query = mysqli_prepare($con, $contests_statement);
 mysqli_stmt_execute($contests_query);
@@ -124,7 +124,7 @@ if (isset($_GET['contest'])) {
         }
     </style>
 </head>
-<body onload="openGroup(event,'WMB')">
+<body>
 
 <!-- Header -->
 <header class="w3-container w3-deep-green w3-center" style="padding:16px 16px 128px;">
@@ -174,12 +174,12 @@ if (isset($_GET['contest'])) {
             <div class="w3-bar w3-deep-green">
                 <?php foreach ($contests_groups as $group): ?>
                     <button 
-                    class="w3-bar-item w3-button tablink" 
+                    class="w3-bar-item w3-button tablink <?=($group='WMB')?'w3-red':''?>" 
                     onclick="openGroup(event,'<?=$group?>')"><?=$group?></button>
                 <?php endforeach; ?>
             </div>
             <?php foreach ($contests_chooser as $group => $contest): ?>
-                <div id="<?=$group?>" class="w3-container w3-border group">
+                <div id="<?=$group?>" class="w3-container w3-border group" style="<?=($group='WMB')?'':'display: none;'?>">
                     <?php foreach ($contest as $contest_data): ?>
                         <p>
                             <a href='index.php?lang=<?=$lang?>&contest=<?=$contest_data["0"]?>'><?=$contest_data["1"]?></a>
