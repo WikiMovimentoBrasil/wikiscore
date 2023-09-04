@@ -48,7 +48,6 @@ foreach ($contests_array as $contest) {
     $contests_chooser[$contest['group']][] = [ $contest["name_id"], $contest["name"] ];
 }
 $contests_groups = array_keys($contests_chooser);
-var_dump($contests_chooser);
 
 //Verifica se página de gerenciamento foi chamada
 if (isset($_GET['manage'])) {
@@ -183,7 +182,7 @@ if (isset($_GET['contest'])) {
                 <div id="<?=$group?>" class="w3-container w3-border group">
                     <?php foreach ($contest as $contest_data): ?>
                         <p>
-                            <a href='index.php?lang=<?=$lang?>&contest=<?=$contest_data["name_id"]?>'><?=$contest_data["name"]?></a>
+                            <a href='index.php?lang=<?=$lang?>&contest=<?=$contest_data["0"]?>'><?=$contest_data["1"]?></a>
                         </p>
                     <?php endforeach; ?>
                 </div>
