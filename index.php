@@ -172,16 +172,14 @@ if (isset($_GET['contest'])) {
         </header>
         <div class="w3-padding">
             <div class="w3-bar w3-deep-green">
-                <?php var_dump($contests_groups); ?>
                 <?php foreach ($contests_groups as $group): ?>
-                    <?php var_dump($group); ?>
                     <button 
-                    class="w3-bar-item w3-button tablink <?=($group='WMB')?'w3-red':''?>" 
+                    class="w3-bar-item w3-button tablink <?=($group=='WMB')?'w3-red':''?>" 
                     onclick="openGroup(event,'<?=$group?>')"><?=$group?></button>
                 <?php endforeach; ?>
             </div>
             <?php foreach ($contests_chooser as $group => $contest): ?>
-                <div id="<?=$group?>" class="w3-container w3-border group" style="<?=($group='WMB')?'':'display: none;'?>">
+                <div id="<?=$group?>" class="w3-container w3-border group" style="<?=($group=='WMB')?'':'display: none;'?>">
                     <?php foreach ($contest as $contest_data): ?>
                         <p>
                             <a href='index.php?lang=<?=$lang?>&contest=<?=$contest_data["0"]?>'><?=$contest_data["1"]?></a>
