@@ -107,7 +107,10 @@ if (isset($_GET['contest'])) {
 }
 
 //Exibe revisão git atual no rodapé da página
-$git = shell_exec("git log -1 --pretty=format:'%h - %s (%ci)' --abbrev-commit"); 
+$git  = "Commit: "
+$git .= shell_exec("git log -1 --pretty=format:'%h - %s (%ci)' --abbrev-commit");
+$git .= "<br>Branch: "
+$git .= shell_exec("git rev-parse --abbrev-ref HEAD");
 ?>
 
 <!DOCTYPE html>
