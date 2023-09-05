@@ -107,10 +107,10 @@ if (isset($_GET['contest'])) {
 }
 
 //Exibe revisão git atual no rodapé da página
-$git  = "Commit: ";
-$git .= shell_exec("git log -1 --pretty=format:'%h - %s (%ci)' --abbrev-commit");
-$git .= "<br>Branch: ";
-$git .= shell_exec("git rev-parse --abbrev-ref HEAD");
+$gitCommit  = "Commit: ";
+$gitCommit .= shell_exec("git log -1 --pretty=format:'%h - %s (%ci)' --abbrev-commit");
+$gitBranch  = "Branch: ";
+$gitBranch .= shell_exec("git rev-parse --abbrev-ref HEAD");
 ?>
 
 <!DOCTYPE html>
@@ -285,7 +285,7 @@ function openGroup(evt, groupName) {
         href="https://creativecommons.org/licenses/by-sa/4.0/deed"
         >CC-BY-SA 4.0 International</a>.
     </p>
-    <p class="w3-small"><em><?=htmlspecialchars($git)?></em></p>
+    <p class="w3-small"><em><?=htmlspecialchars($gitCommit)?><br><?=htmlspecialchars($gitBranch)?></em></p>
 </footer>
 
 </body>
