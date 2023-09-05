@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - develop
 jobs:
   regex-json-verification:
     runs-on: ubuntu-latest
