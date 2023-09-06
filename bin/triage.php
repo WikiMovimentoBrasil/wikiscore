@@ -558,156 +558,156 @@ mysqli_close($con);
                         </p>
                     </div>
                 <?php endif; ?>
-                <div style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>">
-                    <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom">
-                        <h2><?=§('triage-evaluation')?></h2>
+                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" 
+                style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>">
+                    <h2><?=§('triage-evaluation')?></h2>
+                    <form method="post">
+                        <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
+                        <div class="w3-container w3-cell w3-half">
+                            <p><?=§('isvalid')?></p>
+                            <input
+                            class="w3-radio w3-section"
+                            type="radio"
+                            id="valid-sim"
+                            name="valid"
+                            value="sim"
+                            onclick="document.getElementById('obs').required = false"
+                            required>
+                            <label for="valid-sim"><?=§('yes')?></label><br>
+                            <input
+                            class="w3-radio w3-section"
+                            type="radio"
+                            id="valid-nao"
+                            name="valid"
+                            value="nao"
+                            onclick="document.getElementById('obs').required = true"
+                            required>
+                            <label for="valid-nao"><?=§('no')?></label><br><br>
+                        </div>
+                        <div class="w3-container w3-cell w3-half">
+                            <?php if ($contest['pictures_mode'] == 2): ?>
+                                <p><?=§('withimage')?></p>
+                                <input
+                                class="w3-input w3-section"
+                                type="number"
+                                id="pic"
+                                name="pic"
+                                value="0"
+                                min="0"
+                                max="9"
+                                required>
+                                <label for="pic"><?=§('quantity')?></label><br>
+                            <?php else: ?>
+                                <p><?=§('withimage')?></p>
+                                <input
+                                class="w3-radio w3-section"
+                                type="radio"
+                                id="pic-sim"
+                                name="pic"
+                                value="sim"
+                                required>
+                                <label for="pic-sim"><?=§('yes')?></label><br>
+                                <input
+                                class="w3-radio w3-section"
+                                type="radio"
+                                id="pic-nao"
+                                name="pic"
+                                value="nao"
+                                required>
+                                <label for="pic-nao"><?=§('no')?></label><br><br>
+                            <?php endif; ?>
+                        </div>
+                        <p>
+                            <input
+                            class="w3-input w3-border"
+                            name="obs"
+                            id="obs"
+                            type="text"
+                            placeholder="<?=§('triage-observation')?>">
+                            <br>
+                            <input
+                            class="w3-button w3-border w3-block w3-red"
+                            name="overwrite"
+                            id="overwrite"
+                            ype="button"
+                            value="<?=§('triage-alterbytes')?>"
+                            onclick="handleOverwriteClick('<?=@$output['revision']['bytes'];?>')">
+                            <input
+                            class="w3-button w3-green w3-border-green w3-border w3-block w3-margin-top"
+                            type="submit"
+                            value="<?=§('triage-save')?>">
+                        </p>
+                    </form>
+                    <p>
                         <form method="post">
                             <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
-                            <div class="w3-container w3-cell w3-half">
-                                <p><?=§('isvalid')?></p>
-                                <input
-                                class="w3-radio w3-section"
-                                type="radio"
-                                id="valid-sim"
-                                name="valid"
-                                value="sim"
-                                onclick="document.getElementById('obs').required = false"
-                                required>
-                                <label for="valid-sim"><?=§('yes')?></label><br>
-                                <input
-                                class="w3-radio w3-section"
-                                type="radio"
-                                id="valid-nao"
-                                name="valid"
-                                value="nao"
-                                onclick="document.getElementById('obs').required = true"
-                                required>
-                                <label for="valid-nao"><?=§('no')?></label><br><br>
-                            </div>
-                            <div class="w3-container w3-cell w3-half">
-                                <?php if ($contest['pictures_mode'] == 2): ?>
-                                    <p><?=§('withimage')?></p>
-                                    <input
-                                    class="w3-input w3-section"
-                                    type="number"
-                                    id="pic"
-                                    name="pic"
-                                    value="0"
-                                    min="0"
-                                    max="9"
-                                    required>
-                                    <label for="pic"><?=§('quantity')?></label><br>
-                                <?php else: ?>
-                                    <p><?=§('withimage')?></p>
-                                    <input
-                                    class="w3-radio w3-section"
-                                    type="radio"
-                                    id="pic-sim"
-                                    name="pic"
-                                    value="sim"
-                                    required>
-                                    <label for="pic-sim"><?=§('yes')?></label><br>
-                                    <input
-                                    class="w3-radio w3-section"
-                                    type="radio"
-                                    id="pic-nao"
-                                    name="pic"
-                                    value="nao"
-                                    required>
-                                    <label for="pic-nao"><?=§('no')?></label><br><br>
-                                <?php endif; ?>
-                            </div>
-                            <p>
-                                <input
-                                class="w3-input w3-border"
-                                name="obs"
-                                id="obs"
-                                type="text"
-                                placeholder="<?=§('triage-observation')?>">
-                                <br>
-                                <input
-                                class="w3-button w3-border w3-block w3-red"
-                                name="overwrite"
-                                id="overwrite"
-                                ype="button"
-                                value="<?=§('triage-alterbytes')?>"
-                                onclick="handleOverwriteClick('<?=@$output['revision']['bytes'];?>')">
-                                <input
-                                class="w3-button w3-green w3-border-green w3-border w3-block w3-margin-top"
-                                type="submit"
-                                value="<?=§('triage-save')?>">
-                            </p>
+                            <input type="hidden" name="skip" value="true">
+                            <button
+                            class="w3-button w3-purple w3-border w3-block"
+                            type="submit"
+                            <?=(isset($output['revision']['diff']))?'':'disabled';?>
+                            ><?=§('triage-jump')?></button>
                         </form>
+                    </p>
+                </div>
+                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
+                    <h2><?=§('triage-edits')?></h2>
+                    <div class="w3-row">
+                        <div class="w3-half">
+                            <h6 class="w3-center"><?=§('triage-toeval')?></h6>
+                            <h1 class="w3-center"><?=$output['onqueue'];?></h1>
+                        </div>
+                        <div class="w3-half">
+                            <h6 class="w3-center"><?=§('triage-towait')?></h6>
+                            <h1 class="w3-center"><?=$output['onwait'];?></h1>
+                        </div>
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-half">
+                            <h6 class="w3-center"><?=§('triage-onhold')?></h6>
+                            <h1 class="w3-center"><?=$output['onhold'];?></h1>
+                        </div>
+                        <div class="w3-half">
+                            <h6 class="w3-center"><?=§('triage-onskip')?></h6>
+                            <h1 class="w3-center"><?=$output['onskip'];?></h1>
+                        </div>
+                    </div>
+                    <p>
+                        <form method="post">
+                            <input type="hidden" name="release" value="true">
+                            <button
+                            class="w3-button w3-purple w3-border w3-block"
+                            type="submit"
+                            <?=($output['onskip']>0)?'':'disabled';?>
+                            ><?=§('triage-release')?></button>
+                        </form>
+                    </p>
+                    <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
                         <p>
-                            <form method="post">
-                                <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
-                                <input type="hidden" name="skip" value="true">
+                            <form method="post"
+                            onsubmit="return confirm('<?=§('evaluators-areyousure')?>');">
+                                <input type="hidden" name="unhold" value="true">
                                 <button
-                                class="w3-button w3-purple w3-border w3-block"
+                                class="w3-button w3-red w3-border w3-block"
                                 type="submit"
-                                <?=(isset($output['revision']['diff']))?'':'disabled';?>
-                                ><?=§('triage-jump')?></button>
+                                <?=(($output['onhold'] + $output['onskip']) > 0)?'':'disabled';?>
+                                ><?=§('triage-unhold')?></button>
                             </form>
                         </p>
-                    </div>
-                    <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
-                        <h2><?=§('triage-edits')?></h2>
-                        <div class="w3-row">
-                            <div class="w3-half">
-                                <h6 class="w3-center"><?=§('triage-toeval')?></h6>
-                                <h1 class="w3-center"><?=$output['onqueue'];?></h1>
-                            </div>
-                            <div class="w3-half">
-                                <h6 class="w3-center"><?=§('triage-towait')?></h6>
-                                <h1 class="w3-center"><?=$output['onwait'];?></h1>
-                            </div>
-                        </div>
-                        <div class="w3-row">
-                            <div class="w3-half">
-                                <h6 class="w3-center"><?=§('triage-onhold')?></h6>
-                                <h1 class="w3-center"><?=$output['onhold'];?></h1>
-                            </div>
-                            <div class="w3-half">
-                                <h6 class="w3-center"><?=§('triage-onskip')?></h6>
-                                <h1 class="w3-center"><?=$output['onskip'];?></h1>
-                            </div>
-                        </div>
-                        <p>
-                            <form method="post">
-                                <input type="hidden" name="release" value="true">
-                                <button
-                                class="w3-button w3-purple w3-border w3-block"
-                                type="submit"
-                                <?=($output['onskip']>0)?'':'disabled';?>
-                                ><?=§('triage-release')?></button>
-                            </form>
+                    <?php endif; ?>
+                </div>
+                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom" 
+                style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>">
+                    <h2><?=§('triage-recenthistory')?></h2>
+                    <?php foreach ($output['history'] ?? [] as $oldid): ?>
+                        <p class='<?=$oldid['class']?>'>
+                            <strong><?=$oldid['user']?></strong>
+                            <br>
+                            <?=$oldid['timestamp']?>
+                            <br>
+                            <span class='w3-text-<?=$oldid['color']?>'><?=$oldid['bytes']?> bytes</span>
                         </p>
-                        <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
-                            <p>
-                                <form method="post"
-                                onsubmit="return confirm('<?=§('evaluators-areyousure')?>');">
-                                    <input type="hidden" name="unhold" value="true">
-                                    <button
-                                    class="w3-button w3-red w3-border w3-block"
-                                    type="submit"
-                                    <?=(($output['onhold'] + $output['onskip']) > 0)?'':'disabled';?>
-                                    ><?=§('triage-unhold')?></button>
-                                </form>
-                            </p>
-                        <?php endif; ?>
-                    </div>
-                    <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
-                        <h2><?=§('triage-recenthistory')?></h2>
-                        <?php foreach ($output['history'] ?? [] as $oldid): ?>
-                            <p class='<?=$oldid['class']?>'>
-                                <strong><?=$oldid['user']?></strong>
-                                <br>
-                                <?=$oldid['timestamp']?>
-                                <br>
-                                <span class='w3-text-<?=$oldid['color']?>'><?=$oldid['bytes']?> bytes</span>
-                            </p>
-                        <?php endforeach; ?>
-                    </div>
+                    <?php endforeach; ?>
                 </div>
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                     <h2><?=§('triage-generalinfo')?></h2>
