@@ -270,6 +270,12 @@ if ($output['revision'] != null) {
         file_get_contents($contest['api_endpoint']."?".http_build_query($compare_api_params))
     )['compare'];
 
+    $compare_api_params["difftype"] = "inline";
+    
+    $output['compare_mobile'] = unserialize(
+        file_get_contents($contest['api_endpoint']."?".http_build_query($compare_api_params))
+    )['compare'];
+
     //Coleta histórico recente do artigo até o início do concurso
     $history_params = [
         "action"    => "query",
@@ -858,8 +864,13 @@ mysqli_close($con);
                         <table
                         role="presentation"
                         aria-label="Diferencial de edição"
-                        class="diff diff-contentalign-left diff-editfont-monospace"
+                        class="diff diff-desktop diff-contentalign-left diff-editfont-monospace"
                         ><?=$output['compare']['*']?></table>
+                        <table
+                        role="presentation"
+                        aria-label="Diferencial de edição"
+                        class="diff diff-mobile diff-contentalign-left diff-editfont-monospace"
+                        ><?=$output['compare_mobile']['*']?></table>
                         <hr>
                     </div>
                 <?php endif; ?>
