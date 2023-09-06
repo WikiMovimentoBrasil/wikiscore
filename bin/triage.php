@@ -437,10 +437,10 @@ mysqli_close($con);
     </head>
     <body>
         <div class="w3-<?=$contest['theme'];?> w3-large w3-bar w3-top" style="z-index:4">
-            <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i> &nbsp;</button>
+            <button class="w3-bar-item w3-button w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i> &nbsp;</button>
             <span class="w3-bar-item w3-right"><?=$contest['name'];?></span>
         </div>
-        <nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:230px;" id="mySidebar">
+        <nav class="w3-sidebar w3-white w3-animate-left" style="z-index:3;width:230px;display:none;" id="mySidebar">
             <br>
             <div class="w3-container w3-row">
                 <div class="w3-col s4">
@@ -489,7 +489,6 @@ mysqli_close($con);
                 <h5><?=§('triage-panel')?></h5>
             </div>
             <div class="w3-bar-block">
-                <a href="#" rel="noopener" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>&nbsp; Close Menu</a>
                 <a href="#" rel="noopener" class="w3-bar-item w3-button w3-padding w3-blue">
                     <i class="fa-solid fa-check-to-slot"></i>&nbsp; <?=§('triage')?>
                 </a>
@@ -520,8 +519,8 @@ mysqli_close($con);
                 <br><br>
             </div>
         </nav>
-        <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
-        <div class="w3-row-padding w3-content w3-main" style="max-width:1400px;margin-left:230px;margin-top:43px;padding-top:16px;">
+        <div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+        <div class="w3-row-padding w3-content w3-main" style="max-width:unset;margin-top:43px;padding-top:16px;">
             <div class="w3-quarter">
                 <?php if (isset($output['success']['diff'])) : ?>
                     <div
@@ -567,9 +566,9 @@ mysqli_close($con);
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" 
                 style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>">
                     <h2><?=§('triage-evaluation')?></h2>
-                    <form method="post">
+                    <form method="post" name="evaluate">
                         <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
-                        <div class="w3-container w3-cell w3-half">
+                        <div class="w3-container w3-cell w3-col l6 m12 s6">
                             <p><?=§('isvalid')?></p>
                             <input
                             class="w3-radio w3-section"
@@ -590,7 +589,7 @@ mysqli_close($con);
                             required>
                             <label for="valid-nao"><?=§('no')?></label><br><br>
                         </div>
-                        <div class="w3-container w3-cell w3-half">
+                        <div class="w3-container w3-cell w3-col l6 m12 s6">
                             <?php if ($contest['pictures_mode'] == 2): ?>
                                 <p><?=§('withimage')?></p>
                                 <input
@@ -625,55 +624,60 @@ mysqli_close($con);
                         </div>
                         <p>
                             <input
-                            class="w3-input w3-border"
+                            class="w3-input w3-border w3-leftbar w3-rightbar w3-border-light-grey"
                             name="obs"
                             id="obs"
                             type="text"
                             placeholder="<?=§('triage-observation')?>">
                             <br>
                             <input
-                            class="w3-button w3-border w3-block w3-red"
+                            class="w3-button w3-leftbar w3-rightbar w3-border-light-grey w3-block w3-red"
                             name="overwrite"
                             id="overwrite"
                             ype="button"
                             value="<?=§('triage-alterbytes')?>"
                             onclick="handleOverwriteClick('<?=@$output['revision']['bytes'];?>')">
-                            <input
-                            class="w3-button w3-green w3-border-green w3-border w3-block w3-margin-top"
-                            type="submit"
-                            value="<?=§('triage-save')?>">
                         </p>
                     </form>
-                    <p>
-                        <form method="post">
-                            <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
-                            <input type="hidden" name="skip" value="true">
-                            <button
-                            class="w3-button w3-purple w3-border w3-block"
+                    <div class="w3-row">
+                        <div class="w3-section w3-col l6">
+                            <input
+                            form="evaluate"
+                            class="w3-button w3-green w3-leftbar w3-rightbar w3-border-light-grey w3-block"
                             type="submit"
-                            <?=(isset($output['revision']['diff']))?'':'disabled';?>
-                            ><?=§('triage-jump')?></button>
-                        </form>
-                    </p>
+                            value="<?=§('triage-save')?>">
+                        </div>
+                        <div class="w3-section w3-col l6">
+                            <form method="post">
+                                <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
+                                <input type="hidden" name="skip" value="true">
+                                <button
+                                class="w3-button w3-purple w3-leftbar w3-rightbar w3-border-light-grey w3-block"
+                                type="submit"
+                                <?=(isset($output['revision']['diff']))?'':'disabled';?>
+                                ><?=§('triage-jump')?></button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                     <h2><?=§('triage-edits')?></h2>
                     <div class="w3-row">
-                        <div class="w3-half">
+                        <div class="w3-col l6 m12 s6">
                             <h6 class="w3-center"><?=§('triage-toeval')?></h6>
                             <h1 class="w3-center"><?=$output['onqueue'];?></h1>
                         </div>
-                        <div class="w3-half">
+                        <div class="w3-col l6 m12 s6">
                             <h6 class="w3-center"><?=§('triage-towait')?></h6>
                             <h1 class="w3-center"><?=$output['onwait'];?></h1>
                         </div>
                     </div>
                     <div class="w3-row">
-                        <div class="w3-half">
+                        <div class="w3-col l6 m12 s6">
                             <h6 class="w3-center"><?=§('triage-onhold')?></h6>
                             <h1 class="w3-center"><?=$output['onhold'];?></h1>
                         </div>
-                        <div class="w3-half">
+                        <div class="w3-col l6 m12 s6">
                             <h6 class="w3-center"><?=§('triage-onskip')?></h6>
                             <h1 class="w3-center"><?=$output['onskip'];?></h1>
                         </div>
@@ -682,7 +686,7 @@ mysqli_close($con);
                         <form method="post">
                             <input type="hidden" name="release" value="true">
                             <button
-                            class="w3-button w3-purple w3-border w3-block"
+                            class="w3-button w3-purple w3-leftbar w3-rightbar w3-border-light-grey w3-block"
                             type="submit"
                             <?=($output['onskip']>0)?'':'disabled';?>
                             ><?=§('triage-release')?></button>
@@ -694,7 +698,7 @@ mysqli_close($con);
                             onsubmit="return confirm('<?=§('evaluators-areyousure')?>');">
                                 <input type="hidden" name="unhold" value="true">
                                 <button
-                                class="w3-button w3-red w3-border w3-block"
+                                class="w3-button w3-red w3-leftbar w3-rightbar w3-border-light-grey w3-block"
                                 type="submit"
                                 <?=(($output['onhold'] + $output['onskip']) > 0)?'':'disabled';?>
                                 ><?=§('triage-unhold')?></button>
@@ -825,38 +829,34 @@ mysqli_close($con);
                         </p>
                     </div>
                 <?php else: ?>
-                    <div class="w3-container w3-justify w3-margin-bottom">
+                    <div class="w3-container w3-justify w3-margin-bottom w3-row">
                         <h3><?=§('triage-details')?></h3>
-                        <div class="w3-half">
-                            <p style="overflow-wrap: break-word;">
-                                <strong><i class="fa-solid fa-user"></i>&nbsp; <?=§('label-user')?></strong>
-                                &nbsp;
-                                <span style="font-weight:bolder;color:red;">
-                                    <?=@$output['compare']['touser'];?>
-                                </span>
-                                <br>
-                                <strong><i class="fa-solid fa-font"></i>&nbsp; <?=§('label-page')?></strong> <?=@$output['compare']['totitle'];?>
-                                <br>
-                                <strong><i class="fa-solid fa-arrow-up-9-1"></i>&nbsp; <?=§('label-diff')?></strong> <?=@$output['revision']['bytes'];?> bytes
-                                <br>
-                                <strong><i class="fa-regular fa-clock"></i>&nbsp; <?=§('label-timestamp')?></strong> <?=@$output['revision']['timestamp'];?> (UTC)
-                            </p>
+                        <div class="w3-col l6">
+                            <strong><i class="fa-solid fa-user"></i>&nbsp; <?=§('label-user')?></strong>
+                            &nbsp;
+                            <span style="font-weight:bolder;color:red;">
+                                <?=@$output['compare']['touser'];?>
+                            </span>
+                            <br>
+                            <strong><i class="fa-solid fa-font"></i>&nbsp; <?=§('label-page')?></strong> <?=@$output['compare']['totitle'];?>
+                            <br>
+                            <strong><i class="fa-regular fa-clock"></i>&nbsp; <?=§('label-timestamp')?></strong> <?=@$output['revision']['timestamp'];?> (UTC)
                         </div>
-                        <div class="w3-half">
-                            <p style="overflow-wrap: break-word;">
-                                <strong><i class="fa-solid fa-thumbtack"></i>&nbsp; <?=§('triage-diff')?>:</strong>
-                                <a
-                                href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>"
-                                target="_blank"
-                                rel="noopener"
-                                ><?=@$output['revision']['diff'];?></a> - <a
-                                target="_blank"
-                                rel="noopener"
-                                href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>"
-                                ><?=§('triage-copyvio')?></a>
-                                <br>
-                                <strong><i class="fa-solid fa-comment"></i>&nbsp; <?=§('label-summary')?></strong> <?=@$output['compare']['tocomment'];?>
-                            </p>
+                        <div class="w3-col l6">
+                            <strong><i class="fa-solid fa-arrow-up-9-1"></i>&nbsp; <?=§('label-diff')?></strong> <?=@$output['revision']['bytes'];?> bytes
+                            <br>
+                            <strong><i class="fa-solid fa-thumbtack"></i>&nbsp; <?=§('triage-diff')?>:</strong>
+                            <a
+                            href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>"
+                            target="_blank"
+                            rel="noopener"
+                            ><?=@$output['revision']['diff'];?></a> - <a
+                            target="_blank"
+                            rel="noopener"
+                            href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>"
+                            ><?=§('triage-copyvio')?></a>
+                            <br>
+                            <strong><i class="fa-solid fa-comment"></i>&nbsp; <?=§('label-summary')?></strong> <?=@$output['compare']['tocomment'];?>
                         </div>
                     </div>
                     <div class="w3-container">
@@ -865,7 +865,12 @@ mysqli_close($con);
                         role="presentation"
                         aria-label="Diferencial de edição"
                         class="diff diff-desktop diff-contentalign-left diff-editfont-monospace"
-                        ><?=$output['compare']['*']?></table>
+                        ><colgroup>
+                            <col style="width:2%">
+                            <col style="width:48%">
+                            <col style="width:2%;">
+                            <col style="width:48%">
+                        </colgroup><?=$output['compare']['*']?></table>
                         <table
                         role="presentation"
                         aria-label="Diferencial de edição"
