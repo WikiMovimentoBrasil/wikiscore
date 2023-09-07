@@ -226,5 +226,6 @@
     "password-username": "Nombre de usuario",
     "password-oldpassword": "Contraseña antigua",
     "password-success": "¡Contraseña modificada con éxito!",
-    "password-wrongpass": "¡Contraseña antigua incorrecta!"
+    "password-wrongpass": "¡Contraseña antigua incorrecta!",
+    "edits-title": "Título"
 }
