@@ -6,7 +6,7 @@ SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 # Check if the username contains "test"
 if [[ "$SCRIPTPATH" != *"test"* ]]; then
   echo "Path does not contain 'test'. Performing git pull and exiting."
-  git pull
+  git pull -r
   exit 0
 fi
 
@@ -54,7 +54,7 @@ done
 # Checkout the most recent branch
 if [ -n "$most_recent_branch" ]; then
   git checkout "$most_recent_branch"
-  git pull
+  git pull -r
   echo "Checked out branch: $most_recent_branch"
 else
   echo "No remote branches found."
