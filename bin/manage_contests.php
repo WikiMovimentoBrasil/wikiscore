@@ -245,6 +245,13 @@ if (isset($_POST['do_create'])) {
     if (!isset($name_id['0'])) die("Erro: Código interno inválido!");
     $name_id = $name_id['0'];
 
+    //Valida se usuário pertence ao grupo relacionado ao concurso
+    if (!isset($contests_array[$name_id])) die("Erro: Concurso não existe!");
+    if (
+        $_SESSION['user']["user_group"] !== "ALL" && 
+        $_SESSION['user']["user_group"] !== $contests_array[$name_id]['group']
+    ) die("Erro: Gestor não corresponde ao grupo do concurso!");
+
     //Reinicia tabela do concurso, mas mantem a tabela de credenciais
     mysqli_query($con, "TRUNCATE TABLE `{$name_id}__edits`, `{$name_id}__users`, `{$name_id}__articles`;");
 
@@ -258,6 +265,13 @@ if (isset($_POST['do_create'])) {
     preg_match('/^[a-z_]{1,30}$/', $_POST['name_id'], $name_id);
     if (!isset($name_id['0'])) die("Erro: Código interno inválido!");
     $name_id = $name_id['0'];
+
+    //Valida se usuário pertence ao grupo relacionado ao concurso
+    if (!isset($contests_array[$name_id])) die("Erro: Concurso não existe!");
+    if (
+        $_SESSION['user']["user_group"] !== "ALL" && 
+        $_SESSION['user']["user_group"] !== $contests_array[$name_id]['group']
+    ) die("Erro: Gestor não corresponde ao grupo do concurso!");
 
     //Apaga tabelas do concurso
     mysqli_query($con, "DROP TABLE `{$name_id}__edits`, `{$name_id}__users`, `{$name_id}__articles`, `{$name_id}__credentials`;");
@@ -606,7 +620,10 @@ if (isset($_POST['do_create'])) {
                 </div>
             </div>
             <?php foreach ($contests_array as $name_id => $contest_info): ?>
-                <?php if ($contest_info['group'] != $_SESSION['user']["user_group"]) continue; ?>
+                <?php if (
+                    $_SESSION['user']["user_group"] !== "ALL" &&           
+                    $_SESSION['user']["user_group"] !== $contest_info['group']
+                ) continue; ?>
                 <div class="w3-margin-top w3-card">
                     <header
                     class='w3-container w3-<?=$contest_info['theme']?>'
