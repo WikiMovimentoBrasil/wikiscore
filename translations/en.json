@@ -111,6 +111,7 @@
     "compare-next": "Next update in:",
     "compare-soon": "up to 10 minutes",
     "compare-anticipate": "Anticipate update",
+    "compare-force": "Update anyway",
     "compare-early": "The last update occurred less than 30 minutes ago. Please wait before requesting a new update.",
     "compare-unlisted": "Not listed",
     "compare-unlisted-about": "The articles below are included in the category but are not listed officially.",
