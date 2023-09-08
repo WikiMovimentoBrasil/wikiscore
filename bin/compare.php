@@ -483,9 +483,9 @@ if ($contest['end_time'] + 172800 < time()) {
                                 class='w3-btn w3-padding-small w3-<?=$contest['theme']?>'
                                 type='button'
                                 onclick='window.open(
-                                    "<?=$contest['endpoint']?>?diff=<?=$diff_encode?>",
+                                    "<?=$contest['endpoint']?>?diff=<?=$row["diff"]?>",
                                     "_blank"
-                                )'><?=§('compare-seediff')?><?=$row["diff"]?></button>
+                                )'><?=§('compare-seediff')?> <?=$row["diff"]?></button>
                                 <button
                                 class='w3-btn w3-padding-small w3-purple'
                                 type='button'
