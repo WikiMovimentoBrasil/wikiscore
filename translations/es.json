@@ -227,5 +227,6 @@
     "password-oldpassword": "Contraseña antigua",
     "password-success": "¡Contraseña modificada con éxito!",
     "password-wrongpass": "¡Contraseña antigua incorrecta!",
-    "edits-title": "Título"
+    "edits-title": "Título",
+    "compare-force": "Actualizar de todos modos"
 }
