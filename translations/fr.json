@@ -226,5 +226,6 @@
     "password-oldpassword": "Ancien mot de passe",
     "password-success": "Mot de passe changé avec succès !",
     "password-wrongpass": "Mot de passe ancien incorrect !",
-    "triage-welcome": "Bienvenue, $1"
+    "triage-welcome": "Bienvenue, $1",
+    "compare-force": "Mettre à jour quand même"
 }
