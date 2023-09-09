@@ -6,7 +6,7 @@ if (isset($_POST['do_create'])) {
 
     //Valida código interno submetido
     preg_match('/^[a-z_]{1,30}$/', $_POST['name_id'], $name_id);
-    if (!isset($name_id['0'])) die("Erro: Código interno inválido!");
+    if (!isset($name_id['0'])) die(§('manage-invalidcode'));
     $name_id = $name_id['0'];
 
     //Verifica se tabelas existem
@@ -28,7 +28,7 @@ if (isset($_POST['do_create'])) {
     $name_id_like = $name_id.'%';
     mysqli_stmt_execute($exist_query);
     $exist_result = mysqli_fetch_assoc(mysqli_stmt_get_result($exist_query));
-    if ($exist_result["count"] !== 0) die("Erro: Tabelas já existem!");
+    if ($exist_result["count"] !== 0) die(§('manage-alreadyexist'));
 
     //Insere linha com informações do concurso
     $create_statement =
@@ -168,14 +168,14 @@ if (isset($_POST['do_create'])) {
     mysqli_stmt_execute($exist_query);
     $exist_result = mysqli_fetch_assoc(mysqli_stmt_get_result($exist_query));
     if ($exist_result["count"] !== 4) {
-        die("Erro: Erro na criação das tabelas!");
+        die(§('manage-creationerror'));
     }
 
     //Extrai nome do gestor via e-mail
     if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
         $email =  filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
     } else {
-        die("Erro: E-mail inválido!");
+        die(§('manage-wrongemail'));
     }
     $name = strstr($email, "@", true);
     $name = trim($name, "@");
@@ -209,14 +209,9 @@ if (isset($_POST['do_create'])) {
     }
 
     //Cria corpo do e-mail para gestor
-    $message  = "Oi!\n";
-    $message .= "Um novo wikiconcurso ({$_POST['name']}) foi criado e seu e-mail foi cadastrado como gestor ou gestora.\n";
-    $message .= "Para acessar, utilize seu e-mail e a seguinte senha: {$password}\n";
-    $message .= "Caso queira, a senha pode ser alterada ao clicar em 'Esqueci a senha' na tela de login.\n";
-    $message .= "Para mais detalhes, consulte nosso manual na wiki do GitHub.\n\n";
-    $message .= "Atenciosamente,\nWikiScore";
+    $message = §('manage-email', $_POST['name'], $password);
     $emailFile = fopen("php://temp", 'w+');
-    $subject = "WikiScore - Novo concurso cadastrado";
+    $subject = §('manage-subject');
     fwrite($emailFile, "Subject: " . $subject . "\n" . $message);
     rewind($emailFile);
     $fstat = fstat($emailFile);
@@ -235,43 +230,43 @@ if (isset($_POST['do_create'])) {
     curl_close($ch);
 
     //Retorna mensagem final
-    echo "<script>alert('Concurso criado com sucesso!');window.location.href = window.location.href;</script>";
+    echo "<script>alert('".§('manage-created')."');window.location.href = window.location.href;</script>";
 
 //Processo para reiniciar concurso
 } elseif (isset($_POST['do_restart'])) {
 
     //Valida código interno submetido
     preg_match('/^[a-z_]{1,30}$/', $_POST['name_id'], $name_id);
-    if (!isset($name_id['0'])) die("Erro: Código interno inválido!");
+    if (!isset($name_id['0'])) die(§('manage-invalidcode'));
     $name_id = $name_id['0'];
 
     //Valida se usuário pertence ao grupo relacionado ao concurso
-    if (!isset($contests_array[$name_id])) die("Erro: Concurso não existe!");
+    if (!isset($contests_array[$name_id])) die(§('manage-notfound'));
     if (
         $_SESSION['user']["user_group"] !== "ALL" && 
         $_SESSION['user']["user_group"] !== $contests_array[$name_id]['group']
-    ) die("Erro: Gestor não corresponde ao grupo do concurso!");
+    ) die(§('manage-unauthorized'));
 
     //Reinicia tabela do concurso, mas mantem a tabela de credenciais
     mysqli_query($con, "TRUNCATE TABLE `{$name_id}__edits`, `{$name_id}__users`, `{$name_id}__articles`;");
 
     //Retorna mensagem final
-    echo "<script>alert('Concurso reiniciado com sucesso! Realize a atualização do banco de dados.');window.location.href = window.location.href;</script>";
+    echo "<script>alert('".§('manage-restarted')."');window.location.href = window.location.href;</script>";
 
 //Processo para apagar concurso
 } elseif (isset($_POST['do_delete'])) {
 
     //Valida código interno submetido
     preg_match('/^[a-z_]{1,30}$/', $_POST['name_id'], $name_id);
-    if (!isset($name_id['0'])) die("Erro: Código interno inválido!");
+    if (!isset($name_id['0'])) die(§('manage-invalidcode'));
     $name_id = $name_id['0'];
 
     //Valida se usuário pertence ao grupo relacionado ao concurso
-    if (!isset($contests_array[$name_id])) die("Erro: Concurso não existe!");
+    if (!isset($contests_array[$name_id])) die(§('manage-notfound'));
     if (
         $_SESSION['user']["user_group"] !== "ALL" && 
         $_SESSION['user']["user_group"] !== $contests_array[$name_id]['group']
-    ) die("Erro: Gestor não corresponde ao grupo do concurso!");
+    ) die(§('manage-unauthorized'));
 
     //Apaga tabelas do concurso
     mysqli_query($con, "DROP TABLE `{$name_id}__edits`, `{$name_id}__users`, `{$name_id}__articles`, `{$name_id}__credentials`;");
@@ -293,14 +288,14 @@ if (isset($_POST['do_create'])) {
     mysqli_stmt_execute($delete_query);
 
     //Retorna mensagem final
-    echo "<script>alert('Concurso apagado com sucesso!');window.location.href = window.location.href;</script>";
+    echo "<script>alert('".§('manage-deleted')."');window.location.href = window.location.href;</script>";
 }
 
 ?>
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <title>Gerenciamento de concursos</title>
+        <title><?=§('manage-title')?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="bin/w3.css">
         <script type="text/javascript">
@@ -318,51 +313,48 @@ if (isset($_POST['do_create'])) {
     </head>
     <body>
         <header class="w3-container w3-deep-green">
-            <h1>Gerenciamento de concursos</h1>
+            <h1><?=§('manage-title')?></h1>
         </header>
         <br>
         <div class="w3-row-padding w3-content" style="max-width:700px">
             <div class="w3-container w3-margin-top w3-card-4">
                 <div class="w3-container">
-                    <p>
-                        Essa página lista os concursos cadastrados no sistema e permite a criação
-                        de novos concursos.
-                    </p>
+                    <p><?=§('manage-about')?></p>
                 </div>
             </div>
             <div class="w3-margin-top w3-card-4">
                 <header class='w3-container w3-black'>
-                    <h1>Criar novo wikiconcurso</h1>
+                    <h1><?=§('manage-newcontest')?></h1>
                 </header>
                 <div class="w3-container">
                     <form id="create" method="post">
                         <div class="w3-section">
 
                             <label>
-                                <strong>Nome do concurso</strong>
+                                <strong><?=§('manage-contestname')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
                             type="text"
-                            placeholder="Insira o nome completo do concurso"
+                            placeholder="<?=§('manage-contestnameabout')?>"
                             maxlength="255"
                             name="name"
                             required>
 
                             <label>
-                                <strong>Código interno</strong>
+                                <strong><?=§('manage-internalcode')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
                             type="text"
-                            placeholder="Utilize somente letras minúsculas e underlines"
+                            placeholder="<?=§('manage-internalcodeabout')?>"
                             maxlength="30"
                             pattern="[a-z0_]{1,30}"
                             name="name_id"
                             required>
 
                             <label>
-                                <strong>Horário de início</strong>
+                                <strong><?=§('manage-starttime')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
@@ -372,7 +364,7 @@ if (isset($_POST['do_create'])) {
                             required>
 
                             <label>
-                                <strong>Horário de término</strong>
+                                <strong><?=§('manage-endtime')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
@@ -382,7 +374,7 @@ if (isset($_POST['do_create'])) {
                             required>
 
                             <label>
-                                <strong>Endereço do endpoint</strong>
+                                <strong><?=§('manage-endpoint')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
@@ -392,7 +384,7 @@ if (isset($_POST['do_create'])) {
                             required>
 
                             <label>
-                                <strong>Endereço do API</strong>
+                                <strong><?=§('manage-api')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
@@ -405,7 +397,7 @@ if (isset($_POST['do_create'])) {
                                 <div class="w3-half" style="padding-right: 8px;">
 
                                     <label>
-                                        <strong>Tempo de reversão em horas</strong>
+                                        <strong><?=§('manage-reverttime')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
@@ -417,7 +409,7 @@ if (isset($_POST['do_create'])) {
                                     required>
 
                                     <label>
-                                        <strong>PetScan ID dos artigos</strong>
+                                        <strong><?=§('manage-petscan')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
@@ -432,7 +424,7 @@ if (isset($_POST['do_create'])) {
                                 <div class="w3-half" style="padding-left: 8px;">
 
                                     <label>
-                                        <strong>ID da lista de artigos</strong>
+                                        <strong><?=§('manage-listid')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
@@ -442,7 +434,7 @@ if (isset($_POST['do_create'])) {
                                     required>
 
                                     <label>
-                                        <strong>ID da categoria de artigos</strong>
+                                        <strong><?=§('manage-catid')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
@@ -457,12 +449,12 @@ if (isset($_POST['do_create'])) {
                             </div>
 
                             <label>
-                                <strong>Nome do concurso no Outreach Dashboard</strong>
+                                <strong><?=§('manage-outreach')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
                             type="text"
-                            placeholder="Nome_da_campanha/Nome_do_programa"
+                            placeholder="<?=§('manage-outreachplacehold')?>"
                             name="outreach_name"
                             required>
 
@@ -470,7 +462,7 @@ if (isset($_POST['do_create'])) {
                                 <div class="w3-half" style="padding-right: 8px;">
 
                                     <label>
-                                        <strong>Bytes por ponto</strong>
+                                        <strong><?=§('manage-bpp')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
@@ -481,7 +473,7 @@ if (isset($_POST['do_create'])) {
                                     required>
 
                                     <label>
-                                        <strong>Máximo de bytes por artigo-participante</strong>
+                                        <strong><?=§('manage-maxbytes')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
@@ -492,7 +484,7 @@ if (isset($_POST['do_create'])) {
                                     required>
 
                                     <label>
-                                        <strong>Mínimo de bytes por edição</strong>
+                                        <strong><?=§('manage-minbytes')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
@@ -506,7 +498,7 @@ if (isset($_POST['do_create'])) {
                                 <div class="w3-half" style="padding-left: 8px;">
 
                                     <label>
-                                        <strong>Imagens por ponto</strong>
+                                        <strong><?=§('manage-ipp')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
@@ -517,7 +509,7 @@ if (isset($_POST['do_create'])) {
                                     required>
 
                                     <label>
-                                        <strong>Máximo de imagens por artigo-participante</strong>
+                                        <strong><?=§('manage-maximages')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
@@ -528,15 +520,15 @@ if (isset($_POST['do_create'])) {
                                     required>
 
                                     <label>
-                                        <strong>Modo de imagem</strong>
+                                        <strong><?=§('manage-imagemode')?></strong>
                                     </label>
                                     <select
                                     name="pictures_mode"
                                     class="w3-select w3-border w3-margin-bottom"
                                     required>
-                                        <option value="0">Por artigo</option>
-                                        <option value="1">Por edição</option>
-                                        <option value="2">Por imagem</option>
+                                        <option value="0"><?=§('manage-perarticle')?></option>
+                                        <option value="1"><?=§('manage-peredit')?></option>
+                                        <option value="2"><?=§('manage-perimage')?></option>
                                     </select>
 
                                 </div>
@@ -545,7 +537,7 @@ if (isset($_POST['do_create'])) {
                             <div class="w3-row">
                                 <div class="w3-half" style="padding-right: 8px;">
                                     <label>
-                                        <strong>Tema</strong>
+                                        <strong><?=§('manage-palette')?></strong>
                                     </label>
                                     <select
                                     name="theme"
@@ -581,12 +573,12 @@ if (isset($_POST['do_create'])) {
                                         <option value="pale-yellow" class="w3-pale-yellow">pale-yellow</option>
                                         <option value="pale-green" class="w3-pale-green">pale-green</option>
                                         <option value="pale-blue" class="w3-pale-blue">pale-blue</option>
-                                        <option value="color" class="w3-transparent">personalizado</option>
+                                        <option value="color" class="w3-transparent"><?=§('manage-custom')?></option>
                                     </select>
                                 </div>
                                 <div class="w3-half" style="padding-left: 8px;">
                                     <label>
-                                        <strong>Cor personalizada (hex)</strong>
+                                        <strong><?=§('manage-hexcolor')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
@@ -601,7 +593,7 @@ if (isset($_POST['do_create'])) {
                             </div>
 
                             <label>
-                                <strong>E-mail do gestor</strong>
+                                <strong><?=§('manage-managemail')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
@@ -614,7 +606,7 @@ if (isset($_POST['do_create'])) {
                             class="w3-button w3-block w3-deep-green w3-section w3-padding"
                             name="do_create"
                             type="submit"
-                            >Cadastrar</button>
+                            ><?=§('manage-create')?></button>
                         </div>
                     </form>
                 </div>
@@ -635,29 +627,29 @@ if (isset($_POST['do_create'])) {
                         <ul class="w3-ul">
                             <li class="w3-bar">
                                 <div class="w3-bar-item">
-                                    Começa(ou) em <?=$contest_info['start_time']?>: <?=date(
+                                    <?=§('manage-startedtime', date(
                                         'Y/m/d H:i:s (\U\T\C)',
                                         $contest_info['start_time']
-                                    )?>
+                                    ))?>
                                     <br>
-                                    Termina(ou) em <?=$contest_info['end_time']?>: <?=date(
+                                    <?=§('manage-endedtime', date(
                                         'Y/m/d H:i:s (\U\T\C)',
                                         $contest_info['end_time']
-                                    )?>
+                                    ))?>
                                 </div>
                             </li>
                             <li class="w3-bar">
                                 <div class="w3-bar-item">
-                                    Lista de artigos em ID <a
+                                    <?=§('manage-listedid')?> <a
                                     href='<?=$contest_info['endpoint']?>?curid=<?=$contest_info['official_list_pageid']?>'
                                     ><?=$contest_info['official_list_pageid']?></a>
                                     <br>
                                     <?php if (isset($contest_info['category_petscan'])): ?>
-                                        Busca do PetScan ID em <a
+                                        <?=§('manage-petscan')?>: <a
                                         href='https://petscan.wmflabs.org/?psid=<?=$contest_info['category_petscan']?>'
                                         ><?=$contest_info['category_petscan']?></a>
                                     <?php else: ?>
-                                        Categoria de artigos em ID <a
+                                        <?=§('manage-catedid')?> <a
                                         href='<?=$contest_info['endpoint']?>?curid=<?=$contest_info['category_pageid']?>'
                                         ><?=$contest_info['category_pageid']?></a>
                                     <?php endif; ?>
@@ -665,37 +657,37 @@ if (isset($_POST['do_create'])) {
                             </li>
                             <li class="w3-bar">
                                 <div class="w3-bar-item">
-                                    Endpoint principal: <?=$contest_info['endpoint']?>
+                                    <?=§('manage-endpoint')?>: <?=$contest_info['endpoint']?>
                                     <br>
-                                    Endpoint da API: <?=$contest_info['api_endpoint']?>
+                                    <?=§('manage-api')?>: <?=$contest_info['api_endpoint']?>
                                 </div>
                             </li>
                             <li class="w3-bar">
                                 <div class="w3-bar-item" style="word-break: break-word;">
-                                    Outreach: <?=$contest_info['outreach_name']?>
+                                    <?=§('manage-outreach')?>: <?=$contest_info['outreach_name']?>
                                 </div>
                             </li>
                             <li class="w3-bar">
                                 <div class="w3-bar-item">
-                                    Bytes por ponto: <?=$contest_info['bytes_per_points']?>
+                                    <?=§('manage-bpp')?>: <?=$contest_info['bytes_per_points']?>
                                     <br>
-                                    Máximo de bytes por artigo-participante: <?=$contest_info['max_bytes_per_article']?>
+                                    <?=§('manage-maxbytes')?>: <?=$contest_info['max_bytes_per_article']?>
                                     <br>
-                                    Mínimo de bytes por edição: <?=$contest_info['minimum_bytes']??'0'?>
+                                    <?=§('manage-minbytes')?>: <?=$contest_info['minimum_bytes']??'0'?>
                                 </div>
                             </li>
                             <li class="w3-bar">
                                 <div class="w3-bar-item">
-                                    Imagens por ponto: <?=$contest_info['pictures_per_points']?>
+                                    <?=§('manage-ipp')?>: <?=$contest_info['pictures_per_points']?>
                                     <br>
-                                    Máximo de imagens por artigo-participante: <?=$contest_info['max_pic_per_article']??'0'?>
+                                    <?=§('manage-maximages')?>: <?=$contest_info['max_pic_per_article']??'0'?>
                                     <br>
-                                    Modo de imagem: <?=$contest_info['pictures_mode']?>
+                                    <?=§('manage-imagemode')?>: <?=$contest_info['pictures_mode']?>
                                 </div>
                             </li>
                             <li class="w3-bar">
                                 <div class="w3-bar-item">
-                                    Paleta de cor:
+                                    <?=§('manage-palette')?>:
                                     <div
                                     class='w3-<?=$contest_info['theme']?>'
                                     style='
@@ -710,9 +702,9 @@ if (isset($_POST['do_create'])) {
                                     '></div>
                                     <?=$contest_info['color']??$contest_info['theme']?>
                                     <br>
-                                    Tempo de reversão em horas: <?=$contest_info['revert_time']?>
+                                    <?=§('manage-reverttime')?>: <?=$contest_info['revert_time']?>
                                     <br>
-                                    Código interno: <?=$contest_info['name_id']?>
+                                    <?=§('manage-internalcode')?>: <?=$contest_info['name_id']?>
                                 </div>
                             </li>
                             <li class="w3-bar">
@@ -724,14 +716,14 @@ if (isset($_POST['do_create'])) {
                                     class="w3-button w3-orange"
                                     name="do_restart"
                                     form="alter"
-                                    onclick="return confirm('Ao reiniciar o concurso, todas as avaliações já efetuadas serão eliminadas. Deseja prosseguir?')"
-                                    type="submit">Reiniciar</button>
+                                    onclick="return confirm('<?=§('manage-confirmrestart')?>')"
+                                    type="submit"><?=§('manage-restart')?></button>
                                     <button
                                     class="w3-button w3-red w3-right"
                                     name="do_delete"
                                     form="alter"
-                                    onclick="return confirm('Ao apagar o concurso, todos os registros relacionados a este concurso serão eliminados. Deseja prosseguir?')"
-                                    type="submit">Apagar</button>
+                                    onclick="return confirm('<?=§('manage-confirmdelete')?>')"
+                                    type="submit"><?=§('manage-delete')?></button>
                                 </div>
                             </li>
                         </ul>
