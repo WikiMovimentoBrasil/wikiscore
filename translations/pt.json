@@ -277,5 +277,6 @@
     "manage-confirmrestart": "Ao reiniciar o concurso, todas as avaliações já efetuadas serão eliminadas. Deseja prosseguir?",
     "manage-confirmdelete": "Ao apagar o concurso, todos os registros relacionados a este concurso serão eliminados. Deseja prosseguir?",
     "manage-restart": "Reiniciar",
-    "manage-delete": "Apagar"
+    "manage-delete": "Apagar",
+    "compare-force": "Atualizar mesmo assim"
 }
