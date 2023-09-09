@@ -232,8 +232,8 @@ if (isset($_POST['do_create'])) {
     //Retorna mensagem final
     echo "<script>alert('".§('manage-created')."');window.location.href = window.location.href;</script>";
 
-//Processo para reiniciar concurso
-} elseif (isset($_POST['do_restart'])) {
+//Processo para reiniciar/apagar concurso
+} elseif (isset($_POST['do_restart']) || isset($_POST['do_delete'])) {
 
     //Valida código interno submetido
     preg_match('/^[a-z_]{1,30}$/', $_POST['name_id'], $name_id);
@@ -247,48 +247,40 @@ if (isset($_POST['do_create'])) {
         $_SESSION['user']["user_group"] !== $contests_array[$name_id]['group']
     ) die(§('manage-unauthorized'));
 
-    //Reinicia tabela do concurso, mas mantem a tabela de credenciais
-    mysqli_query($con, "TRUNCATE TABLE `{$name_id}__edits`, `{$name_id}__users`, `{$name_id}__articles`;");
+    //Reinicia concurso
+    if (isset($_POST['do_restart'])) {
 
-    //Retorna mensagem final
-    echo "<script>alert('".§('manage-restarted')."');window.location.href = window.location.href;</script>";
+        //Reinicia tabela do concurso, mas mantem a tabela de credenciais
+        mysqli_query($con, "TRUNCATE TABLE `{$name_id}__edits`, `{$name_id}__users`, `{$name_id}__articles`;");
 
-//Processo para apagar concurso
-} elseif (isset($_POST['do_delete'])) {
+        //Retorna mensagem final
+        echo "<script>alert('".§('manage-restarted')."');window.location.href = window.location.href;</script>";
 
-    //Valida código interno submetido
-    preg_match('/^[a-z_]{1,30}$/', $_POST['name_id'], $name_id);
-    if (!isset($name_id['0'])) die(§('manage-invalidcode'));
-    $name_id = $name_id['0'];
+    //Apaga concurso
+    } elseif (isset($_POST['do_delete'])) {
 
-    //Valida se usuário pertence ao grupo relacionado ao concurso
-    if (!isset($contests_array[$name_id])) die(§('manage-notfound'));
-    if (
-        $_SESSION['user']["user_group"] !== "ALL" && 
-        $_SESSION['user']["user_group"] !== $contests_array[$name_id]['group']
-    ) die(§('manage-unauthorized'));
+        //Apaga tabelas do concurso
+        mysqli_query($con, "DROP TABLE `{$name_id}__edits`, `{$name_id}__users`, `{$name_id}__articles`, `{$name_id}__credentials`;");
 
-    //Apaga tabelas do concurso
-    mysqli_query($con, "DROP TABLE `{$name_id}__edits`, `{$name_id}__users`, `{$name_id}__articles`, `{$name_id}__credentials`;");
+        //Apaga registro na tabela de concursos
+        $delete_statement =
+            "DELETE FROM
+                `manage__contests`
+            WHERE
+                `name_id` = ?
+            LIMIT 1";
 
-    //Apaga registro na tabela de concursos
-    $delete_statement =
-        "DELETE FROM
-            `manage__contests`
-        WHERE
-            `name_id` = ?
-        LIMIT 1";
+        $delete_query = mysqli_prepare($con, $delete_statement);
+        mysqli_stmt_bind_param(
+            $delete_query,
+            "s",
+            $name_id
+        );
+        mysqli_stmt_execute($delete_query);
 
-    $delete_query = mysqli_prepare($con, $delete_statement);
-    mysqli_stmt_bind_param(
-        $delete_query,
-        "s",
-        $name_id
-    );
-    mysqli_stmt_execute($delete_query);
-
-    //Retorna mensagem final
-    echo "<script>alert('".§('manage-deleted')."');window.location.href = window.location.href;</script>";
+        //Retorna mensagem final
+        echo "<script>alert('".§('manage-deleted')."');window.location.href = window.location.href;</script>";
+    }
 }
 
 ?>
