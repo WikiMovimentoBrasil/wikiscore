@@ -250,8 +250,10 @@ if (isset($_POST['do_create'])) {
     //Reinicia concurso
     if (isset($_POST['do_restart'])) {
 
-        //Reinicia tabela do concurso, mas mantem a tabela de credenciais
-        mysqli_query($con, "TRUNCATE TABLE `{$name_id}__edits`, `{$name_id}__users`, `{$name_id}__articles`;");
+        //Reinicia tabelas do concurso, mas mantem a tabela de credenciais        
+        mysqli_query($con, "TRUNCATE TABLE `{$name_id}__edits`;");
+        mysqli_query($con, "TRUNCATE TABLE `{$name_id}__users`;");
+        mysqli_query($con, "TRUNCATE TABLE `{$name_id}__articles`;");
 
         //Retorna mensagem final
         echo "<script>alert('".§('manage-restarted')."');window.location.href = window.location.href;</script>";
