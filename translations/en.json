@@ -253,6 +253,7 @@
     "manage-api": "API address",
     "manage-reverttime": "Rollback period (hours)",
     "manage-petscan": "PetScan ID of the pages",
+    "manage-source": "Monitoring method",
     "manage-listid": "Page ID with list of articles",
     "manage-catid": "Category ID of articles",
     "manage-outreach": "Contest name in Outreach Dashboard",

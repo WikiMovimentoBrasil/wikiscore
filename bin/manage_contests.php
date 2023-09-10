@@ -30,7 +30,27 @@ if (isset($_POST['do_create'])) {
     $exist_result = mysqli_fetch_assoc(mysqli_stmt_get_result($exist_query));
     if ($exist_result["count"] !== 0) die(§('manage-alreadyexist'));
 
-    //Insere linha com informações do concurso
+    //Valida informações submetidas via formulário
+    $_POST['start_time'] = date('Y-m-d\TH:i:s', strtotime($_POST['start_time']));
+    $_POST['end_time']   = date('Y-m-d\TH:i:s', strtotime($_POST['end_time']));
+    if ($_POST['source'] == "petscan") {
+        $_POST['category_petscan'] == $_POST['sourceid'];
+        $_POST['category_pageid'] = null;
+    } else {
+        $_POST['category_pageid'] == $_POST['sourceid'];
+        $_POST['category_petscan'] = null;
+    }
+    if (empty($_POST['minimum_bytes'])) {
+        $_POST['minimum_bytes'] = null;
+    }
+    if ($_POST['pictures_mode'] != '2') {
+        $_POST['max_pic_per_article'] = null;
+    }
+    if ($_POST['theme'] != 'color') {
+        $_POST['color'] = null;
+    }
+
+    //Prepara e executa query
     $create_statement =
         "INSERT INTO
             `manage__contests` (
@@ -55,7 +75,6 @@ if (isset($_POST['do_create'])) {
                 `color`
             )
         VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
-
     $create_query = mysqli_prepare($con, $create_statement);
     mysqli_stmt_bind_param(
         $create_query,
@@ -80,25 +99,9 @@ if (isset($_POST['do_create'])) {
         $_POST['theme'],
         $_POST['color']
     );
-
-    //Executa query
-    $_POST['start_time'] = date('Y-m-d\TH:i:s', strtotime($_POST['start_time']));
-    $_POST['end_time']   = date('Y-m-d\TH:i:s', strtotime($_POST['end_time']));
-    if (!empty($_POST['category_pageid'])) {
-        $_POST['category_petscan'] = null;
-    }
-    if (empty($_POST['minimum_bytes'])) {
-        $_POST['minimum_bytes'] = null;
-    }
-    if ($_POST['pictures_mode'] != '2') {
-        $_POST['max_pic_per_article'] = null;
-    }
-    if ($_POST['theme'] != 'color') {
-        $_POST['color'] = null;
-    }
+    mysqli_stmt_execute($create_query);
 
     //Verifica se linha foi inserida com sucesso
-    mysqli_stmt_execute($create_query);
     if (mysqli_stmt_affected_rows($create_query) != 1) {
         printf("Erro: %s.\n", mysqli_stmt_error($create_query));
         die();
@@ -303,6 +306,21 @@ if (isset($_POST['do_create'])) {
                     }
                 }
             });
+
+            function sourceChange(id) {
+                var form = document.getElementById(id);
+                var sourceSelect = form.querySelector('#source');
+                var label = form.querySelector('label[for="sourceid"]');
+                var text = label.querySelector('strong');
+
+                var selectedOption = sourceSelect.options[sourceSelect.selectedIndex].value;
+
+                if (selectedOption === "category") {
+                    text.textContent = "<?=§('manage-catid')?>";
+                } else if (selectedOption === "petscan") {
+                    text.textContent = "<?=§('manage-petscan')?>";
+                }
+            }
         </script>
     </head>
     <body>
@@ -409,18 +427,18 @@ if (isset($_POST['do_create'])) {
                                     name="revert_time"
                                     required>
 
-                                    <label for="petscan">
-                                        <strong><?=§('manage-petscan')?></strong>
+                                    <label for="source">
+                                        <strong><?=§('manage-source')?></strong>
                                     </label>
-                                    <input
-                                    class="w3-input w3-border w3-margin-bottom"
-                                    id="petscan"   
-                                    type="number"
-                                    maxlenght="10"
-                                    name="category_petscan"
-                                    id="category_petscan"
-                                    onclick="document.getElementById('category_pageid').value = '';"
-                                    >
+                                    <select
+                                    id="source"
+                                    name="source"
+                                    class="w3-select w3-border w3-margin-bottom"
+                                    onchange="sourceChange('create')"
+                                    required>
+                                        <option value="category" selected><?=§('manage-catid')?></option>
+                                        <option value="petscan"><?=§('manage-petscan')?></option>
+                                    </select>
 
                                 </div>
                                 <div class="w3-half" style="padding-left: 8px;">
@@ -436,17 +454,16 @@ if (isset($_POST['do_create'])) {
                                     name="official_list_pageid"
                                     required>
 
-                                    <label for="catid">
+                                    <label for="sourceid">
                                         <strong><?=§('manage-catid')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
-                                    id="catid"   
+                                    id="sourceid"   
                                     type="number"
                                     maxlenght="10"
-                                    id="category_pageid"
-                                    name="category_pageid"
-                                    onclick="document.getElementById('category_petscan').value = '';"
+                                    id="sourceid"
+                                    name="sourceid"
                                     >
 
                                 </div>
