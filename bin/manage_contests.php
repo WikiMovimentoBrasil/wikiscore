@@ -324,22 +324,24 @@ if (isset($_POST['do_create'])) {
                     <form id="create" method="post">
                         <div class="w3-section">
 
-                            <label>
+                            <label for="contestname">
                                 <strong><?=§('manage-contestname')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
+                            id="contestname"
                             type="text"
                             placeholder="<?=§('manage-contestnameabout')?>"
                             maxlength="255"
                             name="name"
                             required>
 
-                            <label>
+                            <label for="internalcode">
                                 <strong><?=§('manage-internalcode')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
+                            id="internalcode"
                             type="text"
                             placeholder="<?=§('manage-internalcodeabout')?>"
                             maxlength="30"
@@ -347,41 +349,45 @@ if (isset($_POST['do_create'])) {
                             name="name_id"
                             required>
 
-                            <label>
+                            <label for="starttime">
                                 <strong><?=§('manage-starttime')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
+                            id="starttime"
                             type="datetime-local"
                             name="start_time"
                             step="1"
                             required>
 
-                            <label>
+                            <label for="endtime">
                                 <strong><?=§('manage-endtime')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
+                            id="endtime"
                             type="datetime-local"
                             name="end_time"
                             step="1"
                             required>
 
-                            <label>
+                            <label for="endpoint">
                                 <strong><?=§('manage-endpoint')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
+                            id="endpoint"
                             type="url"
                             placeholder="https://.../w/index.php"
                             name="endpoint"
                             required>
 
-                            <label>
+                            <label for="api">
                                 <strong><?=§('manage-api')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
+                            id="api"
                             type="url"
                             placeholder="https://.../w/api.php"
                             name="api_endpoint"
@@ -390,11 +396,12 @@ if (isset($_POST['do_create'])) {
                             <div class="w3-row">
                                 <div class="w3-half" style="padding-right: 8px;">
 
-                                    <label>
+                                    <label for="reverttime">
                                         <strong><?=§('manage-reverttime')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
+                                    id="reverttime"
                                     type="number"
                                     min="0"
                                     max="99"
@@ -402,11 +409,12 @@ if (isset($_POST['do_create'])) {
                                     name="revert_time"
                                     required>
 
-                                    <label>
+                                    <label for="petscan">
                                         <strong><?=§('manage-petscan')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
+                                    id="petscan"   
                                     type="number"
                                     maxlenght="10"
                                     name="category_petscan"
@@ -417,21 +425,23 @@ if (isset($_POST['do_create'])) {
                                 </div>
                                 <div class="w3-half" style="padding-left: 8px;">
 
-                                    <label>
+                                    <label for="listid">
                                         <strong><?=§('manage-listid')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
+                                    id="listid"   
                                     type="number"
                                     maxlenght="10"
                                     name="official_list_pageid"
                                     required>
 
-                                    <label>
+                                    <label for="catid">
                                         <strong><?=§('manage-catid')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
+                                    id="catid"   
                                     type="number"
                                     maxlenght="10"
                                     id="category_pageid"
@@ -442,11 +452,12 @@ if (isset($_POST['do_create'])) {
                                 </div>
                             </div>
 
-                            <label>
+                            <label for="outreach">
                                 <strong><?=§('manage-outreach')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
+                            id="outreach"   
                             type="text"
                             placeholder="<?=§('manage-outreachplacehold')?>"
                             name="outreach_name"
@@ -455,33 +466,36 @@ if (isset($_POST['do_create'])) {
                             <div class="w3-row">
                                 <div class="w3-half" style="padding-right: 8px;">
 
-                                    <label>
+                                    <label for="bpp">
                                         <strong><?=§('manage-bpp')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
+                                    id="bpp"   
                                     type="number"
                                     min="1"
                                     max="999999999"
                                     name="bytes_per_points"
                                     required>
 
-                                    <label>
+                                    <label for="maxbytes">
                                         <strong><?=§('manage-maxbytes')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
+                                    id="maxbytes"   
                                     type="number"
                                     min="0"
                                     max="999999999"
                                     name="max_bytes_per_article"
                                     required>
 
-                                    <label>
+                                    <label for="minbytes">
                                         <strong><?=§('manage-minbytes')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
+                                    id="minbytes"   
                                     type="number"
                                     min="-1"
                                     max="999999999"
@@ -491,34 +505,37 @@ if (isset($_POST['do_create'])) {
                                 </div>
                                 <div class="w3-half" style="padding-left: 8px;">
 
-                                    <label>
+                                    <label for="ipp">
                                         <strong><?=§('manage-ipp')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
+                                    id="ipp"   
                                     type="number"
                                     min="0"
                                     max="999999999"
                                     name="pictures_per_points"
                                     required>
 
-                                    <label>
+                                    <label for="maximages">
                                         <strong><?=§('manage-maximages')?></strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
+                                    id="maximages"   
                                     type="number"
                                     min="0"
                                     max="999999999"
                                     name="max_pic_per_article"
                                     required>
 
-                                    <label>
+                                    <label for="imagemode">
                                         <strong><?=§('manage-imagemode')?></strong>
                                     </label>
                                     <select
                                     name="pictures_mode"
                                     class="w3-select w3-border w3-margin-bottom"
+                                    id="imagemode"
                                     required>
                                         <option value="0"><?=§('manage-perarticle')?></option>
                                         <option value="1"><?=§('manage-peredit')?></option>
@@ -530,7 +547,7 @@ if (isset($_POST['do_create'])) {
 
                             <div class="w3-row">
                                 <div class="w3-half" style="padding-right: 8px;">
-                                    <label>
+                                    <label for="theme">
                                         <strong><?=§('manage-palette')?></strong>
                                     </label>
                                     <select
@@ -571,7 +588,7 @@ if (isset($_POST['do_create'])) {
                                     </select>
                                 </div>
                                 <div class="w3-half" style="padding-left: 8px;">
-                                    <label>
+                                    <label for="hex">
                                         <strong><?=§('manage-hexcolor')?></strong>
                                     </label>
                                     <input
@@ -586,11 +603,12 @@ if (isset($_POST['do_create'])) {
                                 </div>
                             </div>
 
-                            <label>
+                            <label for="managemail">
                                 <strong><?=§('manage-managemail')?></strong>
                             </label>
                             <input
                             class="w3-input w3-border w3-margin-bottom"
+                            id="managemail"
                             type="email"
                             placeholder="example@example.com"
                             name="email"
