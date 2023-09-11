@@ -246,6 +246,7 @@
     "manage-contestname": "Contest name",
     "manage-contestnameabout": "Enter the full contest name",
     "manage-internalcode": "Internal code",
+    "manage-group": "Group",
     "manage-internalcodeabout": "Use only lower case letters and underscores",
     "manage-starttime": "Start time",
     "manage-endtime": "End time",
