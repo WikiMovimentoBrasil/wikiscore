@@ -512,7 +512,7 @@ $contests_array[]['name'] = null;
                                         placeholder="WMF"
                                         maxlength="30"
                                         name="group"
-                                        value="<?=$contest_info['group']??($_SESSION['user']["user_group"]!=='ALL')?$_SESSION['user']["user_group"]:''?>"
+                                        value="<?=$contest_info['group']??(($_SESSION['user']["user_group"]!=='ALL')?$_SESSION['user']["user_group"]:'')?>"
                                         <?=($contest_info['group']==null&&$_SESSION['user']["user_group"]==='ALL')?'required':'disabled'?>>
 
                                     </div>
