@@ -566,7 +566,7 @@ mysqli_close($con);
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" 
                 style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>">
                     <h2><?=§('triage-evaluation')?></h2>
-                    <form method="post" name="evaluate">
+                    <form method="post" id="evaluate">
                         <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
                         <div class="w3-container w3-cell w3-col l6 m12 s6">
                             <p><?=§('isvalid')?></p>
