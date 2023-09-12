@@ -130,7 +130,7 @@ $all_days = implode(", ", $all_days);
             <h1><?=§('graph')?> - <?=$contest['name'];?></h1>
         </header>
         <br>
-        <div class="w3-row-padding w3-content" style="max-width:700px">
+        <div class="w3-row-padding w3-content" style="max-width:800px">
             <div class="w3-container w3-margin-top w3-card-4">
                 <div class="w3-container">
                     <p><?=§('graph-about')?></p>
