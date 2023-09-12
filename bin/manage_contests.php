@@ -29,161 +29,164 @@ function processFormData()
 }
 
 //Processa formulário
-if (isset($_POST['do_create'])) {
+if (isset($_POST['do_create']) || isset($_POST['do_manager'])) {
 
     //Valida código interno submetido
     preg_match('/^[a-z_]{1,30}$/', $_POST['name_id'], $name_id);
     if (!isset($name_id['0'])) die(§('manage-invalidcode'));
     $name_id = $name_id['0'];
 
-    //Verifica se tabelas existem
-    $exist_statement =
-        "SELECT
-            COUNT(`table_name`) AS `count`
-        FROM
-            information_schema.tables
-        WHERE
-            `table_schema` = ? AND
-            `table_name` LIKE ?";
-    $exist_query = mysqli_prepare($con, $exist_statement);
-    mysqli_stmt_bind_param(
-        $exist_query,
-        "ss",
-        $database,
-        $name_id_like
-    );
-    $name_id_like = $name_id.'%';
-    mysqli_stmt_execute($exist_query);
-    $exist_result = mysqli_fetch_assoc(mysqli_stmt_get_result($exist_query));
-    if ($exist_result["count"] !== 0) die(§('manage-alreadyexist'));
+    if (isset($_POST['do_create'])) {
 
-    //Valida informações submetidas via formulário
-    processFormData();
+        //Verifica se tabelas existem
+        $exist_statement =
+            "SELECT
+                COUNT(`table_name`) AS `count`
+            FROM
+                information_schema.tables
+            WHERE
+                `table_schema` = ? AND
+                `table_name` LIKE ?";
+        $exist_query = mysqli_prepare($con, $exist_statement);
+        mysqli_stmt_bind_param(
+            $exist_query,
+            "ss",
+            $database,
+            $name_id_like
+        );
+        $name_id_like = $name_id.'%';
+        mysqli_stmt_execute($exist_query);
+        $exist_result = mysqli_fetch_assoc(mysqli_stmt_get_result($exist_query));
+        if ($exist_result["count"] !== 0) die(§('manage-alreadyexist'));
 
-    //Prepara e executa query
-    $create_statement =
-        "INSERT INTO
-            `manage__contests` (
-                `name_id`,
-                `start_time`,
-                `end_time`,
-                `name`,
-                `group`,
-                `revert_time`,
-                `official_list_pageid`,
-                `category_pageid`,
-                `category_petscan`,
-                `endpoint`,
-                `api_endpoint`,
-                `outreach_name`,
-                `bytes_per_points`,
-                `max_bytes_per_article`,
-                `minimum_bytes`,
-                `pictures_per_points`,
-                `pictures_mode`,
-                `max_pic_per_article`,
-                `theme`,
-                `color`
-            )
-        VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
-    $create_query = mysqli_prepare($con, $create_statement);
-    mysqli_stmt_bind_param(
-        $create_query,
-        "ssssiiiisssiiiiiiss",
-        $_POST['name_id'],
-        $_POST['start_time'],
-        $_POST['end_time'],
-        $_POST['name'],
-        $_POST['group'],
-        $_POST['revert_time'],
-        $_POST['official_list_pageid'],
-        $_POST['category_pageid'],
-        $_POST['category_petscan'],
-        $_POST['endpoint'],
-        $_POST['api_endpoint'],
-        $_POST['outreach_name'],
-        $_POST['bytes_per_points'],
-        $_POST['max_bytes_per_article'],
-        $_POST['minimum_bytes'],
-        $_POST['pictures_per_points'],
-        $_POST['pictures_mode'],
-        $_POST['max_pic_per_article'],
-        $_POST['theme'],
-        $_POST['color']
-    );
-    mysqli_stmt_execute($create_query);
+        //Valida informações submetidas via formulário
+        processFormData();
 
-    //Verifica se linha foi inserida com sucesso
-    if (mysqli_stmt_affected_rows($create_query) != 1) {
-        printf("Erro: %s.\n", mysqli_stmt_error($create_query));
-        die();
-    }
+        //Prepara e executa query
+        $create_statement =
+            "INSERT INTO
+                `manage__contests` (
+                    `name_id`,
+                    `start_time`,
+                    `end_time`,
+                    `name`,
+                    `group`,
+                    `revert_time`,
+                    `official_list_pageid`,
+                    `category_pageid`,
+                    `category_petscan`,
+                    `endpoint`,
+                    `api_endpoint`,
+                    `outreach_name`,
+                    `bytes_per_points`,
+                    `max_bytes_per_article`,
+                    `minimum_bytes`,
+                    `pictures_per_points`,
+                    `pictures_mode`,
+                    `max_pic_per_article`,
+                    `theme`,
+                    `color`
+                )
+            VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? )";
+        $create_query = mysqli_prepare($con, $create_statement);
+        mysqli_stmt_bind_param(
+            $create_query,
+            "ssssiiiisssiiiiiiss",
+            $_POST['name_id'],
+            $_POST['start_time'],
+            $_POST['end_time'],
+            $_POST['name'],
+            $_POST['group'],
+            $_POST['revert_time'],
+            $_POST['official_list_pageid'],
+            $_POST['category_pageid'],
+            $_POST['category_petscan'],
+            $_POST['endpoint'],
+            $_POST['api_endpoint'],
+            $_POST['outreach_name'],
+            $_POST['bytes_per_points'],
+            $_POST['max_bytes_per_article'],
+            $_POST['minimum_bytes'],
+            $_POST['pictures_per_points'],
+            $_POST['pictures_mode'],
+            $_POST['max_pic_per_article'],
+            $_POST['theme'],
+            $_POST['color']
+        );
+        mysqli_stmt_execute($create_query);
 
-    //Cria novas tabelas
-    mysqli_query(
-        $con,
-        "CREATE TABLE IF NOT EXISTS `{$name_id}__articles` (
-            `key` int(4) unsigned NOT NULL AUTO_INCREMENT,
-            `articleID` mediumint(9) unsigned NOT NULL,
-            PRIMARY KEY (`key`),
-            UNIQUE KEY `articleID` (`articleID`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
-    );
-    mysqli_query(
-        $con,
-        "CREATE TABLE IF NOT EXISTS `{$name_id}__credentials` (
-            `user_id` int(11) NOT NULL AUTO_INCREMENT,
-            `user_name` varchar(255) NOT NULL,
-            `user_email` varchar(255) NOT NULL,
-            `user_password` varchar(128) NOT NULL,
-            `user_status` varchar(1) NOT NULL DEFAULT 'P',
-            `user_data` text,
-            PRIMARY KEY (`user_id`),
-            UNIQUE KEY `user_email` (`user_email`),
-            KEY `user_name` (`user_name`),
-            KEY `user_status` (`user_status`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;"
-    );
-    mysqli_query(
-        $con,
-        "CREATE TABLE IF NOT EXISTS `{$name_id}__edits` (
-            `n` int(6) unsigned NOT NULL AUTO_INCREMENT,
-            `diff` int(9) unsigned NOT NULL,
-            `article` mediumint(8) unsigned NOT NULL DEFAULT '0',
-            `timestamp` timestamp NULL DEFAULT NULL,
-            `user_id` int(11) NOT NULL,
-            `bytes` int(11) DEFAULT NULL,
-            `new_page` tinyint(1) unsigned DEFAULT NULL,
-            `valid_edit` tinyint(1) unsigned DEFAULT NULL,
-            `valid_user` tinyint(1) unsigned DEFAULT NULL,
-            `pictures` tinyint(1) unsigned DEFAULT NULL,
-            `reverted` tinyint(1) unsigned DEFAULT NULL,
-            `by` tinytext COLLATE utf8mb4_unicode_ci,
-            `when` timestamp NULL DEFAULT NULL,
-            `obs` text NULL DEFAULT NULL,
-            PRIMARY KEY (`n`),
-            UNIQUE KEY `diff` (`diff`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
-    );
-    mysqli_query(
-        $con,
-        "CREATE TABLE IF NOT EXISTS `{$name_id}__users` (
-            `n` int(4) unsigned NOT NULL AUTO_INCREMENT,
-            `user` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
-            `timestamp` timestamp NULL DEFAULT NULL,
-            `global_id` int(11) NOT NULL,
-            `local_id` int(11) DEFAULT NULL,
-            `attached` timestamp NULL DEFAULT NULL,
-            PRIMARY KEY (`n`),
-            UNIQUE KEY `user` (`user`)
-        ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
-    );
+        //Verifica se linha foi inserida com sucesso
+        if (mysqli_stmt_affected_rows($create_query) != 1) {
+            printf("Erro: %s.\n", mysqli_stmt_error($create_query));
+            die();
+        }
 
-    //Verifica novamente se tabelas existem
-    mysqli_stmt_execute($exist_query);
-    $exist_result = mysqli_fetch_assoc(mysqli_stmt_get_result($exist_query));
-    if ($exist_result["count"] !== 4) {
-        die(§('manage-creationerror'));
+        //Cria novas tabelas
+        mysqli_query(
+            $con,
+            "CREATE TABLE IF NOT EXISTS `{$name_id}__articles` (
+                `key` int(4) unsigned NOT NULL AUTO_INCREMENT,
+                `articleID` mediumint(9) unsigned NOT NULL,
+                PRIMARY KEY (`key`),
+                UNIQUE KEY `articleID` (`articleID`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
+        );
+        mysqli_query(
+            $con,
+            "CREATE TABLE IF NOT EXISTS `{$name_id}__credentials` (
+                `user_id` int(11) NOT NULL AUTO_INCREMENT,
+                `user_name` varchar(255) NOT NULL,
+                `user_email` varchar(255) NOT NULL,
+                `user_password` varchar(128) NOT NULL,
+                `user_status` varchar(1) NOT NULL DEFAULT 'P',
+                `user_data` text,
+                PRIMARY KEY (`user_id`),
+                UNIQUE KEY `user_email` (`user_email`),
+                KEY `user_name` (`user_name`),
+                KEY `user_status` (`user_status`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;"
+        );
+        mysqli_query(
+            $con,
+            "CREATE TABLE IF NOT EXISTS `{$name_id}__edits` (
+                `n` int(6) unsigned NOT NULL AUTO_INCREMENT,
+                `diff` int(9) unsigned NOT NULL,
+                `article` mediumint(8) unsigned NOT NULL DEFAULT '0',
+                `timestamp` timestamp NULL DEFAULT NULL,
+                `user_id` int(11) NOT NULL,
+                `bytes` int(11) DEFAULT NULL,
+                `new_page` tinyint(1) unsigned DEFAULT NULL,
+                `valid_edit` tinyint(1) unsigned DEFAULT NULL,
+                `valid_user` tinyint(1) unsigned DEFAULT NULL,
+                `pictures` tinyint(1) unsigned DEFAULT NULL,
+                `reverted` tinyint(1) unsigned DEFAULT NULL,
+                `by` tinytext COLLATE utf8mb4_unicode_ci,
+                `when` timestamp NULL DEFAULT NULL,
+                `obs` text NULL DEFAULT NULL,
+                PRIMARY KEY (`n`),
+                UNIQUE KEY `diff` (`diff`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
+        );
+        mysqli_query(
+            $con,
+            "CREATE TABLE IF NOT EXISTS `{$name_id}__users` (
+                `n` int(4) unsigned NOT NULL AUTO_INCREMENT,
+                `user` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '0',
+                `timestamp` timestamp NULL DEFAULT NULL,
+                `global_id` int(11) NOT NULL,
+                `local_id` int(11) DEFAULT NULL,
+                `attached` timestamp NULL DEFAULT NULL,
+                PRIMARY KEY (`n`),
+                UNIQUE KEY `user` (`user`)
+            ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
+        );
+
+        //Verifica novamente se tabelas existem
+        mysqli_stmt_execute($exist_query);
+        $exist_result = mysqli_fetch_assoc(mysqli_stmt_get_result($exist_query));
+        if ($exist_result["count"] !== 4) {
+            die(§('manage-creationerror'));
+        }
     }
 
     //Extrai nome do gestor via e-mail
@@ -198,36 +201,84 @@ if (isset($_POST['do_create'])) {
     //Gera senha para gestor
     $password = bin2hex(random_bytes(14));
     $hash = password_hash($password, PASSWORD_DEFAULT);
-    $mananger_code = 'G';
+    $manager_code = 'G';
 
     //Insere o gestor no banco de dados
-    $mananger_statement =
-        "INSERT INTO
-            `{$name_id}__credentials` (`user_name`, `user_email`, `user_password`, `user_status`)
-        VALUES
-            (?,?,?,?)";
-    $mananger_query = mysqli_prepare($con, $mananger_statement);
-    mysqli_stmt_bind_param(
-        $mananger_query,
-        "ssss",
-        $name,
-        $email,
-        $hash,
-        $mananger_code
-    );
+    if (isset($_POST['do_create'])) {
+
+        $manager_statement =
+            "INSERT INTO
+                `{$name_id}__credentials` (`user_name`, `user_email`, `user_password`, `user_status`)
+            VALUES
+                (?,?,?,?)";
+        $manager_query = mysqli_prepare($con, $manager_statement);
+        mysqli_stmt_bind_param(
+            $manager_query,
+            "ssss",
+            $name,
+            $email,
+            $hash,
+            $manager_code
+        );
+
+        $emailContent = §('manage-email', $_POST['name'], $password);
+        $emailSubject = §('manage-subject');
+        $finalMessage = §('manage-created');
+
+    } elseif (isset($_POST['do_manager'])) {
+
+        //Valida se usuário pertence ao grupo relacionado ao concurso
+        if (!isset($contests_array[$name_id])) die(§('manage-notfound'));
+        if (
+            $_SESSION['user']["user_group"] !== "ALL" && 
+            $_SESSION['user']["user_group"] !== $contests_array[$name_id]['group']
+        ) die(§('manage-unauthorized'));
+
+        $deactive_statement = 
+            "UPDATE 
+                `{$name_id}__credentials`
+            SET
+                `user_status` = 'P'
+            WHERE
+                `user_status` = 'G' OR `user_status` = 'A'";
+        $deactive_query = mysqli_prepare($con, $deactive_statement);
+        mysqli_stmt_execute($deactive_query);
+
+        $manager_statement = 
+            "INSERT IGNORE INTO 
+                `{$name_id}__credentials` (`user_name`, `user_email`, `user_password`, `user_status`)
+            VALUES
+                (?,?,?,?)
+            ON DUPLICATE KEY UPDATE
+                `user_password` = ?,
+                `user_status` = ?";
+        $manager_query = mysqli_prepare($con, $manager_statement);
+        mysqli_stmt_bind_param(
+            $manager_query,
+            "ssssss",
+            $name,
+            $email,
+            $hash,
+            $manager_code,
+            $hash,
+            $manager_code
+        );
+
+        $emailContent = §('manage-remail', $_POST['name'], $password);
+        $emailSubject = §('manage-resubject');
+        $finalMessage = §('manage-remanaged');
+    }
 
     //Verifica se linha foi inserida com sucesso
-    mysqli_stmt_execute($mananger_query);
-    if (mysqli_stmt_affected_rows($mananger_query) != 1) {
-        printf("Erro: %s.\n", mysqli_stmt_error($mananger_query));
+    mysqli_stmt_execute($manager_query);
+    if (mysqli_stmt_affected_rows($manager_query) == 0) {
+        printf("Erro: %s.\n", mysqli_stmt_error($manager_query));
         die();
     }
 
     //Cria corpo do e-mail para gestor
-    $message = §('manage-email', $_POST['name'], $password);
     $emailFile = fopen("php://temp", 'w+');
-    $subject = §('manage-subject');
-    fwrite($emailFile, "Subject: " . $subject . "\n" . $message);
+    fwrite($emailFile, "Subject: {$emailSubject}\n{$emailContent}");
     rewind($emailFile);
     $fstat = fstat($emailFile);
     $size = $fstat['size'];
@@ -245,7 +296,7 @@ if (isset($_POST['do_create'])) {
     curl_close($ch);
 
     //Retorna mensagem final
-    echo "<script>alert('".§('manage-created')."');window.location.href = window.location.href;</script>";
+    echo "<script>alert('{$finalMessage}');window.location.href = window.location.href;</script>";
 
 //Processo para reiniciar/apagar concurso
 } elseif (isset($_POST['do_restart']) || isset($_POST['do_delete']) || isset($_POST['do_edit'])) {
@@ -439,6 +490,22 @@ $contests_array[]['name'] = null;
                 sourceChange(id);
                 colorChange(id);
             }
+
+            function managerChange(id, doChange) {
+                var form = document.getElementById(id);
+                var parent = form.parentNode;
+                var newForm = parent.lastElementChild;
+
+                if (doChange === true) {
+                    form.style.display = 'none';
+                    newForm.style.display = 'block';
+                } else {
+                    form.style.display = 'block';
+                    newForm.style.display = 'none';
+                }
+
+                parent.parentNode.scrollIntoView(true);
+            }
         </script>
     </head>
     <body>
@@ -479,7 +546,7 @@ $contests_array[]['name'] = null;
                                 placeholder="<?=§('manage-contestnameabout')?>"
                                 maxlength="255"
                                 name="name"
-                                value="<?=$contest_info['name']?>"
+                                value="<?=$contest_info['name']??''?>"
                                 <?=($contest_info['name']==null)?'required':'disabled'?>>
 
                                 <div class="w3-row">
@@ -496,7 +563,7 @@ $contests_array[]['name'] = null;
                                         maxlength="30"
                                         pattern="[a-z0_]{1,30}"
                                         name="name_id"
-                                        value="<?=$contest_info['name_id']?>"
+                                        value="<?=$contest_info['name_id']??''?>"
                                         <?=($contest_info['name']==null)?'required':'disabled'?>>
 
                                     </div>
@@ -552,7 +619,7 @@ $contests_array[]['name'] = null;
                                 type="url"
                                 placeholder="https://.../w/index.php"
                                 name="endpoint"
-                                value="<?=$contest_info['endpoint']?>"
+                                value="<?=$contest_info['endpoint']??''?>"
                                 <?=($contest_info['name']==null)?'required':'disabled'?>>
 
                                 <label for="api">
@@ -564,7 +631,7 @@ $contests_array[]['name'] = null;
                                 type="url"
                                 placeholder="https://.../w/api.php"
                                 name="api_endpoint"
-                                value="<?=$contest_info['api_endpoint']?>"
+                                value="<?=$contest_info['api_endpoint']??''?>"
                                 <?=($contest_info['name']==null)?'required':'disabled'?>>
 
                                 <div class="w3-row">
@@ -581,7 +648,7 @@ $contests_array[]['name'] = null;
                                         max="99"
                                         value="24"
                                         name="revert_time"
-                                        value="<?=$contest_info['revert_time']?>"
+                                        value="<?=$contest_info['revert_time']??''?>"
                                         <?=($contest_info['name']==null)?'required':'disabled'?>>
 
                                         <label for="source">
@@ -614,7 +681,7 @@ $contests_array[]['name'] = null;
                                         type="number"
                                         maxlenght="10"
                                         name="official_list_pageid"
-                                        value="<?=$contest_info['official_list_pageid']?>"
+                                        value="<?=$contest_info['official_list_pageid']??''?>"
                                         <?=($contest_info['name']==null)?'required':'disabled'?>>
 
                                         <label for="sourceid">
@@ -642,7 +709,7 @@ $contests_array[]['name'] = null;
                                 type="text"
                                 placeholder="<?=§('manage-outreachplacehold')?>"
                                 name="outreach_name"
-                                value="<?=$contest_info['outreach_name']?>"
+                                value="<?=$contest_info['outreach_name']??''?>"
                                 <?=($contest_info['name']==null)?'required':'disabled'?>>
 
                                 <div class="w3-row">
@@ -658,7 +725,7 @@ $contests_array[]['name'] = null;
                                         min="1"
                                         max="999999999"
                                         name="bytes_per_points"
-                                        value="<?=$contest_info['bytes_per_points']?>"
+                                        value="<?=$contest_info['bytes_per_points']??''?>"
                                         <?=($contest_info['name']==null)?'required':'disabled'?>>
 
                                         <label for="maxbytes">
@@ -746,6 +813,7 @@ $contests_array[]['name'] = null;
                                         onchange="colorChange('<?=($contest_info['name']==null)?'create':$contest_info['name_id']?>')"
                                         class="w3-select w3-border w3-margin-bottom"
                                         <?=($contest_info['name']==null)?'required':'disabled'?>>
+                                            <?php if (!isset($contest_info['theme'])) $contest_info['theme'] = 'red'; ?>
                                             <option value="red" class="w3-red" <?=($contest_info['theme']!='red')?:'selected'?>>red</option>
                                             <option value="pink" class="w3-pink" <?=($contest_info['theme']!='pink')?:'selected'?>>pink</option>
                                             <option value="purple" class="w3-purple" <?=($contest_info['theme']!='purple')?:'selected'?>>purple</option>
@@ -814,33 +882,42 @@ $contests_array[]['name'] = null;
                                     type="submit"
                                     ><?=§('manage-create')?></button>
                                 <?php else: ?>
-                                    <div class="w3-row">
-                                        <div class="w3-third">
+                                    <div class="w3-row w3-section">
+                                        <div class="w3-half">
                                             <button
-                                            class="w3-button w3-orange w3-block w3-rightbar w3-border-light-grey"
-                                            name="do_restart"
-                                            onclick="return confirm('<?=§('manage-confirmrestart')?>')"
-                                            type="submit"><?=§('manage-restart')?></button>
-                                        </div>
-                                        <div class="w3-third">
-                                            <button
-                                            class="w3-button w3-blue w3-block"
+                                            class="w3-button w3-blue w3-block w3-rightbar w3-border-white"
                                             style="display: block;"
                                             type="button"
                                             id="editor"
                                             onclick="editChange('<?=$contest_info['name_id']?>')"
                                             ><?=§('modify')?></button>
                                             <button
-                                            class="w3-button w3-green w3-block"
+                                            class="w3-button w3-green w3-block w3-rightbar w3-border-white"
                                             style="display: none;"
                                             name="do_edit"
                                             id="saver"
                                             type="submit"
                                             ><?=§('triage-save')?></button>
                                         </div>
-                                        <div class="w3-third">
+                                        <div class="w3-half">
                                             <button
-                                            class="w3-button w3-red w3-block w3-leftbar w3-border-light-grey"
+                                            class="w3-button w3-black w3-block w3-leftbar w3-border-white"
+                                            name="do_manager"
+                                            onclick="managerChange('<?=$contest_info['name_id']??''?>', true)"
+                                            type="button"><?=§('manage-newmanager')?></button>
+                                        </div>
+                                    </div>
+                                    <div class="w3-row w3-section">
+                                        <div class="w3-half">
+                                            <button
+                                            class="w3-button w3-orange w3-block w3-rightbar w3-border-white"
+                                            name="do_restart"
+                                            onclick="return confirm('<?=§('manage-confirmrestart')?>')"
+                                            type="submit"><?=§('manage-restart')?></button>
+                                        </div>
+                                        <div class="w3-half">
+                                            <button
+                                            class="w3-button w3-red w3-block w3-leftbar w3-border-white"
                                             name="do_delete"
                                             onclick="return confirm('<?=§('manage-confirmdelete')?>')"
                                             type="submit"><?=§('manage-delete')?></button>
@@ -848,8 +925,38 @@ $contests_array[]['name'] = null;
                                     </div>
                                 <?php endif; ?>
                             </div>
-                        </div>
-                    </form>
+                        </form>
+                        <form 
+                        style="display: none;"
+                        method="post">
+                            <div class="w3-section">
+                                <p><?=§('manage-confirmmanager')?></p>
+                                <input type="hidden" name="name_id" value="<?=$contest_info['name_id']??''?>">
+                                <input type="hidden" name="name" value="<?=$contest_info['name']??''?>">
+                                <input
+                                class="w3-input w3-border w3-margin-bottom"
+                                id="managemail"
+                                type="email"
+                                placeholder="example@example.com"
+                                name="email"
+                                required>
+                                <div class="w3-row">
+                                    <div class="w3-half">
+                                        <button
+                                        class="w3-button w3-orange w3-block w3-rightbar w3-border-white"
+                                        name="do_manager"
+                                        type="submit"><?=§('manage-newmanager')?></button>
+                                    </div>
+                                    <div class="w3-half">
+                                        <button
+                                        class="w3-button w3-red w3-block w3-leftbar w3-border-white"
+                                        type="button"
+                                        onclick="managerChange('<?=$contest_info['name_id']??''?>', false)"><?=§('login-cancel')?></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             <?php endforeach; ?>
         </div>
