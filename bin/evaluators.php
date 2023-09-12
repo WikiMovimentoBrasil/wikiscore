@@ -90,7 +90,8 @@ if ($_POST) {
     if (
         !isset($_POST['user']) && (
             !isset($_POST['on']) ||
-            !isset($_POST['off'])
+            !isset($_POST['off'])||
+            !isset($_POST['reset'])
         )
     ) {
         die(§('evaluators-missing'));
@@ -117,6 +118,34 @@ if ($_POST) {
     }
     mysqli_stmt_execute($update_query);
     if (mysqli_stmt_affected_rows($update_query) != 0) { $output['success'] = true; }
+
+    if (isset($_POST['reset'])) {
+        $reset_query = mysqli_prepare(
+            $con,
+            "DELETE FROM
+                `{$contest['name_id']}__edits`
+            WHERE
+                `by` = ?"
+        );
+        mysqli_stmt_bind_param($reset_query, "s", $_POST['user']);
+        mysqli_stmt_execute($reset_query);
+        if (mysqli_stmt_affected_rows($reset_query) != 0) {
+            $refresh_query = mysqli_prepare(
+                $con,
+                "UPDATE
+                    `manage__contests`
+                SET
+                    `next_update` = NOW()
+                WHERE
+                    `name_id` = ?"
+            );
+            mysqli_stmt_bind_param($refresh_query, "s", $contest['name_id']);
+            mysqli_stmt_execute($refresh_query);
+            if (mysqli_stmt_affected_rows($refresh_query) != 0) {
+                $output['reseted'] = true;
+            }
+        }
+    }
 }
 
 //Icone
@@ -209,6 +238,17 @@ $icon = '
                                     <span><?=$data['email']?></span><br>
                                     <span><?=§('evaluators-stats',$data['evaluated'])?></span>
                                 </div>
+                                <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
+                                    <form method="post">
+                                        <input type='hidden' name='reset' value='1'>
+                                        <input type='hidden' name='user' value='<?=$user?>'>
+                                        <button
+                                        type='submit'
+                                        onclick="return confirm('<?=§('evaluators-areyousure')?>')"
+                                        class='w3-bar-item w3-right w3-button w3-margin w3-red'
+                                        ><?=§('counter-redefine')?></button>
+                                    </form>
+                                <?php endif; ?>
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -235,8 +275,17 @@ $icon = '
                                         <button
                                         type='submit'
                                         onclick="return confirm('<?=§('evaluators-areyousure')?>')"
-                                        class='w3-bar-item w3-right w3-button w3-section w3-red'
+                                        class='w3-bar-item w3-right w3-button w3-section w3-orange'
                                         ><?=§('evaluators-disable')?></button>
+                                    </form>
+                                    <form method="post">
+                                        <input type='hidden' name='reset' value='1'>
+                                        <input type='hidden' name='user' value='<?=$user?>'>
+                                        <button
+                                        type='submit'
+                                        onclick="return confirm('<?=§('evaluators-areyousure')?>')"
+                                        class='w3-bar-item w3-right w3-button w3-margin w3-red'
+                                        ><?=§('counter-redefine')?></button>
                                     </form>
                                 <?php endif; ?>
                             </li>
@@ -268,6 +317,15 @@ $icon = '
                                         class='w3-bar-item w3-right w3-button w3-section w3-green'
                                         ><?=§('evaluators-enable')?></button>
                                     </form>
+                                    <form method="post">
+                                        <input type='hidden' name='reset' value='1'>
+                                        <input type='hidden' name='user' value='<?=$user?>'>
+                                        <button
+                                        type='submit'
+                                        onclick="return confirm('<?=§('evaluators-areyousure')?>')"
+                                        class='w3-bar-item w3-right w3-button w3-margin w3-red'
+                                        ><?=§('counter-redefine')?></button>
+                                    </form>
                                 <?php endif; ?>
                             </li>
                         <?php endforeach; ?>
@@ -276,7 +334,12 @@ $icon = '
             </div>
         </div>
     </body>
-    <?php if (isset($output['success'])): ?>
+    <?php if (isset($output['reseted'])): ?>
+            <script>
+                alert('<?=§('counter-success')?>');
+                window.location.href = window.location.href;
+            </script>
+    <?php elseif (isset($output['success'])): ?>
         <?php if (is_null($output['success']['diff'])): ?>
             <script>
                 alert('<?=§('evaluators-success')?>');
