@@ -167,6 +167,7 @@
     "recover-signature": "Sincerely, WikiScore",
     "recover-subject": "WikiScore - New password",
     "recover-notemail": "Error: Invalid email!",
+    "password": "Password",
     "password-username": "Username",
     "password-oldpassword": "Old password",
     "password-wrongpass": "Incorrect old password!",

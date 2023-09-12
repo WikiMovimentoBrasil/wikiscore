@@ -253,11 +253,8 @@ while (isset($list_api['continue'])) {
         <?php endif; ?>
     </head>
     <body>
-        <header class="w3-container w3-<?=$contest['theme'];?>">
-            <h1><?=§('counter')?> - <?=$contest['name'];?></h1>
-        </header>
-        <br>
-        <div class="w3-container">
+        <?php require_once "sidebar.php"; ?>
+        <div class="w3-container" style="margin-top:43px;padding-top:16px;">
             <div class="w3-threequarter w3-section">
                 <p class="w3-text-darkgrey w3-container">
                     <?=§('counter-about',$contest['name'],date('Y/m/d',$time_unix),date('H:i:s',$time_unix))?>

@@ -150,11 +150,8 @@ mysqli_close($con);
         <link rel="stylesheet" href="bin/diff.css">
     </head>
     <body>
-        <header class="w3-container w3-<?=$contest['theme'];?>">
-            <h1><?=§('modify')?> - <?=$contest['name'];?></h1>
-        </header>
-        <br>
-        <div class="w3-row-padding w3-content" style="max-width:1400px">
+        <?php require_once "sidebar.php"; ?>
+        <div class="w3-row-padding w3-content w3-main" style="max-width:1400px;margin-top:43px;padding-top:16px;">
             <div class="w3-container w3-quarter w3-margin-top">
                 <form class="w3-container w3-card w3-margin-bottom" id="modify" method="get">
                     <h2><?=§('modify-consult')?></h2>

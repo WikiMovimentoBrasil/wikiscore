@@ -399,7 +399,6 @@ mysqli_close($con);
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
         <link rel="stylesheet" href="bin/diff.css">
-        <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/6.2.0/css/all.css">
         <script type="text/javascript">
             function handleOverwriteClick(outputRevisionBytes) {
                 var overwriteElement = document.getElementById('overwrite');
@@ -414,112 +413,13 @@ mysqli_close($con);
                 var obsElement = document.getElementById('obs');
                 obsElement.required = true;
             }
-            
-            function w3_open() {
-                var mySidebar = document.getElementById("mySidebar");
-                var overlayBg = document.getElementById("myOverlay");
-                if (mySidebar.style.display === 'block') {
-                    mySidebar.style.display = 'none';
-                    overlayBg.style.display = "none";
-                } else {
-                    mySidebar.style.display = 'block';
-                    overlayBg.style.display = "block";
-                }
-            }
-            function w3_close() {
-                document.getElementById("mySidebar").style.display = "none";
-                document.getElementById("myOverlay").style.display = "none";
-            }
         </script>
         <?php if (isset($output['success']['diff']) || isset($output['success']['skip']) || isset($output['success']['release'])) : ?>
             <script type="text/javascript">history.replaceState(null, document.title, location.href);</script>
         <?php endif; ?>
     </head>
     <body>
-        <div class="w3-<?=$contest['theme'];?> w3-large w3-bar w3-top" style="z-index:4">
-            <button class="w3-bar-item w3-button w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i> &nbsp;</button>
-            <span class="w3-bar-item w3-right"><?=$contest['name'];?></span>
-        </div>
-        <nav class="w3-sidebar w3-white w3-animate-left" style="z-index:3;width:230px;display:none;" id="mySidebar">
-            <br>
-            <div class="w3-container w3-row">
-                <div class="w3-col s4">
-                    <svg
-                        class="w3-margin-right"
-                        width="46"
-                        height="46"
-                        stroke-width="1.5"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            d="M7 18V17C7 14.2386 9.23858 12 12 12V12C14.7614 12 17 14.2386 17 17V18"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                        />
-                        <path
-                            d="M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12Z"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                        />
-                        <circle
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            stroke="currentColor"
-                            stroke-width="1.5"
-                        />
-                    </svg>
-                </div>
-                <div class="w3-col s8 w3-bar">
-                    <span><?=§('triage-welcome', ucfirst($_SESSION['user']['user_name']))?></span><br>
-                    <a 
-                    href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=password" 
-                    class="w3-bar-item w3-button" target="_blank" rel="noopener"><i class="fa fa-key"></i></a>
-                    <a href="javascript:document.getElementById('logout').submit()" class="w3-bar-item w3-button"><i class="fa-solid fa-door-open"></i></a>
-                    <form method="post" id="logout" style="display: none;">
-                        <input type="hidden" name="logout" value="Logout">
-                    </form>
-                </div>
-            </div>
-            <hr>
-            <div class="w3-container">
-                <h5><?=§('triage-panel')?></h5>
-            </div>
-            <div class="w3-bar-block">
-                <a href="#" rel="noopener" class="w3-bar-item w3-button w3-padding w3-blue">
-                    <i class="fa-solid fa-check-to-slot"></i>&nbsp; <?=§('triage')?>
-                </a>
-                <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=counter" 
-                target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
-                    <i class="fa-solid fa-chart-line"></i>&nbsp; <?=§('counter')?>
-                </a>
-                <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=modify" 
-                target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
-                    <i class="fa-solid fa-pen-to-square"></i>&nbsp; <?=§('modify')?>
-                </a>
-                <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=compare" 
-                target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
-                    <i class="fa-solid fa-code-compare"></i>&nbsp; <?=§('compare')?>
-                </a>
-                <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=edits" 
-                target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
-                    <i class="fa-solid fa-list-check"></i>&nbsp; <?=§('triage-evaluated')?>
-                </a>
-                <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=backtrack" 
-                target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
-                    <i class="fa-solid fa-history"></i>&nbsp; <?=§('backtrack')?>
-                </a>
-                <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=evaluators" 
-                target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
-                    <i class="fa-solid fa-users"></i>&nbsp; <?=§('evaluators')?>
-                </a>
-                <br><br>
-            </div>
-        </nav>
-        <div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+        <?php require_once "sidebar.php"; ?>
         <div class="w3-row-padding w3-content w3-main" style="max-width:unset;margin-top:43px;padding-top:16px;">
             <div class="w3-quarter">
                 <?php if (isset($output['success']['diff'])) : ?>

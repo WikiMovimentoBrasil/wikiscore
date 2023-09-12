@@ -188,13 +188,11 @@ $icon = '
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
+        <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/6.2.0/css/all.css">
     </head>
     <body>
-        <header class="w3-container w3-<?=$contest['theme'];?>">
-            <h1><?=§('evaluators')?> - <?=$contest['name'];?></h1>
-        </header>
-        <br>
-        <div class="w3-row-padding w3-content" style="max-width:800px">
+        <?php require_once "sidebar.php"; ?>
+        <div class="w3-row-padding w3-content w3-main" style="max-width:800px;margin-top:43px;padding-top:16px;">
             <div class="w3-container w3-margin-top w3-card-4">
                 <div class="w3-container">
                     <p><?=§('evaluators-about')?></p>
