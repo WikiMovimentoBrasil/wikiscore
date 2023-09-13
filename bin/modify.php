@@ -337,7 +337,7 @@ mysqli_close($con);
                     </table>
                     <hr>
                 </div>
-                <?php if (!@$output['compare']): ?>
+                <?php if (isset($output['compare']) && $output['compare'] === false): ?>
                     <script>alert('<?=§('modify-notfound')?>');</script>
                 <?php endif; ?>
                 <?php if (@array_key_exists('diff', $output['success'])): ?>
