@@ -107,6 +107,18 @@
         rel="noopener" class="w3-bar-item w3-button w3-padding <?=($_GET['page']!='evaluators')?:'w3-blue'?>">
             <i class="fa-solid fa-users"></i>&nbsp; <?=§('evaluators')?>
         </a>
+        <a href="<?=$contest['endpoint'];?>?curid=<?=$contest['official_list_pageid'];?>" target="_blank"
+        rel="noopener" class="w3-bar-item w3-button w3-padding">
+            <i class="fa-solid fa-certificate"></i>&nbsp; <?=§('triage-list')?>
+            <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
+        </a>
+        <a href="<?= ($contest['category_petscan'])
+            ? "https://petscan.wmflabs.org/?psid={$contest['category_petscan']}"
+            : "{$contest['endpoint']}?curid={$contest['category_pageid']}"
+        ?>" target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
+            <i class="fa-solid fa-magnifying-glass-chart"></i>&nbsp; <?=§('triage-cat')?> 
+            <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
+        </a>
         <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=password" 
         rel="noopener" class="w3-bar-item w3-button w3-padding <?=($_GET['page']!='password')?:'w3-blue'?>">
             <i class="fa-solid fa-key"></i>&nbsp; <?=§('password')?>

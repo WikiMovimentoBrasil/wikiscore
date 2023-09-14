@@ -702,16 +702,6 @@ mysqli_close($con);
                         <br>
                         <?=$contest['max_pic_per_article']??§('triage-indef')?>
                     </p>
-                    <p class="w3-small">
-                        <strong><?=§('triage-links')?></strong>
-                        <br>
-                        <a
-                        href="<?=$contest['endpoint'];?>?curid=<?=$contest['official_list_pageid'];?>"
-                        ><?=§('triage-list')?></a> - <a href="<?= ($contest['category_petscan'])
-                            ? 'https://petscan.wmflabs.org/?psid=' . $contest['category_petscan']
-                            : $contest['endpoint'] . '?curid=' . $contest['category_pageid']
-                        ?>"><?=§('triage-cat')?></a>
-                    </p>
                 </div>
             </div>
             <div class="w3-threequarter">
