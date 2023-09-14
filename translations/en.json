@@ -220,6 +220,8 @@
     "triage-maximages": "Maximum images per article",
     "triage-list": "Official list",
     "triage-cat": "Categorization",
+    "triage-authorship": "Authorship:",
+    "triage-verify": "Verify",
     "triage-database": "Database updating.",
     "triage-databaseabout": "Please wait a few minutes and refresh the page.",
     "triage-noedit": "There is no edit to be displayed at this time.",

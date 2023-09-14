@@ -399,6 +399,7 @@ mysqli_close($con);
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
         <link rel="stylesheet" href="bin/diff.css">
+        <script type="text/javascript" src="bin/authorship.js"></script>
         <script type="text/javascript">
             function handleOverwriteClick(outputRevisionBytes) {
                 var overwriteElement = document.getElementById('overwrite');
@@ -534,7 +535,7 @@ mysqli_close($con);
                             class="w3-button w3-leftbar w3-rightbar w3-border-light-grey w3-block w3-red"
                             name="overwrite"
                             id="overwrite"
-                            ype="button"
+                            type="button"
                             value="<?=§('triage-alterbytes')?>"
                             onclick="handleOverwriteClick('<?=@$output['revision']['bytes'];?>')">
                         </p>
@@ -599,6 +600,11 @@ mysqli_close($con);
                             </span>
                             <br>
                             <strong><i class="fa-solid fa-font"></i>&nbsp; <?=§('label-page')?></strong> <?=@$output['compare']['totitle'];?>
+                            <br>
+                            <strong><i class="fa-solid fa-hand-point-up"></i>&nbsp; <?=§('triage-authorship')?></strong>
+                            <a onclick="calculateAuthorship('<?=$output['revision']['diff']?>', '<?=$contest['endpoint']?>')"
+                            href="#" id="a_authorship"><?=§('triage-verify')?></a>
+                            <span id="span_authorship"></span>
                             <br>
                             <strong><i class="fa-regular fa-clock"></i>&nbsp; <?=§('label-timestamp')?></strong> <?=@$output['revision']['timestamp'];?> (UTC)
                         </div>
