@@ -5,8 +5,12 @@ const WIKITYPE_ARRAY = ["wikipedia"];
 
 function hideAuthorshipLink() {
   const authorshipLink = document.getElementById("a_authorship");
+  const spanAuthorship = document.getElementById("span_authorship");
   if (authorshipLink) {
     authorshipLink.style.display = 'none';
+  }
+  if (spanAuthorship) {
+    spanAuthorship.innerHTML = '<i class="fa-solid fa-spinner w3-spin"></i>';
   }
 }
 
@@ -18,6 +22,10 @@ function updateAuthorshipPercentage(percentage) {
 }
 
 function handleFetchError(error) {
+  const spanAuthorship = document.getElementById("span_authorship");
+  if (spanAuthorship) {
+    spanAuthorship.innerHTML = '<i class="fa-solid fa-question w3-text-red"></i>';
+  }
   console.error('Error during fetch operation:', error);
   throw new Error('There was a problem with the fetch operation.');
 }
