@@ -262,21 +262,3 @@ table.diff.diff-contentalign-left.diff-editfont-monospace {
     display: inline-table;
     font-family: monospace;
 }
-
-@media (min-width: 993px) {
-    .diff-desktop {
-        display: table;
-    }
-    .diff-mobile {
-        display: none;
-    }
-}
-
-@media (max-width: 992px) {
-    .diff-desktop {
-        display: none;
-    }
-    .diff-mobile {
-        display: table;
-    }
-}

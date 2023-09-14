@@ -560,6 +560,92 @@ mysqli_close($con);
                         </div>
                     </div>
                 </div>
+                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom w3-hide-small" 
+                style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>">
+                    <h2><?=§('triage-recenthistory')?></h2>
+                    <?php foreach ($output['history'] ?? [] as $oldid): ?>
+                        <p class='<?=$oldid['class']?>'>
+                            <strong><?=$oldid['user']?></strong>
+                            <br>
+                            <?=$oldid['timestamp']?>
+                            <br>
+                            <span class='w3-text-<?=$oldid['color']?>'><?=$oldid['bytes']?> bytes</span>
+                        </p>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <div class="w3-half">
+                <?php if (isset($output['updating'])): ?>
+                    <div class="w3-panel w3-red w3-display-container w3-border">
+                        <p>
+                            <h3><?=§('triage-database')?></h3>
+                            <?=§('triage-databaseabout')?>
+                        </p>
+                    </div>
+                <?php elseif (!isset($output['compare']['*'])): ?>
+                    <div class="w3-panel w3-orange w3-display-container w3-border">
+                        <p>
+                            <h3><?=§('triage-noedit')?></h3>
+                        </p>
+                    </div>
+                <?php else: ?>
+                    <div class="w3-container w3-justify w3-margin-bottom w3-row">
+                        <h3><?=§('triage-details')?></h3>
+                        <div class="w3-col l6">
+                            <strong><i class="fa-solid fa-user"></i>&nbsp; <?=§('label-user')?></strong>
+                            &nbsp;
+                            <span style="font-weight:bolder;color:red;">
+                                <?=@$output['compare']['touser'];?>
+                            </span>
+                            <br>
+                            <strong><i class="fa-solid fa-font"></i>&nbsp; <?=§('label-page')?></strong> <?=@$output['compare']['totitle'];?>
+                            <br>
+                            <strong><i class="fa-regular fa-clock"></i>&nbsp; <?=§('label-timestamp')?></strong> <?=@$output['revision']['timestamp'];?> (UTC)
+                        </div>
+                        <div class="w3-col l6">
+                            <strong><i class="fa-solid fa-arrow-up-9-1"></i>&nbsp; <?=§('label-diff')?></strong> <?=@$output['revision']['bytes'];?> bytes
+                            <br>
+                            <strong><i class="fa-solid fa-thumbtack"></i>&nbsp; <?=§('triage-diff')?>:</strong>
+                            <a
+                            href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>"
+                            target="_blank"
+                            rel="noopener"
+                            ><?=@$output['revision']['diff'];?></a> - <a
+                            target="_blank"
+                            rel="noopener"
+                            href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>"
+                            ><?=§('triage-copyvio')?></a>
+                            <br>
+                            <strong><i class="fa-solid fa-comment"></i>&nbsp; <?=§('label-summary')?></strong> <?=@$output['compare']['tocomment'];?>
+                        </div>
+                    </div>
+                    <div class="w3-container">
+                        <h3><?=§('triage-differential')?></h3>
+                        <table
+                        role="presentation"
+                        aria-label="Diferencial de edição"
+                        class="diff diff-desktop diff-contentalign-left diff-editfont-monospace w3-hide-small w3-hide-medium"
+                        >
+                            <colgroup>
+                                <col style="width:2%">
+                                <col style="width:48%">
+                                <col style="width:2%;">
+                                <col style="width:48%">
+                            </colgroup>
+                            <?=$output['compare']['*']?>
+                        </table>
+                        <table
+                        role="presentation"
+                        aria-label="Diferencial de edição"
+                        class="diff diff-mobile diff-contentalign-left diff-editfont-monospace w3-hide-large"
+                        >
+                            <?=$output['compare_mobile']['*']?>
+                        </table>
+                        <hr>
+                    </div>
+                <?php endif; ?>
+            </div>
+            <div class="w3-quarter">
                 <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
                     <h2><?=§('triage-edits')?></h2>
                     <div class="w3-row">
@@ -606,7 +692,7 @@ mysqli_close($con);
                         </p>
                     <?php endif; ?>
                 </div>
-                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom" 
+                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom w3-hide-large w3-hide-medium" 
                 style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>">
                     <h2><?=§('triage-recenthistory')?></h2>
                     <?php foreach ($output['history'] ?? [] as $oldid): ?>
@@ -703,72 +789,6 @@ mysqli_close($con);
                         <?=$contest['max_pic_per_article']??§('triage-indef')?>
                     </p>
                 </div>
-            </div>
-            <div class="w3-threequarter">
-                <?php if (isset($output['updating'])): ?>
-                    <div class="w3-panel w3-red w3-display-container w3-border">
-                        <p>
-                            <h3><?=§('triage-database')?></h3>
-                            <?=§('triage-databaseabout')?>
-                        </p>
-                    </div>
-                <?php elseif (!isset($output['compare']['*'])): ?>
-                    <div class="w3-panel w3-orange w3-display-container w3-border">
-                        <p>
-                            <h3><?=§('triage-noedit')?></h3>
-                        </p>
-                    </div>
-                <?php else: ?>
-                    <div class="w3-container w3-justify w3-margin-bottom w3-row">
-                        <h3><?=§('triage-details')?></h3>
-                        <div class="w3-col l6">
-                            <strong><i class="fa-solid fa-user"></i>&nbsp; <?=§('label-user')?></strong>
-                            &nbsp;
-                            <span style="font-weight:bolder;color:red;">
-                                <?=@$output['compare']['touser'];?>
-                            </span>
-                            <br>
-                            <strong><i class="fa-solid fa-font"></i>&nbsp; <?=§('label-page')?></strong> <?=@$output['compare']['totitle'];?>
-                            <br>
-                            <strong><i class="fa-regular fa-clock"></i>&nbsp; <?=§('label-timestamp')?></strong> <?=@$output['revision']['timestamp'];?> (UTC)
-                        </div>
-                        <div class="w3-col l6">
-                            <strong><i class="fa-solid fa-arrow-up-9-1"></i>&nbsp; <?=§('label-diff')?></strong> <?=@$output['revision']['bytes'];?> bytes
-                            <br>
-                            <strong><i class="fa-solid fa-thumbtack"></i>&nbsp; <?=§('triage-diff')?>:</strong>
-                            <a
-                            href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>"
-                            target="_blank"
-                            rel="noopener"
-                            ><?=@$output['revision']['diff'];?></a> - <a
-                            target="_blank"
-                            rel="noopener"
-                            href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>"
-                            ><?=§('triage-copyvio')?></a>
-                            <br>
-                            <strong><i class="fa-solid fa-comment"></i>&nbsp; <?=§('label-summary')?></strong> <?=@$output['compare']['tocomment'];?>
-                        </div>
-                    </div>
-                    <div class="w3-container">
-                        <h3><?=§('triage-differential')?></h3>
-                        <table
-                        role="presentation"
-                        aria-label="Diferencial de edição"
-                        class="diff diff-desktop diff-contentalign-left diff-editfont-monospace"
-                        ><colgroup>
-                            <col style="width:2%">
-                            <col style="width:48%">
-                            <col style="width:2%;">
-                            <col style="width:48%">
-                        </colgroup><?=$output['compare']['*']?></table>
-                        <table
-                        role="presentation"
-                        aria-label="Diferencial de edição"
-                        class="diff diff-mobile diff-contentalign-left diff-editfont-monospace"
-                        ><?=$output['compare_mobile']['*']?></table>
-                        <hr>
-                    </div>
-                <?php endif; ?>
             </div>
         </div>
     </body>
