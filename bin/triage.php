@@ -400,6 +400,7 @@ mysqli_close($con);
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
         <link rel="stylesheet" href="bin/diff.css">
         <script type="text/javascript" src="bin/authorship.js"></script>
+        <script type="text/javascript" src="bin/copyvios.js"></script>
         <script type="text/javascript">
             function handleOverwriteClick(outputRevisionBytes) {
                 var overwriteElement = document.getElementById('overwrite');
@@ -616,9 +617,9 @@ mysqli_close($con);
                             target="_blank" rel="noopener"><?=@$output['revision']['diff'];?></a>
                             <br>
                             <strong><i class="fa-solid fa-triangle-exclamation"></i><?=§('triage-copyvio')?>:</strong>
-                            <a target="_blank" rel="noopener"
-                            href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>"
-                            ><?=§('triage-verify')?></a>
+                            <a onclick="calculateCopyvios('<?=$output['revision']['diff']?>','<?=$contest['endpoint']?>')"
+                            href="#" id="a_copyvios"><?=§('triage-verify')?></a>
+                            <span id="span_copyvios"></span>
                             <br>
                             <strong><i class="fa-solid fa-comment"></i><?=§('label-summary')?></strong>
                             <?=@$output['compare']['tocomment'];?>
