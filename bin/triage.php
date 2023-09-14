@@ -590,39 +590,38 @@ mysqli_close($con);
                         </p>
                     </div>
                 <?php else: ?>
-                    <div class="w3-container w3-justify w3-margin-bottom w3-row">
+                    <div class="w3-container w3-justify w3-margin-bottom w3-row details">
                         <h3><?=§('triage-details')?></h3>
                         <div class="w3-col l6">
-                            <strong><i class="fa-solid fa-user"></i>&nbsp; <?=§('label-user')?></strong>
-                            &nbsp;
-                            <span style="font-weight:bolder;color:red;">
-                                <?=@$output['compare']['touser'];?>
-                            </span>
+                            <strong><i class="fa-solid fa-user"></i><?=§('label-user')?></strong>
+                            <span style="font-weight:bolder;color:red;"><?=@$output['compare']['touser'];?></span>
                             <br>
-                            <strong><i class="fa-solid fa-font"></i>&nbsp; <?=§('label-page')?></strong> <?=@$output['compare']['totitle'];?>
+                            <strong><i class="fa-solid fa-font"></i><?=§('label-page')?></strong>
+                            <?=@$output['compare']['totitle'];?>
                             <br>
-                            <strong><i class="fa-solid fa-hand-point-up"></i>&nbsp; <?=§('triage-authorship')?></strong>
-                            <a onclick="calculateAuthorship('<?=$output['revision']['diff']?>', '<?=$contest['endpoint']?>')"
+                            <strong><i class="fa-solid fa-hand-point-up"></i><?=§('triage-authorship')?></strong>
+                            <a onclick="calculateAuthorship('<?=$output['revision']['diff']?>','<?=$contest['endpoint']?>')"
                             href="#" id="a_authorship"><?=§('triage-verify')?></a>
                             <span id="span_authorship"></span>
                             <br>
-                            <strong><i class="fa-regular fa-clock"></i>&nbsp; <?=§('label-timestamp')?></strong> <?=@$output['revision']['timestamp'];?> (UTC)
+                            <strong><i class="fa-regular fa-clock"></i><?=§('label-timestamp')?></strong>
+                            <?=@$output['revision']['timestamp'];?> (UTC)
                         </div>
                         <div class="w3-col l6">
-                            <strong><i class="fa-solid fa-arrow-up-9-1"></i>&nbsp; <?=§('label-diff')?></strong> <?=@$output['revision']['bytes'];?> bytes
+                            <strong><i class="fa-solid fa-arrow-up-9-1"></i><?=§('label-diff')?></strong>
+                            <?=@$output['revision']['bytes'];?> bytes
                             <br>
-                            <strong><i class="fa-solid fa-thumbtack"></i>&nbsp; <?=§('triage-diff')?>:</strong>
-                            <a
-                            href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>"
-                            target="_blank"
-                            rel="noopener"
-                            ><?=@$output['revision']['diff'];?></a> - <a
-                            target="_blank"
-                            rel="noopener"
+                            <strong><i class="fa-solid fa-thumbtack"></i><?=§('triage-diff')?>:</strong>
+                            <a href="<?=$contest['endpoint'];?>?diff=<?=@$output['revision']['diff'];?>"
+                            target="_blank" rel="noopener"><?=@$output['revision']['diff'];?></a>
+                            <br>
+                            <strong><i class="fa-solid fa-triangle-exclamation"></i><?=§('triage-copyvio')?>:</strong>
+                            <a target="_blank" rel="noopener"
                             href="https://copyvios.toolforge.org/?lang=pt&amp;project=wikipedia&amp;action=search&amp;use_engine=1&amp;use_links=1&amp;turnitin=0&amp;oldid=<?=@$output['revision']['diff'];?>"
-                            ><?=§('triage-copyvio')?></a>
+                            ><?=§('triage-verify')?></a>
                             <br>
-                            <strong><i class="fa-solid fa-comment"></i>&nbsp; <?=§('label-summary')?></strong> <?=@$output['compare']['tocomment'];?>
+                            <strong><i class="fa-solid fa-comment"></i><?=§('label-summary')?></strong>
+                            <?=@$output['compare']['tocomment'];?>
                         </div>
                     </div>
                     <div class="w3-container">
