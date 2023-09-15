@@ -165,7 +165,7 @@
     "triage-byimage": "Por imagem",
     "triage-bypage": "Por artigo",
     "triage-bytes": "$1 bytes",
-    "triage-cat": "categoria de monitoramento",
+    "triage-cat": "Categorização",
     "triage-contestend": "Horário de término do wikiconcurso",
     "triage-contestname": "Nome do wikiconcurso",
     "triage-conteststart": "Horário de início do wikiconcurso",
@@ -276,5 +276,11 @@
     "manage-remail": "Oi!\nVocê foi (re)designado como gestor do concurso ($1).\nPara acessar o sistema, utilize seu e-mail e a seguinte senha: $2\nPara mais detalhes, consulte nosso manual na wiki do GitHub.\n\nAtenciosamente,\nWikiScore",
     "manage-source": "Método de monitoramento",
     "manage-remanaged": "Novo gestor definido com sucesso!",
-    "manage-newmanager": "Definir novo gestor"
+    "manage-newmanager": "Definir novo gestor",
+    "triage-authorship": "Autoria:",
+    "counter-biggest-edition": "Maior edição",
+    "counter-most-edited": "Artigo mais editado",
+    "triage-verify": "Verificar",
+    "counter-editions": "$1 edições",
+    "counter-biggest-delta": "Artigo mais expandido"
 }
