@@ -420,7 +420,7 @@ mysqli_close($con);
             <script type="text/javascript">history.replaceState(null, document.title, location.href);</script>
         <?php endif; ?>
     </head>
-    <body>
+    <body onload="calculateAuthorship('<?=$output['revision']['diff']??'false'?>','<?=$contest['endpoint']?>')">
         <?php require_once "sidebar.php"; ?>
         <div class="w3-row-padding w3-content w3-main" style="max-width:unset;margin-top:43px;padding-top:16px;">
             <div class="w3-quarter">

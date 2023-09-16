@@ -31,6 +31,10 @@ function handleFetchError(error) {
 }
 
 function calculateAuthorship(revid, urlString) {
+  if (revid == 'false') {
+    return false;
+  }
+
   // Hide the link to avoid duplicity
   hideAuthorshipLink();
 
