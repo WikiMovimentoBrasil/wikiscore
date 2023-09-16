@@ -33,7 +33,7 @@
     <span class="w3-bar-item"><?=§($_GET['page'])?></span>
     <span class="w3-bar-item w3-right w3-hide-small"><?=$contest['name'];?></span>
 </div>
-<nav class="w3-sidebar w3-white w3-animate-left" style="z-index:3;width:230px;display:none;" id="mySidebar">
+<nav class="w3-sidebar w3-white w3-animate-left" style="z-index:3;width:230px;display:none;min-height:100vh;" id="mySidebar">
     <br>
     <div class="w3-container w3-row">
         <div class="w3-col s4">
@@ -126,4 +126,4 @@
         <br><br>
     </div>
 </nav>
-<div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+<div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer;min-height:100vh;" title="close side menu" id="myOverlay"></div>
