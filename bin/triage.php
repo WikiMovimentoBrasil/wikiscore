@@ -554,6 +554,7 @@ mysqli_close($con);
                             class="w3-input w3-border w3-leftbar w3-rightbar w3-border-light-grey"
                             name="obs"
                             id="obs"
+                            list="commons"
                             type="text"
                             placeholder="<?=§('triage-observation')?>">
                             <br>
@@ -565,6 +566,13 @@ mysqli_close($con);
                             value="<?=§('triage-alterbytes')?>"
                             onclick="handleOverwriteClick('<?=@$output['revision']['bytes'];?>')">
                         </p>
+                        <datalist id="commons">
+                            <option value="<?=§('triage-vda')?>">
+                            <option value="<?=§('triage-redirect')?>">
+                            <option value="<?=§('triage-noref')?>">
+                            <option value="<?=§('triage-onlycat')?>">
+                            <option value="<?=§('triage-onlytag')?>">
+                        </datalist>
                     </form>
                     <div class="w3-row">
                         <div class="w3-section w3-col l6">
