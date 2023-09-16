@@ -148,37 +148,6 @@ if ($_POST) {
     }
 }
 
-//Icone
-$icon = '
-<svg
-    class="w3-bar-item"
-    width="85"
-    height="85"
-    stroke-width="1.5"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
->
-<path
-    d="M7 18V17C7 14.2386 9.23858 12 12 12V12C14.7614 12 17 14.2386 17 17V18"
-    stroke="currentColor"
-    stroke-linecap="round"
-/>
-<path
-    d="M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12Z"
-    stroke="currentColor"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-/>
-<circle
-    cx="12"
-    cy="12"
-    r="10"
-    stroke="currentColor"
-    stroke-width="1.5"
-/>
-</svg>';
-
 //Exibe página
 ?>
 <!DOCTYPE html>
@@ -206,7 +175,7 @@ $icon = '
                     <div class="w3-container">
                         <ul class="w3-ul">
                             <li class="w3-bar">
-                                <?=$icon?>
+                                <i class="w3-bar-item w3-padding-16 fa-regular fa-circle-user" style="font-size: 3em; padding: 20px;"></i>
                                 <form method="post">
                                     <input type="email" placeholder="<?=§('login-email')?>" name="email" 
                                     class="w3-input w3-border w3-bar-item w3-section"
@@ -230,7 +199,7 @@ $icon = '
                     <ul class="w3-ul">
                         <?php foreach ($output["evaluators"]["G"] ?? array() as $user => $data): ?>
                             <li class="w3-bar">
-                                <?=$icon?>
+                                <i class="w3-bar-item w3-padding-24 fa-solid fa-circle-user" style="font-size: 3em;"></i>
                                 <div class="w3-bar-item">
                                     <span class='w3-large'><?=$user?></span><br>
                                     <span><?=$data['email']?></span><br>
@@ -260,7 +229,7 @@ $icon = '
                     <ul class="w3-ul">
                         <?php foreach ($output["evaluators"]["A"] ?? array() as $user => $data): ?>
                             <li class="w3-bar">
-                                <?=$icon?>
+                                <i class="w3-bar-item w3-padding-24 fa-solid fa-circle-user" style="font-size: 3em;"></i>
                                 <div class="w3-bar-item">
                                     <span class='w3-large'><?=$user?></span><br>
                                     <span><?=$data['email']?></span><br>
@@ -299,7 +268,7 @@ $icon = '
                     <ul class="w3-ul">
                         <?php foreach ($output["evaluators"]["P"] ?? array() as $user => $data): ?>
                             <li class="w3-bar">
-                                <?=$icon?>
+                                <i class="w3-bar-item w3-padding-24 fa-solid fa-circle-user" style="font-size: 3em;"></i>
                                 <div class="w3-bar-item">
                                     <span class='w3-large'><?=$user?></span><br>
                                     <span><?=$data['email']?></span><br>
