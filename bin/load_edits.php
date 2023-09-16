@@ -72,9 +72,16 @@ if (isset($contest['category_petscan'])) {
     }
 }
 
+//Realiza manutenção do banco de dados
+mysqli_query($con, "ALTER TABLE `{$contest['name_id']}__articles` ADD COLUMN IF NOT EXISTS `title` VARCHAR(100) NOT NULL AFTER `articleID`;");
+mysqli_query($con, "ALTER TABLE `{$contest['name_id']}__edits` ADD COLUMN IF NOT EXISTS `orig_bytes` INT(11) DEFAULT NULL AFTER  `bytes`;");
+mysqli_query($con, "UPDATE `{$contest['name_id']}__edits` SET `orig_bytes` = CASE 
+    WHEN `obs` REGEXP 'Aval: de (-?[0-9]+) para (-?[0-9]+)' THEN CAST(REGEXP_SUBSTR(`obs`, 'Aval: de \\\\K-?[0-9]*') AS SIGNED) 
+    WHEN `obs` REGEXP 'bytes: (-?[0-9]+) -> (-?[0-9]+)' THEN CAST(REGEXP_SUBSTR(`obs`, 'bytes: \\\\K-?[0-9]*') AS SIGNED) 
+    ELSE `bytes` END WHERE `orig_bytes` IS NULL;");
+
 //Monta e executa query para atualização da tabela de artigos
 mysqli_query($con, "TRUNCATE `{$contest['name_id']}__articles`;");
-mysqli_query($con, "ALTER TABLE `{$contest['name_id']}__articles` ADD COLUMN IF NOT EXISTS `title` VARCHAR(100) NOT NULL AFTER `articleID`;");
 $addarticle_statement = "
     INSERT INTO
         `{$contest['name_id']}__articles` (`articleID`, `title`)
@@ -144,19 +151,21 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
                 `timestamp`,
                 `user_id`,
                 `bytes`,
+                `orig_bytes`,
                 `new_page`
             )
         VALUES
-            ( ? , ? , ? , ? , ? , ? )
+            ( ? , ? , ? , ? , ? , ? , ? )
     ";
     $addedit_query = mysqli_prepare($con, $addedit_statement);
     mysqli_stmt_bind_param(
         $addedit_query,
-        "iisiii",
+        "iisiiii",
         $addedit_diff,
         $addedit_article,
         $addedit_timestamp,
         $addedit_user_id,
+        $addedit_bytes,
         $addedit_bytes,
         $addedit_newpage
     );

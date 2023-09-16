@@ -90,7 +90,8 @@ if ($_POST) {
     if (
         !isset($_POST['user']) && (
             !isset($_POST['on']) ||
-            !isset($_POST['off'])
+            !isset($_POST['off'])||
+            !isset($_POST['reset'])
         )
     ) {
         die(§('evaluators-missing'));
@@ -117,38 +118,35 @@ if ($_POST) {
     }
     mysqli_stmt_execute($update_query);
     if (mysqli_stmt_affected_rows($update_query) != 0) { $output['success'] = true; }
-}
 
-//Icone
-$icon = '
-<svg
-    class="w3-bar-item"
-    width="85"
-    height="85"
-    stroke-width="1.5"
-    viewBox="0 0 24 24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
->
-<path
-    d="M7 18V17C7 14.2386 9.23858 12 12 12V12C14.7614 12 17 14.2386 17 17V18"
-    stroke="currentColor"
-    stroke-linecap="round"
-/>
-<path
-    d="M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12Z"
-    stroke="currentColor"
-    stroke-linecap="round"
-    stroke-linejoin="round"
-/>
-<circle
-    cx="12"
-    cy="12"
-    r="10"
-    stroke="currentColor"
-    stroke-width="1.5"
-/>
-</svg>';
+    if (isset($_POST['reset'])) {
+        $reset_query = mysqli_prepare(
+            $con,
+            "DELETE FROM
+                `{$contest['name_id']}__edits`
+            WHERE
+                `by` = ?"
+        );
+        mysqli_stmt_bind_param($reset_query, "s", $_POST['user']);
+        mysqli_stmt_execute($reset_query);
+        if (mysqli_stmt_affected_rows($reset_query) != 0) {
+            $refresh_query = mysqli_prepare(
+                $con,
+                "UPDATE
+                    `manage__contests`
+                SET
+                    `next_update` = NOW()
+                WHERE
+                    `name_id` = ?"
+            );
+            mysqli_stmt_bind_param($refresh_query, "s", $contest['name_id']);
+            mysqli_stmt_execute($refresh_query);
+            if (mysqli_stmt_affected_rows($refresh_query) != 0) {
+                $output['reseted'] = true;
+            }
+        }
+    }
+}
 
 //Exibe página
 ?>
@@ -159,13 +157,11 @@ $icon = '
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
+        <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/6.2.0/css/all.css">
     </head>
     <body>
-        <header class="w3-container w3-<?=$contest['theme'];?>">
-            <h1><?=§('evaluators')?> - <?=$contest['name'];?></h1>
-        </header>
-        <br>
-        <div class="w3-row-padding w3-content" style="max-width:700px">
+        <?php require_once "sidebar.php"; ?>
+        <div class="w3-row-padding w3-content w3-main" style="max-width:800px;margin-top:43px;padding-top:16px;">
             <div class="w3-container w3-margin-top w3-card-4">
                 <div class="w3-container">
                     <p><?=§('evaluators-about')?></p>
@@ -179,7 +175,7 @@ $icon = '
                     <div class="w3-container">
                         <ul class="w3-ul">
                             <li class="w3-bar">
-                                <?=$icon?>
+                                <i class="w3-bar-item w3-padding-16 fa-regular fa-circle-user" style="font-size: 3em; padding: 20px;"></i>
                                 <form method="post">
                                     <input type="email" placeholder="<?=§('login-email')?>" name="email" 
                                     class="w3-input w3-border w3-bar-item w3-section"
@@ -203,12 +199,23 @@ $icon = '
                     <ul class="w3-ul">
                         <?php foreach ($output["evaluators"]["G"] ?? array() as $user => $data): ?>
                             <li class="w3-bar">
-                                <?=$icon?>
+                                <i class="w3-bar-item w3-padding-24 fa-solid fa-circle-user" style="font-size: 3em;"></i>
                                 <div class="w3-bar-item">
                                     <span class='w3-large'><?=$user?></span><br>
                                     <span><?=$data['email']?></span><br>
                                     <span><?=§('evaluators-stats',$data['evaluated'])?></span>
                                 </div>
+                                <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
+                                    <form method="post">
+                                        <input type='hidden' name='reset' value='1'>
+                                        <input type='hidden' name='user' value='<?=$user?>'>
+                                        <button
+                                        type='submit'
+                                        onclick="return confirm('<?=§('evaluators-areyousure')?>')"
+                                        class='w3-bar-item w3-right w3-button w3-margin w3-red'
+                                        ><?=§('counter-redefine')?></button>
+                                    </form>
+                                <?php endif; ?>
                             </li>
                         <?php endforeach; ?>
                     </ul>
@@ -222,7 +229,7 @@ $icon = '
                     <ul class="w3-ul">
                         <?php foreach ($output["evaluators"]["A"] ?? array() as $user => $data): ?>
                             <li class="w3-bar">
-                                <?=$icon?>
+                                <i class="w3-bar-item w3-padding-24 fa-solid fa-circle-user" style="font-size: 3em;"></i>
                                 <div class="w3-bar-item">
                                     <span class='w3-large'><?=$user?></span><br>
                                     <span><?=$data['email']?></span><br>
@@ -235,8 +242,17 @@ $icon = '
                                         <button
                                         type='submit'
                                         onclick="return confirm('<?=§('evaluators-areyousure')?>')"
-                                        class='w3-bar-item w3-right w3-button w3-section w3-red'
+                                        class='w3-bar-item w3-right w3-button w3-section w3-orange'
                                         ><?=§('evaluators-disable')?></button>
+                                    </form>
+                                    <form method="post">
+                                        <input type='hidden' name='reset' value='1'>
+                                        <input type='hidden' name='user' value='<?=$user?>'>
+                                        <button
+                                        type='submit'
+                                        onclick="return confirm('<?=§('evaluators-areyousure')?>')"
+                                        class='w3-bar-item w3-right w3-button w3-margin w3-red'
+                                        ><?=§('counter-redefine')?></button>
                                     </form>
                                 <?php endif; ?>
                             </li>
@@ -252,7 +268,7 @@ $icon = '
                     <ul class="w3-ul">
                         <?php foreach ($output["evaluators"]["P"] ?? array() as $user => $data): ?>
                             <li class="w3-bar">
-                                <?=$icon?>
+                                <i class="w3-bar-item w3-padding-24 fa-solid fa-circle-user" style="font-size: 3em;"></i>
                                 <div class="w3-bar-item">
                                     <span class='w3-large'><?=$user?></span><br>
                                     <span><?=$data['email']?></span><br>
@@ -268,6 +284,15 @@ $icon = '
                                         class='w3-bar-item w3-right w3-button w3-section w3-green'
                                         ><?=§('evaluators-enable')?></button>
                                     </form>
+                                    <form method="post">
+                                        <input type='hidden' name='reset' value='1'>
+                                        <input type='hidden' name='user' value='<?=$user?>'>
+                                        <button
+                                        type='submit'
+                                        onclick="return confirm('<?=§('evaluators-areyousure')?>')"
+                                        class='w3-bar-item w3-right w3-button w3-margin w3-red'
+                                        ><?=§('counter-redefine')?></button>
+                                    </form>
                                 <?php endif; ?>
                             </li>
                         <?php endforeach; ?>
@@ -276,7 +301,12 @@ $icon = '
             </div>
         </div>
     </body>
-    <?php if (isset($output['success'])): ?>
+    <?php if (isset($output['reseted'])): ?>
+            <script>
+                alert('<?=§('counter-success')?>');
+                window.location.href = window.location.href;
+            </script>
+    <?php elseif (isset($output['success'])): ?>
         <?php if (is_null($output['success']['diff'])): ?>
             <script>
                 alert('<?=§('evaluators-success')?>');

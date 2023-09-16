@@ -36,11 +36,8 @@ if (isset($_POST['oldpass'])) {
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
     </head>
     <body>
-        <header class="w3-container w3-<?=$contest['theme'];?>">
-            <h1><?=§('recover-reset')?></h1>
-        </header>
-        <br>
-        <div class="w3-row-padding w3-content" style="max-width:700px">
+        <?php require_once "sidebar.php"; ?>
+        <div class="w3-row-padding w3-content w3-main" style="max-width:800px;margin-top:43px;padding-top:16px;">
             <div class="w3-container w3-margin-top w3-card-4">
                 <div class="w3-container">
                     <p><?=§('recover-about')?></p>

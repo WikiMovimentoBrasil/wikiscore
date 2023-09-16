@@ -4,7 +4,7 @@
 require_once "protect.php";
 
 //Verifica se a ultima atualização ocorreu em menos de 30 minutos
-if ((time() - $contest['finished_update']) < 1800) {
+if ((time() - $contest['finished_update']) < 1800 || $contest['next_update'] == null) {
     $early = true;
 }
 
@@ -15,7 +15,7 @@ if (isset($_POST['update']) && !isset($early)) {
         "UPDATE
             `manage__contests`
         SET
-            `next_update` = NOW()
+            `next_update` = NULL
         WHERE
             `name_id` = ?"
     );
@@ -301,14 +301,25 @@ if ($contest['end_time'] + 172800 < time()) {
         <?php endif; ?>
     </head>
     <body onload="startCountdown(<?=(is_numeric($countdown)?$countdown:'')?>)">
-        <header class="w3-container w3-<?=$contest['theme'];?>">
-            <h1><?=§('compare')?> - <?=$contest['name'];?></h1>
-        </header>
-        <br>
-        <div class="w3-container">
+        <?php require_once "sidebar.php"; ?>
+        <div class="w3-container" style="margin-top:43px;padding-top:16px;">
             <?php if ($countdown === false) : ?>
                 <div class="w3-panel w3-pale-red w3-display-container w3-border">
-                    <h3><?=§('compare-ended')?></h3>
+                    <?php if (isset($early) || isset($update)) : ?>
+                        <h3><?=§('compare-next')?> <?=§('compare-soon')?></h3>
+                    <?php else : ?>
+                        <h3><?=§('compare-ended')?></h3>
+                        <form method="post">
+                            <p>
+                                <button
+                                class="w3-button w3-small w3-red"
+                                type="submit"
+                                name="update"
+                                value="update"
+                                ><?=§('compare-force')?></button>
+                            </p>
+                        </form>
+                    <?php endif; ?>
                 </div>
             <?php else : ?>
                 <div class="w3-panel w3-pale-blue w3-display-container w3-border">
