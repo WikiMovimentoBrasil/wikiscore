@@ -282,5 +282,10 @@
     "counter-most-edited": "Artigo mais editado",
     "triage-verify": "Verificar",
     "counter-editions": "$1 edições",
-    "counter-biggest-delta": "Artigo mais expandido"
+    "counter-biggest-delta": "Artigo mais expandido",
+    "triage-onlytag": "Mera inserção de marcações de manutenção",
+    "triage-redirect": "Mero redirecionamento",
+    "triage-noref": "Conteúdo sem fonte",
+    "triage-onlycat": "Mera categorização",
+    "triage-vda": "Violação de direitos autorais"
 }
