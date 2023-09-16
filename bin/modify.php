@@ -33,6 +33,9 @@ if ($_POST) {
     } else {
         $post['obs'] = addslashes($_POST['obs']);
     }
+    if (isset($_POST['overwrite'])) {
+        $post['overwrite'] = addslashes($_POST['overwrite']);
+    } 
 
     //Busca número de bytes e nome do avaliador no banco de dados
     $evaluated_query = mysqli_prepare(

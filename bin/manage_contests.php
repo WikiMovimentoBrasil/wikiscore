@@ -155,6 +155,7 @@ if (isset($_POST['do_create']) || isset($_POST['do_manager'])) {
                 `timestamp` timestamp NULL DEFAULT NULL,
                 `user_id` int(11) NOT NULL,
                 `bytes` int(11) DEFAULT NULL,
+                `orig_bytes` int(11) DEFAULT NULL,
                 `new_page` tinyint(1) unsigned DEFAULT NULL,
                 `valid_edit` tinyint(1) unsigned DEFAULT NULL,
                 `valid_user` tinyint(1) unsigned DEFAULT NULL,
