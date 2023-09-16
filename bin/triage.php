@@ -77,11 +77,6 @@ if ($_POST) {
             WHERE
                 `by` LIKE 'skip-%' OR `by` LIKE 'hold-%'
             ");
-        mysqli_stmt_bind_param(
-            $release_query,
-            "s",
-            $_SESSION['user']['user_name']
-        );
         mysqli_stmt_execute($release_query);
         if (mysqli_stmt_affected_rows($release_query) == 0) {
             die("<br>Erro ao liberar edição. Atualize a página para tentar novamente.");
