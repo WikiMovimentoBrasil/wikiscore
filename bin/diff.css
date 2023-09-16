@@ -272,3 +272,16 @@ table.diff.diff-contentalign-left.diff-editfont-monospace {
 .details > div {
     padding: 0 8px;
 }
+
+body {
+    animation: fadein linear(0 0%, 0 100%, 1 100%) 0.5s;
+}
+
+@keyframes fadein {
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
+}

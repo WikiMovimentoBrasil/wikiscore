@@ -415,6 +415,31 @@ mysqli_close($con);
                 var obsElement = document.getElementById('obs');
                 obsElement.required = true;
             }
+
+            function movePosition(){
+                var first = document.getElementById("first_column");
+                var third = document.getElementById("third_column");
+                var edits = document.getElementById("edits");
+                
+                var windowWidth = document.documentElement.clientWidth;
+                if(windowWidth < 601){
+                    third.insertBefore(edits, third.firstChild);
+                } else {
+                    first.appendChild(edits);
+                }
+            }
+
+
+            var domReady = function(callback) {
+                document.readyState === "interactive" || document.readyState === "complete" ? callback() : document.addEventListener("DOMContentLoaded", callback);
+            };
+            domReady(function() { 
+                movePosition()
+            });
+
+            window.onresize = function(event) {
+               movePosition()
+            };
         </script>
         <?php if (isset($output['success']['diff']) || isset($output['success']['skip']) || isset($output['success']['release'])) : ?>
             <script type="text/javascript">history.replaceState(null, document.title, location.href);</script>
@@ -423,7 +448,7 @@ mysqli_close($con);
     <body onload="calculateAuthorship('<?=$output['revision']['diff']??'false'?>','<?=$contest['endpoint']?>')">
         <?php require_once "sidebar.php"; ?>
         <div class="w3-row-padding w3-content w3-main" style="max-width:unset;margin-top:43px;padding-top:16px;">
-            <div class="w3-quarter">
+            <div id="first_column" class="w3-quarter">
                 <?php if (isset($output['success']['diff'])) : ?>
                     <div
                     class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom"
@@ -562,21 +587,54 @@ mysqli_close($con);
                         </div>
                     </div>
                 </div>
-                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom w3-hide-small" 
-                style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>">
-                    <h2><?=§('triage-recenthistory')?></h2>
-                    <?php foreach ($output['history'] ?? [] as $oldid): ?>
-                        <p class='<?=$oldid['class']?>'>
-                            <strong><?=$oldid['user']?></strong>
-                            <br>
-                            <?=$oldid['timestamp']?>
-                            <br>
-                            <span class='w3-text-<?=$oldid['color']?>'><?=$oldid['bytes']?> bytes</span>
+                <div id="edits" class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
+                    <h2><?=§('triage-edits')?></h2>
+                    <div class="w3-row">
+                        <div class="w3-col l6 m12 s6">
+                            <h6 class="w3-center"><?=§('triage-toeval')?></h6>
+                            <h1 class="w3-center"><?=$output['onqueue'];?></h1>
+                        </div>
+                        <div class="w3-col l6 m12 s6">
+                            <h6 class="w3-center"><?=§('triage-towait')?></h6>
+                            <h1 class="w3-center"><?=$output['onwait'];?></h1>
+                        </div>
+                    </div>
+                    <div class="w3-row">
+                        <div class="w3-col l6 m12 s6">
+                            <h6 class="w3-center"><?=§('triage-onhold')?></h6>
+                            <h1 class="w3-center"><?=$output['onhold'];?></h1>
+                        </div>
+                        <div class="w3-col l6 m12 s6">
+                            <h6 class="w3-center"><?=§('triage-onskip')?></h6>
+                            <h1 class="w3-center"><?=$output['onskip'];?></h1>
+                        </div>
+                    </div>
+                    <p>
+                        <form method="post">
+                            <input type="hidden" name="release" value="true">
+                            <button
+                            class="w3-button w3-purple w3-leftbar w3-rightbar w3-border-light-grey w3-block"
+                            type="submit"
+                            <?=($output['onskip']>0)?'':'disabled';?>
+                            ><?=§('triage-release')?></button>
+                        </form>
+                    </p>
+                    <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
+                        <p>
+                            <form method="post"
+                            onsubmit="return confirm('<?=§('evaluators-areyousure')?>');">
+                                <input type="hidden" name="unhold" value="true">
+                                <button
+                                class="w3-button w3-red w3-leftbar w3-rightbar w3-border-light-grey w3-block"
+                                type="submit"
+                                <?=(($output['onhold'] + $output['onskip']) > 0)?'':'disabled';?>
+                                ><?=§('triage-unhold')?></button>
+                            </form>
                         </p>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </div>
-            <div class="w3-half">
+            <div id="second_column" class="w3-half">
                 <?php if (isset($output['updating'])): ?>
                     <div class="w3-panel w3-red w3-display-container w3-border">
                         <p>
@@ -651,54 +709,8 @@ mysqli_close($con);
                     </div>
                 <?php endif; ?>
             </div>
-            <div class="w3-quarter">
-                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
-                    <h2><?=§('triage-edits')?></h2>
-                    <div class="w3-row">
-                        <div class="w3-col l6 m12 s6">
-                            <h6 class="w3-center"><?=§('triage-toeval')?></h6>
-                            <h1 class="w3-center"><?=$output['onqueue'];?></h1>
-                        </div>
-                        <div class="w3-col l6 m12 s6">
-                            <h6 class="w3-center"><?=§('triage-towait')?></h6>
-                            <h1 class="w3-center"><?=$output['onwait'];?></h1>
-                        </div>
-                    </div>
-                    <div class="w3-row">
-                        <div class="w3-col l6 m12 s6">
-                            <h6 class="w3-center"><?=§('triage-onhold')?></h6>
-                            <h1 class="w3-center"><?=$output['onhold'];?></h1>
-                        </div>
-                        <div class="w3-col l6 m12 s6">
-                            <h6 class="w3-center"><?=§('triage-onskip')?></h6>
-                            <h1 class="w3-center"><?=$output['onskip'];?></h1>
-                        </div>
-                    </div>
-                    <p>
-                        <form method="post">
-                            <input type="hidden" name="release" value="true">
-                            <button
-                            class="w3-button w3-purple w3-leftbar w3-rightbar w3-border-light-grey w3-block"
-                            type="submit"
-                            <?=($output['onskip']>0)?'':'disabled';?>
-                            ><?=§('triage-release')?></button>
-                        </form>
-                    </p>
-                    <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
-                        <p>
-                            <form method="post"
-                            onsubmit="return confirm('<?=§('evaluators-areyousure')?>');">
-                                <input type="hidden" name="unhold" value="true">
-                                <button
-                                class="w3-button w3-red w3-leftbar w3-rightbar w3-border-light-grey w3-block"
-                                type="submit"
-                                <?=(($output['onhold'] + $output['onskip']) > 0)?'':'disabled';?>
-                                ><?=§('triage-unhold')?></button>
-                            </form>
-                        </p>
-                    <?php endif; ?>
-                </div>
-                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom w3-hide-large w3-hide-medium" 
+            <div id="third_column" class="w3-quarter">
+                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom" 
                 style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>">
                     <h2><?=§('triage-recenthistory')?></h2>
                     <?php foreach ($output['history'] ?? [] as $oldid): ?>
