@@ -177,7 +177,6 @@ $count_query = mysqli_query(
         `user_table`.`user` ASC
     ;"
 );
-if (mysqli_num_rows($count_query) == 0) { die("No users"); }
 
 //Realiza query para tabela de estatísticas
 $stats_query = mysqli_prepare(
@@ -259,7 +258,7 @@ $list_api_params = [
 ];
 
 $list_api = unserialize(file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params)));
-$stats['listed_articles'] = count($list_api['query']['pages']) ?? 0;
+$stats['listed_articles'] = count($list_api['query']['pages'] ?? []);
 
 //Coleta segunda página da lista, caso exista
 while (isset($list_api['continue'])) {
@@ -317,133 +316,141 @@ while (isset($list_api['continue'])) {
                 </form>
             </div>
         </div>
-        <div class="w3-container w3-card w3-margin w3-<?=$contest['theme'];?>">
-            <div class="w3-row">
-                <div class="w3-half">
-                    <div class="w3-third">
-                        <h6 class="w3-center"><?=§('counter-allpages')?></h6>
-                        <h1 class="w3-center"><?=number_format($stats['listed_articles'], 0, ',', '.');?></h1>
-                    </div>
-                    <div class="w3-third">
-                        <h6 class="w3-center"><?=§('counter-alledited')?></h6>
-                        <h1 class="w3-center"><?=number_format($stats['edited_articles'], 0, ',', '.');?></h1>
-                    </div>
-                    <div class="w3-third">
-                        <h6 class="w3-center"><?=§('counter-allcreated')?></h6>
-                        <h1 class="w3-center"><?=number_format($stats['new_pages'], 0, ',', '.');?></h1>
-                    </div>
-                </div>
-                <div class="w3-half">
-                    <div class="w3-third">
-                        <h6 class="w3-center"><?=§('counter-allenrolled')?></h6>
-                        <h1 class="w3-center"><?=number_format($stats['all_users'], 0, ',', '.');?></h1>
-                    </div>
-                    <div class="w3-third">
-                        <h6 class="w3-center"><?=§('counter-allvalidated')?></h6>
-                        <h1 class="w3-center"><?=number_format($stats['valid_edits'], 0, ',', '.');?></h1>
-                    </div>
-                    <div class="w3-third">
-                        <h6 class="w3-center"><?=§('counter-allbytes')?></h6>
-                        <h1 class="w3-center"><?=number_format($stats['all_bytes'], 0, ',', '.');?></h1>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div>
-            <div class="w3-row-padding w3-center w3-section">
-                <div class="w3-third">
-                    <div class="w3-container w3-card w3-<?=$contest['theme'];?>">
-                        <div class="w3-half">
-                            <h6 class="w3-center"><?=§('counter-most-edited')?></h6>
+        <?php if (isset($stats['valid_edits'])) : ?>
+            <div class="w3-container w3-card w3-margin w3-<?=$contest['theme'];?>">
+                <div class="w3-row">
+                    <div class="w3-half">
+                        <div class="w3-third">
+                            <h6 class="w3-center"><?=§('counter-allpages')?></h6>
+                            <h1 class="w3-center"><?=number_format($stats['listed_articles'], 0, ',', '.');?></h1>
                         </div>
-                        <div class="w3-half">
-                            <h4 class="w3-center">
-                                <a href="<?=$contest['endpoint']?>?curid=<?=$stats['most_edited_article']?>">
-                                    <?=$stats['most_edited_title']??§('edits-title')?>
-                                </a>
-                                <br>
-                                <?=§('counter-editions', number_format($stats['most_edited_total'], 0, ',', '.'))?>
-                            </h4>
+                        <div class="w3-third">
+                            <h6 class="w3-center"><?=§('counter-alledited')?></h6>
+                            <h1 class="w3-center"><?=number_format($stats['edited_articles'], 0, ',', '.');?></h1>
+                        </div>
+                        <div class="w3-third">
+                            <h6 class="w3-center"><?=§('counter-allcreated')?></h6>
+                            <h1 class="w3-center"><?=number_format($stats['new_pages'], 0, ',', '.');?></h1>
                         </div>
                     </div>
-                </div>
-                <div class="w3-third">
-                    <div class="w3-container w3-card w3-<?=$contest['theme'];?>">
-                        <div class="w3-half">
-                            <h6 class="w3-center"><?=§('counter-biggest-delta')?></h6>
+                    <div class="w3-half">
+                        <div class="w3-third">
+                            <h6 class="w3-center"><?=§('counter-allenrolled')?></h6>
+                            <h1 class="w3-center"><?=number_format($stats['all_users'], 0, ',', '.');?></h1>
                         </div>
-                        <div class="w3-half">
-                            <h4 class="w3-center">
-                                <a href="<?=$contest['endpoint']?>?curid=<?=$stats['biggest_delta_article']?>">
-                                    <?=$stats['biggest_delta_title']??§('edits-title')?>
-                                </a>
-                                <br>
-                                <?=§('triage-bytes', number_format($stats['biggest_delta_total'], 0, ',', '.'))?>
-                            </h4>
+                        <div class="w3-third">
+                            <h6 class="w3-center"><?=§('counter-allvalidated')?></h6>
+                            <h1 class="w3-center"><?=number_format($stats['valid_edits'], 0, ',', '.');?></h1>
                         </div>
-                    </div>
-                </div>
-                <div class="w3-third">
-                    <div class="w3-container w3-card w3-<?=$contest['theme'];?>">
-                        <div class="w3-half">
-                            <h6 class="w3-center"><?=§('counter-biggest-edition')?></h6>
-                        </div>
-                        <div class="w3-half">
-                            <h4 class="w3-center">
-                                <a href="<?=$contest['endpoint']?>?diff=<?=$stats['biggest_edition_diff']?>">
-                                    <?=$stats['biggest_edition_title']??§('edits-title')?>
-                                </a>
-                                <br>
-                                <?=§('triage-bytes', number_format($stats['biggest_edition_bytes'], 0, ',', '.'))?>
-                            </h4>
+                        <div class="w3-third">
+                            <h6 class="w3-center"><?=§('counter-allbytes')?></h6>
+                            <h1 class="w3-center"><?=number_format($stats['all_bytes'], 0, ',', '.');?></h1>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="w3-container">
-            <table aria-label="Lista de participantes" class="w3-table-all w3-hoverable w3-card">
-                <tr>
-                    <th><?=§('counter-user')?></th>
-                    <th><?=§('counter-bytes')?></th>
-                    <th><?=§('counter-edits')?></th>
-                    <th><?=§('counter-ppb')?></th>
-                    <th><?=§('counter-images')?></th>
-                    <th><?=§('counter-ppi')?></th>
-                    <th><?=§('counter-points')?></th>
-                    <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
-                        <th><?=§('counter-redefine')?></th>
-                    <?php endif; ?>
-                </tr>
-                <?php while ($row = mysqli_fetch_assoc($count_query)): ?>
+            <div>
+                <div class="w3-row-padding w3-center w3-section">
+                    <div class="w3-third">
+                        <div class="w3-container w3-card w3-<?=$contest['theme'];?>">
+                            <div class="w3-half">
+                                <h6 class="w3-center"><?=§('counter-most-edited')?></h6>
+                            </div>
+                            <div class="w3-half">
+                                <h4 class="w3-center">
+                                    <a href="<?=$contest['endpoint']?>?curid=<?=$stats['most_edited_article']?>">
+                                        <?=$stats['most_edited_title']??§('edits-title')?>
+                                    </a>
+                                    <br>
+                                    <?=§('counter-editions', number_format($stats['most_edited_total'], 0, ',', '.'))?>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w3-third">
+                        <div class="w3-container w3-card w3-<?=$contest['theme'];?>">
+                            <div class="w3-half">
+                                <h6 class="w3-center"><?=§('counter-biggest-delta')?></h6>
+                            </div>
+                            <div class="w3-half">
+                                <h4 class="w3-center">
+                                    <a href="<?=$contest['endpoint']?>?curid=<?=$stats['biggest_delta_article']?>">
+                                        <?=$stats['biggest_delta_title']??§('edits-title')?>
+                                    </a>
+                                    <br>
+                                    <?=§('triage-bytes', number_format($stats['biggest_delta_total'], 0, ',', '.'))?>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w3-third">
+                        <div class="w3-container w3-card w3-<?=$contest['theme'];?>">
+                            <div class="w3-half">
+                                <h6 class="w3-center"><?=§('counter-biggest-edition')?></h6>
+                            </div>
+                            <div class="w3-half">
+                                <h4 class="w3-center">
+                                    <a href="<?=$contest['endpoint']?>?diff=<?=$stats['biggest_edition_diff']?>">
+                                        <?=$stats['biggest_edition_title']??§('edits-title')?>
+                                    </a>
+                                    <br>
+                                    <?=§('triage-bytes', number_format($stats['biggest_edition_bytes'], 0, ',', '.'))?>
+                                </h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w3-container">
+                <table aria-label="Lista de participantes" class="w3-table-all w3-hoverable w3-card">
                     <tr>
-                        <td><?=$row["user"]?></td>
-                        <td><?=$row["sum"]?></td>
-                        <td><?=$row["total edits"]?></td>
-                        <td><?=$row["bytes points"]?></td>
-                        <td><?=$row["total pictures"]?></td>
-                        <td><?=$row["pictures points"]?></td>
-                        <td><?=$row["total points"]?></td>
+                        <th><?=§('counter-user')?></th>
+                        <th><?=§('counter-bytes')?></th>
+                        <th><?=§('counter-edits')?></th>
+                        <th><?=§('counter-ppb')?></th>
+                        <th><?=§('counter-images')?></th>
+                        <th><?=§('counter-ppi')?></th>
+                        <th><?=§('counter-points')?></th>
                         <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
-                            <td>
-                                <form
-                                method='post'
-                                onSubmit='return confirm(
-                                    "<?=§('counter-confirm')?>"
-                                )'>
-                                    <input type='hidden' name='user' value='<?=$row["user"]?>'>
-                                    <input
-                                    <?=($row["total edits"] == 0)?"disabled":""?>
-                                    type='submit'
-                                    class='w3-btn w3-<?=$contest["theme"]?>'
-                                    value='<?=§('counter-redefine')?>'>
-                                </form>
-                            </td>
+                            <th><?=§('counter-redefine')?></th>
                         <?php endif; ?>
                     </tr>
-                <?php endwhile; ?>
-            </table>
-        </div>
+                    <?php while ($row = mysqli_fetch_assoc($count_query) ?? []): ?>
+                        <tr>
+                            <td><?=$row["user"]?></td>
+                            <td><?=$row["sum"]?></td>
+                            <td><?=$row["total edits"]?></td>
+                            <td><?=$row["bytes points"]?></td>
+                            <td><?=$row["total pictures"]?></td>
+                            <td><?=$row["pictures points"]?></td>
+                            <td><?=$row["total points"]?></td>
+                            <?php if ($_SESSION['user']["user_status"] == 'G'): ?>
+                                <td>
+                                    <form
+                                    method='post'
+                                    onSubmit='return confirm(
+                                        "<?=§('counter-confirm')?>"
+                                    )'>
+                                        <input type='hidden' name='user' value='<?=$row["user"]?>'>
+                                        <input
+                                        <?=($row["total edits"] == 0)?"disabled":""?>
+                                        type='submit'
+                                        class='w3-btn w3-<?=$contest["theme"]?>'
+                                        value='<?=§('counter-redefine')?>'>
+                                    </form>
+                                </td>
+                            <?php endif; ?>
+                        </tr>
+                    <?php endwhile; ?>
+                </table>
+            </div>
+        <?php else: ?>
+            <div class="w3-panel w3-orange w3-margin w3-display-container w3-border">
+                <p>
+                    <h3><?=§('triage-noedit')?></h3>
+                </p>
+            </div>
+        <?php endif; ?>
     </body>
     <?php if (isset($output['success'])): ?>
         <script>
