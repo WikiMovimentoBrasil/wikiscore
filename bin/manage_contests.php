@@ -523,9 +523,9 @@ $contests_array[]['name'] = null;
             </div>
             <?php foreach ($contests_array as $name_id => $contest_info): ?>
                 <?php if (
+                    $contest_info['name'] !== null &&
                     $_SESSION['user']["user_group"] !== "ALL" &&           
-                    $_SESSION['user']["user_group"] !== $contest_info['group'] ?? null &&
-                    $contest_info['name'] !== null
+                    $_SESSION['user']["user_group"] !== $contest_info['group']
                 ) continue; ?>
                 <div class="w3-margin-top w3-card w3-section">
                     <header
@@ -845,7 +845,7 @@ $contests_array[]['name'] = null;
                                             <option value="pale-yellow" class="w3-pale-yellow" <?=($contest_info['theme']!='pale-yellow')?:'selected'?>>pale-yellow</option>
                                             <option value="pale-green" class="w3-pale-green" <?=($contest_info['theme']!='pale-green')?:'selected'?>>pale-green</option>
                                             <option value="pale-blue" class="w3-pale-blue" <?=($contest_info['theme']!='pale-blue')?:'selected'?>>pale-blue</option>
-                                            <option value="color" class="w3-transparent" <?=($contest_info['theme']!='custom')?:'selected'?>><?=§('manage-custom')?></option>
+                                            <option value="color" class="w3-transparent" <?=($contest_info['theme']!='color')?:'selected'?>><?=§('manage-custom')?></option>
                                         </select>
                                     </div>
                                     <div class="w3-half" style="padding-left: 8px;">
