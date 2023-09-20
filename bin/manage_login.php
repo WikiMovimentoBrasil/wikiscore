@@ -19,7 +19,7 @@ if (isset($_POST['do_login'])) {
 ?>
 
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" style="container-type: normal;">
     <head>
         <title><?=§('login-manage')?></title>
         <meta name="viewport" content="width=device-width, initial-scale=1">

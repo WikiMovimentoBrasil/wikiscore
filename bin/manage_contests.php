@@ -91,7 +91,7 @@ if (isset($_POST['do_create']) || isset($_POST['do_manager'])) {
         $create_query = mysqli_prepare($con, $create_statement);
         mysqli_stmt_bind_param(
             $create_query,
-            "ssssiiiisssiiiiiiss",
+            "sssssiiiisssiiiiiiss",
             $_POST['name_id'],
             $_POST['start_time'],
             $_POST['end_time'],
@@ -127,6 +127,7 @@ if (isset($_POST['do_create']) || isset($_POST['do_manager'])) {
             "CREATE TABLE IF NOT EXISTS `{$name_id}__articles` (
                 `key` int(4) unsigned NOT NULL AUTO_INCREMENT,
                 `articleID` mediumint(9) unsigned NOT NULL,
+                `title` VARCHAR(100) NOT NULL,
                 PRIMARY KEY (`key`),
                 UNIQUE KEY `articleID` (`articleID`)
             ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;"
@@ -523,7 +524,7 @@ $contests_array[]['name'] = null;
             <?php foreach ($contests_array as $name_id => $contest_info): ?>
                 <?php if (
                     $_SESSION['user']["user_group"] !== "ALL" &&           
-                    $_SESSION['user']["user_group"] !== $contest_info['group'] &&
+                    $_SESSION['user']["user_group"] !== $contest_info['group'] ?? null &&
                     $contest_info['name'] !== null
                 ) continue; ?>
                 <div class="w3-margin-top w3-card w3-section">
@@ -581,7 +582,7 @@ $contests_array[]['name'] = null;
                                         maxlength="30"
                                         name="group"
                                         value="<?=$contest_info['group']??(($_SESSION['user']["user_group"]!=='ALL')?$_SESSION['user']["user_group"]:'')?>"
-                                        <?=($contest_info['group']==null&&$_SESSION['user']["user_group"]==='ALL')?'required':'disabled'?>>
+                                        <?=($contest_info['name']==null&&$_SESSION['user']["user_group"]==='ALL')?'required':'disabled'?>>
 
                                     </div>
                                 </div>
@@ -695,7 +696,7 @@ $contests_array[]['name'] = null;
                                         maxlenght="10"
                                         id="sourceid"
                                         name="sourceid"
-                                        value="<?=(isset($contest_info['category_petscan']))?$contest_info['category_petscan']:$contest_info['category_pageid']?>"
+                                        value="<?=$contest_info['category_petscan'] ?? $contest_info['category_pageid'] ?? ''?>"
                                         <?=($contest_info['name']==null)?'required':'disabled'?>>
 
                                     </div>
@@ -795,9 +796,9 @@ $contests_array[]['name'] = null;
                                         class="w3-select w3-border w3-margin-bottom"
                                         id="imagemode"
                                         <?=($contest_info['name']==null)?'required':'disabled'?>>
-                                            <option value="0" <?=($contest_info['pictures_mode']!=0)?:'selected'?>><?=§('manage-perarticle')?></option>
-                                            <option value="1" <?=($contest_info['pictures_mode']!=1)?:'selected'?>><?=§('manage-peredit')?></option>
-                                            <option value="2" <?=($contest_info['pictures_mode']!=2)?:'selected'?>><?=§('manage-perimage')?></option>
+                                            <option value="0" <?=(@$contest_info['pictures_mode']!=0)?:'selected'?>><?=§('manage-perarticle')?></option>
+                                            <option value="1" <?=(@$contest_info['pictures_mode']!=1)?:'selected'?>><?=§('manage-peredit')?></option>
+                                            <option value="2" <?=(@$contest_info['pictures_mode']!=2)?:'selected'?>><?=§('manage-perimage')?></option>
                                         </select>
 
                                     </div>
@@ -913,14 +914,14 @@ $contests_array[]['name'] = null;
                                             <button
                                             class="w3-button w3-orange w3-block w3-rightbar w3-border-white"
                                             name="do_restart"
-                                            onclick="return confirm('<?=§('manage-confirmrestart')?>')"
+                                            onclick="editChange('<?=$contest_info['name_id']?>'); return confirm('<?=§('manage-confirmrestart')?>')"
                                             type="submit"><?=§('manage-restart')?></button>
                                         </div>
                                         <div class="w3-half">
                                             <button
                                             class="w3-button w3-red w3-block w3-leftbar w3-border-white"
                                             name="do_delete"
-                                            onclick="return confirm('<?=§('manage-confirmdelete')?>')"
+                                            onclick="editChange('<?=$contest_info['name_id']?>'); return confirm('<?=§('manage-confirmdelete')?>')"
                                             type="submit"><?=§('manage-delete')?></button>
                                         </div>
                                     </div>
