@@ -164,7 +164,7 @@ $gitBranch .= shell_exec("git rev-parse --abbrev-ref HEAD");
     <br>
     <button
     class="w3-button w3-black w3-padding-large w3-large w3-margin-top"
-    onclick="location.href='index.php?manage=true'"
+    onclick="location.href='index.php?lang=<?=$lang?>&manage=true'"
     ><?=§('contest-manage')?></button>
 </header>
 
