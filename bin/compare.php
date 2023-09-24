@@ -70,7 +70,7 @@ if (isset($contest['official_list_pageid']) && isset($contest['category_pageid']
     ];
 
     $list_api = unserialize(file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params)));
-    $listmembers = $list_api['query']['pages'];
+    $listmembers = $list_api['query']['pages'] ?? [];
     foreach ($listmembers as $pagetitle) {
         if (isset($pagetitle['missing'])) { continue; }
         $list_official[] = $pagetitle['title'];
@@ -112,7 +112,7 @@ if (isset($contest['official_list_pageid']) && isset($contest['category_pageid']
     $categorymembers_api = unserialize(
         file_get_contents($contest['api_endpoint']."?".http_build_query($categorymembers_api_params))
     );
-    foreach ($categorymembers_api['query']['pages'] as $pageid) {
+    foreach ($categorymembers_api['query']['pages'] ?? [] as $pageid) {
         $list_cat[] = $pageid['title'];
         if (!isset($pageid['pageprops']['wikibase_item'])) {
             $list_wd[] = $pageid['title'];
