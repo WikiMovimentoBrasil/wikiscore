@@ -1,5 +1,7 @@
 <img src="https://img.shields.io/github/issues/WikiMovimentoBrasil/wikiscore?style=flat"/> <img src="https://img.shields.io/github/license/WikiMovimentoBrasil/wikiscore?style=flat"/> <img src="https://img.shields.io/github/languages/top/WikiMovimentoBrasil/wikiscore?style=flat"/> <img
-src="https://img.shields.io/github/last-commit/WikiMovimentoBrasil/wikiscore?style=flat"/> [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=wikimovimentobrasil_wikiscore&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=wikimovimentobrasil_wikiscore) [![Status da tradução](https://hosted.weblate.org/widgets/wikiscore/-/main/svg-badge.svg)](https://hosted.weblate.org/engage/wikiscore/)
+src="https://img.shields.io/github/last-commit/WikiMovimentoBrasil/wikiscore?style=flat"/> [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=wikimovimentobrasil_wikiscore&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=wikimovimentobrasil_wikiscore) [![Endpoint Badge](https://img.shields.io/endpoint?url=https%3A%2F%2Fwikiscore-test.toolforge.org%2Fbadge.php)](https://translatewiki.net/wiki/Translating:WikiScore)
+
+
 
 # WikiScore
 

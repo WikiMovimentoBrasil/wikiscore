@@ -270,9 +270,9 @@ function openGroup(evt, groupName) {
         target="_blank"
         >w3.css</a>, <a
         rel="noopener"
-        href="https://hosted.weblate.org/projects/wikiscore/"
+        href="https://translatewiki.net/wiki/Translating:WikiScore"
         target="_blank"
-        >Weblate</a> and <a
+        >TranslateWiki</a> and <a
         rel="noopener"
         href="https://wikitech.wikimedia.org/wiki/Portal:Toolforge"
         target="_blank">Toolforge</a>.<br>Source-code on <a
