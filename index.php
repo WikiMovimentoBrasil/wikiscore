@@ -137,7 +137,7 @@ $gitBranch .= shell_exec("git rev-parse --abbrev-ref HEAD");
             </select>
         </form>
     </div>
-    <img class="w3-section" src="images/Logo_Preto_Tagline.svg" style="width: 400px; max-width: 100%;">
+    <img class="w3-section" alt="logo" src="images/Logo_Preto_Tagline.svg" style="width: 400px; max-width: 100%;">
     <br>
     <button
     class="w3-button w3-black w3-padding w3-margin w3-round-xxlarge"
@@ -151,7 +151,7 @@ $gitBranch .= shell_exec("git rev-parse --abbrev-ref HEAD");
     ><?=§('contest-manage')?></button>
 </header>
 <div class="w3-center" style="background-color: #8493a6;">
-    <img src="images/Desenho_01.png" style="width: 100%;max-width: 980px;">
+    <img src="images/Desenho_01.png" alt="drawing" style="width: 100%;max-width: 980px;">
 </div>
 
 <!-- Join -->
@@ -215,7 +215,7 @@ function openGroup(evt, groupName) {
         <div class="w3-half w3-xlarge w3-margin-top">
             <?=§('index-enroll-short')?>
             <br>
-            <img src="images/folder.svg" style="width: 30px;">
+            <img src="images/folder.svg" alt="folder" style="width: 30px;">
         </div>
         <div class="w3-half w3-padding">
             <p><?=§('index-enroll-intro')?></p>
