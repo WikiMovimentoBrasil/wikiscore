@@ -82,7 +82,7 @@ $centralauth_query = mysqli_prepare(
         `localuser`
     WHERE
         `lu_wiki` = ?
-        AND `lu_global_id` IN (${bindClause})"
+        AND `lu_global_id` IN ({$bindClause})"
 );
 
 //Executa consulta e coleta os resultados
