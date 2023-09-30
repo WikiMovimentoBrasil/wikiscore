@@ -1,5 +1,4 @@
 <?php
-echo "<pre>";
 
 //Coleta lista de edições
 $edits_statement = "
@@ -63,4 +62,3 @@ while ($row = mysqli_fetch_assoc($edits_result)) {
 //Encerra conexão
 mysqli_stmt_close($update_query);
 mysqli_close($con);
-echo "Concluido! (3/3)";

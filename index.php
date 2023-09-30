@@ -63,13 +63,14 @@ if (isset($_GET['manage'])) {
 }
 
 //Verifica se algum concurso foi definido
-if (isset($_GET['contest'])) {
+$contestCall = $_GET['contest'] ?? $argv['1'] ?? null;
+if ($contestCall) {
 
     //Verifica se o concurso existe
-    if (isset($contests_array[@$_GET['contest']])) {
+    if (isset($contests_array[$contestCall])) {
 
         //Insere dados do concurso em uma array
-        $contest = $contests_array[$_GET['contest']];
+        $contest = $contests_array[$contestCall];
 
         //Lista páginas disponíveis para uso
         $accepted_pages = array(
@@ -84,10 +85,11 @@ if (isset($_GET['contest'])) {
             "graph",
             "recover",
             "password",
-            "maintenance",
+        );
+        $update_pages = array(
             "load_edits",
             "load_reverts",
-            "load_users"
+            "load_users",
         );
 
         //Carrega página solicitada ou redireciona para página de login
@@ -96,6 +98,10 @@ if (isset($_GET['contest'])) {
                 require_once __DIR__.'/bin/'.$_GET['page'].'.php';
             } else {
                 require_once __DIR__.'/bin/login.php';
+            }
+        } elseif(isset($argv['2'])) {
+            if (in_array($argv['2'], $update_pages)) {
+                require_once __DIR__.'/bin/'.$argv['2'].'.php';
             }
         } else {
             require_once __DIR__.'/bin/login.php';

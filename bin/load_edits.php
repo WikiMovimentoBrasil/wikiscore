@@ -1,8 +1,4 @@
 <?php
-echo "<pre>";
-
-//Aumenta tempo limite de execução do script
-set_time_limit(1200);
 
 //Verifica se PSID do PetScan foi fornecido ao invés de uma categoria comum
 if (isset($contest['category_petscan'])) {
@@ -231,5 +227,3 @@ while ($row = mysqli_fetch_assoc($articles_result)) {
 
 //Encerra conexão
 mysqli_close($con);
-echo "<br>Concluido! (1/3)<br>";
-echo "<a href='index.php?contest={$contest['name_id']}&page=load_users'>Próxima etapa, clique aqui.</a>";

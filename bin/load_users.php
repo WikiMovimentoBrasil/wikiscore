@@ -1,5 +1,4 @@
 <?php
-echo "<pre>";
 
 //Coleta planilha com usuarios inscritos
 $outreach_params = [
@@ -169,5 +168,3 @@ mysqli_query(
 
 //Encerra conexão
 mysqli_close($con);
-echo "<br>Concluido! (2/3)<br>";
-echo "<a href='index.php?contest=".$contest['name_id']."&page=load_reverts'>Próxima etapa, clique aqui.</a>";
