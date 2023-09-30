@@ -1,12 +1,15 @@
 <?php
 set_time_limit(1790);
 
-//Atualiza traduções
+//Atualiza código
 if (isset($_SERVER['HTTP_X_GITHUB_EVENT'])) { 
     $output = `bash git.sh`; 
     echo $output;
     exit();
 }
+
+var_dump($argv);
+die();
 
 //Conecta ao banco de dados
 require_once __DIR__.'/bin/connect.php';
