@@ -25,10 +25,8 @@
 <?php if (!isset($_GET['page'])) $_GET['page'] = 'triage'; ?>
 <div class="w3-<?=$contest['theme'];?> w3-large w3-bar w3-top" style="z-index:4">
     <button class="w3-bar-item w3-button w3-hover-none w3-hover-text-light-grey" onclick="w3_open();">
-        <i class="fa fa-bars"></i> &nbsp;<span 
-        class="w3-hide-medium w3-hide-small" 
-        style="font-family: serif;"
-        ><?=§('main-title')?>
+        <i class="fa fa-bars"></i> &nbsp;
+        <img src="images/Logo_Branco.svg" class="w3-hide-medium w3-hide-small" style="width: 100px;">
     </button>
     <span class="w3-bar-item"><?=§($_GET['page'])?></span>
     <span class="w3-bar-item w3-right w3-hide-small"><?=$contest['name'];?></span>
