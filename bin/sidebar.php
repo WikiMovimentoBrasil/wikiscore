@@ -90,6 +90,11 @@
             <i class="fa-solid fa-magnifying-glass-chart"></i>&nbsp; <?=§('triage-cat')?> 
             <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
         </a>
+        <a href="https://outreachdashboard.wmflabs.org/courses/<?=$contest['outreach_name'];?>" target="_blank"
+        rel="noopener" class="w3-bar-item w3-button w3-padding">
+            <i class="fa-solid fa-circle-nodes"></i>&nbsp; <?=§('triage-outreach')?> 
+            <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
+        </a>
         <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=password" 
         rel="noopener" class="w3-bar-item w3-button w3-padding <?=($_GET['page']!='password')?:'w3-blue'?>">
             <i class="fa-solid fa-key"></i>&nbsp; <?=§('password')?>
