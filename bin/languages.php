@@ -2,6 +2,7 @@
 
 //Carrega traduções
 $acceptedLanguages = str_replace('.json', '', array_diff(scandir('translations'), array('..', '.')));
+foreach (array_keys($acceptedLanguages, 'qqq', true) as $acptCode) unset($acceptedLanguages[$acptCode]);
 $userLang = $_GET["lang"] ?? "";
 $browserLang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? 'en', 0, 2);
 if (in_array($userLang, $acceptedLanguages)) {

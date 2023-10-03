@@ -8,7 +8,7 @@ if (isset($_POST['email'])) {
 
 // (B) REDIRECT USER IF SIGNED IN
 if (isset($_SESSION['user'])) {
-    header("Location: index.php?manage=true&page=contests");
+    header("Location: index.php?lang=$lang&manage=true&page=contests");
     exit();
 }
 

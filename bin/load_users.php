@@ -82,7 +82,7 @@ $centralauth_query = mysqli_prepare(
         `localuser`
     WHERE
         `lu_wiki` = ?
-        AND `lu_global_id` IN (${bindClause})"
+        AND `lu_global_id` IN ({$bindClause})"
 );
 
 //Executa consulta e coleta os resultados
@@ -132,7 +132,7 @@ foreach ($enrollments as $enrollment) {
     $row_timestamp = strftime('%Y-%m-%d %H:%M:%S', strtotime($enrollment['enrollment_timestamp']));
     $row_local_id = $centralauth_users[$enrollment['global_id']]['lu_local_id'] ?? null;
     $row_user = $centralauth_users[$enrollment['global_id']]['lu_name'] ?? $enrollment['username'] ?? null;
-    if ($centralauth_users[$enrollment['global_id']]['lu_attached'] !== null) {
+    if (isset($centralauth_users[$enrollment['global_id']]['lu_attached'])) {
         $row_attached = strftime('%Y-%m-%d %H:%M:%S', strtotime($centralauth_users[$enrollment['global_id']]['lu_attached']));
     } else {
         $row_attached = null;

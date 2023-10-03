@@ -120,23 +120,16 @@ $gitBranch .= shell_exec("git rev-parse --abbrev-ref HEAD");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="bin/w3.css">
-    <style>
-        @font-face {
-            font-family:'LinLibertine';
-            src: url("/font/LinLibertine_Re-4.7.3.otf");
-        }
-        #main-title {
-            visibility: hidden;
-        }
-    </style>
+    <link href='https://tools-static.wmflabs.org/fontcdn/css?family=Roboto' rel='stylesheet' type='text/css'>
 </head>
-<body>
+<body style="font-family: 'Roboto', sans-serif;">
 
 <!-- Header -->
-<header class="w3-container w3-deep-green w3-center" style="padding:16px 16px 128px;">
+<header class="w3-container w3-content w3-padding-32">
     <div style="display: flex; justify-content: flex-end;">
         <form method="get">
-            <select name="lang" onchange="this.form.submit()" class="w3-select" style="max-width: 16em;">
+            <select name="lang" onchange="this.form.submit()" style="max-width: 16em; text-transform: uppercase;"
+            class="w3-select w3-border w3-border-black w3-padding-small w3-round-xxlarge w3-small">
                 <option value="" disabled selected><?=§('language-select')?></option>
                 <?php foreach ($acceptedLanguages as $optionLanguage): ?>
                     <option value='<?=$optionLanguage?>'><?=Locale::getDisplayLanguage($optionLanguage, $optionLanguage)?></option>
@@ -144,40 +137,33 @@ $gitBranch .= shell_exec("git rev-parse --abbrev-ref HEAD");
             </select>
         </form>
     </div>
-    <h1
-    class="w3-margin" id="main-title"
-    style="font-family: 'LinLibertine', sans-serif; font-size: calc(2em + 3.5vw);"
-    ><?=§('main-title-w')?></h1>
-    <script type="text/javascript">
-        const heading = document.getElementById('main-title');
-        const customFont = new FontFace('LinLibertine', 'url(/font/LinLibertine_Re-4.7.3.otf)');
-        customFont.load().then(() => {
-          document.fonts.add(customFont);
-          heading.style.visibility = 'visible';
-        });
-    </script>
-    <p class="w3-large"><?=§('subtitle')?></p>
-    <button
-    class="w3-button w3-black w3-padding-large w3-large w3-margin-top"
-    onclick="document.getElementById('id01').style.display='block'"
-    ><?=§('contest-enter')?></button>
+    <img class="w3-section" alt="logo" src="images/Logo_Preto_Tagline.svg" style="width: 400px; max-width: 100%;">
     <br>
     <button
-    class="w3-button w3-black w3-padding-large w3-large w3-margin-top"
-    onclick="location.href='index.php?manage=true'"
+    class="w3-button w3-black w3-padding w3-margin w3-round-xxlarge"
+    style="text-transform: uppercase;"
+    onclick="document.getElementById('id01').style.display='block'"
+    ><?=§('contest-enter')?></button>
+    <button
+    class="w3-button w3-black w3-padding w3-margin w3-round-xxlarge"
+    style="text-transform: uppercase;"
+    onclick="location.href='index.php?lang=<?=$lang?>&manage=true'"
     ><?=§('contest-manage')?></button>
 </header>
+<div class="w3-center" style="background-color: #8493a6;">
+    <img src="images/Desenho_01.png" alt="drawing" style="width: 100%;max-width: 980px;">
+</div>
 
 <!-- Join -->
 <div id="id01" class="w3-modal">
     <div class="w3-modal-content w3-card-4 w3-animate-top">
-        <header class="w3-container w3-deep-green">
+        <header class="w3-container w3-black">
             <span onclick="document.getElementById('id01').style.display='none'"
             class="w3-button w3-display-topright">&times;</span>
             <h4><?=§('contest-select')?></h4>
         </header>
         <div class="w3-padding">
-            <div class="w3-bar w3-deep-green">
+            <div class="w3-bar w3-black">
                 <?php foreach ($contests_groups as $group): ?>
                     <button 
                     class="w3-bar-item w3-button tablink <?=($group=='WMB')?'w3-red':''?>" 
@@ -213,79 +199,72 @@ function openGroup(evt, groupName) {
 </script>
 
 <!-- First Grid -->
-<div class="w3-row-padding w3-padding-64 w3-container">
+<div class="w3-padding w3-padding-24 w3-container w3-border-top w3-border-black">
     <div class="w3-content">
-        <div class="w3-twothird">
-            <h1><?=§('index-about-short')?></h1>
-            <h5 class="w3-padding-32">
-                <?=§('index-about-intro')?>
-            </h5>
-            <p class="w3-text-grey">
-                <?=§('index-about-main')?>
-            </p>
-        </div>
-        <div class="w3-third w3-center">
-            <img
-            alt="Logo da Wikipédia"
-            class="w3-padding-64"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Wikipedia_article_icon_BLACK.svg/226px-Wikipedia_article_icon_BLACK.svg.png"
-            >
+        <div class="w3-half w3-jumbo"><?=§('index-about-short')?></div>
+        <div class="w3-half w3-padding">
+            <p><?=§('index-about-intro')?></p>
+            <p style="color: #8493a6;"><?=§('index-about-main')?></p>
         </div>
     </div>
 </div>
 
 <!-- Second Grid -->
-<div class="w3-row-padding w3-light-grey w3-padding-64 w3-container">
+<div class="w3-padding w3-padding-24 w3-container w3-border-top w3-border-black">
     <div class="w3-content">
-        <div class="w3-third w3-center">
-            <img
-            alt="Logo de Editathons"
-            class="w3-padding-64"
-            src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/Editathons.svg/200px-Editathons.svg.png">
+        <div class="w3-half w3-xlarge w3-margin-top">
+            <?=§('index-enroll-short')?>
+            <br>
+            <img src="images/folder.svg" alt="folder" style="width: 30px;">
         </div>
-        <div class="w3-twothird">
-            <h1><?=§('index-enroll-short')?></h1>
-            <h5 class="w3-padding-32">
-                <?=§('index-enroll-intro')?>
-            </h5>
-            <p class="w3-text-grey">
-                <?=§('index-enroll-main')?>
-            </p>
+        <div class="w3-half w3-padding">
+            <p><?=§('index-enroll-intro')?></p>
+            <p style="color: #8493a6;"><?=§('index-enroll-main')?></p>
         </div>
     </div>
 </div>
-<div class="w3-container w3-black w3-center w3-opacity w3-padding-64">
-        <img
-        alt="Logo do WMB"
-        src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Wiki_Movimento_Brasil_-_logo_negativo.svg/125px-Wiki_Movimento_Brasil_-_logo_negativo.svg.png"
-        >
-</div>
 
 <!-- Footer -->
-<footer class="w3-container w3-padding-64 w3-center w3-opacity">
-    <p>
-        Powered by <a
-        rel="noopener"
-        href="https://www.w3schools.com/w3css/default.asp"
-        target="_blank"
-        >w3.css</a>, <a
-        rel="noopener"
-        href="https://hosted.weblate.org/projects/wikiscore/"
-        target="_blank"
-        >Weblate</a> and <a
-        rel="noopener"
-        href="https://wikitech.wikimedia.org/wiki/Portal:Toolforge"
-        target="_blank">Toolforge</a>.<br>Source-code on <a
-        rel="noopener"
-        href="https://github.com/WikiMovimentoBrasil/wikiscore"
-        >GitHub</a> under <a
-        rel="noopener"
-        href="https://github.com/WikiMovimentoBrasil/wikiscore/blob/main/LICENSE">GPL v3.0</a>.<br>Text license: <a
-        rel="noopener"
-        href="https://creativecommons.org/licenses/by-sa/4.0/deed"
-        >CC-BY-SA 4.0 International</a>.
-    </p>
-    <p class="w3-small"><?=htmlspecialchars($gitCommit)?><br><?=htmlspecialchars($gitBranch)?></p>
+<footer class="w3-container w3-padding w3-black">
+    <div class="w3-row w3-content w3-section">
+        <div class="w3-third">
+            <a href="https://meta.wikimedia.org/wiki/Wiki_Movement_Brazil_User_Group">
+                <img alt="Logo do WMB" class="w3-section" style="width: 80px;"
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Wiki_Movimento_Brasil_-_logo_negativo.svg/125px-Wiki_Movimento_Brasil_-_logo_negativo.svg.png">
+            </a>
+        </div>
+        <div class="w3-third">
+            <p class="w3-tiny">
+                Powered by <a
+                rel="noopener"
+                href="https://www.w3schools.com/w3css/default.asp"
+                target="_blank"
+                >w3.css</a>, <a
+                rel="noopener"
+                href="https://translatewiki.net/wiki/Translating:WikiScore"
+                target="_blank"
+                >TranslateWiki</a> and <a
+                rel="noopener"
+                href="https://wikitech.wikimedia.org/wiki/Portal:Toolforge"
+                target="_blank">Toolforge</a>.<br>Source-code on <a
+                rel="noopener"
+                href="https://github.com/WikiMovimentoBrasil/wikiscore"
+                >GitHub</a> under <a
+                rel="noopener"
+                href="https://github.com/WikiMovimentoBrasil/wikiscore/blob/main/LICENSE">GPL v3.0</a>.<br>Text license: <a
+                rel="noopener"
+                href="https://creativecommons.org/licenses/by-sa/4.0/deed"
+                >CC-BY-SA 4.0 International</a>.
+            </p>
+        </div>
+        <div class="w3-third">
+            <p class="w3-tiny">
+                <?=htmlspecialchars($gitCommit)?>
+                <br>
+                <?=htmlspecialchars($gitBranch)?>
+            </p>
+        </div>
+    </div>
 </footer>
 
 </body>

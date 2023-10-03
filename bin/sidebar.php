@@ -25,12 +25,17 @@
 <?php if (!isset($_GET['page'])) $_GET['page'] = 'triage'; ?>
 <div class="w3-<?=$contest['theme'];?> w3-large w3-bar w3-top" style="z-index:4">
     <button class="w3-bar-item w3-button w3-hover-none w3-hover-text-light-grey" onclick="w3_open();">
-        <i class="fa fa-bars"></i> &nbsp;<span 
-        class="w3-hide-medium w3-hide-small" 
-        style="font-family: serif;"
-        ><?=§('main-title')?>
+        <i class="fa fa-bars"></i> &nbsp;
+        <img src="images/Logo_Branco.svg" alt="logo" class="w3-hide-medium w3-hide-small" style="width: 83px;">
     </button>
     <span class="w3-bar-item"><?=§($_GET['page'])?></span>
+    <?php if(str_contains(getcwd(), 'test')): ?>
+        <span class="w3-bar-item w3-black">
+            <i class="fa-solid fa-flask-vial fa-fade"></i>
+            &nbsp;
+            <i class="fa-solid fa-server fa-fade"></i>
+        </span>
+    <?php endif; ?>
     <span class="w3-bar-item w3-right w3-hide-small"><?=$contest['name'];?></span>
 </div>
 <nav class="w3-sidebar w3-white w3-animate-left" style="z-index:3;width:230px;display:none;min-height:100vh;" id="mySidebar">
@@ -90,6 +95,11 @@
             : "{$contest['endpoint']}?curid={$contest['category_pageid']}"
         ?>" target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
             <i class="fa-solid fa-magnifying-glass-chart"></i>&nbsp; <?=§('triage-cat')?> 
+            <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
+        </a>
+        <a href="https://outreachdashboard.wmflabs.org/courses/<?=$contest['outreach_name'];?>" target="_blank"
+        rel="noopener" class="w3-bar-item w3-button w3-padding">
+            <i class="fa-solid fa-circle-nodes"></i>&nbsp; <?=§('triage-outreach')?> 
             <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
         </a>
         <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=password" 
