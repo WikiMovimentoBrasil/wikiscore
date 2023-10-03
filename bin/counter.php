@@ -12,7 +12,7 @@ if (isset($_POST['time_round'])) {
 }
 
 //Processa redefinição de participantes
-if (isset($_POST['user'])) {
+if (isset($_POST['user_id'])) {
 
     //Encerra script caso usuário não seja gestor
     if ($_SESSION['user']['user_status'] != 'G') {
@@ -25,9 +25,9 @@ if (isset($_POST['user'])) {
         "DELETE FROM
             `{$contest['name_id']}__edits`
         WHERE
-            `user` = ?"
+            `user_id` = ?"
     );
-    mysqli_stmt_bind_param($reset_query, "s", $_POST['user']);
+    mysqli_stmt_bind_param($reset_query, "s", $_POST['user_id']);
     mysqli_stmt_execute($reset_query);
 
     //Verifica se query ocorreu normalmente e solicita atualização do banco de dados
@@ -54,6 +54,7 @@ $count_query = mysqli_query(
     $con,
     "SELECT
         `user_table`.`user`,
+        `user_table`.`user_id`,
         IFNULL(`points`.`sum`, 0) AS `sum`,
         IFNULL(`points`.`total edits`, 0) AS `total edits`,
         IFNULL(`points`.`bytes points`, 0) AS `bytes points`,
@@ -431,7 +432,7 @@ while (isset($list_api['continue'])) {
                                     onSubmit='return confirm(
                                         "<?=§('counter-confirm')?>"
                                     )'>
-                                        <input type='hidden' name='user' value='<?=$row["user"]?>'>
+                                        <input type='hidden' name='user_id' value='<?=$row["user_id"]?>'>
                                         <input
                                         <?=($row["total edits"] == 0)?"disabled":""?>
                                         type='submit'
