@@ -40,11 +40,24 @@ if (time() < $contest['start_time']) {
     }
 
     //Monta lista de dias em uma array
-    $days = array();
-    for ($i = -1; end($days) != $start_day; $i--) {
-        $days[] = date('Y-m-d', strtotime("{$i} days", strtotime($end_time)));
+    function generateDateRange($startDay, $endDate) {
+        $start = new DateTime($startDay);
+        $end = new DateTime($endDate);
+
+        // Include the end date in the range
+        $end->modify('+1 day');
+
+        $interval = new DateInterval('P1D'); // 1 day interval
+        $dateRange = new DatePeriod($start, $interval, $end);
+
+        $result = [];
+        foreach ($dateRange as $date) {
+            $result[] = $date->format('Y-m-d');
+        }
+
+        return $result;
     }
-    $days = array_reverse($days);
+    $days = generateDateRange($start_day, $end_time);
 
     //Separa último dia da lista
     $last_day = array_pop($days);
