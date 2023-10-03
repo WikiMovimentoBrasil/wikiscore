@@ -683,7 +683,7 @@ mysqli_close($con);
                             <span id="span_copyvios"></span>
                             <br>
                             <strong><i class="fa-solid fa-comment"></i><?=§('label-summary')?></strong>
-                            <?=@$output['compare']['tocomment'];?>
+                            <?=htmlspecialchars($output['compare']['tocomment']??'')?>
                         </div>
                     </div>
                     <div class="w3-container">

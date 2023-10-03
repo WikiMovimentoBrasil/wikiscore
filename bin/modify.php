@@ -307,7 +307,7 @@ mysqli_close($con);
                         <li><?=§('label-timestamp')?><br><?=(@$output['revision']['timestamp']);?></li>
                         <li><?=§('label-user')?><br><?=(@$output['compare']['touser']);?></li>
                         <li><?=§('modify-label-bytes')?><br><?=(@$output['revision']['bytes']);?></li>
-                        <li><?=§('label-summary')?><br><?=(@$output['compare']['tocomment']);?>&nbsp;</li>
+                        <li><?=§('label-summary')?><br><?=htmlspecialchars($output['compare']['tocomment']??'')?>&nbsp;</li>
                         <li><?=§('modify-label-newpage')?><br><?=(@$output['revision']['new_page'])?"Sim":"Não";?></li>
                         <li><?=§('modify-label-valid')?><br><?=(@$output['revision']['valid_edit'])?"Sim":"Não";?></li>
                         <li><?=§('modify-label-enrolled')?><br><?=(@$output['revision']['valid_user'])?"Sim":"Não";?></li>
