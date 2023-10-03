@@ -378,7 +378,7 @@ $count_result = mysqli_fetch_assoc(mysqli_stmt_get_result($count_query));
 $output['onwait'] = $count_result['onwait'];
 $output['onskip'] = $count_result['onskip'];
 $output['onhold'] = $count_result['onhold'];
-$output['onqueue'] = $count_result['onqueue'] - $count_result['onwait'];
+$output['onqueue'] = max(0, $count_result['onqueue'] - $count_result['onwait']);
 
 //Encerra conexão
 mysqli_close($con);
