@@ -38,7 +38,7 @@
     <?php endif; ?>
     <span class="w3-bar-item w3-right w3-hide-small"><?=$contest['name'];?></span>
 </div>
-<nav class="w3-sidebar w3-white w3-animate-left" style="z-index:3;width:230px;display:none;min-height:100vh;" id="mySidebar">
+<nav class="w3-sidebar w3-white w3-animate-left" style="z-index:3;width:280px;display:none;min-height:100vh;" id="mySidebar">
     <br>
     <div class="w3-container w3-row">
         <div class="w3-col s4">
@@ -46,10 +46,6 @@
         </div>
         <div class="w3-col s8 w3-bar">
             <span><?=§('triage-welcome', ucfirst($_SESSION['user']['user_name']))?></span><br>
-            <a href="javascript:document.getElementById('logout').submit()" class="w3-bar-item w3-button"><i class="fa-solid fa-door-open"></i></a>
-            <form method="post" id="logout" style="display: none;">
-                <input type="hidden" name="logout" value="Logout">
-            </form>
         </div>
     </div>
     <hr>
@@ -105,6 +101,13 @@
         <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=password" 
         rel="noopener" class="w3-bar-item w3-button w3-padding <?=($_GET['page']!='password')?:'w3-blue'?>">
             <i class="fa-solid fa-key"></i>&nbsp; <?=§('password')?>
+        </a>
+        <form method="post" id="logout" style="display: none;">
+            <input type="hidden" name="logout" value="Logout">
+        </form>
+        <a href="javascript:document.getElementById('logout').submit()" 
+        rel="noopener" class="w3-bar-item w3-button w3-padding">
+            <i class="fa-solid fa-door-open"></i>&nbsp; <?=§('exit')?>
         </a>
         <br><br>
     </div>
