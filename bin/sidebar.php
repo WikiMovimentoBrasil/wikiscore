@@ -69,7 +69,7 @@
         rel="noopener" class="w3-bar-item w3-button w3-padding <?=($_GET['page']!='compare')?:'w3-blue'?>">
             <i class="fa-solid fa-code-compare"></i>&nbsp; <?=§('compare')?>
         </a>
-        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=edits" target="_blank"
+        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=edits"
         rel="noopener" class="w3-bar-item w3-button w3-padding <?=($_GET['page']!='edits')?:'w3-blue'?>">
             <i class="fa-solid fa-list-check"></i>&nbsp; <?=§('triage-evaluated')?>
         </a>

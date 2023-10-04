@@ -591,7 +591,7 @@ mysqli_close($con);
                     </div>
                 </div>
                 <div id="edits" class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
-                    <h2><?=§('triage-edits')?></h2>
+                    <h2><?=§('edits')?></h2>
                     <div class="w3-row">
                         <div class="w3-col l6 m12 s6">
                             <h6 class="w3-center"><?=§('triage-toeval')?></h6>

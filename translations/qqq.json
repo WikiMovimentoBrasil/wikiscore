@@ -146,7 +146,7 @@
 	"triage-welcome": "Welcome message shown in the sidebar\n\nParameters:\n* $1: name of the evaluator",
 	"triage-diff": "{{Identical|Diff}}",
 	"triage-fix": "Name of the tool page where the review (or reevaluation) of evaluations already made is carried out.",
-	"triage-edits": "{{Identical|Edit}}",
+	"edits": "{{Identical|Edit}}",
 	"triage-toeval": "{{identical|Available}}",
 	"triage-evaluated": "Name of the tool page where the table with the evaluated editions is generated.",
 	"triage-jump": "Text used in a button so that the evaluator can temporarily skip the evaluation of one edition and can evaluate another edition",
