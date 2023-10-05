@@ -171,98 +171,110 @@ if ($lastedit_query != false) {
         <header class="w3-<?=$contest['theme'];?> w3-container">
             <h1><?=$contest['name'];?></h1>
         </header>
-        <div class="w3-container w3-padding-32">
-            <div class="w3-row-padding">
-                <div class="w3-third w3-section">
-                    <div class="w3-card-4 w3-padding">
-                        <canvas id="total_edits"></canvas>
-                    </div>
+        <div class="w3-block w3-card w3-margin w3-hide-medium w3-hide-small" style="width: inherit;">
+            <div class="w3-center">
+                <a href="https://outreachdashboard.wmflabs.org/courses/<?=$contest['outreach_name'];?>"
+                target="_blank" rel="noopener" style="color: #fff; background-color: #676eb4;"
+                class="w3-button w3-margin-top w3-padding">
+                <?=§('triage-outreach')?> 
+                    <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
+                </a>
+            </div>
+            <iframe scrolling="no" sandbox
+            src="https://outreachdashboard.wmflabs.org/embed/course_stats/<?=$contest['outreach_name'];?>" 
+            style="width: 100%; border:0px none transparent;"></iframe>
+        </div>
+        <?php if (time() > $contest['start_time']) require_once "stats.php"; ?> 
+        <div class="w3-row-padding">
+            <div class="w3-third w3-margin-bottom">
+                <div class="w3-card-4 w3-padding">
+                    <canvas id="total_edits"></canvas>
                 </div>
-                <div class="w3-third w3-section">
-                    <div class="w3-card-4 w3-padding">
-                        <canvas id="valid_edits"></canvas>
-                    </div>
+            </div>
+            <div class="w3-third w3-margin-bottom">
+                <div class="w3-card-4 w3-padding">
+                    <canvas id="valid_edits"></canvas>
                 </div>
-                <div class="w3-third w3-section">
-                    <div class="w3-card-4 w3-padding">
-                        <canvas id="new_articles"></canvas>
+            </div>
+            <div class="w3-third w3-margin-bottom">
+                <div class="w3-card-4 w3-padding">
+                    <canvas id="new_articles"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="w3-row-padding">
+            <div class="w3-third w3-margin-bottom">
+                <div class="w3-card-4 w3-padding">
+                    <canvas id="new_bytes"></canvas>
+                </div>
+            </div>
+            <div class="w3-third w3-margin-bottom">
+                <div class="w3-card-4 w3-padding">
+                    <canvas id="valid_bytes"></canvas>
+                </div>
+            </div>
+            <div class="w3-third w3-margin-bottom">
+                <div class="w3-card-4 w3-light-grey w3-justify">
+                    <header class="w3-<?=$contest['theme'];?> w3-container">
+                        <h3><?=§('login-about')?></h3>
+                    </header>
+                    <div class="w3-container">
+                        <p class="w3-small">
+                            <strong><?=§('login-start')?></strong>
+                            <br>
+                            <?=date('Y/m/d H:i:s (\U\T\C)', $contest['start_time']);?>
+                        </p>
+                        <p class="w3-small">
+                            <strong><?=§('login-end')?></strong>
+                            <br>
+                            <?=date('Y/m/d H:i:s (\U\T\C)', $contest['end_time']);?>
+                        </p>
+                        <p class="w3-small">
+                            <strong><?=§('login-recent')?></strong>
+                            <br>
+                            <?=$lastedit;?>
+                        </p>
+                    </div>
+                    <div class="w3-container w3-padding-small">
+                        <button class="w3-button w3-half w3-<?=$contest['theme'];?> w3-block" style="filter: hue-rotate(120deg);" type="button" onclick="window.open('index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=graph', '_blank');"><?=§('login-graph')?></button>
+                        <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-half w3-block w3-<?=$contest['theme'];?>" style="filter: hue-rotate(240deg);"><?=§('login')?></button>
                     </div>
                 </div>
             </div>
-            <div class="w3-row-padding">
-                <div class="w3-third w3-section">
-                    <div class="w3-card-4 w3-padding">
-                        <canvas id="new_bytes"></canvas>
-                    </div>
+        </div>
+        <div id="id01" class="w3-modal">
+            <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
+                <div class="w3-center">
+                    <br>
+                    <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-xlarge w3-hover-red w3-display-topright" title="Close Modal">&times;</span>
+                    <svg width="240" height="240" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M7 18V17C7 14.2386 9.23858 12 12 12V12C14.7614 12 17 14.2386 17 17V18" stroke="currentColor" stroke-linecap="round" />
+                        <path d="M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
+                        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" />
+                    </svg>
                 </div>
-                <div class="w3-third w3-section">
-                    <div class="w3-card-4 w3-padding">
-                        <canvas id="valid_bytes"></canvas>
+                <form class="w3-container" id="login" method="post">
+                    <div class="w3-section">
+                        <label>
+                            <strong><?=§('login-email')?></strong>
+                        </label>
+                        <input class="w3-input w3-border w3-margin-bottom" type="email" placeholder="Insira seu e-mail" name="email" required>
+                        <label>
+                            <strong><?=§('login-password')?></strong>
+                        </label>
+                        <input class="w3-input w3-border" type="password" placeholder="Insira sua senha" name="password" required>
+                        <button class="w3-button w3-block w3-<?=$contest['theme'];?> w3-section w3-padding" name="do_login" type="submit"><?=§('login')?></button>
                     </div>
-                </div>
-                <div class="w3-third w3-section">
-                    <div class="w3-card-4 w3-light-grey w3-justify">
-                        <header class="w3-<?=$contest['theme'];?> w3-container">
-                            <h1><?=§('login-about')?></h1>
-                        </header>
-                        <div class="w3-container">
-                            <p class="w3-small">
-                                <strong><?=§('login-start')?></strong>
-                                <br>
-                                <?=date('Y/m/d H:i:s (\U\T\C)', $contest['start_time']);?>
-                            </p>
-                            <p class="w3-small">
-                                <strong><?=§('login-end')?></strong>
-                                <br>
-                                <?=date('Y/m/d H:i:s (\U\T\C)', $contest['end_time']);?>
-                            </p>
-                            <p class="w3-small">
-                                <strong><?=§('login-recent')?></strong>
-                                <br>
-                                <?=$lastedit;?>
-                            </p>
-                        </div>
-                        <div class="w3-container w3-padding-small">
-                            <button class="w3-button w3-half w3-<?=$contest['theme'];?> w3-block w3-large" style="filter: hue-rotate(120deg);" type="button" onclick="window.open('index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=graph', '_blank');"><?=§('login-graph')?></button>
-                            <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-half w3-block w3-<?=$contest['theme'];?> w3-large" style="filter: hue-rotate(240deg);"><?=§('login')?></button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div id="id01" class="w3-modal">
-                <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
-                    <div class="w3-center">
-                        <br>
-                        <span onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-xlarge w3-hover-red w3-display-topright" title="Close Modal">&times;</span>
-                        <svg width="240" height="240" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M7 18V17C7 14.2386 9.23858 12 12 12V12C14.7614 12 17 14.2386 17 17V18" stroke="currentColor" stroke-linecap="round" />
-                            <path d="M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />
-                            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" />
-                        </svg>
-                    </div>
-                    <form class="w3-container" id="login" method="post">
-                        <div class="w3-section">
-                            <label>
-                                <strong><?=§('login-email')?></strong>
-                            </label>
-                            <input class="w3-input w3-border w3-margin-bottom" type="email" placeholder="Insira seu e-mail" name="email" required>
-                            <label>
-                                <strong><?=§('login-password')?></strong>
-                            </label>
-                            <input class="w3-input w3-border" type="password" placeholder="Insira sua senha" name="password" required>
-                            <button class="w3-button w3-block w3-<?=$contest['theme'];?> w3-section w3-padding" name="do_login" type="submit"><?=§('login')?></button>
-                        </div>
-                    </form>
-                    <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
-                        <button
-                        onclick="window.open(
-                            'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=recover',
-                            '_blank'
-                        );"
-                        type="button"
-                        class="w3-button w3-red"
-                        ><?=§('login-recover')?></button>
-                    </div>
+                </form>
+                <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+                    <button
+                    onclick="window.open(
+                        'index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=recover',
+                        '_blank'
+                    );"
+                    type="button"
+                    class="w3-button w3-red"
+                    ><?=§('login-recover')?></button>
                 </div>
             </div>
         </div>
