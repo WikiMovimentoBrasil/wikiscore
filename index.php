@@ -93,7 +93,8 @@ if (isset($_GET['contest'])) {
         //Carrega página solicitada ou redireciona para página de login
         if (isset($_GET['page'])) {
             if (in_array($_GET['page'], $accepted_pages)) {
-                require_once __DIR__.'/bin/'.$_GET['page'].'.php';
+                $getPage = $_GET['page'];
+                require_once __DIR__.'/bin/'.$getPage.'.php';
             } else {
                 require_once __DIR__.'/bin/login.php';
             }
