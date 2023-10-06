@@ -289,7 +289,7 @@ if ($contest['end_time'] + 172800 < time()) {
             }
 
             function startCountdown(totalSeconds) {
-                if (!totalSeconds || isNaN(totalSeconds) || totalSeconds < 0) {
+                if (totalSeconds === false || isNaN(totalSeconds) || totalSeconds < 0) {
                     return;
                 }
                 const targetTime = performance.now() + totalSeconds * 1000;
