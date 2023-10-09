@@ -181,9 +181,9 @@ if ($_POST["csv"]) {
                                     $red = 'green';
                                 }
 
-                                if ($x == 1) {
+                                if ($x === 1) {
                                     return "<span class='w3-text-$green w3-large'>✓</span>";
-                                } elseif ($x == 0) {
+                                } elseif ($x === 0) {
                                     return "<span class='w3-text-$red w3-large'>✗</span>";
                                 } else {
                                     return $x;
