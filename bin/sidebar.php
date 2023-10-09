@@ -22,13 +22,13 @@
         document.getElementById("myOverlay").style.display = "none";
     }
 </script>
-<?php if (!isset($_GET['page'])) $_GET['page'] = 'triage'; ?>
+<?php if (!isset($getPage)) $getPage = 'triage'; ?>
 <div class="w3-<?=$contest['theme'];?> w3-large w3-bar w3-top" style="z-index:4">
     <button class="w3-bar-item w3-button w3-hover-none w3-hover-text-light-grey" onclick="w3_open();">
         <i class="fa fa-bars"></i> &nbsp;
         <img src="images/Logo_Branco.svg" alt="logo" class="w3-hide-medium w3-hide-small" style="width: 83px;">
     </button>
-    <span class="w3-bar-item"><?=§($_GET['page'])?></span>
+    <span class="w3-bar-item"><?=§($getPage)?></span>
     <?php if(str_contains(getcwd(), 'test')): ?>
         <span class="w3-bar-item w3-black">
             <i class="fa-solid fa-flask-vial fa-fade"></i>
@@ -38,7 +38,7 @@
     <?php endif; ?>
     <span class="w3-bar-item w3-right w3-hide-small"><?=$contest['name'];?></span>
 </div>
-<nav class="w3-sidebar w3-white w3-animate-left" style="z-index:3;width:230px;display:none;min-height:100vh;" id="mySidebar">
+<nav class="w3-sidebar w3-white w3-animate-left" style="z-index:3;width:280px;display:none;min-height:100vh;" id="mySidebar">
     <br>
     <div class="w3-container w3-row">
         <div class="w3-col s4">
@@ -46,10 +46,6 @@
         </div>
         <div class="w3-col s8 w3-bar">
             <span><?=§('triage-welcome', ucfirst($_SESSION['user']['user_name']))?></span><br>
-            <a href="javascript:document.getElementById('logout').submit()" class="w3-bar-item w3-button"><i class="fa-solid fa-door-open"></i></a>
-            <form method="post" id="logout" style="display: none;">
-                <input type="hidden" name="logout" value="Logout">
-            </form>
         </div>
     </div>
     <hr>
@@ -58,31 +54,31 @@
     </div>
     <div class="w3-bar-block">
         <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=triage" 
-        rel="noopener" class="w3-bar-item w3-button w3-padding <?=($_GET['page']!='triage')?:'w3-blue'?>">
+        rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='triage')?:'w3-blue'?>">
             <i class="fa-solid fa-check-to-slot"></i>&nbsp; <?=§('triage')?>
         </a>
         <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=counter" 
-        rel="noopener" class="w3-bar-item w3-button w3-padding <?=($_GET['page']!='counter')?:'w3-blue'?>">
+        rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='counter')?:'w3-blue'?>">
             <i class="fa-solid fa-chart-line"></i>&nbsp; <?=§('counter')?>
         </a>
         <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=modify" 
-        rel="noopener" class="w3-bar-item w3-button w3-padding <?=($_GET['page']!='modify')?:'w3-blue'?>">
+        rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='modify')?:'w3-blue'?>">
             <i class="fa-solid fa-pen-to-square"></i>&nbsp; <?=§('modify')?>
         </a>
         <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=compare" 
-        rel="noopener" class="w3-bar-item w3-button w3-padding <?=($_GET['page']!='compare')?:'w3-blue'?>">
+        rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='compare')?:'w3-blue'?>">
             <i class="fa-solid fa-code-compare"></i>&nbsp; <?=§('compare')?>
         </a>
-        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=edits" target="_blank"
-        rel="noopener" class="w3-bar-item w3-button w3-padding <?=($_GET['page']!='edits')?:'w3-blue'?>">
+        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=edits"
+        rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='edits')?:'w3-blue'?>">
             <i class="fa-solid fa-list-check"></i>&nbsp; <?=§('triage-evaluated')?>
         </a>
         <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=backtrack" 
-        rel="noopener" class="w3-bar-item w3-button w3-padding <?=($_GET['page']!='backtrack')?:'w3-blue'?>">
+        rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='backtrack')?:'w3-blue'?>">
             <i class="fa-solid fa-history"></i>&nbsp; <?=§('backtrack')?>
         </a>
         <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=evaluators" 
-        rel="noopener" class="w3-bar-item w3-button w3-padding <?=($_GET['page']!='evaluators')?:'w3-blue'?>">
+        rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='evaluators')?:'w3-blue'?>">
             <i class="fa-solid fa-users"></i>&nbsp; <?=§('evaluators')?>
         </a>
         <a href="<?=$contest['endpoint'];?>?curid=<?=$contest['official_list_pageid'];?>" target="_blank"
@@ -103,8 +99,15 @@
             <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
         </a>
         <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=password" 
-        rel="noopener" class="w3-bar-item w3-button w3-padding <?=($_GET['page']!='password')?:'w3-blue'?>">
+        rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='password')?:'w3-blue'?>">
             <i class="fa-solid fa-key"></i>&nbsp; <?=§('password')?>
+        </a>
+        <form method="post" id="logout" style="display: none;">
+            <input type="hidden" name="logout" value="Logout">
+        </form>
+        <a href="javascript:document.getElementById('logout').submit()" 
+        rel="noopener" class="w3-bar-item w3-button w3-padding">
+            <i class="fa-solid fa-door-open"></i>&nbsp; <?=§('exit')?>
         </a>
         <br><br>
     </div>

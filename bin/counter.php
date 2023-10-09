@@ -12,7 +12,7 @@ if (isset($_POST['time_round'])) {
 }
 
 //Processa redefinição de participantes
-if (isset($_POST['user'])) {
+if (isset($_POST['user_id'])) {
 
     //Encerra script caso usuário não seja gestor
     if ($_SESSION['user']['user_status'] != 'G') {
@@ -25,9 +25,9 @@ if (isset($_POST['user'])) {
         "DELETE FROM
             `{$contest['name_id']}__edits`
         WHERE
-            `user` = ?"
+            `user_id` = ?"
     );
-    mysqli_stmt_bind_param($reset_query, "s", $_POST['user']);
+    mysqli_stmt_bind_param($reset_query, "s", $_POST['user_id']);
     mysqli_stmt_execute($reset_query);
 
     //Verifica se query ocorreu normalmente e solicita atualização do banco de dados
@@ -54,6 +54,7 @@ $count_query = mysqli_query(
     $con,
     "SELECT
         `user_table`.`user`,
+        `user_table`.`user_id`,
         IFNULL(`points`.`sum`, 0) AS `sum`,
         IFNULL(`points`.`total edits`, 0) AS `total edits`,
         IFNULL(`points`.`bytes points`, 0) AS `bytes points`,
@@ -178,104 +179,7 @@ $count_query = mysqli_query(
     ;"
 );
 
-//Realiza query para tabela de estatísticas
-$stats_query = mysqli_prepare(
-    $con,
-    "SELECT
-        most_edited.title AS most_edited_title,
-        most_edited.article AS most_edited_article,
-        most_edited.total AS most_edited_total,
-        biggest_delta.title AS biggest_delta_title,
-        biggest_delta.article AS biggest_delta_article,
-        biggest_delta.total AS biggest_delta_total,
-        biggest_edition.title AS biggest_edition_title,
-        biggest_edition.article AS biggest_edition_article,
-        biggest_edition.diff AS biggest_edition_diff,
-        biggest_edition.bytes AS biggest_edition_bytes,
-        edits_summary.new_pages AS new_pages,
-        edits_summary.edited_articles AS edited_articles,
-        edits_summary.valid_edits AS valid_edits,
-        edits_summary.all_bytes AS all_bytes,
-        edits_summary.all_users AS all_users
-    FROM
-        (SELECT title, article, COUNT(diff) AS total, SUM(bytes) AS bytes
-        FROM {$contest['name_id']}__edits
-        LEFT JOIN {$contest['name_id']}__articles ON article = articleID
-        GROUP BY article
-        ORDER BY total DESC
-        LIMIT 1) AS most_edited
-    LEFT JOIN
-        (SELECT title, article, SUM(bytes) AS total
-        FROM {$contest['name_id']}__edits
-        LEFT JOIN {$contest['name_id']}__articles ON article = articleID
-        GROUP BY article
-        ORDER BY total DESC
-        LIMIT 1) AS biggest_delta
-    ON 1=1
-    LEFT JOIN
-        (SELECT title, article, diff, bytes
-        FROM {$contest['name_id']}__edits
-        LEFT JOIN {$contest['name_id']}__articles ON article = articleID
-        WHERE valid_edit = '1'
-        ORDER BY bytes DESC
-        LIMIT 1) AS biggest_edition
-    ON 1=1
-    CROSS JOIN
-        (SELECT
-            SUM(`new_page`) AS `new_pages`,
-            COUNT(DISTINCT `article`) AS `edited_articles`,
-            SUM(`valid_edit`) AS `valid_edits`,
-            (
-                SELECT
-                    SUM(`bytes`)
-                FROM
-                    `{$contest['name_id']}__edits`
-                WHERE
-                    `bytes` > 0
-            ) AS `all_bytes`,
-            (
-                SELECT
-                    COUNT(*)
-                FROM
-                    `{$contest['name_id']}__users`
-                WHERE
-                    `timestamp` != '0'
-            ) AS `all_users`
-        FROM
-            `{$contest['name_id']}__edits`) AS edits_summary;"
-);
-mysqli_stmt_execute($stats_query);
-$stats = mysqli_fetch_assoc(mysqli_stmt_get_result($stats_query));
 
-//Coleta lista de artigos na página do concurso
-$list_api_params = [
-    "action"        => "query",
-    "format"        => "php",
-    "generator"     => "links",
-    "pageids"       => $contest['official_list_pageid'],
-    "gplnamespace"  => "0",
-    "gpllimit"      => "max"
-];
-
-$list_api = unserialize(file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params)));
-$stats['listed_articles'] = count($list_api['query']['pages'] ?? []);
-
-//Coleta segunda página da lista, caso exista
-while (isset($list_api['continue'])) {
-    $list_api_params = [
-        "action"        => "query",
-        "format"        => "php",
-        "generator"     => "links",
-        "pageids"       => $contest['official_list_pageid'],
-        "gplnamespace"  => "0",
-        "gpllimit"      => "max",
-        "gplcontinue"   => $list_api['continue']['gplcontinue']
-    ];
-    $list_api = unserialize(
-        file_get_contents($contest['api_endpoint']."?".http_build_query($list_api_params))
-    );
-    $stats['listed_articles'] += count($list_api['query']['pages']);
-}
 
 
 ?>
@@ -316,91 +220,8 @@ while (isset($list_api['continue'])) {
                 </form>
             </div>
         </div>
-        <?php if (isset($stats['valid_edits'])) : ?>
-            <div class="w3-container w3-card w3-margin w3-<?=$contest['theme'];?>">
-                <div class="w3-row">
-                    <div class="w3-half">
-                        <div class="w3-third">
-                            <h6 class="w3-center"><?=§('counter-allpages')?></h6>
-                            <h1 class="w3-center"><?=number_format($stats['listed_articles'], 0, ',', '.');?></h1>
-                        </div>
-                        <div class="w3-third">
-                            <h6 class="w3-center"><?=§('counter-alledited')?></h6>
-                            <h1 class="w3-center"><?=number_format($stats['edited_articles'], 0, ',', '.');?></h1>
-                        </div>
-                        <div class="w3-third">
-                            <h6 class="w3-center"><?=§('counter-allcreated')?></h6>
-                            <h1 class="w3-center"><?=number_format($stats['new_pages'], 0, ',', '.');?></h1>
-                        </div>
-                    </div>
-                    <div class="w3-half">
-                        <div class="w3-third">
-                            <h6 class="w3-center"><?=§('counter-allenrolled')?></h6>
-                            <h1 class="w3-center"><?=number_format($stats['all_users'], 0, ',', '.');?></h1>
-                        </div>
-                        <div class="w3-third">
-                            <h6 class="w3-center"><?=§('counter-allvalidated')?></h6>
-                            <h1 class="w3-center"><?=number_format($stats['valid_edits'], 0, ',', '.');?></h1>
-                        </div>
-                        <div class="w3-third">
-                            <h6 class="w3-center"><?=§('counter-allbytes')?></h6>
-                            <h1 class="w3-center"><?=number_format($stats['all_bytes'], 0, ',', '.');?></h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div>
-                <div class="w3-row-padding w3-center w3-section">
-                    <div class="w3-third">
-                        <div class="w3-container w3-card w3-<?=$contest['theme'];?>">
-                            <div class="w3-half">
-                                <h6 class="w3-center"><?=§('counter-most-edited')?></h6>
-                            </div>
-                            <div class="w3-half">
-                                <h4 class="w3-center">
-                                    <a href="<?=$contest['endpoint']?>?curid=<?=$stats['most_edited_article']?>">
-                                        <?=$stats['most_edited_title']??§('edits-title')?>
-                                    </a>
-                                    <br>
-                                    <?=§('counter-editions', number_format($stats['most_edited_total'], 0, ',', '.'))?>
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w3-third">
-                        <div class="w3-container w3-card w3-<?=$contest['theme'];?>">
-                            <div class="w3-half">
-                                <h6 class="w3-center"><?=§('counter-biggest-delta')?></h6>
-                            </div>
-                            <div class="w3-half">
-                                <h4 class="w3-center">
-                                    <a href="<?=$contest['endpoint']?>?curid=<?=$stats['biggest_delta_article']?>">
-                                        <?=$stats['biggest_delta_title']??§('edits-title')?>
-                                    </a>
-                                    <br>
-                                    <?=§('triage-bytes', number_format($stats['biggest_delta_total'], 0, ',', '.'))?>
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="w3-third">
-                        <div class="w3-container w3-card w3-<?=$contest['theme'];?>">
-                            <div class="w3-half">
-                                <h6 class="w3-center"><?=§('counter-biggest-edition')?></h6>
-                            </div>
-                            <div class="w3-half">
-                                <h4 class="w3-center">
-                                    <a href="<?=$contest['endpoint']?>?diff=<?=$stats['biggest_edition_diff']?>">
-                                        <?=$stats['biggest_edition_title']??§('edits-title')?>
-                                    </a>
-                                    <br>
-                                    <?=§('triage-bytes', number_format($stats['biggest_edition_bytes'], 0, ',', '.'))?>
-                                </h4>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <?php if (time() > $contest['start_time']) : ?>
+            <?php require_once "stats.php"; ?> 
             <div class="w3-container">
                 <table aria-label="Lista de participantes" class="w3-table-all w3-hoverable w3-card">
                     <tr>
@@ -431,7 +252,7 @@ while (isset($list_api['continue'])) {
                                     onSubmit='return confirm(
                                         "<?=§('counter-confirm')?>"
                                     )'>
-                                        <input type='hidden' name='user' value='<?=$row["user"]?>'>
+                                        <input type='hidden' name='user_id' value='<?=$row["user_id"]?>'>
                                         <input
                                         <?=($row["total edits"] == 0)?"disabled":""?>
                                         type='submit'
