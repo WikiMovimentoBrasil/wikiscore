@@ -124,30 +124,6 @@ if ($valid_bytes != false) {
 } else {
     $valid_bytes_rows = '';
 }
-
-//Captura horário de última edição avaliada no banco de dados
-$lastedit_query = mysqli_query(
-    $con,
-    "SELECT
-        `timestamp` AS `lastedit`
-    FROM
-        `{$contest['name_id']}__edits`
-    WHERE
-        `valid_edit` IS NOT NULL
-    ORDER BY
-        `timestamp` DESC
-    LIMIT
-        1;"
-);
-$lastedit = "-";
-if ($lastedit_query != false) {
-    $lastedit_query = mysqli_fetch_assoc($lastedit_query);
-    if (isset($lastedit_query["lastedit"]) && !is_null($lastedit_query["lastedit"])) {
-        $lastedit = date('Y/m/d H:i:s (\U\T\C)', strtotime($lastedit_query["lastedit"]));
-    }
-}
-
-
 ?>
 
 <!DOCTYPE html>
@@ -157,6 +133,7 @@ if ($lastedit_query != false) {
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="./bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
+        <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/6.2.0/css/all.css">
         <?php if (isset($_POST['do_login'])): ?>
             <script>alert('<?=§('login-invalid')?>');</script>
         <?php elseif (isset($_POST['do_create'])) : ?>
@@ -168,10 +145,22 @@ if ($lastedit_query != false) {
         crossorigin="anonymous"></script>
     </head>
     <body>
-        <header class="w3-<?=$contest['theme'];?> w3-container">
-            <h1><?=$contest['name'];?></h1>
-        </header>
-        <div class="w3-block w3-card w3-margin w3-hide-medium w3-hide-small" style="width: inherit;">
+        <div class="w3-<?=$contest['theme'];?> w3-large w3-bar">
+            <img src="images/Logo_Branco.svg" alt="logo" class="w3-bar-item" style="width: 128px;">
+            <?php if(str_contains(getcwd(), 'test')): ?>
+                <span class="w3-bar-item w3-black">
+                    <i class="fa-solid fa-flask-vial fa-fade"></i>
+                    &nbsp;
+                    <i class="fa-solid fa-server fa-fade"></i>
+                </span>
+            <?php endif; ?>
+            <button onclick="window.open('index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=graph', '_blank');"
+            class="w3-button w3-bar-item" ><?=§('login-graph')?></button>
+            <button onclick="document.getElementById('id01').style.display='block'"
+            class="w3-button w3-bar-item" ><?=§('login')?></button>
+            <span class="w3-bar-item w3-right w3-hide-small"><?=$contest['name'];?></span>
+        </div>
+        <div class="w3-block w3-card w3-margin w3-hide-medium w3-hide-small"  style="width: inherit;">
             <div class="w3-center">
                 <a href="https://outreachdashboard.wmflabs.org/courses/<?=$contest['outreach_name'];?>"
                 target="_blank" rel="noopener" style="color: #fff; background-color: #676eb4;"
@@ -199,36 +188,6 @@ if ($lastedit_query != false) {
             <div class="w3-third w3-margin-bottom">
                 <div class="w3-card-4 w3-padding">
                     <canvas id="new_articles"></canvas>
-                </div>
-            </div>
-        </div>
-        <div class="w3-row-padding">
-            <div class="w3-third w3-margin-bottom">
-                <div class="w3-card-4 w3-light-grey w3-justify">
-                    <header class="w3-<?=$contest['theme'];?> w3-container">
-                        <h3><?=§('login-about')?></h3>
-                    </header>
-                    <div class="w3-container">
-                        <p class="w3-small">
-                            <strong><?=§('login-start')?></strong>
-                            <br>
-                            <?=date('Y/m/d H:i:s (\U\T\C)', $contest['start_time']);?>
-                        </p>
-                        <p class="w3-small">
-                            <strong><?=§('login-end')?></strong>
-                            <br>
-                            <?=date('Y/m/d H:i:s (\U\T\C)', $contest['end_time']);?>
-                        </p>
-                        <p class="w3-small">
-                            <strong><?=§('login-recent')?></strong>
-                            <br>
-                            <?=$lastedit;?>
-                        </p>
-                    </div>
-                    <div class="w3-container w3-padding-small">
-                        <button class="w3-button w3-half w3-<?=$contest['theme'];?> w3-block" style="filter: hue-rotate(120deg);" type="button" onclick="window.open('index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=graph', '_blank');"><?=§('login-graph')?></button>
-                        <button onclick="document.getElementById('id01').style.display='block'" class="w3-button w3-half w3-block w3-<?=$contest['theme'];?>" style="filter: hue-rotate(240deg);"><?=§('login')?></button>
-                    </div>
                 </div>
             </div>
         </div>
