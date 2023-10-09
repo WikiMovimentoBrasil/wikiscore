@@ -193,7 +193,7 @@ if ($lastedit_query != false) {
             </div>
             <div class="w3-third w3-margin-bottom">
                 <div class="w3-card-4 w3-padding">
-                    <canvas id="valid_edits"></canvas>
+                    <canvas id="new_bytes"></canvas>
                 </div>
             </div>
             <div class="w3-third w3-margin-bottom">
@@ -203,16 +203,6 @@ if ($lastedit_query != false) {
             </div>
         </div>
         <div class="w3-row-padding">
-            <div class="w3-third w3-margin-bottom">
-                <div class="w3-card-4 w3-padding">
-                    <canvas id="new_bytes"></canvas>
-                </div>
-            </div>
-            <div class="w3-third w3-margin-bottom">
-                <div class="w3-card-4 w3-padding">
-                    <canvas id="valid_bytes"></canvas>
-                </div>
-            </div>
             <div class="w3-third w3-margin-bottom">
                 <div class="w3-card-4 w3-light-grey w3-justify">
                     <header class="w3-<?=$contest['theme'];?> w3-container">
@@ -306,31 +296,7 @@ if ($lastedit_query != false) {
                                 fill: false,
                                 borderColor: 'rgb(128, 0, 128)',
                                 tension: 0.1
-                            }
-                        ]
-                    }
-                }
-            );
-
-            const valid_edits = new Chart(
-                document.getElementById('valid_edits'),
-                {
-                    type: 'line',
-                    options: {
-                        aspectRatio: 1.5,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: "<?=§('login-validedits')?>"
                             },
-                            legend: {
-                                display: false
-                            }
-                        }
-                    },
-                    data: {
-                        labels: dias,
-                        datasets: [
                             {
                                 label: '<?=§('login-validedits')?>',
                                 data: [ <?=$valid_edits_rows;?> ],
@@ -399,31 +365,7 @@ if ($lastedit_query != false) {
                                 fill: false,
                                 borderColor: 'rgb(219, 112, 147)',
                                 tension: 0.1
-                            }
-                        ]
-                    }
-                }
-            );
-
-            const valid_bytes = new Chart(
-                document.getElementById('valid_bytes'),
-                {
-                    type: 'line',
-                    options: {
-                        aspectRatio: 1.5,
-                        plugins: {
-                            title: {
-                                display: true,
-                                text: "<?=§('login-validbytes')?>"
                             },
-                            legend: {
-                                display: false
-                            }
-                        }
-                    },
-                    data: {
-                        labels: dias,
-                        datasets: [
                             {
                                 label: '<?=§('login-validbytes')?>',
                                 data: [ <?=$valid_bytes_rows;?> ],
