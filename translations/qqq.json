@@ -179,7 +179,7 @@
 	"triage-noref": "Menu option with frequent reasons for rejecting edits. Indicates that the edit is invalid because the added content does not have sources.",
 	"triage-onlycat": "Menu option with frequent reasons for rejecting edits. Indicates that the edit is invalid as it was just adding a category to the page.",
 	"triage-onlytag": "Menu option with frequent reasons for rejecting edits. Indicates that the edition is invalid because it was just an addition of maintenance markings (e.g.: source needed, partial, etc...)",
-	"triage-outreach": "Copy from [[Special:Translations/Wikimedia:Wikiedudashboard-application.dashboard|Wikimedia:Wikiedudashboard-application.dashboard]]",
+	"triage-outreach": "Short name of the '''Programs & Events Outreach Dashboard'''. See [[Translating:Wiki Ed Dashboard]].",
 	"manage-invalidcode": "Error message displayed when the contest's internal code does not correspond to a registered contest.",
 	"manage-alreadyexist": "Error message displayed when a competition registration request cannot be completed because it already exists in the database.",
 	"manage-creationerror": "Error message displayed when a competition registration request cannot be completed due to an error in the database.",
