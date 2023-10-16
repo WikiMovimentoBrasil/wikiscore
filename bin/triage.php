@@ -263,10 +263,34 @@ if ($output['revision'] != null) {
     ];
     $output['compare'] = unserialize(
         file_get_contents($contest['api_endpoint']."?".http_build_query($compare_api_params))
-    )['compare'];
+    )['compare'] ?? false;
 
+    //Interrope script caso artigo tenha sido eliminado
+    if (!$output['compare']) {
+        $reverted_statment = "
+            UPDATE
+                `{$contest['name_id']}__edits`
+            SET
+                `reverted` = '1'
+            WHERE
+                `diff` = ?
+        ";
+        $reverted_query = mysqli_prepare($con, $reverted_statment);
+        mysqli_stmt_bind_param($reverted_query, "i", $output['revision']['diff']);
+        mysqli_stmt_execute($reverted_query);
+        if (mysqli_stmt_affected_rows($reverted_query) != 0) {
+            echo "
+            <script>
+                alert('".§('modify-label-reverted')." ".$output['revision']['diff']."');
+                window.location.href = window.location.href;
+            </script>
+            ";
+        }
+        exit();
+    }
+
+    //Coleta informações da edição via API do MediaWiki versão inline
     $compare_api_params["difftype"] = "inline";
-    
     $output['compare_mobile'] = unserialize(
         file_get_contents($contest['api_endpoint']."?".http_build_query($compare_api_params))
     )['compare'];
