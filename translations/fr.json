@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Albertoleoncio",
 			"Gomoko",
 			"Obscaeris",
 			"Wladek92"
@@ -33,6 +34,7 @@
 	"isvalid": "Édition valide ?",
 	"yes": "Oui",
 	"no": "Non",
+	"exit": "Quitter",
 	"withimage": "Avec une image ?",
 	"quantity": "Quantité",
 	"modify-diffstats": "Données de l’édition",
@@ -144,9 +146,6 @@
 	"login-invalid": "Courriel/mot de passe invalide",
 	"login-pending": "Évaluateur pré-inscrit. Demandez l’autorisation du responsable du Wikiconcours.",
 	"login-about": "Système d'évaluation",
-	"login-start": "Heure de début du Wikiconcours",
-	"login-end": "Heure de fin du Wikiconcours",
-	"login-recent": "Temps de la dernière modification évaluée",
 	"login-graph": "Graphique de résultats",
 	"login-email": "Courriel",
 	"login-password": "Mot de passe",
@@ -180,6 +179,9 @@
 	"password-username": "Nom d'utilisateur",
 	"password-oldpassword": "Ancien mot de passe",
 	"password-wrongpass": "Mot de passe ancien incorrect !",
+	"edits": "Contributions",
+	"edits-csv": "Télécharger",
+	"edits-about": "Cette page liste toutes les modifications faites par les participants au concours. Pour accéder aux modifications faites par tous les utilisateurs, télécharger le fichier CSV.",
 	"triage": "Ordonner",
 	"triage-lasteval": "Dernière évaluation",
 	"triage-welcome": "Bienvenue, $1",
@@ -188,7 +190,6 @@
 	"triage-withimage": "Avec une image",
 	"triage-fix": "Vérifier",
 	"triage-panel": "Panneau",
-	"edits": "Contributions",
 	"triage-toeval": "Disponible",
 	"triage-towait": "En attente",
 	"triage-onhold": "En train d'évaluer",

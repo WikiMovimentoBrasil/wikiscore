@@ -1,9 +1,6 @@
 {
 	"@metadata": {
-		"authors": [
-			"Albertoleoncio",
-			"YuriNikolai"
-		]
+		"authors": []
 	},
 	"main-title": "WikiScore",
 	"contest-enter": "Entrar em um concurso",
@@ -32,7 +29,6 @@
 	"isvalid": "Edição válida?",
 	"yes": "Sim",
 	"no": "Não",
-	"exit": "Sair",
 	"withimage": "Imagem?",
 	"quantity": "Quantidade",
 	"modify-diffstats": "Dados da edição",
@@ -178,8 +174,6 @@
 	"password-oldpassword": "Senha antiga",
 	"password-wrongpass": "Senha antiga incorreta!",
 	"edits": "Edições",
-	"edits-csv": "Baixar",
-	"edits-about": "Esta página lista todas as edições feitas pelos participantes do concurso. Para acessar as edições feitas por todos os usuários, baixe o arquivo CSV.",
 	"triage": "Triagem",
 	"triage-lasteval": "Última avaliação",
 	"triage-welcome": "Olá, $1",
@@ -239,7 +233,6 @@
 	"triage-noref": "Conteúdo sem fonte",
 	"triage-onlycat": "Mera categorização",
 	"triage-onlytag": "Mera inserção de marcações de manutenção",
-	"triage-outreach": "Outreach Dashboard",
 	"manage-invalidcode": "Erro: Código interno inválido!",
 	"manage-alreadyexist": "Erro: Tabelas já existem!",
 	"manage-creationerror": "Erro: Não foi possível criar as tabelas!",
