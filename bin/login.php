@@ -91,6 +91,23 @@ if ($new_articles != false) {
     $new_articles_rows = '';
 }
 
+$new_participants = mysqli_query($con, "
+    SELECT
+       date_generator.date as the_date,
+       IFNULL(COUNT(`queried`.n), 0) as count
+    from ( {$date_generator} ) date_generator
+    left join (SELECT `n`, DATE(`timestamp`) AS date_timestamp from `{$contest['name_id']}__users`
+        ) AS queried on date_timestamp = date_generator.date
+    GROUP BY date;
+");
+if ($new_participants != false) {
+    while ($row = mysqli_fetch_assoc($new_participants)) $new_participants_rows[] = $row['count'];
+    array_splice($new_participants_rows, $elapsed_days);
+    $new_participants_rows = implode(", ", $new_participants_rows);
+} else {
+    $new_participants_rows = '';
+}
+
 $new_bytes = mysqli_query($con, "
     SELECT
        date_generator.date as the_date,
@@ -277,7 +294,7 @@ if ($valid_bytes != false) {
                         plugins: {
                             title: {
                                 display: true,
-                                text: "<?=§('login-newpages')?>"
+                                text: "<?=§('login-newevents')?>"
                             },
                             legend: {
                                 display: false
@@ -292,6 +309,13 @@ if ($valid_bytes != false) {
                                 data: [ <?=$new_articles_rows;?> ],
                                 fill: false,
                                 borderColor: 'rgb(65, 105, 225)',
+                                tension: 0.1
+                            },
+                            {
+                                label: '<?=§('login-newparticipants')?>',
+                                data: [ <?=$new_participants_rows;?> ],
+                                fill: false,
+                                borderColor: 'rgb(219, 112, 147)',
                                 tension: 0.1
                             }
                         ]
