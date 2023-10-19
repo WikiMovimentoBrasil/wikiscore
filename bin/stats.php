@@ -103,7 +103,7 @@ while (isset($list_api['continue'])) {
 
 <div class="w3-container w3-card w3-margin w3-<?=$contest['theme'];?>">
     <div class="w3-center">
-        <h3 class="w3-margin-top w3-padding"><?=§('login-about')?>&nbsp;<?=§('main-title')?></h3>
+        <h3 class="w3-margin-top w3-padding"><?=§('main-title')?></h3>
     </div>
     <div class="w3-row">
         <div class="w3-half">

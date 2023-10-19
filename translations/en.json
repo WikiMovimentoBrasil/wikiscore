@@ -137,7 +137,6 @@
     "login": "Log in",
     "login-invalid": "Invalid email/password",
     "login-pending": "Pre-registered evaluator. Request authorization from the contest manager.",
-    "login-about": "Evaluation system",
     "login-graph": "Graphic scoreboard",
     "login-email": "Email",
     "login-password": "Password",
