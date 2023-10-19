@@ -1,6 +1,9 @@
 <?php
 echo "<pre>";
 
+//Aumenta tempo limite de execução do script
+set_time_limit(1200);
+
 //Coleta lista de edições
 $edits_statement = "
     SELECT
