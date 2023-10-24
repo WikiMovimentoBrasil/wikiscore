@@ -134,7 +134,7 @@ $gitBranch .= shell_exec("git rev-parse --abbrev-ref HEAD");
                 <option value="" disabled selected><?=§('language-select')?></option>
                 <?php foreach ($acceptedLanguages as $optionLanguage): ?>
                     <?php if ($optionLanguage == 'qqx') continue; ?>
-                    <option value='<?=$optionLanguage?>'><?=Locale::getDisplayLanguage($optionLanguage, $optionLanguage)?></option>
+                    <option value='<?=$optionLanguage?>'><?=Locale::getDisplayName($optionLanguage, $optionLanguage)?></option>
                 <?php endforeach; ?>
             </select>
         </form>

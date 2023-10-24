@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Cupkake4Yoshi",
 			"Magiczocker"
 		]
 	},
@@ -118,7 +119,7 @@
 	"recover-email": "E-Mail",
 	"recover-newpassword": "Neues Passwort",
 	"recover-placeholder": "Neues Passwort eingeben",
-	"recover-send": "Abschicken",
+	"recover-send": "Senden",
 	"recover-success": "Das Passwort wurde erfolgreich geändert!",
 	"recover-notfound": "Bewerter nicht gefunden",
 	"recover-signature": "Mit freundlichen Grüßen, WikiScore",
@@ -152,7 +153,7 @@
 	"triage-ipp": "Bilder pro Punkt",
 	"triage-maxbytes": "Maximale Bytes/Punkte pro Artikel",
 	"triage-minbytes": "Mindestbytes pro Bearbeitung",
-	"triage-indef": "Nicht angegeben",
+	"triage-indef": "undefiniert",
 	"triage-noimages": "Deaktiviert",
 	"triage-imagemode": "Bildmodus",
 	"triage-byimage": "Pro Bild",

@@ -256,7 +256,7 @@ if ($output['revision'] != null) {
     //Coleta informações da edição via API do MediaWiki
     $compare_api_params = [
         "action"    => "compare",
-        "prop"      => "title|diff|comment|user",
+        "prop"      => "title|diff|comment|user|ids",
         "format"    => "php",
         "fromrev"   => $output['revision']['diff'],
         "torelative"=> "prev"
@@ -367,7 +367,8 @@ if ($output['revision'] != null) {
             "user"      => $edit['user'],
             "timestamp" => $timestamp,
             "color"     => $delta_color,
-            "bytes"     => $delta
+            "bytes"     => $delta,
+            "revid"     => $edit['revid']
         ];
     }
 
@@ -683,7 +684,8 @@ mysqli_close($con);
                             <span style="font-weight:bolder;color:red;"><?=@$output['compare']['touser'];?></span>
                             <br>
                             <strong><i class="fa-solid fa-font"></i><?=§('label-page')?></strong>
-                            <?=@$output['compare']['totitle'];?>
+                            <a href="<?=$contest['endpoint'];?>?curid=<?=@$output['compare']['toid'];?>"
+                            target="_blank" rel="noopener"><?=@$output['compare']['totitle'];?></a>
                             <br>
                             <strong><i class="fa-solid fa-hand-point-up"></i><?=§('triage-authorship')?></strong>
                             <a onclick="calculateAuthorship('<?=$output['revision']['diff']?>','<?=$contest['endpoint']?>')"
@@ -744,7 +746,8 @@ mysqli_close($con);
                         <p class='<?=$oldid['class']?>'>
                             <strong><?=$oldid['user']?></strong>
                             <br>
-                            <?=$oldid['timestamp']?>
+                            <a href="<?=$contest['endpoint'];?>?diff=<?=$oldid['revid']?>"
+                            target="_blank" rel="noopener"><?=$oldid['timestamp']?></a>
                             <br>
                             <span class='w3-text-<?=$oldid['color']?>'><?=$oldid['bytes']?> bytes</span>
                         </p>

@@ -107,7 +107,6 @@
 	"compare-success": "Szerkesztés sikeresen eltávolítva!",
 	"login": "Bejelentkezés",
 	"login-invalid": "Érvénytelen email/jelszó",
-	"login-about": "Pontozási rendszer",
 	"login-email": "Email",
 	"login-password": "Jelszó",
 	"login-recover": "Elfelejtettem a jelszavam",
