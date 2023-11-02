@@ -137,6 +137,8 @@
 	"password-oldpassword": "Régi jelszó",
 	"password-wrongpass": "Érvénytelen régi jelszó!",
 	"edits": "Szerkesztések",
+	"edits-csv": "Letöltés",
+	"edits-about": "Ez az oldal felsorolja a verseny résztvevői által végzett összes szerkesztést. Ha minden felhasználó szerkesztéséhez hozzá kívánsz férni, töltsd le a CSV-fájlt!",
 	"triage-lasteval": "Legutóbbi értékelés",
 	"triage-welcome": "Helló $1",
 	"triage-diff": "Eltérés",
