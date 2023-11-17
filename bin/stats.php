@@ -146,7 +146,7 @@ while (isset($list_api['continue'])) {
                 <div class="w3-half">
                     <h4 class="w3-center">
                         <a href="<?=$contest['endpoint']?>?curid=<?=$stats['most_edited_article']?>" target="_blank">
-                            <?=$stats['most_edited_title']??§('edits-title')?>
+                            <?=$stats['most_edited_title']?:§('edits-title')?>
                         </a>
                         <br>
                         <?=§('counter-editions', number_format($stats['most_edited_total'], 0, ',', '.'))?>
@@ -162,7 +162,7 @@ while (isset($list_api['continue'])) {
                 <div class="w3-half">
                     <h4 class="w3-center">
                         <a href="<?=$contest['endpoint']?>?curid=<?=$stats['biggest_delta_article']?>" target="_blank">
-                            <?=$stats['biggest_delta_title']??§('edits-title')?>
+                            <?=$stats['biggest_delta_title']?:§('edits-title')?>
                         </a>
                         <br>
                         <?=§('triage-bytes', number_format($stats['biggest_delta_total'], 0, ',', '.'))?>
@@ -178,7 +178,7 @@ while (isset($list_api['continue'])) {
                 <div class="w3-half">
                     <h4 class="w3-center">
                         <a href="<?=$contest['endpoint']?>?diff=<?=$stats['biggest_edition_diff']?>" target="_blank">
-                            <?=$stats['biggest_edition_title']??§('edits-title')?>
+                            <?=$stats['biggest_edition_title']?:§('edits-title')?>
                         </a>
                         <br>
                         <?=§('triage-bytes', number_format($stats['biggest_edition_bytes'], 0, ',', '.'))?>
