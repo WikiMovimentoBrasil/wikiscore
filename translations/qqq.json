@@ -178,6 +178,7 @@
 	"triage-images": "Maximum number of points accepted by each participant in each article.\n\nParameters:\n* $1: number of points",
 	"triage-indef": "{{Identical|Undefined}}",
 	"triage-noimages": "{{Identical|Disabled}}",
+    "triage-counter": "Label for the byte counter referring to the text of an edition selected by the user",
 	"triage-list": "Name of the tool page that redirects the evaluator to the official list of articles on the wiki.",
 	"triage-cat": "Name of the page of the tool that redirects the contest page categorization system. Corresponds a category on the wiki or a [[:m:PetScan|PetScan search]].",
 	"triage-differential": "Title of the section where the changes between two revisions of a page are displayed.",

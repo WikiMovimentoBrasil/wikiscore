@@ -449,12 +449,42 @@ mysqli_close($con);
                 }
             }
 
+            function getSelectedText() {
+                var text = "";
+                if (window.getSelection) {
+                    text = window.getSelection().toString();
+                } else if (document.selection && document.selection.type !== "Control") {
+                    text = document.selection.createRange().text;
+                }
+                return text;
+            }
+
+            function countBytes(text) {
+                // Count the number of bytes using the TextEncoder API
+                var encoder = new TextEncoder();
+                var bytes = encoder.encode(text);
+                return bytes.length;
+            }
+
+            function updateTooltip() {
+                var selectedText = getSelectedText();
+                var byteCount = countBytes(selectedText);
+                var tooltip = document.getElementById("tooltip");
+
+                if (byteCount > 0) {
+                    tooltip.parentElement.style.visibility = "visible";
+                    tooltip.innerHTML = "<?=§('triage-counter')?>: " + byteCount;
+                } else {
+                	tooltip.parentElement.style.visibility = "hidden";
+                }
+            }
 
             var domReady = function(callback) {
                 document.readyState === "interactive" || document.readyState === "complete" ? callback() : document.addEventListener("DOMContentLoaded", callback);
             };
             domReady(function() { 
-                movePosition()
+                movePosition();
+                document.getElementById("text-container").addEventListener("mouseup", updateTooltip);
             });
 
             window.onresize = function(event) {
@@ -712,7 +742,10 @@ mysqli_close($con);
                             <?=htmlspecialchars($output['compare']['tocomment']??'')?>
                         </div>
                     </div>
-                    <div class="w3-container">
+                    <div class="tooltip w3-button w3-orange" style="visibility: hidden;">
+                        <span class="tooltiptext" id="tooltip"><?=§('triage-counter')?>: 0</span>
+                    </div>
+                    <div class="w3-container" id="text-container">
                         <h3><?=§('triage-differential')?></h3>
                         <table
                         role="presentation"
