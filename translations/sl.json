@@ -240,6 +240,7 @@
 	"triage-onlycat": "Zgolj kategorizacija",
 	"triage-onlytag": "Zgolj vstavljanje oznak za vzdrževanje",
 	"triage-outreach": "Nadzorna plošča Outreach",
+	"triage-counter": "Zlogov v izbranem besedilu",
 	"manage-invalidcode": "Napaka: Neveljavna interna oznaka!",
 	"manage-alreadyexist": "Napaka: Tabele že obstajajo!",
 	"manage-creationerror": "Napaka: Tabel ni mogoče ustvariti!",

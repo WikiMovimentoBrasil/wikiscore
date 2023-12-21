@@ -240,6 +240,7 @@
 	"triage-onlycat": "僅添加分類",
 	"triage-onlytag": "僅插入維護標記",
 	"triage-outreach": "Outreach 控制面板",
+	"triage-counter": "所選文字的位元組",
 	"manage-invalidcode": "錯誤：無法的內部代碼！",
 	"manage-alreadyexist": "錯誤：資料庫表格已存在！",
 	"manage-creationerror": "錯誤：無法建立資料庫表格！",
