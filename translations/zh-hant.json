@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Anterdc99",
 			"Kly"
 		]
 	},
@@ -137,7 +138,7 @@
 	"compare-rollback": "回退",
 	"compare-rollback-about": "以下列出的編輯在驗證後已撤銷。",
 	"compare-reevaluate": "重新評估",
-	"compare-success": "成功移動編輯！",
+	"compare-success": "成功刪除編輯！",
 	"compare-error": "請求更新時發生錯誤。請重整頁面來重試。",
 	"login": "登入",
 	"login-invalid": "無效的電子郵件/密碼",
@@ -241,7 +242,7 @@
 	"triage-onlytag": "僅插入維護標記",
 	"triage-outreach": "Outreach 控制面板",
 	"triage-counter": "所選文字的位元組",
-	"manage-invalidcode": "錯誤：無法的內部代碼！",
+	"manage-invalidcode": "錯誤：無效的內部代碼！",
 	"manage-alreadyexist": "錯誤：資料庫表格已存在！",
 	"manage-creationerror": "錯誤：無法建立資料庫表格！",
 	"manage-notfound": "錯誤：競賽不存在！",
