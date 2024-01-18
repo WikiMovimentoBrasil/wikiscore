@@ -241,6 +241,7 @@
 	"triage-onlycat": "Mera categorização",
 	"triage-onlytag": "Mera inserção de marcações de manutenção",
 	"triage-outreach": "Outreach Dashboard",
+	"triage-counter": "Bytes no texto selecionado",
 	"manage-invalidcode": "Erro: Código interno inválido!",
 	"manage-alreadyexist": "Erro: Tabelas já existem!",
 	"manage-creationerror": "Erro: Não foi possível criar as tabelas!",
