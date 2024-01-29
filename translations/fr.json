@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Albertoleoncio",
+			"Crochet.david",
 			"Gomoko",
 			"Obscaeris",
 			"Wladek92"
@@ -243,6 +244,7 @@
 	"triage-onlycat": "Simple catégorisation",
 	"triage-onlytag": "Simple insertion de marques de maintenance",
 	"triage-outreach": "Tableau de bord de sensibilisation",
+	"triage-counter": "Octets dans le texte sélectionné",
 	"manage-invalidcode": "Erreur : Code interne non valide !",
 	"manage-alreadyexist": "Erreur : Les tables existent déjà !",
 	"manage-creationerror": "Erreur : Impossible de créer les tables !",
