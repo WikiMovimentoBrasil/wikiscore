@@ -25,7 +25,7 @@ if (!@mysqli_select_db($con, $database)) {
         echo "Error creating database.";
         die();
     }
-} 
+}
 
 //Cria tabelas caso não existam
 mysqli_query($con, "

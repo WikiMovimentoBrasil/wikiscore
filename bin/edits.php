@@ -32,7 +32,7 @@ $edits_statement = "
         `{$contest['name_id']}__users`
     ON
         `{$contest['name_id']}__edits`.`user_id` = `{$contest['name_id']}__users`.`local_id`
-    LEFT JOIN 
+    LEFT JOIN
         `{$contest['name_id']}__articles`
     ON
         `{$contest['name_id']}__edits`.`article` = `{$contest['name_id']}__articles`.`articleID`;
@@ -191,8 +191,8 @@ if ($_POST["csv"]) {
                             }
                             ?>
                             <?php while ($query = mysqli_fetch_assoc($edits_result)): ?>
-                                <?php if ($query["valid_user"] != 1) { 
-                                    continue; 
+                                <?php if ($query["valid_user"] != 1) {
+                                    continue;
                                 } ?>
                                 <tr>
                                     <td><?=$query["diff"]?></td>

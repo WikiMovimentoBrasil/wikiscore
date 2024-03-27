@@ -40,7 +40,7 @@ switch (true) {
     case $percentage > 75:
         $color = 'orange';
         break;
-    
+
     default:
         $color = 'red';
         break;
@@ -55,5 +55,3 @@ $result = [
 
 // Convert result to JSON and output
 echo json_encode($result, JSON_PRETTY_PRINT);
-
-?>

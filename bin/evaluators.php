@@ -177,10 +177,10 @@ if ($_POST) {
                             <li class="w3-bar">
                                 <i class="w3-bar-item w3-padding-16 fa-regular fa-circle-user" style="font-size: 3em; padding: 20px;"></i>
                                 <form method="post">
-                                    <input type="email" placeholder="<?=§('login-email')?>" name="email" 
+                                    <input type="email" placeholder="<?=§('login-email')?>" name="email"
                                     class="w3-input w3-border w3-bar-item w3-section"
                                     >
-                                    <button type='submit' 
+                                    <button type='submit'
                                     class='w3-bar-item w3-right w3-button w3-section w3-<?=$contest['theme'];?>'
                                     >
                                         <?=§('evaluators-register')?>

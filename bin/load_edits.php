@@ -16,7 +16,7 @@ if (isset($contest['category_petscan'])) {
 
     //Insere lista em uma array
     $list = array();
-    foreach ($petscan_list as $petscan_id) { 
+    foreach ($petscan_list as $petscan_id) {
         $list[] = [
             "id"    => $petscan_id['id'],
             "title" => $petscan_id['title']
@@ -41,7 +41,7 @@ if (isset($contest['category_petscan'])) {
 
     //Insere lista em uma array
     $list = array();
-    foreach ($categorymembers_api['query']['categorymembers'] as $pageid) { 
+    foreach ($categorymembers_api['query']['categorymembers'] as $pageid) {
         $list[] = [
             "id" => $pageid['pageid'],
             "title"  => $pageid['title']
@@ -63,7 +63,7 @@ if (isset($contest['category_petscan'])) {
         $categorymembers_api = unserialize(
             file_get_contents($contest['api_endpoint']."?".http_build_query($categorymembers_api_params))
         );
-        foreach ($categorymembers_api['query']['categorymembers'] as $pageid) { 
+        foreach ($categorymembers_api['query']['categorymembers'] as $pageid) {
             $list[] = [
                 "id" => $pageid['pageid'],
                 "title"  => $pageid['title']
@@ -75,9 +75,9 @@ if (isset($contest['category_petscan'])) {
 //Realiza manutenção do banco de dados
 mysqli_query($con, "ALTER TABLE `{$contest['name_id']}__articles` ADD COLUMN IF NOT EXISTS `title` VARCHAR(100) NOT NULL AFTER `articleID`;");
 mysqli_query($con, "ALTER TABLE `{$contest['name_id']}__edits` ADD COLUMN IF NOT EXISTS `orig_bytes` INT(11) DEFAULT NULL AFTER  `bytes`;");
-mysqli_query($con, "UPDATE `{$contest['name_id']}__edits` SET `orig_bytes` = CASE 
-    WHEN `obs` REGEXP 'Aval: de (-?[0-9]+) para (-?[0-9]+)' THEN CAST(REGEXP_SUBSTR(`obs`, 'Aval: de \\\\K-?[0-9]*') AS SIGNED) 
-    WHEN `obs` REGEXP 'bytes: (-?[0-9]+) -> (-?[0-9]+)' THEN CAST(REGEXP_SUBSTR(`obs`, 'bytes: \\\\K-?[0-9]*') AS SIGNED) 
+mysqli_query($con, "UPDATE `{$contest['name_id']}__edits` SET `orig_bytes` = CASE
+    WHEN `obs` REGEXP 'Aval: de (-?[0-9]+) para (-?[0-9]+)' THEN CAST(REGEXP_SUBSTR(`obs`, 'Aval: de \\\\K-?[0-9]*') AS SIGNED)
+    WHEN `obs` REGEXP 'bytes: (-?[0-9]+) -> (-?[0-9]+)' THEN CAST(REGEXP_SUBSTR(`obs`, 'bytes: \\\\K-?[0-9]*') AS SIGNED)
     ELSE `bytes` END WHERE `orig_bytes` IS NULL;");
 
 //Monta e executa query para atualização da tabela de artigos

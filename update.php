@@ -2,8 +2,8 @@
 set_time_limit(1790);
 
 //Atualiza traduções
-if (isset($_SERVER['HTTP_X_GITHUB_EVENT'])) { 
-    $output = `bash git.sh`; 
+if (isset($_SERVER['HTTP_X_GITHUB_EVENT'])) {
+    $output = `bash git.sh`;
     echo $output;
     exit();
 }
@@ -18,20 +18,20 @@ $contests_statement = '
     FROM
         `manage__contests`
     WHERE
-    
+
         -- Concurso já começou
         `start_time` < NOW()
 
         -- Não há registro de atualização iniciada (nunca houve ou foi apagado) ou
         -- A última atualização foi há mais de 10 minutos
-        AND (                      
+        AND (
             `started_update` IS NULL OR
             `started_update` + INTERVAL 10 MINUTE < NOW()
-        ) 
-    
+        )
+
         -- Não há agendamento de próxima atualização (nunca houve ou foi apagado) ou
-        AND (     
-        `next_update` IS NULL 
+        AND (
+        `next_update` IS NULL
 
             -- Concurso ainda não terminou, não está em atualização e o prazo de atualização foi atingido
             OR (

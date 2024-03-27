@@ -53,19 +53,19 @@
         <h5><?=§('triage-panel')?></h5>
     </div>
     <div class="w3-bar-block">
-        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=triage" 
+        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=triage"
         rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='triage')?:'w3-blue'?>">
             <i class="fa-solid fa-check-to-slot"></i>&nbsp; <?=§('triage')?>
         </a>
-        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=counter" 
+        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=counter"
         rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='counter')?:'w3-blue'?>">
             <i class="fa-solid fa-chart-line"></i>&nbsp; <?=§('counter')?>
         </a>
-        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=modify" 
+        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=modify"
         rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='modify')?:'w3-blue'?>">
             <i class="fa-solid fa-pen-to-square"></i>&nbsp; <?=§('modify')?>
         </a>
-        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=compare" 
+        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=compare"
         rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='compare')?:'w3-blue'?>">
             <i class="fa-solid fa-code-compare"></i>&nbsp; <?=§('compare')?>
         </a>
@@ -73,11 +73,11 @@
         rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='edits')?:'w3-blue'?>">
             <i class="fa-solid fa-list-check"></i>&nbsp; <?=§('triage-evaluated')?>
         </a>
-        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=backtrack" 
+        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=backtrack"
         rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='backtrack')?:'w3-blue'?>">
             <i class="fa-solid fa-history"></i>&nbsp; <?=§('backtrack')?>
         </a>
-        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=evaluators" 
+        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=evaluators"
         rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='evaluators')?:'w3-blue'?>">
             <i class="fa-solid fa-users"></i>&nbsp; <?=§('evaluators')?>
         </a>
@@ -90,22 +90,22 @@
             ? "https://petscan.wmflabs.org/?psid={$contest['category_petscan']}"
             : "{$contest['endpoint']}?curid={$contest['category_pageid']}"
         ?>" target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
-            <i class="fa-solid fa-magnifying-glass-chart"></i>&nbsp; <?=§('triage-cat')?> 
+            <i class="fa-solid fa-magnifying-glass-chart"></i>&nbsp; <?=§('triage-cat')?>
             <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
         </a>
         <a href="https://outreachdashboard.wmflabs.org/courses/<?=$contest['outreach_name'];?>" target="_blank"
         rel="noopener" class="w3-bar-item w3-button w3-padding">
-            <i class="fa-solid fa-circle-nodes"></i>&nbsp; <?=§('triage-outreach')?> 
+            <i class="fa-solid fa-circle-nodes"></i>&nbsp; <?=§('triage-outreach')?>
             <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
         </a>
-        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=password" 
+        <a href="index.php?lang=<?=$lang?>&contest=<?=$contest['name_id'];?>&page=password"
         rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='password')?:'w3-blue'?>">
             <i class="fa-solid fa-key"></i>&nbsp; <?=§('password')?>
         </a>
         <form method="post" id="logout" style="display: none;">
             <input type="hidden" name="logout" value="Logout">
         </form>
-        <a href="javascript:document.getElementById('logout').submit()" 
+        <a href="javascript:document.getElementById('logout').submit()"
         rel="noopener" class="w3-bar-item w3-button w3-padding">
             <i class="fa-solid fa-door-open"></i>&nbsp; <?=§('exit')?>
         </a>

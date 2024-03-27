@@ -169,8 +169,8 @@ $gitBranch .= shell_exec("git rev-parse --abbrev-ref HEAD");
         <div class="w3-padding">
             <div class="w3-bar w3-black">
                 <?php foreach ($contests_groups as $group): ?>
-                    <button 
-                    class="w3-bar-item w3-button tablink <?=($group=='WMB')?'w3-red':''?>" 
+                    <button
+                    class="w3-bar-item w3-button tablink <?=($group=='WMB')?'w3-red':''?>"
                     onclick="openGroup(event,'<?=$group?>')"><?=$group?></button>
                 <?php endforeach; ?>
             </div>

@@ -232,12 +232,12 @@ if (isset($_POST['do_create']) || isset($_POST['do_manager'])) {
         //Valida se usuário pertence ao grupo relacionado ao concurso
         if (!isset($contests_array[$name_id])) die(§('manage-notfound'));
         if (
-            $_SESSION['user']["user_group"] !== "ALL" && 
+            $_SESSION['user']["user_group"] !== "ALL" &&
             $_SESSION['user']["user_group"] !== $contests_array[$name_id]['group']
         ) die(§('manage-unauthorized'));
 
-        $deactive_statement = 
-            "UPDATE 
+        $deactive_statement =
+            "UPDATE
                 `{$name_id}__credentials`
             SET
                 `user_status` = 'P'
@@ -246,8 +246,8 @@ if (isset($_POST['do_create']) || isset($_POST['do_manager'])) {
         $deactive_query = mysqli_prepare($con, $deactive_statement);
         mysqli_stmt_execute($deactive_query);
 
-        $manager_statement = 
-            "INSERT IGNORE INTO 
+        $manager_statement =
+            "INSERT IGNORE INTO
                 `{$name_id}__credentials` (`user_name`, `user_email`, `user_password`, `user_status`)
             VALUES
                 (?,?,?,?)
@@ -311,14 +311,14 @@ if (isset($_POST['do_create']) || isset($_POST['do_manager'])) {
     //Valida se usuário pertence ao grupo relacionado ao concurso
     if (!isset($contests_array[$name_id])) die(§('manage-notfound'));
     if (
-        $_SESSION['user']["user_group"] !== "ALL" && 
+        $_SESSION['user']["user_group"] !== "ALL" &&
         $_SESSION['user']["user_group"] !== $contests_array[$name_id]['group']
     ) die(§('manage-unauthorized'));
 
     //Reinicia concurso
     if (isset($_POST['do_restart'])) {
 
-        //Reinicia tabelas do concurso, mas mantem a tabela de credenciais        
+        //Reinicia tabelas do concurso, mas mantem a tabela de credenciais
         mysqli_query($con, "TRUNCATE TABLE `{$name_id}__edits`;");
         mysqli_query($con, "TRUNCATE TABLE `{$name_id}__users`;");
         mysqli_query($con, "TRUNCATE TABLE `{$name_id}__articles`;");
@@ -358,9 +358,9 @@ if (isset($_POST['do_create']) || isset($_POST['do_manager'])) {
 
         //Prepara e executa query
         $update_statement =
-            "UPDATE 
+            "UPDATE
                 `manage__contests`
-            SET 
+            SET
                 `start_time` = ?,
                 `end_time` = ?,
                 `name` = ?,
@@ -380,7 +380,7 @@ if (isset($_POST['do_create']) || isset($_POST['do_manager'])) {
                 `max_pic_per_article` = ?,
                 `theme` = ?,
                 `color` = ?
-            WHERE 
+            WHERE
                 `name_id` = ?";
         $update_query = mysqli_prepare($con, $update_statement);
         mysqli_stmt_bind_param(
@@ -524,7 +524,7 @@ $contests_array[]['name'] = null;
             <?php foreach ($contests_array as $name_id => $contest_info): ?>
                 <?php if (
                     $contest_info['name'] !== null &&
-                    $_SESSION['user']["user_group"] !== "ALL" &&           
+                    $_SESSION['user']["user_group"] !== "ALL" &&
                     $_SESSION['user']["user_group"] !== $contest_info['group']
                 ) continue; ?>
                 <div class="w3-margin-top w3-card w3-section">
@@ -553,7 +553,7 @@ $contests_array[]['name'] = null;
 
                                 <div class="w3-row">
                                     <div class="w3-threequarter" style="padding-right: 8px;">
-                                
+
                                         <label for="internalcode">
                                             <strong><?=§('manage-internalcode')?></strong>
                                         </label>
@@ -679,7 +679,7 @@ $contests_array[]['name'] = null;
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
-                                        id="listid"   
+                                        id="listid"
                                         type="number"
                                         maxlenght="10"
                                         name="official_list_pageid"
@@ -691,7 +691,7 @@ $contests_array[]['name'] = null;
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
-                                        id="sourceid"   
+                                        id="sourceid"
                                         type="number"
                                         maxlenght="10"
                                         id="sourceid"
@@ -707,7 +707,7 @@ $contests_array[]['name'] = null;
                                 </label>
                                 <input
                                 class="w3-input w3-border w3-margin-bottom"
-                                id="outreach"   
+                                id="outreach"
                                 type="text"
                                 placeholder="<?=§('manage-outreachplacehold')?>"
                                 name="outreach_name"
@@ -722,7 +722,7 @@ $contests_array[]['name'] = null;
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
-                                        id="bpp"   
+                                        id="bpp"
                                         type="number"
                                         min="1"
                                         max="999999999"
@@ -735,7 +735,7 @@ $contests_array[]['name'] = null;
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
-                                        id="maxbytes"   
+                                        id="maxbytes"
                                         type="number"
                                         min="0"
                                         max="999999999"
@@ -749,7 +749,7 @@ $contests_array[]['name'] = null;
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
-                                        id="minbytes"   
+                                        id="minbytes"
                                         type="number"
                                         min="-1"
                                         placeholder="0"
@@ -766,7 +766,7 @@ $contests_array[]['name'] = null;
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
-                                        id="ipp"   
+                                        id="ipp"
                                         type="number"
                                         min="0"
                                         max="999999999"
@@ -779,7 +779,7 @@ $contests_array[]['name'] = null;
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
-                                        id="maximages"   
+                                        id="maximages"
                                         type="number"
                                         min="0"
                                         max="999999999"
@@ -928,7 +928,7 @@ $contests_array[]['name'] = null;
                                 <?php endif; ?>
                             </div>
                         </form>
-                        <form 
+                        <form
                         style="display: none;"
                         method="post">
                             <div class="w3-section">
