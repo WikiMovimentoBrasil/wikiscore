@@ -440,7 +440,7 @@ mysqli_close($con);
                 var first = document.getElementById("first_column");
                 var third = document.getElementById("third_column");
                 var edits = document.getElementById("edits");
-                
+
                 var windowWidth = document.documentElement.clientWidth;
                 if(windowWidth < 601){
                     third.insertBefore(edits, third.firstChild);
@@ -482,7 +482,7 @@ mysqli_close($con);
             var domReady = function(callback) {
                 document.readyState === "interactive" || document.readyState === "complete" ? callback() : document.addEventListener("DOMContentLoaded", callback);
             };
-            domReady(function() { 
+            domReady(function() {
                 movePosition();
                 document.getElementById("text-container").addEventListener("mouseup", updateTooltip);
             });
@@ -540,7 +540,7 @@ mysqli_close($con);
                         </p>
                     </div>
                 <?php endif; ?>
-                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom" 
+                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom"
                 style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>">
                     <h2><?=§('triage-evaluation')?></h2>
                     <form method="post" id="evaluate">
@@ -772,7 +772,7 @@ mysqli_close($con);
                 <?php endif; ?>
             </div>
             <div id="third_column" class="w3-quarter">
-                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom" 
+                <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom"
                 style="display:<?=(isset($output['revision']['timestamp']))?'block':'none';?>">
                     <h2><?=§('triage-recenthistory')?></h2>
                     <?php foreach ($output['history'] ?? [] as $oldid): ?>
@@ -833,7 +833,7 @@ mysqli_close($con);
                     <p class="w3-small">
                         <strong><?=§('triage-minbytes')?></strong>
                         <br>
-                        <?php 
+                        <?php
                             if (!$contest['minimum_bytes']) {
                                 echo §('triage-indef');
                             } elseif ($contest['minimum_bytes'] == -1) {

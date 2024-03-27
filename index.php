@@ -133,7 +133,9 @@ $gitBranch .= shell_exec("git rev-parse --abbrev-ref HEAD");
             class="w3-select w3-border w3-border-black w3-padding-small w3-round-xxlarge w3-small">
                 <option value="" disabled selected><?=§('language-select')?></option>
                 <?php foreach ($acceptedLanguages as $optionLanguage): ?>
-                    <?php if ($optionLanguage == 'qqx') continue; ?>
+                    <?php if ($optionLanguage == 'qqx') {
+                        continue;
+                    } ?>
                     <option value='<?=$optionLanguage?>'><?=Locale::getDisplayName($optionLanguage, $optionLanguage)?></option>
                 <?php endforeach; ?>
             </select>
@@ -167,8 +169,8 @@ $gitBranch .= shell_exec("git rev-parse --abbrev-ref HEAD");
         <div class="w3-padding">
             <div class="w3-bar w3-black">
                 <?php foreach ($contests_groups as $group): ?>
-                    <button 
-                    class="w3-bar-item w3-button tablink <?=($group=='WMB')?'w3-red':''?>" 
+                    <button
+                    class="w3-bar-item w3-button tablink <?=($group=='WMB')?'w3-red':''?>"
                     onclick="openGroup(event,'<?=$group?>')"><?=$group?></button>
                 <?php endforeach; ?>
             </div>

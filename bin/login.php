@@ -100,8 +100,10 @@ $new_participants = mysqli_query($con, "
         ) AS queried on date_timestamp = date_generator.date
     GROUP BY date;
 ");
-if ($new_participants != false) {
-    while ($row = mysqli_fetch_assoc($new_participants)) $new_participants_rows[] = $row['count'];
+if ($new_participants) {
+    while ($row = mysqli_fetch_assoc($new_participants)) {
+        $new_participants_rows[] = $row['count'];
+    }
     array_splice($new_participants_rows, $elapsed_days);
     $new_participants_rows = implode(", ", $new_participants_rows);
 } else {
@@ -182,15 +184,17 @@ if ($valid_bytes != false) {
                 <a href="https://outreachdashboard.wmflabs.org/courses/<?=$contest['outreach_name'];?>"
                 target="_blank" rel="noopener" style="color: #fff; background-color: #676eb4;"
                 class="w3-button w3-margin-top w3-padding">
-                <?=§('triage-outreach')?> 
+                <?=§('triage-outreach')?>
                     <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
                 </a>
             </div>
-            <iframe scrolling="no" sandbox
-            src="https://outreachdashboard.wmflabs.org/embed/course_stats/<?=$contest['outreach_name'];?>" 
+            <iframe scrolling="no" title="outreach" sandbox
+            src="https://outreachdashboard.wmflabs.org/embed/course_stats/<?=$contest['outreach_name'];?>"
             style="width: 100%; border:0px none transparent;"></iframe>
         </div>
-        <?php if (time() > $contest['start_time']) require_once "stats.php"; ?> 
+        <?php if (time() > $contest['start_time']) {
+            require_once "stats.php";
+        } ?>
         <div class="w3-row-padding">
             <div class="w3-third w3-margin-bottom">
                 <div class="w3-card-4 w3-padding">

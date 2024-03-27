@@ -221,7 +221,7 @@ $count_query = mysqli_query(
             </div>
         </div>
         <?php if (time() > $contest['start_time']) : ?>
-            <?php require_once "stats.php"; ?> 
+            <?php require_once "stats.php"; ?>
             <div class="w3-container">
                 <table aria-label="Lista de participantes" class="w3-table-all w3-hoverable w3-card">
                     <tr>
