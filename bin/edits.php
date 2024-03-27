@@ -191,7 +191,9 @@ if ($_POST["csv"]) {
                             }
                             ?>
                             <?php while ($query = mysqli_fetch_assoc($edits_result)): ?>
-                                <?php if ($query["valid_user"] != 1) continue; ?>
+                                <?php if ($query["valid_user"] != 1) { 
+                                    continue; 
+                                } ?>
                                 <tr>
                                     <td><?=$query["diff"]?></td>
                                     <td><?=$query["title"]?></td>

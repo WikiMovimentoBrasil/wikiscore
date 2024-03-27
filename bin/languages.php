@@ -27,7 +27,9 @@ if (in_array($userLang, $acceptedLanguages)) {
 
         // Set default quality value to 1 for languages without a specified value
         foreach ($languagesWithQuality as $language => $quality) {
-            if ($quality === '') $languagesWithQuality[$language] = 1;
+            if ($quality === '') { 
+                $languagesWithQuality[$language] = 1; 
+            }
         }
 
         // Sort languages by quality in descending order

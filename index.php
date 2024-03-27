@@ -133,7 +133,9 @@ $gitBranch .= shell_exec("git rev-parse --abbrev-ref HEAD");
             class="w3-select w3-border w3-border-black w3-padding-small w3-round-xxlarge w3-small">
                 <option value="" disabled selected><?=§('language-select')?></option>
                 <?php foreach ($acceptedLanguages as $optionLanguage): ?>
-                    <?php if ($optionLanguage == 'qqx') continue; ?>
+                    <?php if ($optionLanguage == 'qqx') {
+                        continue;
+                    } ?>
                     <option value='<?=$optionLanguage?>'><?=Locale::getDisplayName($optionLanguage, $optionLanguage)?></option>
                 <?php endforeach; ?>
             </select>
