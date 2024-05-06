@@ -2,6 +2,7 @@
 	"@metadata": {
 		"authors": [
 			"Albertoleoncio",
+			"Amire80",
 			"Magiczocker"
 		]
 	},
@@ -154,8 +155,11 @@
 	"triage-welcome": "Welcome message shown in the sidebar\n\nParameters:\n* $1: name of the evaluator",
 	"triage-diff": "{{Identical|Diff}}",
 	"triage-fix": "Name of the tool page where the review (or reevaluation) of evaluations already made is carried out.",
-	"triage-toeval": "{{identical|Available}}",
-	"triage-evaluated": "Name of the tool page where the table with the evaluated editions is generated.",
+	"triage-toeval": "An adjective that describes an edit of a wiki page.\n\n{{identical|Available}}",
+	"triage-towait": "An adjective that describes an edit of a wiki page.",
+	"triage-onhold": "Describes an edit of a wiki page.",
+	"triage-onskip": "An adjective that describes an edit of a wiki page.",
+	"triage-evaluated": "Name of the tool page where the table with the evaluated editions is generated. An adjective that describes one or more editions of a wiki page.",
 	"triage-jump": "Text used in a button so that the evaluator can temporarily skip the evaluation of one edition and can evaluate another edition",
 	"triage-release": "Text used in a button so that the evaluator can release skipped edits to be placed back in the evaluation queue",
 	"triage-unhold": "Text used in a button so that the contest manager can reinsert into the evaluation queue all editions that have been skipped or are being evaluated by an evaluator",
