@@ -554,6 +554,7 @@ mysqli_close($con);
                             name="valid"
                             value="sim"
                             onclick="document.getElementById('obs').required = false"
+                            onkeydown="document.getElementById('obs').required = false"
                             required>
                             <label for="valid-sim"><?=§('yes')?></label><br>
                             <input
@@ -563,6 +564,7 @@ mysqli_close($con);
                             name="valid"
                             value="nao"
                             onclick="document.getElementById('obs').required = true"
+                            onkeydown="document.getElementById('obs').required = true"
                             required>
                             <label for="valid-nao"><?=§('no')?></label><br><br>
                         </div>

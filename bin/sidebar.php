@@ -112,4 +112,4 @@
         <br><br>
     </div>
 </nav>
-<div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer;min-height:100vh;" title="close side menu" id="myOverlay"></div>
+<button class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer;min-height:100vh;" title="close side menu" id="myOverlay"></button>
