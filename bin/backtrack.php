@@ -121,7 +121,7 @@ if (isset($_POST['diff'])) {
                                         <button
                                         type='submit'
                                         onclick="return confirm('<?=§('backtrack-areyousure')?>')"
-                                        class='w3-bar-item w3-right w3-button w3-section w3-green'
+                                        class='w3-bar-item w3-<?=$right?> w3-button w3-section w3-green'
                                         ><?=§('backtrack-accept')?></button>
                                     </form>
                                 </li>

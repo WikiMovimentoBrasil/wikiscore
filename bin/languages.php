@@ -77,3 +77,13 @@ function §($item, ...$args) {
 
     return $translatedString;
 }
+
+//RTL conversion
+$rtl = ['he', 'skr-arab'];
+$right = 'right';
+$left = 'left';
+if (in_array($lang, $rtl)) {
+    echo '<link rel="stylesheet" href="bin/rtl.css">';
+    $right = 'left';
+    $left = 'right';
+}

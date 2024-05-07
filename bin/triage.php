@@ -358,7 +358,7 @@ if ($output['revision'] != null) {
         //Insere estilo no parágrafo para destacar edição em avaliação
         $history_class = 'w3-small';
         if ($edit['revid'] == $output['revision']['diff']) {
-            $history_class = 'w3-small w3-leftbar w3-border-grey w3-padding-small';
+            $history_class = "w3-small w3-${left}bar w3-border-grey w3-padding-small";
         }
 
         //Monta código da edição
@@ -603,7 +603,7 @@ mysqli_close($con);
                         </div>
                         <p>
                             <input
-                            class="w3-input w3-border w3-leftbar w3-rightbar w3-border-light-grey"
+                            class="w3-input w3-border w3-<?=$left?>bar w3-<?=$right?>bar w3-border-light-grey"
                             name="obs"
                             id="obs"
                             list="commons"
@@ -611,7 +611,7 @@ mysqli_close($con);
                             placeholder="<?=§('triage-observation')?>">
                             <br>
                             <input
-                            class="w3-button w3-leftbar w3-rightbar w3-border-light-grey w3-block w3-red"
+                            class="w3-button w3-<?=$left?>bar w3-<?=$right?>bar w3-border-light-grey w3-block w3-red"
                             name="overwrite"
                             id="overwrite"
                             type="button"
@@ -630,7 +630,7 @@ mysqli_close($con);
                         <div class="w3-section w3-col l6">
                             <input
                             form="evaluate"
-                            class="w3-button w3-green w3-leftbar w3-rightbar w3-border-light-grey w3-block"
+                            class="w3-button w3-green w3-leftbar w3-<?=$right?>bar w3-border-light-grey w3-block"
                             type="submit"
                             value="<?=§('triage-save')?>">
                         </div>
@@ -639,7 +639,7 @@ mysqli_close($con);
                                 <input type="hidden" name="diff" value="<?=@$output['revision']['diff'];?>">
                                 <input type="hidden" name="skip" value="true">
                                 <button
-                                class="w3-button w3-purple w3-leftbar w3-rightbar w3-border-light-grey w3-block"
+                                class="w3-button w3-purple w3-<?=$left?>bar w3-<?=$right?>bar w3-border-light-grey w3-block"
                                 type="submit"
                                 <?=(isset($output['revision']['diff']))?'':'disabled';?>
                                 ><?=§('triage-jump')?></button>
@@ -673,7 +673,7 @@ mysqli_close($con);
                         <form method="post">
                             <input type="hidden" name="release" value="true">
                             <button
-                            class="w3-button w3-purple w3-leftbar w3-rightbar w3-border-light-grey w3-block"
+                            class="w3-button w3-purple w3-<?=$left?>bar w3-<?=$right?>bar w3-border-light-grey w3-block"
                             type="submit"
                             <?=($output['onskip']>0)?'':'disabled';?>
                             ><?=§('triage-release')?></button>
@@ -685,7 +685,7 @@ mysqli_close($con);
                             onsubmit="return confirm('<?=§('evaluators-areyousure')?>');">
                                 <input type="hidden" name="unhold" value="true">
                                 <button
-                                class="w3-button w3-red w3-leftbar w3-rightbar w3-border-light-grey w3-block"
+                                class="w3-button w3-red w3-<?=$left?>bar w3-<?=$right?>bar w3-border-light-grey w3-block"
                                 type="submit"
                                 <?=(($output['onhold'] + $output['onskip']) > 0)?'':'disabled';?>
                                 ><?=§('triage-unhold')?></button>

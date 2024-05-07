@@ -177,7 +177,7 @@ if ($valid_bytes != false) {
             class="w3-button w3-bar-item" ><?=§('login-graph')?></button>
             <button onclick="document.getElementById('id01').style.display='block'"
             class="w3-button w3-bar-item" ><?=§('login')?></button>
-            <span class="w3-bar-item w3-right w3-hide-small"><?=$contest['name'];?></span>
+            <span class="w3-bar-item w3-<?=$right?> w3-hide-small"><?=$contest['name'];?></span>
         </div>
         <div class="w3-block w3-card w3-margin w3-hide-medium w3-hide-small"  style="width: inherit;">
             <div class="w3-center">
@@ -216,7 +216,7 @@ if ($valid_bytes != false) {
             <div class="w3-modal-content w3-card-4 w3-animate-zoom" style="max-width:600px">
                 <div class="w3-center">
                     <br>
-                    <button onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-xlarge w3-hover-red w3-display-topright" title="Close Modal">&times;</button>
+                    <button onclick="document.getElementById('id01').style.display='none'" class="w3-button w3-xlarge w3-hover-red w3-display-top<?=$right?>" title="Close Modal">&times;</button>
                     <svg width="240" height="240" stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M7 18V17C7 14.2386 9.23858 12 12 12V12C14.7614 12 17 14.2386 17 17V18" stroke="currentColor" stroke-linecap="round" />
                         <path d="M12 12C13.6569 12 15 10.6569 15 9C15 7.34315 13.6569 6 12 6C10.3431 6 9 7.34315 9 9C9 10.6569 10.3431 12 12 12Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" />

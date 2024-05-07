@@ -175,13 +175,13 @@ if ($_POST) {
                     <div class="w3-container">
                         <ul class="w3-ul">
                             <li class="w3-bar">
-                                <i class="w3-bar-item w3-padding-16 fa-regular fa-circle-user" style="font-size: 3em; padding: 20px;"></i>
+                                <i class="w3-bar-item w3-padding-16 fa-regular fa-circle-user w3-<?=$left?>" style="font-size: 3em; padding: 20px;"></i>
                                 <form method="post">
                                     <input type="email" placeholder="<?=§('login-email')?>" name="email"
-                                    class="w3-input w3-border w3-bar-item w3-section"
+                                    class="w3-input w3-border w3-bar-item w3-section w3-<?=$left?>"
                                     >
                                     <button type='submit'
-                                    class='w3-bar-item w3-right w3-button w3-section w3-<?=$contest['theme'];?>'
+                                    class='w3-bar-item w3-<?=$right?> w3-button w3-section w3-<?=$contest['theme'];?>'
                                     >
                                         <?=§('evaluators-register')?>
                                     </button>
@@ -199,8 +199,8 @@ if ($_POST) {
                     <ul class="w3-ul">
                         <?php foreach ($output["evaluators"]["G"] ?? array() as $user => $data): ?>
                             <li class="w3-bar">
-                                <i class="w3-bar-item w3-padding-24 fa-solid fa-circle-user" style="font-size: 3em;"></i>
-                                <div class="w3-bar-item">
+                                <i class="w3-bar-item w3-padding-24 fa-solid fa-circle-user w3-<?=$left?>" style="font-size: 3em;"></i>
+                                <div class="w3-bar-item w3-<?=$left?>">
                                     <span class='w3-large'><?=$user?></span><br>
                                     <span><?=$data['email']?></span><br>
                                     <span><?=§('evaluators-stats',$data['evaluated'])?></span>
@@ -212,7 +212,7 @@ if ($_POST) {
                                         <button
                                         type='submit'
                                         onclick="return confirm('<?=§('evaluators-areyousure')?>')"
-                                        class='w3-bar-item w3-right w3-button w3-margin w3-red'
+                                        class='w3-bar-item w3-<?=$right?> w3-button w3-margin w3-red'
                                         ><?=§('counter-redefine')?></button>
                                     </form>
                                 <?php endif; ?>
@@ -229,8 +229,8 @@ if ($_POST) {
                     <ul class="w3-ul">
                         <?php foreach ($output["evaluators"]["A"] ?? array() as $user => $data): ?>
                             <li class="w3-bar">
-                                <i class="w3-bar-item w3-padding-24 fa-solid fa-circle-user" style="font-size: 3em;"></i>
-                                <div class="w3-bar-item">
+                                <i class="w3-bar-item w3-padding-24 fa-solid fa-circle-user w3-<?=$left?>" style="font-size: 3em;"></i>
+                                <div class="w3-bar-item w3-<?=$left?>">
                                     <span class='w3-large'><?=$user?></span><br>
                                     <span><?=$data['email']?></span><br>
                                     <span><?=§('evaluators-stats',$data['evaluated'])?></span>
@@ -242,7 +242,7 @@ if ($_POST) {
                                         <button
                                         type='submit'
                                         onclick="return confirm('<?=§('evaluators-areyousure')?>')"
-                                        class='w3-bar-item w3-right w3-button w3-section w3-orange'
+                                        class='w3-bar-item w3-<?=$right?> w3-button w3-section w3-orange'
                                         ><?=§('evaluators-disable')?></button>
                                     </form>
                                     <form method="post">
@@ -251,7 +251,7 @@ if ($_POST) {
                                         <button
                                         type='submit'
                                         onclick="return confirm('<?=§('evaluators-areyousure')?>')"
-                                        class='w3-bar-item w3-right w3-button w3-margin w3-red'
+                                        class='w3-bar-item w3-<?=$right?> w3-button w3-margin w3-red'
                                         ><?=§('counter-redefine')?></button>
                                     </form>
                                 <?php endif; ?>
@@ -268,8 +268,8 @@ if ($_POST) {
                     <ul class="w3-ul">
                         <?php foreach ($output["evaluators"]["P"] ?? array() as $user => $data): ?>
                             <li class="w3-bar">
-                                <i class="w3-bar-item w3-padding-24 fa-solid fa-circle-user" style="font-size: 3em;"></i>
-                                <div class="w3-bar-item">
+                                <i class="w3-bar-item w3-padding-24 fa-solid fa-circle-user w3-<?=$left?>" style="font-size: 3em;"></i>
+                                <div class="w3-bar-item w3-<?=$left?>">
                                     <span class='w3-large'><?=$user?></span><br>
                                     <span><?=$data['email']?></span><br>
                                     <span><?=§('evaluators-stats',$data['evaluated'])?></span>
@@ -281,7 +281,7 @@ if ($_POST) {
                                         <button
                                         type='submit'
                                         onclick="return confirm('<?=§('evaluators-areyousure')?>')"
-                                        class='w3-bar-item w3-right w3-button w3-section w3-green'
+                                        class='w3-bar-item w3-<?=$right?> w3-button w3-section w3-green'
                                         ><?=§('evaluators-enable')?></button>
                                     </form>
                                     <form method="post">
@@ -290,7 +290,7 @@ if ($_POST) {
                                         <button
                                         type='submit'
                                         onclick="return confirm('<?=§('evaluators-areyousure')?>')"
-                                        class='w3-bar-item w3-right w3-button w3-margin w3-red'
+                                        class='w3-bar-item w3-<?=$right?> w3-button w3-margin w3-red'
                                         ><?=§('counter-redefine')?></button>
                                     </form>
                                 <?php endif; ?>
