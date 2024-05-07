@@ -265,6 +265,7 @@ table.diff.diff-contentalign-left.diff-editfont-monospace {
 
 .details i {
     margin-right: 5px;
+    margin-left: 5px;
     width: 15px;
     text-align: center;
 }

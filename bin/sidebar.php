@@ -24,23 +24,23 @@
 </script>
 <?php if (!isset($getPage)) $getPage = 'triage'; ?>
 <div class="w3-<?=$contest['theme'];?> w3-large w3-bar w3-top" style="z-index:4">
-    <button class="w3-bar-item w3-button w3-hover-none w3-hover-text-light-grey" onclick="w3_open();">
+    <button class="w3-bar-item w3-<?=$left?> w3-button w3-hover-none w3-hover-text-light-grey" onclick="w3_open();">
         <i class="fa fa-bars"></i> &nbsp;
         <img src="images/Logo_Branco.svg" alt="logo" class="w3-hide-medium w3-hide-small" style="width: 83px;">
     </button>
-    <span class="w3-bar-item"><?=§($getPage)?></span>
+    <span class="w3-bar-item w3-<?=$left?>"><?=§($getPage)?></span>
     <?php if(str_contains(getcwd(), 'test')): ?>
-        <span class="w3-bar-item w3-black">
+        <span class="w3-bar-item w3-black w3-<?=$left?>">
             <i class="fa-solid fa-flask-vial fa-fade"></i>
             &nbsp;
             <i class="fa-solid fa-server fa-fade"></i>
         </span>
     <?php endif; ?>
-    <span class="w3-bar-item w3-right w3-hide-small"><?=$contest['name'];?></span>
+    <span class="w3-bar-item w3-<?=$right?> w3-hide-small"><?=$contest['name'];?></span>
 </div>
-<nav class="w3-sidebar w3-white w3-animate-left" style="z-index:3;width:280px;display:none;min-height:100vh;" id="mySidebar">
+<nav class="w3-sidebar w3-white w3-animate-<?=$left?>" style="z-index:3;width:280px;display:none;min-height:100vh;" id="mySidebar">
     <br>
-    <div class="w3-container w3-row">
+    <div class="w3-container w3-row w3-<?=$left?>">
         <div class="w3-col s4">
             <i class="fa-solid fa-circle-user" style="font-size: 3em;"></i>
         </div>
@@ -112,4 +112,4 @@
         <br><br>
     </div>
 </nav>
-<div class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer;min-height:100vh;" title="close side menu" id="myOverlay"></div>
+<button class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer;min-height:100vh;" title="close side menu" id="myOverlay"></button>

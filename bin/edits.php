@@ -144,7 +144,7 @@ if ($_POST["csv"]) {
                     <div class="w3-threequarter"><?=§('edits-about')?></div>
                     <form method="post" target="_blank" class="w3-quarter">
                         <input type="hidden" name="csv" value="csv">
-                        <button class="w3-button w3-right w3-green" type="submit">
+                        <button class="w3-button w3-<?=$right?> w3-green" type="submit">
                             <i class="fa-solid fa-file-csv"></i> <?=§('edits-csv')?>
                         </button>
                     </form>

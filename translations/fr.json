@@ -5,6 +5,7 @@
 			"Crochet.david",
 			"Gomoko",
 			"Obscaeris",
+			"Urhixidur",
 			"Wladek92"
 		]
 	},
@@ -17,7 +18,7 @@
 	"index-about-intro": "WikiScore est un outil créé pour valider des éditions et compter les résultats des participants aux wikiconcours.",
 	"index-about-main": "La plateforme a une interface simple traduisible dans d'autres langues. Elle permet de valider rapidement les modifications dans les articles de n'importe quel wikiconcours. Différents évaluateurs peuvent avoir des profils différents, avec des registres de validation individualisés.",
 	"index-enroll-short": "Enregistrer un nouveau wikiconcours",
-	"index-enroll-intro": "Pour demander l'inscription d'un nouveau wikiconcours, le premier contact doit se faire par l'e-mail de contact de Wiki Movimento Brasil.",
+	"index-enroll-intro": "Pour demander l'inscription d'un nouveau wikiconcours, le premier contact doit se faire par le courriel de contact de Wiki Movimento Brasil.",
 	"index-enroll-main": "Envoyez un courriel à wikiscore@wmnobrasil.org en fournissant les informations de base sur votre groupe (chapitre, organisation thématique ou groupe d'utilisateurs, officiel ou non) et les concours potentiels.  Nous demanderons éventuellement des informations supplémentaires ultérieurement pour les derniers ajustements de l'outil.",
 	"backtrack": "Revenir",
 	"backtrack-about": "Cette page répertorie les modifications apportées par les participants dans le cadre du wikiconcours mais qui ont été effectuées avant leur enregistrement sur l'Outreach Dashboard. Si c'est nécessaire, cliquez sur le bouton pour accepter la contribution. Après l'acceptation, la modification sera disponible dans la file d'attente d'évaluation.",

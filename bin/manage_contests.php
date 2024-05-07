@@ -552,7 +552,7 @@ $contests_array[]['name'] = null;
                                 <?=($contest_info['name']==null)?'required':'disabled'?>>
 
                                 <div class="w3-row">
-                                    <div class="w3-threequarter" style="padding-right: 8px;">
+                                    <div class="w3-threequarter" style="padding-<?=$right?>: 8px;">
 
                                         <label for="internalcode">
                                             <strong><?=§('manage-internalcode')?></strong>
@@ -569,7 +569,7 @@ $contests_array[]['name'] = null;
                                         <?=($contest_info['name']==null)?'required':'disabled'?>>
 
                                     </div>
-                                    <div class="w3-quarter" style="padding-right: 8px;">
+                                    <div class="w3-quarter" style="padding-<?=$right?>: 8px;">
 
                                         <label for="group">
                                             <strong><?=§('manage-group')?></strong>
@@ -637,7 +637,7 @@ $contests_array[]['name'] = null;
                                 <?=($contest_info['name']==null)?'required':'disabled'?>>
 
                                 <div class="w3-row">
-                                    <div class="w3-half" style="padding-right: 8px;">
+                                    <div class="w3-half" style="padding-<?=$right?>: 8px;">
 
                                         <label for="reverttime">
                                             <strong><?=§('manage-reverttime')?></strong>
@@ -672,7 +672,7 @@ $contests_array[]['name'] = null;
                                         </select>
 
                                     </div>
-                                    <div class="w3-half" style="padding-left: 8px;">
+                                    <div class="w3-half" style="padding-<?=$left?>: 8px;">
 
                                         <label for="listid">
                                             <strong><?=§('manage-listid')?></strong>
@@ -715,7 +715,7 @@ $contests_array[]['name'] = null;
                                 <?=($contest_info['name']==null)?'required':'disabled'?>>
 
                                 <div class="w3-row">
-                                    <div class="w3-half" style="padding-right: 8px;">
+                                    <div class="w3-half" style="padding-<?=$right?>: 8px;">
 
                                         <label for="bpp">
                                             <strong><?=§('manage-bpp')?></strong>
@@ -759,7 +759,7 @@ $contests_array[]['name'] = null;
                                         <?=($contest_info['name']==null)?'required':'disabled'?>>
 
                                     </div>
-                                    <div class="w3-half" style="padding-left: 8px;">
+                                    <div class="w3-half" style="padding-<?=$left?>: 8px;">
 
                                         <label for="ipp">
                                             <strong><?=§('manage-ipp')?></strong>
@@ -805,7 +805,7 @@ $contests_array[]['name'] = null;
                                 </div>
 
                                 <div class="w3-row">
-                                    <div class="w3-half" style="padding-right: 8px;">
+                                    <div class="w3-half" style="padding-<?=$right?>: 8px;">
                                         <label for="theme">
                                             <strong><?=§('manage-palette')?></strong>
                                         </label>
@@ -848,7 +848,7 @@ $contests_array[]['name'] = null;
                                             <option value="color" class="w3-transparent" <?=($contest_info['theme']!='color')?:'selected'?>><?=§('manage-custom')?></option>
                                         </select>
                                     </div>
-                                    <div class="w3-half" style="padding-left: 8px;">
+                                    <div class="w3-half" style="padding-<?=$left?>: 8px;">
                                         <label for="hex">
                                             <strong><?=§('manage-hexcolor')?></strong>
                                         </label>
@@ -887,14 +887,14 @@ $contests_array[]['name'] = null;
                                     <div class="w3-row w3-section">
                                         <div class="w3-half">
                                             <button
-                                            class="w3-button w3-blue w3-block w3-rightbar w3-border-white"
+                                            class="w3-button w3-blue w3-block w3-<?=$right?>bar w3-border-white"
                                             style="display: block;"
                                             type="button"
                                             id="editor"
                                             onclick="editChange('<?=$contest_info['name_id']?>')"
                                             ><?=§('modify')?></button>
                                             <button
-                                            class="w3-button w3-green w3-block w3-rightbar w3-border-white"
+                                            class="w3-button w3-green w3-block w3-<?=$right?>bar w3-border-white"
                                             style="display: none;"
                                             name="do_edit"
                                             id="saver"
@@ -903,7 +903,7 @@ $contests_array[]['name'] = null;
                                         </div>
                                         <div class="w3-half">
                                             <button
-                                            class="w3-button w3-black w3-block w3-leftbar w3-border-white"
+                                            class="w3-button w3-black w3-block w3-<?=$left?>bar w3-border-white"
                                             name="do_manager"
                                             onclick="managerChange('<?=$contest_info['name_id']??''?>', true)"
                                             type="button"><?=§('manage-newmanager')?></button>
@@ -912,14 +912,14 @@ $contests_array[]['name'] = null;
                                     <div class="w3-row w3-section">
                                         <div class="w3-half">
                                             <button
-                                            class="w3-button w3-orange w3-block w3-rightbar w3-border-white"
+                                            class="w3-button w3-orange w3-block w3-<?=$right?>bar w3-border-white"
                                             name="do_restart"
                                             onclick="editChange('<?=$contest_info['name_id']?>'); return confirm('<?=§('manage-confirmrestart')?>')"
                                             type="submit"><?=§('manage-restart')?></button>
                                         </div>
                                         <div class="w3-half">
                                             <button
-                                            class="w3-button w3-red w3-block w3-leftbar w3-border-white"
+                                            class="w3-button w3-red w3-block w3-<?=$left?>bar w3-border-white"
                                             name="do_delete"
                                             onclick="editChange('<?=$contest_info['name_id']?>'); return confirm('<?=§('manage-confirmdelete')?>')"
                                             type="submit"><?=§('manage-delete')?></button>
@@ -945,13 +945,13 @@ $contests_array[]['name'] = null;
                                 <div class="w3-row">
                                     <div class="w3-half">
                                         <button
-                                        class="w3-button w3-orange w3-block w3-rightbar w3-border-white"
+                                        class="w3-button w3-orange w3-block w3-<?=$right?>bar w3-border-white"
                                         name="do_manager"
                                         type="submit"><?=§('manage-newmanager')?></button>
                                     </div>
                                     <div class="w3-half">
                                         <button
-                                        class="w3-button w3-red w3-block w3-leftbar w3-border-white"
+                                        class="w3-button w3-red w3-block w3-<?=$left?>bar w3-border-white"
                                         type="button"
                                         onclick="managerChange('<?=$contest_info['name_id']??''?>', false)"><?=§('login-cancel')?></button>
                                     </div>

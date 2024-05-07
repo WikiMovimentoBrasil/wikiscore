@@ -162,8 +162,8 @@ $gitBranch .= shell_exec("git rev-parse --abbrev-ref HEAD");
 <div id="id01" class="w3-modal">
     <div class="w3-modal-content w3-card-4 w3-animate-top">
         <header class="w3-container w3-black">
-            <span onclick="document.getElementById('id01').style.display='none'"
-            class="w3-button w3-display-topright">&times;</span>
+            <button onclick="document.getElementById('id01').style.display='none'"
+            class="w3-button w3-display-top<?=$right?>">&times;</button>
             <h4><?=§('contest-select')?></h4>
         </header>
         <div class="w3-padding">
@@ -250,15 +250,15 @@ function openGroup(evt, groupName) {
                 >TranslateWiki</a> and <a
                 rel="noopener"
                 href="https://wikitech.wikimedia.org/wiki/Portal:Toolforge"
-                target="_blank">Toolforge</a>.<br>Source-code on <a
+                target="_blank">Toolforge</a><br>Source-code on <a
                 rel="noopener"
                 href="https://github.com/WikiMovimentoBrasil/wikiscore"
                 >GitHub</a> under <a
                 rel="noopener"
-                href="https://github.com/WikiMovimentoBrasil/wikiscore/blob/main/LICENSE">GPL v3.0</a>.<br>Text license: <a
+                href="https://github.com/WikiMovimentoBrasil/wikiscore/blob/main/LICENSE">GPL v3.0</a><br>Text license: <a
                 rel="noopener"
                 href="https://creativecommons.org/licenses/by-sa/4.0/deed"
-                >CC-BY-SA 4.0 International</a>.
+                >CC-BY-SA 4.0 International</a>
             </p>
         </div>
         <div class="w3-third">

@@ -151,6 +151,19 @@ mysqli_close($con);
         <link rel="stylesheet" href="bin/w3.css">
         <link rel="stylesheet" type="text/css" href="bin/color.php?color=<?=@$contest['color'];?>">
         <link rel="stylesheet" href="bin/diff.css">
+        <script>
+            function changeInput() {
+                var overwriteInput = document.getElementById('overwrite');
+                overwriteInput.removeAttribute('value');
+                overwriteInput.type = 'number';
+                overwriteInput.className = 'w3-input w3-border';
+                overwriteInput.value = '<?= @$output['revision']['bytes']; ?>';
+                overwriteInput.removeAttribute('onclick');
+                overwriteInput.removeAttribute('id');
+                document.getElementById('obs').required = true;
+            }
+        </script>
+
     </head>
     <body>
         <?php require_once "sidebar.php"; ?>
@@ -203,8 +216,8 @@ mysqli_close($con);
                         name="valid"
                         value="sim"
                         onclick="document.getElementById('obs').required = false"
-                        required
-                        >
+                        onKeyDown="document.getElementById('obs').required = false"
+                        required>
                         <label for="valid-sim"><?=§('yes')?></label><br>
                         <input
                         class="w3-radio w3-section"
@@ -212,8 +225,9 @@ mysqli_close($con);
                         id="valid-nao"
                         name="valid"
                         value="nao"
-                        onclick="document.getElementById('obs').required = true" required
-                        >
+                        onclick="document.getElementById('obs').required = true"
+                        onKeyDown="document.getElementById('obs').required = true" 
+                        required>
                         <label for="valid-nao"><?=§('no')?></label><br><br>
                     </div>
                     <div class="w3-container w3-cell w3-half">
@@ -264,15 +278,8 @@ mysqli_close($con);
                         id="overwrite"
                         type="button"
                         value="Alterar bytes"
-                        onclick="
-                            document.getElementById('overwrite').removeAttribute('value');
-                            document.getElementById('overwrite').type = 'number';
-                            document.getElementById('overwrite').className = 'w3-input w3-border';
-                            document.getElementById('overwrite').value = '<?=@$output['revision']['bytes'];?>';
-                            document.getElementById('overwrite').removeAttribute('onclick');
-                            document.getElementById('overwrite').removeAttribute('id');
-                            document.getElementById('obs').required = true;
-                        ">
+                        onclick="changeInput()"
+                        onKeyDown="changeInput()">
                         <input
                         class="w3-button w3-orange w3-border-orange w3-border w3-block w3-margin-top"
                         type="submit"
