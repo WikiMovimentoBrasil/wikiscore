@@ -1,6 +1,7 @@
 {
 	"@metadata": {
 		"authors": [
+			"Suleiman the Magnificent Television",
 			"Ykhwong"
 		]
 	},
@@ -10,6 +11,7 @@
 	"contest-select": "내 대회 선택",
 	"language-select": "언어 선택",
 	"index-about-short": "이것은 무엇입니까?",
+	"index-about-intro": "위키스코어는 위키 대회 참가자의 수를 확인하고 편집을 검증하기 위해 만들어진 도구입니다.",
 	"index-enroll-short": "새 위키대회 등록",
 	"backtrack-areyousure": "확실합니까?",
 	"yes": "예",
