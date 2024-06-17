@@ -4,6 +4,7 @@
 			"Albertoleoncio",
 			"Crochet.david",
 			"Gomoko",
+			"McDutchie",
 			"Obscaeris",
 			"Urhixidur",
 			"Wladek92"
@@ -238,7 +239,7 @@
 	"triage-database": "Mise à jour de la base de données.",
 	"triage-databaseabout": "Veuillez patienter quelques minutes et actualiser la page.",
 	"triage-noedit": "Il n'y a pas d'édition à afficher pour le moment.",
-	"triage-differential": "Modifier le différentiel",
+	"triage-differential": "Différences de modification",
 	"triage-vda": "Violation des droits d’auteur",
 	"triage-redirect": "Simple redirection",
 	"triage-noref": "Contenu sans source",
