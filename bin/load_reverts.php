@@ -47,7 +47,10 @@ while ($row = mysqli_fetch_assoc($edits_result)) {
     ];
     $revisions_api = file_get_contents($contest['api_endpoint']."?".http_build_query($revisions_api_params));
     $revisions_api = unserialize($revisions_api)['query'];
-    $revision = end($revisions_api['pages'])['revisions']['0'];
+    if (isset($revisions_api['pages'])) {
+        $revision = end($revisions_api['pages']);
+        $revision = $revision['revisions']['0'] ?? false;
+    }
 
     //Marca edição caso tenha sido revertida ou eliminada
     if (
