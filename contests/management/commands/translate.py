@@ -14,14 +14,26 @@ class Command(BaseCommand):
             if filename.endswith('.json'):
                 filepath = os.path.join(json_dir, filename)
                 translations = self.load_translations(filepath)
-                language = filename.split('.')[0]
-                po = self.convert_to_po(translations, language)
-                po_path = os.path.join(settings.BASE_DIR, 'locale', language, 'LC_MESSAGES', 'django.po')
+                language_code = filename.split('.')[0]
+                language_code = self.convert_language_code(language_code)
+                po = self.convert_to_po(translations, language_code)
+                po_path = os.path.join(settings.BASE_DIR, 'locale', language_code, 'LC_MESSAGES', 'django.po')
                 self.save_po_file(po, po_path)
 
     def load_translations(self, filepath):
         with open(filepath, 'r', encoding='utf-8') as f:
             return json.load(f)
+
+    def convert_language_code(self, code):
+        parts = code.split('-')
+        language = parts[0]
+        if len(parts) == 1:
+            return language
+        region = parts[1]
+        if len(region) == 2:
+            return f'{language}_{region.upper()}'
+        else:
+            return f'{language}_{region[0].upper()}{region[1:]}'
 
     def convert_to_po(self, translations, language):
         po = POFile(encoding='utf-8')
@@ -30,7 +42,7 @@ class Command(BaseCommand):
             'Content-Transfer-Encoding': '8bit',
             'Language': language,
         }
-        for key, value in translations.items():
+        for key, value in self.flatten_dict(translations).items():
             if isinstance(value, str):
                 # Count the number of placeholders in the string
                 count = len(re.findall(r'\$\d+', value))

@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
+from contests.locale import get_available_languages
 
 load_dotenv()
 
@@ -29,6 +30,7 @@ LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 PROTECTED_USER_FIELDS = ['groups']
+LANGUAGES = get_available_languages()
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

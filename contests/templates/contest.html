@@ -18,8 +18,6 @@
         <button onclick="window.open('{% url 'login' %}')" class="w3-button w3-bar-item">{% trans 'login' %}</button>
         <span class="w3-bar-item w3-right w3-hide-small">{{ contest.name }}</span>
     </div>
-    
-    <!-- Additional content and charts similar to your PHP structure -->
     <div class="w3-row-padding">
         <div class="w3-third w3-margin-bottom">
             <div class="w3-card-4 w3-padding">
@@ -37,7 +35,6 @@
             </div>
         </div>
     </div>
-    
     <script type="text/javascript">
         const dias = [ {{ result.date }} ];
 
