@@ -1,0 +1,124 @@
+{% load static %}
+{% load i18n %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <title>{{ contest.name }}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="{% static 'w3.css' %}">
+        <link rel="stylesheet" type="text/css" href="../color?color={{ contest.color }}">
+        <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/6.2.0/css/all.css">
+        {% block head %}{% endblock %}
+    </head>
+    <body onload="{% block onload %}{% endblock %}">
+        <script>
+            let head = document.getElementsByTagName('HEAD')[0];
+            let link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = 'https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/6.2.0/css/all.css';
+            head.appendChild(link);
+        
+            function w3_open() {
+                var mySidebar = document.getElementById("mySidebar");
+                var overlayBg = document.getElementById("myOverlay");
+                if (mySidebar.style.display === 'block') {
+                    mySidebar.style.display = 'none';
+                    overlayBg.style.display = "none";
+                } else {
+                    mySidebar.style.display = 'block';
+                    overlayBg.style.display = "block";
+                }
+            }
+            function w3_close() {
+                document.getElementById("mySidebar").style.display = "none";
+                document.getElementById("myOverlay").style.display = "none";
+            }
+        </script>
+        <div class="w3-{{ contest.theme }} w3-large w3-bar w3-top" style="z-index:4">
+            <button class="w3-bar-item w3-{{ left }} w3-button w3-hover-none w3-hover-text-light-grey" onclick="w3_open();">
+                <i class="fa fa-bars"></i> &nbsp;
+                <img src="{% static 'Logo_Branco.svg' %}" alt="logo" class="w3-hide-medium w3-hide-small" style="width: 83px;">
+            </button>
+            <span class="w3-bar-item w3-{{ left }}">{% block pagename %}{% trans 'triage' %}{% endblock %}</span>
+            <span class="w3-bar-item w3-{{ right }} w3-hide-small">{{ contest.name }}</span>
+        </div>
+        <nav class="w3-sidebar w3-white w3-animate-{{ left }}" style="z-index:3;width:280px;display:none;min-height:100vh;" id="mySidebar">
+            <br>
+            <div class="w3-container w3-row w3-{{ left }}">
+                <div class="w3-col s4">
+                    <i class="fa-solid fa-circle-user" style="font-size: 3em;"></i>
+                </div>
+                <div class="w3-col s8 w3-bar">
+                    <span>{% blocktrans with triage_welcome_1=request.user %}.{{ triage_welcome_1 }}.{% endblocktrans %}</span><br>
+                </div>
+            </div>
+            <hr>
+            <div class="w3-container">
+                <h5>{% trans 'triage-panel' %}</h5>
+            </div>
+            <div class="w3-bar-block">
+                <a href="index.php?contest={{ contest.name_id }}&page=triage"
+                rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='triage')?:'w3-blue'?>">
+                    <i class="fa-solid fa-check-to-slot"></i>&nbsp; {% trans 'triage' %}
+                </a>
+                <a href="index.php?contest={{ contest.name_id }}&page=counter"
+                rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='counter')?:'w3-blue'?>">
+                    <i class="fa-solid fa-chart-line"></i>&nbsp; {% trans 'counter' %}
+                </a>
+                <a href="index.php?contest={{ contest.name_id }}&page=modify"
+                rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='modify')?:'w3-blue'?>">
+                    <i class="fa-solid fa-pen-to-square"></i>&nbsp; {% trans 'modify' %}
+                </a>
+                <a href="index.php?contest={{ contest.name_id }}&page=compare"
+                rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='compare')?:'w3-blue'?>">
+                    <i class="fa-solid fa-code-compare"></i>&nbsp; {% trans 'compare' %}
+                </a>
+                <a href="index.php?contest={{ contest.name_id }}&page=edits"
+                rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='edits')?:'w3-blue'?>">
+                    <i class="fa-solid fa-list-check"></i>&nbsp; {% trans 'triage-evaluated' %}
+                </a>
+                <a href="index.php?contest={{ contest.name_id }}&page=backtrack"
+                rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='backtrack')?:'w3-blue'?>">
+                    <i class="fa-solid fa-history"></i>&nbsp; {% trans 'backtrack' %}
+                </a>
+                <a href="index.php?contest={{ contest.name_id }}&page=evaluators"
+                rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='evaluators')?:'w3-blue'?>">
+                    <i class="fa-solid fa-users"></i>&nbsp; {% trans 'evaluators' %}
+                </a>
+                <a href="{{ contest.endpoint }}?curid={{ contest.official_list_pageid }}" target="_blank"
+                rel="noopener" class="w3-bar-item w3-button w3-padding">
+                    <i class="fa-solid fa-certificate"></i>&nbsp; {% trans 'triage-list' %}
+                    <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
+                </a>
+                <a href="{% if contest.category_petscan %}https://petscan.wmflabs.org/?psid={{ contest.category_petscan }}{% else %}{{ contest.endpoint }}?curid={{ contest.category_pageid }}{% endif %}>" 
+                target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>&nbsp; {% trans 'triage-cat' %}
+                    <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
+                </a>
+                <a href="https://outreachdashboard.wmflabs.org/courses/{{ contest.outreach_name }}" target="_blank"
+                rel="noopener" class="w3-bar-item w3-button w3-padding">
+                    <i class="fa-solid fa-circle-nodes"></i>&nbsp; {% trans 'triage-outreach' %}
+                    <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
+                </a>
+                <a href="index.php?contest={{ contest.name_id }}&page=password"
+                rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='password')?:'w3-blue'?>">
+                    <i class="fa-solid fa-key"></i>&nbsp; {% trans 'password' %}
+                </a>
+                <form method="post" id="logout" style="display: none;">
+                    <input type="hidden" name="logout" value="Logout">
+                </form>
+                <a href="javascript:document.getElementById('logout').submit()"
+                rel="noopener" class="w3-bar-item w3-button w3-padding">
+                    <i class="fa-solid fa-door-open"></i>&nbsp; {% trans 'exit' %}
+                </a>
+                <br><br>
+            </div>
+        </nav>
+        <button class="w3-overlay w3-animate-opacity" onclick="w3_close()" style="cursor:pointer;min-height:100vh;" title="close side menu" id="myOverlay"></button>
+        {% block content %}{% endblock %}
+    </body>
+</html>

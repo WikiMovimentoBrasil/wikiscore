@@ -1,0 +1,159 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <title>{{ contest.name }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'w3.css' %}">
+    <link rel="stylesheet" type="text/css" href="../color?color={{ contest.color }}">
+    <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/6.2.0/css/all.css">
+    <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <div class="w3-{{ contest.theme }} w3-large w3-bar">
+        <img src="{% static 'Logo_Branco.svg' %}" alt="logo" class="w3-bar-item" style="width: 128px;">
+        <button onclick="window.open('graph_page', '_blank');" class="w3-button w3-bar-item">{% trans 'login-graph' %}</button>
+        <button onclick="window.open('{% url 'login' %}')" class="w3-button w3-bar-item">{% trans 'login' %}</button>
+        <span class="w3-bar-item w3-right w3-hide-small">{{ contest.name }}</span>
+    </div>
+    
+    <!-- Additional content and charts similar to your PHP structure -->
+    <div class="w3-row-padding">
+        <div class="w3-third w3-margin-bottom">
+            <div class="w3-card-4 w3-padding">
+                <canvas id="total_edits"></canvas>
+            </div>
+        </div>
+        <div class="w3-third w3-margin-bottom">
+            <div class="w3-card-4 w3-padding">
+                <canvas id="new_bytes"></canvas>
+            </div>
+        </div>
+        <div class="w3-third w3-margin-bottom">
+            <div class="w3-card-4 w3-padding">
+                <canvas id="new_articles"></canvas>
+            </div>
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+        const dias = [ {{ result.date }} ];
+
+        const total_edits = new Chart(
+            document.getElementById('total_edits'),
+            {
+                type: 'line',
+                options: {
+                    aspectRatio: 1.5,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: "{% trans 'login-alledits' %}"
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
+                },
+                data: {
+                    labels: dias,
+                    datasets: [
+                        {
+                            label: '{% trans 'login-alledits' %}',
+                            data: [ {{ result.total_edits }} ],
+                            fill: false,
+                            borderColor: 'rgb(128, 0, 128)',
+                            tension: 0.1
+                        },
+                        {
+                            label: '{% trans 'login-validedits' %}',
+                            data: [ {{ result.valid_edits }} ],
+                            fill: false,
+                            borderColor: 'rgb(143, 188, 143)',
+                            tension: 0.1
+                        }
+                    ]
+                }
+            }
+        );
+
+        const new_articles = new Chart(
+            document.getElementById('new_articles'),
+            {
+                type: 'line',
+                options: {
+                    aspectRatio: 1.5,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: "{% trans 'login-newevents' %}"
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
+                },
+                data: {
+                    labels: dias,
+                    datasets: [
+                        {
+                            label: '{% trans 'login-newpages' %}',
+                            data: [ {{ result.new_articles }} ],
+                            fill: false,
+                            borderColor: 'rgb(65, 105, 225)',
+                            tension: 0.1
+                        },
+                        {
+                            label: '{% trans 'login-newparticipants' %}',
+                            data: [ {{ result.new_participants }} ],
+                            fill: false,
+                            borderColor: 'rgb(219, 112, 147)',
+                            tension: 0.1
+                        }
+                    ]
+                }
+            }
+        );
+
+        const new_bytes = new Chart(
+            document.getElementById('new_bytes'),
+            {
+                type: 'line',
+                options: {
+                    aspectRatio: 1.5,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: "{% trans 'login-newbytes' %}"
+                        },
+                        legend: {
+                            display: false
+                        }
+                    }
+                },
+                data: {
+                    labels: dias,
+                    datasets: [
+                        {
+                            label: '{% trans 'login-newbytes' %}',
+                            data: [ {{ result.total_bytes }} ],
+                            fill: false,
+                            borderColor: 'rgb(219, 112, 147)',
+                            tension: 0.1
+                        },
+                        {
+                            label: '{% trans 'login-validbytes' %}',
+                            data: [ {{ result.valid_bytes }} ],
+                            fill: false,
+                            borderColor: 'rgb(255, 69, 0)',
+                            tension: 0.1
+                        }
+                    ]
+                }
+            }
+            );
+    </script>
+</body>
+</html>

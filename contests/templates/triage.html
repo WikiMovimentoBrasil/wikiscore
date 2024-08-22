@@ -1,0 +1,477 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+
+
+{% block pagename %}{% trans 'triage' %}{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'diff.css' %}">
+    {% if LANGUAGE_BIDI %}
+        <link rel="stylesheet" href="{% static 'rtl.css' %}">
+    {% endif %}
+    <script type="text/javascript" src="{% static 'authorship.js' %}"></script>
+    <script type="text/javascript" src="{% static 'copyvios.js' %}"></script>
+    <script type="text/javascript">
+        function handleOverwriteClick(outputRevisionBytes) {
+            var overwriteElement = document.getElementById('overwrite');
+
+            overwriteElement.removeAttribute('value');
+            overwriteElement.type = 'number';
+            overwriteElement.className = 'w3-input w3-border';
+            overwriteElement.value = outputRevisionBytes;
+            overwriteElement.removeAttribute('onclick');
+            overwriteElement.removeAttribute('id');
+
+            var obsElement = document.getElementById('obs');
+            obsElement.required = true;
+        }
+
+        function movePosition(){
+            var first = document.getElementById("first_column");
+            var third = document.getElementById("third_column");
+            var edits = document.getElementById("edits");
+
+            var windowWidth = document.documentElement.clientWidth;
+            if(windowWidth < 601){
+                third.insertBefore(edits, third.firstChild);
+            } else {
+                first.appendChild(edits);
+            }
+        }
+
+        function getSelectedText() {
+            var text = "";
+            if (window.getSelection) {
+                text = window.getSelection().toString();
+            } else if (document.selection && document.selection.type !== "Control") {
+                text = document.selection.createRange().text;
+            }
+            return text;
+        }
+
+        function countBytes(text) {
+            // Count the number of bytes using the TextEncoder API
+            var encoder = new TextEncoder();
+            var bytes = encoder.encode(text);
+            return bytes.length;
+        }
+
+        function updateTooltip() {
+            var selectedText = getSelectedText();
+            var byteCount = countBytes(selectedText);
+            var tooltip = document.getElementById("tooltip");
+
+            if (byteCount > 0) {
+                tooltip.parentElement.style.visibility = "visible";
+                tooltip.innerHTML = "{% trans 'triage-counter' %}: " + byteCount;
+            } else {
+                tooltip.parentElement.style.visibility = "hidden";
+            }
+        }
+
+        var domReady = function(callback) {
+            document.readyState === "interactive" || document.readyState === "complete" ? callback() : document.addEventListener("DOMContentLoaded", callback);
+        };
+        domReady(function() {
+            movePosition();
+            document.getElementById("text-container").addEventListener("mouseup", updateTooltip);
+        });
+
+        window.onresize = function(event) {
+            movePosition()
+        };
+    </script>
+    {% if action != None %}
+        <script type="text/javascript">history.replaceState(null, document.title, location.href);</script>
+    {% endif %}
+{% endblock %}
+
+{% block onload %}calculateAuthorship('{% if edit.diff %}{{ edit.diff }}{% else %}false{% endif %}','{{ contest.endpoint }}'){% endblock %}
+  
+{% block content %}
+    <div class="w3-row-padding w3-content w3-main" style="max-width:unset;margin-top:43px;padding-top:16px;">
+        <div id="first_column" class="w3-quarter">
+            {% if action.edit %}
+                <div
+                class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom"
+                style="display: block"
+                >
+                    <h2>{% trans 'triage-lasteval' %}</h2>
+                    <p>
+                        {% trans 'triage-diff' %}: 
+                            <a
+                            href="{{ contest.endpoint }}?diff={{ action.edit.diff }}"
+                            rel="noopener"
+                            target="_blank">{{ action.edit.diff }}</a>
+                    </p>
+                    <p>
+                        {% trans 'triage-validedit' %}: {% if action.valid_edit %}<i
+                        class="fa-regular w3-text-green fa-circle-check"
+                        aria-hidden="true"
+                        ></i> {% trans 'yes' %}{% else %}<i
+                        class="fa-regular w3-text-red fa-circle-xmark"
+                        aria-hidden="true"
+                        ></i> {% trans 'no' %}{% endif %}
+                    </p>
+                    <p>
+                        {% trans 'triage-withimage' %}: {% if action.picture %}<i
+                        class="fa-regular w3-text-green fa-circle-check"
+                        aria-hidden="true"
+                        ></i> {% trans 'yes' %}{% else %}<i
+                        class="fa-regular w3-text-red fa-circle-xmark"
+                        aria-hidden="true"
+                        ></i> {% trans 'no' %}{% endif %}
+                    </p>
+                    <p>
+                        <button
+                        class="w3-button w3-border-purple w3-purple w3-border w3-block w3-small"
+                        type="button"
+                        onclick="window.open(
+                            'index.php?contest={{ contest.name_id }}&page=modify&diff={{ action.edit.diff }}',
+                            '_blank'
+                        );"><i class="fa-solid fa-eraser w3-medium" aria-hidden="true"></i> {% trans 'triage-fix' %}</button>
+                    </p>
+                </div>
+            {% endif %}
+            <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom"
+            style="display:{% if edit.timestamp %}block{% else %}none{% endif %};">
+                <h2>{% trans 'triage-evaluation' %}</h2>
+                <form method="post" id="evaluate">
+                    {% csrf_token %}
+                    <input type="hidden" name="diff" value="{{ edit.diff }}">
+                    <div class="w3-container w3-cell w3-col l6 m12 s6">
+                        <p>{% trans 'isvalid' %}</p>
+                        <input
+                        class="w3-radio w3-section"
+                        type="radio"
+                        id="valid-sim"
+                        name="valid"
+                        value="sim"
+                        onclick="document.getElementById('obs').required = false"
+                        onkeydown="document.getElementById('obs').required = false"
+                        required>
+                        <label for="valid-sim">{% trans 'yes' %}</label><br>
+                        <input
+                        class="w3-radio w3-section"
+                        type="radio"
+                        id="valid-nao"
+                        name="valid"
+                        value="nao"
+                        onclick="document.getElementById('obs').required = true"
+                        onkeydown="document.getElementById('obs').required = true"
+                        required>
+                        <label for="valid-nao">{% trans 'no' %}</label><br><br>
+                    </div>
+                    <div class="w3-container w3-cell w3-col l6 m12 s6">
+                        {% if contest.picture_mode == 2 %}
+                            <p>{% trans 'withimage' %}</p>
+                            <input
+                            class="w3-input w3-section"
+                            type="number"
+                            id="pic"
+                            name="pic"
+                            value="0"
+                            min="0"
+                            max="9"
+                            required>
+                            <label for="pic">{% trans 'quantity' %}</label><br>
+                        {% else %}
+                            <p>{% trans 'withimage' %}</p>
+                            <input
+                            class="w3-radio w3-section"
+                            type="radio"
+                            id="pic-sim"
+                            name="pic"
+                            value="sim"
+                            required>
+                            <label for="pic-sim">{% trans 'yes' %}</label><br>
+                            <input
+                            class="w3-radio w3-section"
+                            type="radio"
+                            id="pic-nao"
+                            name="pic"
+                            value="nao"
+                            required>
+                            <label for="pic-nao">{% trans 'no' %}</label><br><br>
+                        {% endif %}
+                    </div>
+                    <p>
+                        <input
+                        class="w3-input w3-border w3-leftbar w3-rightbar w3-border-light-grey"
+                        name="obs"
+                        id="obs"
+                        list="commons"
+                        type="text"
+                        placeholder="{% trans 'triage-observation' %}">
+                        <br>
+                        <input
+                        class="w3-button w3-leftbar w3-rightbar w3-border-light-grey w3-block w3-red"
+                        name="overwrite"
+                        id="overwrite"
+                        type="button"
+                        value="{% trans 'triage-alterbytes' %}"
+                        onclick="handleOverwriteClick('{{ edit.orig_bytes }}')">
+                    </p>
+                    <datalist id="commons">
+                        <option value="{% trans 'triage-vda' %}">
+                        <option value="{% trans 'triage-redirect' %}">
+                        <option value="{% trans 'triage-noref' %}">
+                        <option value="{% trans 'triage-onlycat' %}">
+                        <option value="{% trans 'triage-onlytag' %}">
+                    </datalist>
+                </form>
+                <div class="w3-row">
+                    <div class="w3-section w3-col l6">
+                        <input
+                        form="evaluate"
+                        class="w3-button w3-green w3-leftbar w3-{{ right }}bar w3-border-light-grey w3-block"
+                        type="submit"
+                        value="{% trans 'triage-save' %}">
+                    </div>
+                    <div class="w3-section w3-col l6">
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="diff" value="{{ edit.diff }}">
+                            <input type="hidden" name="skip" value="true">
+                            <button
+                            class="w3-button w3-purple w3-leftbar w3-rightbar w3-border-light-grey w3-block"
+                            type="submit"
+                            {% if not edit.diff %}disabled{% endif %}
+                            >{% trans 'triage-jump' %}</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div id="edits" class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
+                <h2>{% trans 'edits' %}</h2>
+                <div class="w3-row">
+                    <div class="w3-col l6 m12 s6">
+                        <h6 class="w3-center">{% trans 'triage-toeval' %}</h6>
+                        <h1 class="w3-center">{{ onqueue }}</h1>
+                    </div>
+                    <div class="w3-col l6 m12 s6">
+                        <h6 class="w3-center">{% trans 'triage-towait' %}</h6>
+                        <h1 class="w3-center">{{ onwait }}</h1>
+                    </div>
+                </div>
+                <div class="w3-row">
+                    <div class="w3-col l6 m12 s6">
+                        <h6 class="w3-center">{% trans 'triage-onhold' %}</h6>
+                        <h1 class="w3-center">{{ onhold }}</h1>
+                    </div>
+                    <div class="w3-col l6 m12 s6">
+                        <h6 class="w3-center">{% trans 'triage-onskip' %}</h6>
+                        <h1 class="w3-center">{{ onskip }}</h1>
+                    </div>
+                </div>
+                <p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="release" value="true">
+                        <button
+                        class="w3-button w3-purple w3-leftbar w3-rightbar w3-border-light-grey w3-block"
+                        type="submit"
+                        {% if not onskip %}disabled{% endif %}
+                        >{% trans 'triage-release' %}</button>
+                    </form>
+                </p>
+                {% if evaluator_status == 'G' %}
+                    <p>
+                        <form method="post"
+                        onsubmit="return confirm('{% trans 'evaluators-areyousure' %}');">
+                            {% csrf_token %}
+                            <input type="hidden" name="unhold" value="true">
+                            <button
+                            class="w3-button w3-red w3-leftbar w3-rightbar w3-border-light-grey w3-block"
+                            type="submit"
+                            {% if onpending < 0 %}disabled{% endif %}
+                            >{% trans 'triage-unhold' %}</button>
+                        </form>
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+        <div id="second_column" class="w3-half">
+            {% if error == 'updating' %}
+                <div class="w3-panel w3-red w3-display-container w3-border">
+                    <p>
+                        <h3>{% trans 'triage-database' %}</h3>
+                        {% trans 'triage-databaseabout' %}
+                    </p>
+                </div>
+            {% elif not compare %}
+                <div class="w3-panel w3-orange w3-display-container w3-border">
+                    <p>
+                        <h3>{% trans 'triage-noedit' %}</h3>
+                    </p>
+                </div>
+            {% else %}
+                <div class="w3-container w3-justify w3-margin-bottom w3-row details">
+                    <h3>{% trans 'triage-details' %}</h3>
+                    <div class="w3-col l6">
+                        <strong><i class="fa-solid fa-user"></i>{% trans 'label-user' %}</strong>
+                        <span style="font-weight:bolder;color:red;">{{ compare.touser }}</span>
+                        <br>
+                        <strong><i class="fa-solid fa-font"></i>{% trans 'label-page' %}</strong>
+                        <a href="{{ contest.endpoint }}?curid={{ compare.toid }}"
+                        target="_blank" rel="noopener">{{ compare.totitle }}</a>
+                        <br>
+                        <strong><i class="fa-solid fa-hand-point-up"></i>{% trans 'triage-authorship' %}</strong>
+                        <a onclick="calculateAuthorship('{{ edit.diff }}','{{ contest.endpoint }}')"
+                        href="#" id="a_authorship">{% trans 'triage-verify' %}</a>
+                        <span id="span_authorship"></span>
+                        <br>
+                        <strong><i class="fa-regular fa-clock"></i>{% trans 'label-timestamp' %}</strong>
+                        {{ edit.timestamp }} (UTC)
+                    </div>
+                    <div class="w3-col l6">
+                        <strong><i class="fa-solid fa-arrow-up-9-1"></i>{% trans 'label-diff' %}</strong>
+                        {{ edit.orig_bytes }} bytes
+                        <br>
+                        <strong><i class="fa-solid fa-thumbtack"></i>{% trans 'triage-diff' %}:</strong>
+                        <a href="{{ contest.endpoint }}?diff={{ edit.diff }}"
+                        target="_blank" rel="noopener">{{ edit.diff }}</a>
+                        <br>
+                        <strong><i class="fa-solid fa-triangle-exclamation"></i>{% trans 'triage-copyvio' %}:</strong>
+                        <a onclick="calculateCopyvios('{{ edit.diff }}','{{ contest.endpoint }}')"
+                        href="#" id="a_copyvios">{% trans 'triage-verify' %}</a>
+                        <span id="span_copyvios"></span>
+                        <br>
+                        <strong><i class="fa-solid fa-comment"></i>{% trans 'label-summary' %}</strong>
+                        {{ compare.tocomment }}
+                    </div>
+                </div>
+                <div class="tooltip w3-button w3-orange" style="visibility: hidden;">
+                    <span class="tooltiptext" id="tooltip">{% trans 'triage-counter' %}: 0</span>
+                </div>
+                <div class="w3-container" id="text-container">
+                    <h3>{% trans 'triage-differential' %}</h3>
+                    <table
+                    role="presentation"
+                    aria-label="Diferencial de edição"
+                    class="diff diff-desktop diff-contentalign-left diff-editfont-monospace w3-hide-small w3-hide-medium"
+                    >
+                        <colgroup>
+                            <col style="width:2%">
+                            <col style="width:48%">
+                            <col style="width:2%;">
+                            <col style="width:48%">
+                        </colgroup>
+                        {{ compare_html | safe }}
+                    </table>
+                    <table
+                    role="presentation"
+                    aria-label="Diferencial de edição"
+                    class="diff diff-mobile diff-contentalign-left diff-editfont-monospace w3-hide-large"
+                    >
+                        {{ compare_mobile_html | safe }}
+                    </table>
+                    <hr>
+                </div>
+            {% endif %}
+        </div>
+        <div id="third_column" class="w3-quarter">
+            <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom"
+            style="display:{% if edit.timestamp %}block{% else %}none{% endif %}">
+                <h2>{% trans 'triage-recenthistory' %}</h2>
+                {% for event in context %}
+                    <p class='{{ event.class }}'>
+                        <strong>{{ event.user }}</strong>
+                        <br>
+                        <a href="{{ contest.endpoint }}?diff={{ event.revid }}"
+                        target="_blank" rel="noopener">{{ event.timestamp }}</a>
+                        <br>
+                        <span class='w3-text-{{ event.color }}'>{{ event.bytes }} bytes</span>
+                    </p>
+                {% endfor %}
+            </div>
+            <div class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-justify w3-margin-bottom">
+                <h2>{% trans 'triage-generalinfo' %}</h2>
+                <p class="w3-small">
+                    <strong>{% trans 'triage-contestname' %}</strong>
+                    <br>
+                    {{ contest.name }}
+                </p>
+                <p class="w3-small">
+                    <strong>{% trans 'triage-loggedname' %}</strong>
+                    <br>
+                    {{ request.user }}
+                </p>
+                <p class="w3-small">
+                    <strong>{% trans 'triage-conteststart' %}</strong>
+                    <br>
+                    {{ contest.start_time }}
+                </p>
+                <p class="w3-small">
+                    <strong>{% trans 'triage-contestend' %}</strong>
+                    <br>
+                    {{ contest.end_time }}
+                </p>
+                <p class="w3-small">
+                    <strong>{% trans 'triage-lastupdate' %}</strong>
+                    <br>
+                    {{ contest.finished_update }}
+                </p>
+                <p class="w3-small">
+                    <strong>{% trans 'triage-delay' %}</strong>
+                    <br>
+                    {% blocktrans with triage_hours_1=contest.revert_time %}.{{ triage_hours_1 }}.{% endblocktrans %}
+                </p>
+                <p class="w3-small">
+                    <strong>{% trans 'triage-bpp' %}</strong>
+                    <br>
+                    {% blocktrans with triage_bytes_1=contest.bytes_per_points %}.{{ triage_bytes_1 }}.{% endblocktrans %}
+                </p>
+                <p class="w3-small">
+                    <strong>{% trans 'triage-maxbytes' %}</strong>
+                    <br>
+                    {% blocktrans with triage_bytes_1=contest.max_bytes_per_article %}.{{ triage_bytes_1 }}.{% endblocktrans %}
+                    /
+                    {% blocktrans with triage_points_1=triage_points %}.{{triage_points_1}}.{% endblocktrans %}
+                </p>
+                <p class="w3-small">
+                    <strong>{% trans 'triage-minbytes' %}</strong>
+                    <br>
+                    {% if not contest.minimum_bytes %}
+                        {% trans 'triage-indef' %}
+                    {% elif contest.minimum_bytes == -1 %}
+                        {% trans 'triage-includingall' %}
+                    {% else %}
+                        {% blocktrans with triage_bytes_1=contest.minimum_bytes %}.{{ triage_bytes_1 }}.{% endblocktrans %}
+                    {% endif %}
+                </p>
+                <p class="w3-small">
+                    <strong>{% trans 'triage-ipp' %}</strong>
+                    <br>
+                    {% if contest.pictures_per_points == 0 %}
+                        {% trans 'triage-noimages' %}
+                    {% else %}
+                        {% blocktrans with triage_images_1=contest.pictures_per_points %}.{{ triage_images_1 }}.{% endblocktrans %}
+                    {% endif %}
+                </p>
+                <p class="w3-small" style="display:{% if not contest.pictures_per_points %}none{% else %}block{% endif %}">
+                    <strong>{% trans 'triage-imagemode' %}</strong>
+                    <br>
+                    {% if contest.pictures_per_points == 2 %}
+                        {% trans 'triage-byimage' %}
+                    {% elif contest.pictures_per_points == 1 %}
+                        {% trans 'triage-byedition' %}
+                    {% else %}
+                        {% trans 'triage-bypage' %}
+                    {% endif %}
+                </p>
+                <p class="w3-small" style="display:{% if not contest.max_pic_per_article %}none{% else %}block{% endif %}">
+                    <strong>{% trans 'triage-maximages' %}</strong>
+                    <br>
+                    {% if contest.max_pic_per_article %}
+                        {{ contest.max_pic_per_article }}
+                    {% else %}
+                        {% trans 'triage-indef' %}
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
