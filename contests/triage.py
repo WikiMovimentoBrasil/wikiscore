@@ -3,7 +3,8 @@ from datetime import datetime, timedelta
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Contest, Edit, Evaluation, Participant, ParticipantEnrollment, Qualification, Evaluator
 from django.utils import timezone
-from django.db.models import Sum, Case, When, Value, IntegerField, Q, OuterRef, Subquery
+from django.db import transaction
+from django.db.models import Sum, Case, When, Value, IntegerField, Q, OuterRef, Subquery, Count
 
 
 class TriageHandler:
@@ -51,7 +52,9 @@ class TriageHandler:
             return_dict.update({'error': 'noedit'})
         else:
             # Mark the edit as being held by the current user
-            self.hold_edit(next_edit, request.user)
+            hold = self.hold_edit(next_edit, request.user)
+            if not hold:
+                return_dict.update({'error': 'held'})
             
             # Fetch comparison data for the edit
             compare_data, compare_data_mobile = self.fetch_compare_data(contest.api_endpoint, next_edit.diff)
@@ -97,31 +100,34 @@ class TriageHandler:
         return return_dict 
 
     def skip_edit(self, diff):
-        return Evaluation.objects.create(
+        evaluation = Evaluation.objects.create(
             contest=self.contest,
             evaluator=Evaluator.objects.get(contest=self.contest, user=self.user),
             diff=Edit.objects.get(diff=diff),
             status='3'
         )
+        Edit.objects.filter(diff=diff).update(last_evaluation=evaluation)
+        return evaluation
 
     def release_edit(self):
         evaluator = Evaluator.objects.get(contest=self.contest, user=self.user)
 
-        subquery = Evaluation.objects.filter(
-            contest=self.contest,
-            evaluator=evaluator,
-            diff=OuterRef('diff')
-        ).order_by('-when').values('pk')[:1]
-
-        skipped = Evaluation.objects.filter(
-            contest=self.contest,
-            pk__in=Subquery(subquery),
-            status='3'
+        skipped = Edit.objects.filter(
+            contest=self.contest, 
+            last_evaluation__evaluator=evaluator, 
+            last_evaluation__status='3'
         )
 
-        return Evaluation.objects.bulk_create([
-            Evaluation(contest=self.contest, evaluator=evaluator, diff=skip.edit) for skip in skipped
-        ])
+        for skip in skipped:
+            evaluation = Evaluation.objects.create(
+                contest=self.contest,
+                evaluator=evaluator,
+                diff=skip,
+                status='0' # Status '0' indicates the edit is pending
+            )
+            Edit.objects.filter(diff=skip.diff).update(last_evaluation=evaluation)
+
+        return skipped
 
     def evaluate_edit(self, request):
 
@@ -147,80 +153,82 @@ class TriageHandler:
             status='1',
             obs=request.POST.get('obs') or None
         )
+        Edit.objects.filter(diff=diff).update(last_evaluation=evaluation)
+
         return evaluation.__dict__
 
     def get_next_edit(self, contest):
 
-        subquery = Evaluation.objects.filter(
-            contest=contest,
-            diff=OuterRef('diff')
-        ).order_by('-when').values('pk')[:1]
-
-        evaluated = Evaluation.objects.filter(
-            contest=contest,
-            pk__in=Subquery(subquery),
-            status__in=['1', '3']
-        ).values_list('diff', flat=True)
-
-        held = Evaluation.objects.filter(
-            contest=contest,
-            pk__in=Subquery(subquery),
-            status='2'
-        ).exclude(
-            evaluator=Evaluator.objects.get(contest=contest, user=self.user)
-        ).values_list('diff', flat=True)
-
-        active = Qualification.objects.filter(
-            contest=contest,
-            status=1,
-        ).values_list('diff_id', flat=True)
-
         edit = Edit.objects.filter(
-            pk__in=active,
             contest=contest,
             orig_bytes__gte=contest.minimum_bytes or 1,
             timestamp__lte=timezone.now() - timedelta(hours=contest.revert_time),
             participant__isnull=False,
-        ).exclude(pk__in=evaluated).exclude(pk__in=held).order_by('timestamp').first()
+            last_qualification__status=1
+        ).filter(
+            Q(last_evaluation=None) |
+            Q(last_evaluation__status='0') |
+            (Q(last_evaluation__status='2') & Q(last_evaluation__evaluator=Evaluator.objects.get(contest=contest, user=self.user)))
+        ).order_by('timestamp').first()
 
         return edit
 
     def unhold_edit(self):
-        subquery = Evaluation.objects.filter(
-            contest=contest,
-            diff=OuterRef('diff')
-        ).order_by('-when').values('pk')[:1]
 
-        lockeds = Evaluation.objects.filter(
-            contest=contest,
-            pk__in=Subquery(subquery),
-            status__in=['2', '3']
+        lockeds = Edit.objects.filter(
+            contest=self.contest,
+            last_evaluation__status__in=['2', '3'],
         )
 
-        return Evaluation.objects.bulk_create([
-            Evaluation(contest=self.contest, diff=locked.diff) for locked in lockeds
-        ])
+        for locked in lockeds:
+            evalution = Evaluation.objects.create(
+                contest=self.contest,
+                diff=locked.diff,
+                status='0' # Status '0' indicates the edit is pending
+            )
+            Edit.objects.filter(diff=locked.diff).update(last_evaluation=evaluation)
+
+        return lockeds
 
     # Function to mark the edit as being held by the user
     def hold_edit(self, edit, user):
-        subquery = Evaluation.objects.filter(
-            contest=self.contest,
-            diff=OuterRef('diff')
-        ).order_by('-when').values('pk')[:1]
 
-        held = Evaluation.objects.filter(
-            contest=self.contest,
-            pk__in=Subquery(subquery),
-            status=2
-        )
+        # Start an atomic transaction
+        with transaction.atomic():
+            # Lock the edit row to avoid race conditions
+            held_edit = Edit.objects.select_for_update().filter(
+                diff=edit.diff,
+                contest=self.contest
+            ).filter(
+                Q(last_evaluation=None) |
+                Q(last_evaluation__status='0') |
+                (Q(last_evaluation__status='2') & Q(last_evaluation__evaluator=Evaluator.objects.get(contest=self.contest, user=self.user)))
+            ).first()
 
-        if not held:
-            Evaluation.objects.create(
-                contest=self.contest,
-                evaluator=Evaluator.objects.get(contest=self.contest, user=user),
-                diff=edit,
-                status='2' # Status '2' indicates the edit is on hold
-            )
+            if held_edit:
+                # Check if the edit is already held by the same user (status='2' and evaluator is the current user)
+                if held_edit.last_evaluation and held_edit.last_evaluation.status == '2' and held_edit.last_evaluation.evaluator.user == self.user:
+                    # Edit is already held by the current user, no need to create a new evaluation
+                    return True
+                
+                # Create a new evaluation if the edit is not already held by the current user
+                evaluator = Evaluator.objects.get(contest=self.contest, user=self.user)
+                evaluation = Evaluation.objects.create(
+                    contest=self.contest,
+                    evaluator=evaluator,
+                    diff=held_edit,
+                    status='2'  # Status '2' indicates the edit is on hold
+                )
+
+                # Update the edit's last_evaluation field
+                held_edit.last_evaluation = evaluation
+                held_edit.save(update_fields=['last_evaluation'])
+
+                # Return success after creating and updating
+                return True
+            else:
+                # Handle the case where the edit is already held by another user
+                return False
 
     # Function to fetch comparison data for the edit
     def fetch_compare_data(self, api_endpoint, diff):
@@ -303,54 +311,22 @@ class TriageHandler:
     # Function to calculate edit statistics (e.g., on queue, on hold)
     def calculate_edit_stats(self, contest):
 
-        subquery = Evaluation.objects.filter(
-            contest=contest,
-            diff=OuterRef('diff')
-        ).order_by('-when').values('pk')[:1]
+        # Annotations for different statuses
+        stats = Edit.objects.filter(contest=contest).aggregate(
+            onqueue=Count('pk', filter=Q(
+                last_qualification__status='1',
+                orig_bytes__gte=contest.minimum_bytes or 1,
+                timestamp__lte=timezone.now() - timedelta(hours=contest.revert_time),
+                participant__isnull=False
+            ) & ~Q(last_evaluation__status__in=['1', '2', '3'])),
+            onwait=Count('pk', filter=Q(
+                last_qualification__status='1',
+                orig_bytes__gte=contest.minimum_bytes or 1,
+                timestamp__gte=timezone.now() - timedelta(hours=contest.revert_time),
+                participant__isnull=False
+            ) & ~Q(last_evaluation__status__in=['1', '2', '3'])),
+            onhold=Count('pk', filter=Q(last_evaluation__status='2')),
+            onskip=Count('pk', filter=Q(last_evaluation__status='3'))
+        )
 
-        evaluated = Evaluation.objects.filter(
-            contest=contest,
-            pk__in=Subquery(subquery),
-            status='1'
-        ).values_list('diff', flat=True)
-
-        held = Evaluation.objects.filter(
-            contest=contest,
-            pk__in=Subquery(subquery),
-            status='2'
-        ).values_list('diff', flat=True)
-
-        skipped = Evaluation.objects.filter(
-            contest=contest,
-            pk__in=Subquery(subquery),
-            status='3'
-        ).values_list('diff', flat=True)
-
-        active = Qualification.objects.filter(
-            contest=contest,
-            status=1,
-        ).values_list('diff_id', flat=True)
-
-        wait = Edit.objects.filter(
-            pk__in=active,
-            contest=contest,
-            orig_bytes__gte=contest.minimum_bytes or 1,
-            timestamp__gte=timezone.now() - timedelta(hours=contest.revert_time),
-            participant__isnull=False,
-        ).exclude(pk__in=evaluated).exclude(pk__in=held).exclude(pk__in=skipped)
-
-        queue = Edit.objects.filter(
-            pk__in=active,
-            contest=contest,
-            orig_bytes__gte=contest.minimum_bytes or 1,
-            timestamp__lte=timezone.now() - timedelta(hours=contest.revert_time),
-            participant__isnull=False,
-        ).exclude(pk__in=evaluated).exclude(pk__in=held).exclude(pk__in=skipped)
-
-
-        onwait = wait.count()
-        onskip = Edit.objects.filter(pk__in=skipped).count()
-        onhold = Edit.objects.filter(pk__in=held).count()
-        onqueue = queue.count()
-
-        return {'onqueue': onqueue, 'onwait': onwait, 'onskip': onskip, 'onhold': onhold}
+        return stats
