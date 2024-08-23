@@ -15,22 +15,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         contest_name_id = options.get('contest')
         contest = Contest.objects.get(name_id=contest_name_id)
-        
-        # Coleta lista de edições
-        subquery = Qualification.objects.filter(
-            contest=contest,
-            diff=OuterRef('diff')
-        ).order_by('-when').values('pk')[:1]
 
-        # Get the latest enrollment for each user, then filter by enrolled=True
-        already_reverted = Qualification.objects.filter(
-            contest=contest,
-            pk__in=Subquery(subquery),
-            status=0
-        ).values_list('diff__diff', flat=True)
-        edits = Edit.objects.filter(contest=contest).exclude(participant=None).values_list('diff', flat=True)
-
-        diffs = list(set(edits) - set(already_reverted))
+        # Coleta lista de edições ativas no concurso
+        diffs = Edit.objects.filter(contest=contest, last_qualification__status=1).values_list('diff', flat=True)
 
         # Loop para análise de cada edição
         for diff in diffs:
@@ -58,11 +45,12 @@ class Command(BaseCommand):
                 or (revision and 'sha1hidden' in revision)
                 or (revision and 'mw-reverted' in revision['tags'])
             ):
-                Qualification.objects.create(
+                new_qualification = Qualification.objects.create(
                     contest=contest,
                     diff=Edit.objects.get(diff=diff),
                     status=0,
                 )
+                Edit.objects.filter(diff=diff).update(last_qualification=new_qualification)
                 self.stdout.write(f"Marcada edição {diff} como revertida.")
 
         # Encerra script

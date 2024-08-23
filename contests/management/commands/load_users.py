@@ -98,22 +98,20 @@ class Command(BaseCommand):
     def process_enrollments(self, enrollments, contest, wiki_id):
         """Processes each enrollment, updating or inserting users."""
         # Get all participant enrollments for the specific contest
-        latest_enrollment_subquery = ParticipantEnrollment.objects.filter(
-            contest=contest,
-            user=OuterRef('user')
-        ).order_by('-when').values('pk')[:1]
+        already_enrolled = Participant.objects.filter(contest=contest, last_enrollment__enrolled=True).values_list('global_id', flat=True)
 
-        # Get the latest enrollment for each user, then filter by enrolled=True
-        already_enrolled = ParticipantEnrollment.objects.filter(
-            contest=contest,
-            pk__in=Subquery(latest_enrollment_subquery),
-            enrolled=True
-        ).values_list('user__global_id', flat=True)
+        # Extract global IDs from the enrollments
+        enrollments_ids = set(enrollment['global_id'] for enrollment in enrollments)
 
-        missing_enrollments = [enrollment for enrollment in already_enrolled if enrollment not in enrollments]
-        ParticipantEnrollment.objects.bulk_create([
-            ParticipantEnrollment(contest=contest, enrolled=False, user=Participant.objects.get(global_id=enrollment, contest=contest)) for enrollment in missing_enrollments
-        ])
+        for enrollment in already_enrolled:
+            if str(enrollment) not in enrollments_ids:
+                self.stdout.write(f"Usuário {enrollment} não está mais inscrito. Desinscrevendo...")
+                unenroll = ParticipantEnrollment.objects.create(
+                    contest=contest, 
+                    enrolled=False, 
+                    user=Participant.objects.get(global_id=enrollment, contest=contest)
+                )
+                Participant.objects.filter(global_id=enrollment, contest=contest).update(last_enrollment=unenroll)
 
         for enrollment in enrollments:
             global_id = enrollment['global_id']
@@ -129,18 +127,23 @@ class Command(BaseCommand):
 
     def insert_or_update_user(self, global_id, username, contest, wiki_id, timestamp):
         """Inserts or updates the user in the Participant table."""
-        if Participant.objects.filter(global_id=global_id, contest=contest).exists():
-            Participant.objects.filter(global_id=global_id, contest=contest).update(user=username)
-            local_id = Participant.objects.get(global_id=global_id, contest=contest).local_id
+        try:
+            participant = Participant.objects.get(global_id=global_id, contest=contest)
+            local_id = participant.local_id
             self.stdout.write(f"Usuário {username} já está na tabela. Ignorando...")
-        else:
+        except Participant.DoesNotExist:
+            participant = None
             local_id = self.add_user_contest(global_id, contest, wiki_id, timestamp)
+            self.stdout.write(f"Usuário {username} inserido com sucesso!")
+        
+        if participant and participant.user != username:
+            self.stdout.write(f"Usuário {username} mudou de nome. Atualizando...")
+            Participant.objects.filter(global_id=global_id, contest=contest).update(user=username)
 
         if not local_id:
             self.stdout.write(f"Usuário {username} não encontrado. Ignorando...")
             return None
         else:
-            self.stdout.write(f"Usuário {username} inserido com sucesso!")
             self.update_user_edits(local_id, contest, timestamp)
 
     def add_user_contest(self, global_id, contest, wiki_id, timestamp):
@@ -154,7 +157,7 @@ class Command(BaseCommand):
         if not local_id:
             return None
         else:
-            Participant.objects.create(
+            new_participant = Participant.objects.create(
                 contest=contest,
                 user=user,
                 timestamp=timestamp,
@@ -162,6 +165,11 @@ class Command(BaseCommand):
                 local_id=local_id,
                 attached=attached,
             )
+            new_enrollment = ParticipantEnrollment.objects.create(
+                contest=contest,
+                user=new_participant
+            )
+            Participant.objects.filter(global_id=global_id, contest=contest).update(last_enrollment=new_enrollment)
             return local_id
 
     def fetch_user_data(self, global_id, contest):
@@ -179,24 +187,17 @@ class Command(BaseCommand):
     def update_user_edits(self, local_id, contest, timestamp):
         """Updates user edits in the Edit table."""
         self.stdout.write(f"Atualizando edições do usuário com ID local {local_id}...")
-        participant = Participant.objects.get(local_id=local_id, contest=contest)
-
-        try:
-            already_enrolled = ParticipantEnrollment.objects.filter(contest=contest, user=participant).latest('when').enrolled
-        except ParticipantEnrollment.DoesNotExist:
-            already_enrolled = False
-
-        if already_enrolled:
-            self.stdout.write("Usuário já está inscrito. Ignorando...")
-        else:
-            ParticipantEnrollment.objects.create(contest=contest, user=participant)
+        participant = Participant.objects.get(local_id=local_id, contest=contest, last_enrollment__enrolled=True)
         
         Edit.objects.filter(user_id=local_id, contest=contest, participant=None).update(participant=participant)
 
-        edits = Edit.objects.filter(user_id=local_id, timestamp__gte=timestamp, contest=contest)
-        Qualification.objects.bulk_create([
-            Qualification(contest=contest, diff=edit) for edit in edits
-        ])
+        edits = Edit.objects.filter(user_id=local_id, timestamp__gte=timestamp, contest=contest, last_qualification=None)
+        edits_to_update = []
+        for edit in edits:
+            qualification = Qualification.objects.create(contest=contest, diff=edit)
+            edit.last_qualification = qualification
+            edits_to_update.append(edit)
+        Edit.objects.bulk_update(edits_to_update, ['last_qualification'])
 
     def unlock_edits(self, contest):
         """Unlocks any remaining locked edits in the Edit table."""
@@ -204,7 +205,7 @@ class Command(BaseCommand):
 
         subquery = Evaluation.objects.filter(
             contest=contest,
-            edit=OuterRef('edit')
+            diff=OuterRef('diff')
         ).order_by('-when').values('pk')[:1]
 
         lockeds = Evaluation.objects.filter(
@@ -214,5 +215,5 @@ class Command(BaseCommand):
         )
 
         Evaluation.objects.bulk_create([
-            Evaluation(contest=self.contest, edit=locked.edit) for locked in lockeds
+            Evaluation(contest=self.contest, diff=locked.diff) for locked in lockeds
         ])

@@ -100,7 +100,7 @@ class TriageHandler:
         return Evaluation.objects.create(
             contest=self.contest,
             evaluator=Evaluator.objects.get(contest=self.contest, user=self.user),
-            edit=Edit.objects.get(diff=diff),
+            diff=Edit.objects.get(diff=diff),
             status='3'
         )
 
@@ -110,7 +110,7 @@ class TriageHandler:
         subquery = Evaluation.objects.filter(
             contest=self.contest,
             evaluator=evaluator,
-            edit=OuterRef('edit')
+            diff=OuterRef('diff')
         ).order_by('-when').values('pk')[:1]
 
         skipped = Evaluation.objects.filter(
@@ -120,7 +120,7 @@ class TriageHandler:
         )
 
         return Evaluation.objects.bulk_create([
-            Evaluation(contest=self.contest, evaluator=evaluator, edit=skip.edit) for skip in skipped
+            Evaluation(contest=self.contest, evaluator=evaluator, diff=skip.edit) for skip in skipped
         ])
 
     def evaluate_edit(self, request):
@@ -135,12 +135,12 @@ class TriageHandler:
             picture = True if request.POST.get('picture') == 'sim' else False
 
         overwrite_value = request.POST.get('overwrite')
-        real_bytes = int(overwrite_value) if overwrite_value and overwrite_value.isnumeric() else 0
+        real_bytes = int(overwrite_value) if overwrite_value and overwrite_value.isnumeric() else Edit.objects.get(diff=diff).orig_bytes
 
         evaluation = Evaluation.objects.create(
             contest=self.contest,
             evaluator=Evaluator.objects.get(contest=self.contest, user=self.user),
-            edit=Edit.objects.get(diff=request.POST.get('diff')),
+            diff=Edit.objects.get(diff=request.POST.get('diff')),
             valid_edit=True if request.POST.get('valid') == 'sim' else False,
             pictures=picture,
             real_bytes=real_bytes,
@@ -153,14 +153,14 @@ class TriageHandler:
 
         subquery = Evaluation.objects.filter(
             contest=contest,
-            edit=OuterRef('edit')
+            diff=OuterRef('diff')
         ).order_by('-when').values('pk')[:1]
 
         evaluated = Evaluation.objects.filter(
             contest=contest,
             pk__in=Subquery(subquery),
             status__in=['1', '3']
-        ).values_list('edit', flat=True)
+        ).values_list('diff', flat=True)
 
         held = Evaluation.objects.filter(
             contest=contest,
@@ -168,7 +168,7 @@ class TriageHandler:
             status='2'
         ).exclude(
             evaluator=Evaluator.objects.get(contest=contest, user=self.user)
-        ).values_list('edit', flat=True)
+        ).values_list('diff', flat=True)
 
         active = Qualification.objects.filter(
             contest=contest,
@@ -188,7 +188,7 @@ class TriageHandler:
     def unhold_edit(self):
         subquery = Evaluation.objects.filter(
             contest=contest,
-            edit=OuterRef('edit')
+            diff=OuterRef('diff')
         ).order_by('-when').values('pk')[:1]
 
         lockeds = Evaluation.objects.filter(
@@ -198,14 +198,14 @@ class TriageHandler:
         )
 
         return Evaluation.objects.bulk_create([
-            Evaluation(contest=self.contest, edit=locked.edit) for locked in lockeds
+            Evaluation(contest=self.contest, diff=locked.diff) for locked in lockeds
         ])
 
     # Function to mark the edit as being held by the user
     def hold_edit(self, edit, user):
         subquery = Evaluation.objects.filter(
             contest=self.contest,
-            edit=OuterRef('edit')
+            diff=OuterRef('diff')
         ).order_by('-when').values('pk')[:1]
 
         held = Evaluation.objects.filter(
@@ -218,7 +218,7 @@ class TriageHandler:
             Evaluation.objects.create(
                 contest=self.contest,
                 evaluator=Evaluator.objects.get(contest=self.contest, user=user),
-                edit=edit,
+                diff=edit,
                 status='2' # Status '2' indicates the edit is on hold
             )
 
@@ -305,26 +305,26 @@ class TriageHandler:
 
         subquery = Evaluation.objects.filter(
             contest=contest,
-            edit=OuterRef('edit')
+            diff=OuterRef('diff')
         ).order_by('-when').values('pk')[:1]
 
         evaluated = Evaluation.objects.filter(
             contest=contest,
             pk__in=Subquery(subquery),
             status='1'
-        ).values_list('edit', flat=True)
+        ).values_list('diff', flat=True)
 
         held = Evaluation.objects.filter(
             contest=contest,
             pk__in=Subquery(subquery),
             status='2'
-        ).values_list('edit', flat=True)
+        ).values_list('diff', flat=True)
 
         skipped = Evaluation.objects.filter(
             contest=contest,
             pk__in=Subquery(subquery),
             status='3'
-        ).values_list('edit', flat=True)
+        ).values_list('diff', flat=True)
 
         active = Qualification.objects.filter(
             contest=contest,

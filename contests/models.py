@@ -65,6 +65,7 @@ class Participant(models.Model):
     global_id = models.IntegerField()
     local_id = models.IntegerField(blank=True)
     attached = models.DateTimeField(blank=True)
+    last_enrollment = models.ForeignKey('ParticipantEnrollment', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return self.user
@@ -91,6 +92,8 @@ class Edit(models.Model):
     participant = models.ForeignKey('Participant', on_delete=models.SET_NULL, null=True)
     orig_bytes = models.IntegerField(blank=True, default=0)
     new_page = models.BooleanField(default=False)
+    last_qualification = models.ForeignKey('Qualification', on_delete=models.SET_NULL, null=True)
+    last_evaluation = models.ForeignKey('Evaluation', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return (f"{self.contest.name_id} - {self.diff}")
@@ -123,7 +126,7 @@ class Evaluation(models.Model):
     )
     contest = models.ForeignKey('Contest', on_delete=models.CASCADE)
     evaluator = models.ForeignKey('Evaluator', on_delete=models.SET_NULL, null=True)
-    edit = models.ForeignKey('Edit', on_delete=models.CASCADE)
+    diff = models.ForeignKey('Edit', on_delete=models.CASCADE)
     valid_edit = models.BooleanField(default=False)
     pictures = models.SmallIntegerField(default=0)
     real_bytes = models.IntegerField(blank=True, default=0)
@@ -132,4 +135,4 @@ class Evaluation(models.Model):
     obs = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return (f"{self.contest.name_id} - {self.edit.diff} - {self.evaluator.user.username} - {self.status} - {self.when}")
+        return (f"{self.contest.name_id} - {self.diff.diff} - {self.evaluator.user.username} - {self.status} - {self.when}")
