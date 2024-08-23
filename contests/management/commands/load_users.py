@@ -1,7 +1,7 @@
 import csv
 import requests
 from django.db import connection, models
-from django.db.models import OuterRef, Subquery
+from django.db.models import OuterRef, Subquery, F
 from datetime import datetime
 from dateutil import parser
 from contests.models import Contest, Edit, Participant, ParticipantEnrollment, Qualification, Evaluation
@@ -26,8 +26,17 @@ class Command(BaseCommand):
             enrollments = self.parse_event(response)
         else:
             csv_content = self.fetch_csv_data(contest)
-            enrollments = self.parse_csv(csv_content)
-            self.stdout.write(f"Lista de usuários coletada. ({len(enrollments)} usuários encontrados)")
+            if csv_content:
+                enrollments = self.parse_csv(csv_content)
+                self.stdout.write(f"Lista de usuários coletada. ({len(enrollments)} usuários encontrados)")
+            else:
+                # Get saved enrollments from the database if Outreach is down
+                self.stdout.write("Não foi possível coletar a lista de usuários. Usando dados salvos...")
+                enrollments = Participant.objects.filter(contest=contest).values(
+                    'global_id', 
+                    username=F('user'), 
+                    enrollment_timestamp=F('timestamp')
+                )
 
         # Coleta ID da wiki
         wiki_id = self.fetch_wiki_id(contest)
@@ -49,8 +58,11 @@ class Command(BaseCommand):
         self.stdout.write("Coletando lista de usuários inscritos...")
         csv_params = {"course": contest.outreach_name}
         csv_url = 'https://outreachdashboard.wmflabs.org/course_students_csv'
-        response = requests.get(csv_url, params=csv_params, timeout=15)
-        response.encoding = 'utf-8'
+        try:
+            response = requests.get(csv_url, params=csv_params, timeout=15)
+            response.encoding = 'utf-8'
+        except requests.exceptions.Timeout:
+            return None
         if not response.text:
             raise ValueError("Não foi possível encontrar a lista de usuários no Outreach.")
         return response.text
