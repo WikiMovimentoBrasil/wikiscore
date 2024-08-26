@@ -15,7 +15,9 @@
     <div class="w3-{{ contest.theme }} w3-large w3-bar">
         <img src="{% static 'Logo_Branco.svg' %}" alt="logo" class="w3-bar-item" style="width: 128px;">
         <button onclick="window.open('graph_page', '_blank');" class="w3-button w3-bar-item">{% trans 'login-graph' %}</button>
-        <button onclick="window.open('{% url 'login' %}')" class="w3-button w3-bar-item">{% trans 'login' %}</button>
+        {% if result.is_evaluator %}
+            <button onclick="window.open('{% url 'triage_view' %}?contest={{ contest.name_id }}')" class="w3-button w3-bar-item">{% trans 'login' %}</button>
+        {% endif %}
         <span class="w3-bar-item w3-right w3-hide-small">{{ contest.name }}</span>
     </div>
     <div class="w3-row-padding">
