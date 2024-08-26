@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+
+
+{% block pagename %}{% trans 'counter' %}{% endblock %}
+
+
+{% block content %}
+    <div class="w3-container" style="margin-top:43px;padding-top:16px;">
+        <div class="w3-threequarter w3-section">
+            <p class="w3-text-darkgrey w3-container">
+                {% blocktrans with counter_about_1=contest.name counter_about_2=date counter_about_3=time %}.{{ counter_about_1 }}.{{ counter_about_2 }}.{{ counter_about_3 }}.{% endblocktrans %}
+                {% trans 'counter-description' %}
+            </p>
+        </div>
+        <div class="w3-quarter w3-section">
+            <form class="w3-container w3-card w3-padding" method="post">
+                <caption>
+                    {% trans 'counter-uptotime' %}
+                </caption>
+                <input
+                class="w3-input w3-border"
+                type="datetime-local"
+                name="time_round"
+                step="1"
+                value="{{ contest.time_form }}"
+                >
+                <input class="w3-btn w3-block w3-{{ contest.theme }}" type="submit">
+            </form>
+        </div>
+    </div>
+    {% if contest_begun %}
+        # TODO: stats.php
+        <div class="w3-container">
+            <table aria-label="Lista de participantes" class="w3-table-all w3-hoverable w3-card">
+                <tr>
+                    <th>{% trans 'counter-user' %}</th>
+                    <th>{% trans 'counter-bytes' %}</th>
+                    <th>{% trans 'counter-edits' %}</th>
+                    <th>{% trans 'counter-ppb' %}</th>
+                    <th>{% trans 'counter-images' %}</th>
+                    <th>{% trans 'counter-ppi' %}</th>
+                    <th>{% trans 'counter-points' %}</th>
+                    {% if user.user_status == 'G' %}
+                        <th>{% trans 'counter-redefine' %}</th>
+                    {% endif %}
+                </tr>
+                {% for row in counter %}
+                    <tr>
+                        <td>{{ row.user }}</td>
+                        <td>{{ row.sum }}</td>
+                        <td>{{ row.total_edits }}</td>
+                        <td>{{ row.bytes_points }}</td>
+                        <td>{{ row.total_pictures }}</td>
+                        <td>{{ row.pictures_points }}</td>
+                        <td>{{ row.total_points }}</td>
+                        {% if user.user_status == 'G' %}
+                            <td>
+                                <form
+                                method='post'
+                                onSubmit='return confirm(
+                                    "{% trans 'counter-confirm' %}"
+                                )'>
+                                    <input type='hidden' name='user_id' value='{{ row.id }}'>
+                                    <input
+                                    {% if row.total_edits == 0 %}disabled{% endif %}
+                                    type='submit'
+                                    class='w3-btn w3-{{ contest.theme }}'
+                                    value='{% trans 'counter-redefine' %}'>
+                                </form>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% else %}
+        <div class="w3-panel w3-orange w3-margin w3-display-container w3-border">
+            <p>
+                <h3>{% trans 'triage-noedit' %}</h3>
+            </p>
+        </div>
+    {% endif %}
+</body>
+{% if success %}
+    <script>
+        alert(
+            '{% trans 'counter-success' %}'
+        );
+        window.location.href = window.location.href;
+    </script>
+{% endif %}
+{% endblock %}
