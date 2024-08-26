@@ -17,6 +17,7 @@
         </div>
         <div class="w3-quarter w3-section">
             <form class="w3-container w3-card w3-padding" method="post">
+                {% csrf_token %}
                 <caption>
                     {% trans 'counter-uptotime' %}
                 </caption>
@@ -63,6 +64,7 @@
                                 onSubmit='return confirm(
                                     "{% trans 'counter-confirm' %}"
                                 )'>
+                                    {% csrf_token %}
                                     <input type='hidden' name='user_id' value='{{ row.id }}'>
                                     <input
                                     {% if row.total_edits == 0 %}disabled{% endif %}

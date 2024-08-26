@@ -1,6 +1,5 @@
 from django.urls import path
-from .views import contest_view, home_view, color_view, triage_view, backtrack_view
-from .counter import counter_view
+from .views import contest_view, home_view, color_view, triage_view, backtrack_view, counter_view
 
 urlpatterns = [
     path('', home_view, name='home_view'),

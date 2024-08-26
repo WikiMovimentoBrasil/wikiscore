@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Contest, Edit, Participant, Qualification, Evaluator
 from .triage import TriageHandler
+from .counter import CounterHandler
 from django.db import connection
 from datetime import datetime, timedelta
 from django.db.models import Count, Sum, Case, When, Value, IntegerField, Q, F, OuterRef, Subquery
@@ -210,6 +211,16 @@ def triage_view(request):
         'left': 'right' if translation.get_language_bidi() else 'left',
     })
     return render(request, "triage.html", triage_dict)
+
+@login_required()
+@contest_evaluator_required
+def counter_view(request):
+    contest = get_object_or_404(Contest, name_id=request.GET.get('contest'))
+
+    handler = CounterHandler(contest=contest)
+    context = handler.get_context(request)
+
+    return render(request, "counter.html", context)
 
 @login_required()
 @contest_evaluator_required
