@@ -5,12 +5,27 @@ from django.db import connection
 from datetime import datetime, timedelta
 from django.db.models import Count, Sum, Case, When, Value, IntegerField, Q, F, OuterRef, Subquery
 from django.db.models.functions import TruncDay
-from django.utils import timezone
+from django.utils import timezone, translation
+from django.utils.html import escape
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
-from django.utils.html import escape
 from django.contrib.auth.decorators import login_required
-from django.utils import translation
+from collections import defaultdict
+from functools import wraps
+
+def contest_evaluator_required(view_func):
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        contest_name_id = request.GET.get('contest')
+        if not contest_name_id:
+            return redirect('/')
+        contest = get_object_or_404(Contest, name_id=contest_name_id)
+        try:
+            Evaluator.objects.get(contest=contest, user=request.user)
+        except Evaluator.DoesNotExist:
+            raise PermissionDenied("You are not allowed to access this page.")
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
 
 def color_view(request):
     color = request.GET.get('color')
@@ -63,11 +78,17 @@ def home_view(request):
     })
 
 def contest_view(request):
-
     contest_name_id = request.GET.get('contest')
     if not contest_name_id:
         return redirect('/')
     contest = get_object_or_404(Contest, name_id=contest_name_id)
+
+    is_evaluator = False
+    try:
+        Evaluator.objects.get(contest=contest, user=request.user)
+        is_evaluator = True
+    except Evaluator.DoesNotExist:
+        pass
 
     date_min = contest.start_time
     date_max = contest.end_time
@@ -164,21 +185,15 @@ def contest_view(request):
         'total_bytes': ', '.join(total_bytes_list),
         'valid_edits': ', '.join(valid_edits_list),
         'valid_bytes': ', '.join(valid_bytes_list),
+        'is_evaluator': is_evaluator,
     }
 
     return render(request, 'contest.html', {'contest': contest, 'result': result})
 
 @login_required()
+@contest_evaluator_required
 def triage_view(request):
-    contest_name_id = request.GET.get('contest')
-    if not contest_name_id:
-        return redirect('/')
-    
-    contest = get_object_or_404(Contest, name_id=contest_name_id)
-    try:
-        Evaluator.objects.get(contest=contest, user=request.user)
-    except Evaluator.DoesNotExist:
-        raise PermissionDenied("You are not allowed to access this page.")
+    contest = get_object_or_404(Contest, name_id=request.GET.get('contest'))
 
     handler = TriageHandler(contest=contest, user=request.user, api_endpoint=contest.api_endpoint)
     if request.method == 'POST':
@@ -197,6 +212,7 @@ def triage_view(request):
     return render(request, "triage.html", triage_dict)
 
 @login_required()
+@contest_evaluator_required
 def backtrack_view(request):
     contest = get_object_or_404(Contest, name_id=request.GET.get('contest'))
 
