@@ -195,3 +195,36 @@ def triage_view(request):
         'left': 'right' if translation.get_language_bidi() else 'left',
     })
     return render(request, "triage.html", triage_dict)
+
+@login_required()
+def backtrack_view(request):
+    contest = get_object_or_404(Contest, name_id=request.GET.get('contest'))
+
+    qualified = False
+    diff = None
+    if request.POST.get('diff'):
+        diff = request.POST.get('diff')
+        edit = Edit.objects.get(diff=diff)
+        evaluator = Evaluator.objects.get(contest=contest, user=request.user)
+        new_qualification = Qualification.objects.create(contest=contest, diff=edit, evaluator=evaluator)
+        qualified = Edit.objects.filter(contest=contest, diff=diff, last_qualification__isnull=True).update(last_qualification=new_qualification)
+
+    edits = Edit.objects.filter(
+        contest=contest, 
+        last_qualification__isnull=True, 
+        participant__isnull=False
+    ).order_by('participant__user', 'timestamp')
+
+    result = defaultdict(lambda: {'enrollment_timestamp': None, 'diffs': []})
+    for edit in edits:
+        user = edit.participant.user
+        result[user]['enrollment_timestamp'] = edit.participant.timestamp
+        result[user]['diffs'].append({'diff': edit.diff, 'bytes': edit.orig_bytes, 'timestamp': edit.timestamp})
+
+    return render(request, 'backtrack.html', {
+        'contest': contest,
+        'result': result.items(),
+        'diff': diff if qualified else None,
+        'right': 'left' if translation.get_language_bidi() else 'right',
+    })
+

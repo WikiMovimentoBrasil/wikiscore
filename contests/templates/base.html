@@ -81,7 +81,7 @@
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='edits')?:'w3-blue'?>">
                     <i class="fa-solid fa-list-check"></i>&nbsp; {% trans 'triage-evaluated' %}
                 </a>
-                <a href="index.php?contest={{ contest.name_id }}&page=backtrack"
+                <a href="{% url 'backtrack_view' %}?contest={{ contest.name_id }}"
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='backtrack')?:'w3-blue'?>">
                     <i class="fa-solid fa-history"></i>&nbsp; {% trans 'backtrack' %}
                 </a>
