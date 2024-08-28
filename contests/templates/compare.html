@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+
+
+{% block pagename %}{% trans 'compare' %}{% endblock %}
+
+{% block head %}
+<script type="text/javascript">
+    function formatTime(seconds) {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = seconds % 60;
+
+        return (
+            String(hours).padStart(2, '0') +
+            ':' +
+            String(minutes).padStart(2, '0') +
+            ':' +
+            String(secs).padStart(2, '0')
+        );
+    }
+
+    function updateCountdown(targetTime) {
+        const countdownDiv = document.getElementById('countdown');
+        const currentTime = performance.now();
+        const remainingTimeInSeconds = Math.max(0, Math.round((targetTime - currentTime) / 1000));
+
+        if (remainingTimeInSeconds > 0) {
+            countdownDiv.textContent = formatTime(remainingTimeInSeconds);
+            requestAnimationFrame(() => updateCountdown(targetTime));
+        } else {
+            countdownDiv.textContent = '{% trans 'compare-soon' %}';
+        }
+    }
+
+    function startCountdown(totalSeconds) {
+        if (totalSeconds === false || isNaN(totalSeconds) || totalSeconds < 0) {
+            return;
+        }
+        const targetTime = performance.now() + totalSeconds * 1000;
+        updateCountdown(targetTime);
+    }
+</script>
+{% if update_request %}
+    <script type="text/javascript">history.replaceState(null, document.title, location.href);</script>
+{% endif %}
+{% endblock %}
+
+{% block onload %}startCountdown({{ update_countdown }}){% endblock %}
+
+{% block content %}
+<div class="w3-container" style="margin-top:43px;padding-top:16px;">
+    {% if update_countdown is False %}
+        <div class="w3-panel w3-pale-red w3-display-container w3-border">
+            {% if early_update and update_request %}
+                <h3>{% trans 'compare-next' %} {% trans 'compare-soon' %}</h3>
+            {% else %}
+                <h3>{% trans 'compare-ended' %}</h3>
+                <form method="post">
+                    {% csrf_token %}
+                    <p>
+                        <button
+                        class="w3-button w3-small w3-red"
+                        type="submit"
+                        name="update"
+                        value="update"
+                        >{% trans 'compare-force' %}</button>
+                    </p>
+                </form>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="w3-panel w3-pale-blue w3-display-container w3-border">
+            <h3>{% trans 'compare-next' %} <span id="countdown">...</span></h3>
+            <form method="post">
+                {% csrf_token %}
+                <p>
+                    <button
+                    class="w3-button w3-small w3-blue"
+                    type="submit"
+                    name="update"
+                    value="update"
+                    style="display:{% if update_countdown is 0 or early_update %}none{% else %}block{% endif %}"
+                    >{% trans 'compare-anticipate' %}</button>
+                    <span style="display:{% if early_update %}inline{% else %}none{% endif %}">
+                        {% trans 'compare-early' %}
+                    </span>
+                </p>
+            </form>
+        </div>
+    {% endif %}
+</div>
+<br>
+<div class="w3-row-padding">
+    <div class="w3-third w3-section">
+        <div class="w3-card white">
+            <div class="w3-container w3-purple">
+                <h3>{% trans 'compare-unlisted' %}</h3>
+            </div>
+            <ul class="w3-ul w3-border-top">
+                <li>
+                    {% trans 'compare-unlisted-about' %}
+                </li>
+                {% for title in articles.list_official_not_category %}
+                    <li>
+                        <a
+                        rel="noopener"
+                        target='_blank'
+                        href='{{ contest.endpoint }}?title={{ title|urlencode }}'>
+                            {{ title }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="w3-third w3-section">
+        <div class="w3-card white">
+            <div class="w3-container w3-indigo">
+                <h3>{% trans 'compare-uncated' %}</h3>
+            </div>
+            <ul class="w3-ul w3-border-top">
+                <li>
+                    {% trans 'compare-uncated-about' %}
+                </li>
+                {% for title in articles.list_category_not_official %}
+                    <li>
+                        <a
+                        rel="noopener"
+                        target='_blank'
+                        href='{{ contest.endpoint }}?title={{ title|urlencode }}'>
+                            {{ title }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="w3-third w3-section">
+        <div class="w3-card white">
+            <div class="w3-container w3-red">
+                <h3>{% trans 'compare-deletion' %}</h3>
+            </div>
+            <ul class="w3-ul w3-border-top">
+                <li>
+                    {% trans 'compare-deletion-about' %}
+                </li>
+                {% for title in articles.deletion %}
+                    <li>
+                        <a
+                        rel="noopener"
+                        target='_blank'
+                        href='{{ contest.endpoint }}?title={{ title|urlencode }}'>
+                            {{ title }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="w3-row-padding">
+    <div class="w3-third w3-section">
+        <div class="w3-card white">
+            <div class="w3-container w3-blue">
+                <h3>{% trans 'compare-nowikidata' %}</h3>
+            </div>
+            <ul class="w3-ul w3-border-top">
+                <li>
+                    {% trans 'compare-nowikidata-about' %}
+                </li>
+                {% for title in articles.list_wikidata %}
+                    <li>
+                        <a
+                        rel="noopener"
+                        target='_blank'
+                        href='{{ contest.endpoint }}?title={{ title|urlencode }}'>
+                            {{ title }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="w3-third w3-section">
+        <div class="w3-card white">
+            <div class="w3-container w3-black">
+                <h3>{% trans 'compare-inconsistency' %}</h3>
+            </div>
+            <ul class="w3-ul w3-border-top">
+                <li>
+                    {% trans 'compare-inconsistency-about' %}
+                </li>
+                {% for edits in inconsistent_edits %}
+                    <li class='{% if edits.last_evaluation__valid_edit is True %}w3-red{% endif %}'>
+                        <button
+                        class='w3-btn w3-padding-small w3-{{ contest.theme }}'
+                        type='button'
+                        onclick='window.open(
+                            "{{ contest.endpoint }}?diff={{ edits.diff|urlencode }}",
+                            "_blank"
+                        )'>{% trans 'compare-seediff' %}{{ edits.diff }}</button>
+                        <form
+                        style='display: inline'
+                        method='post'
+                        onSubmit='return confirm(
+                            "{% trans 'compare-areyousure' %}"
+                        )'>
+                            <input type='hidden' name='diff' value='{{ edits.diff }}'>
+                            <input type='submit' class='w3-btn w3-padding-small w3-red' value='{% trans 'compare-delete' %}'>
+                        </form>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <div class="w3-third w3-section">
+        <div class="w3-card white">
+            <div class="w3-container w3-deep-orange">
+                <h3>{% trans 'compare-rollback' %}</h3>
+            </div>
+            <ul class="w3-ul w3-border-top">
+                <li>
+                    {% trans 'compare-rollback-about' %}
+                </li>
+                {% for edits in reverted_edits %}
+                    <li>
+                        <button
+                        class='w3-btn w3-padding-small w3-{{ contest.theme }}'
+                        type='button'
+                        onclick='window.open(
+                            "{{ contest.endpoint }}?diff={{ edits.diff|urlencode }}",
+                            "_blank"
+                        )'>{% trans 'compare-seediff' %}{{ edits.diff }}</button>
+                        <button
+                        class='w3-btn w3-padding-small w3-purple'
+                        type='button'
+                        onclick='window.open(
+                            "contest={{ contest.name_id }}&page=modify&diff={{ edits.diff|urlencode }}",
+                            "_blank"
+                        );'>{% trans 'compare-reevaluate' %}</button>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -73,7 +73,7 @@
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='modify')?:'w3-blue'?>">
                     <i class="fa-solid fa-pen-to-square"></i>&nbsp; {% trans 'modify' %}
                 </a>
-                <a href="index.php?contest={{ contest.name_id }}&page=compare"
+                <a href="{% url 'compare_view' %}?contest={{ contest.name_id }}"
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='compare')?:'w3-blue'?>">
                     <i class="fa-solid fa-code-compare"></i>&nbsp; {% trans 'compare' %}
                 </a>

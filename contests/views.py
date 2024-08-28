@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import Contest, Edit, Participant, Qualification, Evaluator
 from .triage import TriageHandler
 from .counter import CounterHandler
+from .compare import CompareHandler
 from django.db import connection
 from datetime import datetime, timedelta
 from django.db.models import Count, Sum, Case, When, Value, IntegerField, Q, F, OuterRef, Subquery
@@ -255,3 +256,11 @@ def backtrack_view(request):
         'right': 'left' if translation.get_language_bidi() else 'right',
     })
 
+@login_required()
+@contest_evaluator_required
+def compare_view(request):
+    contest = get_object_or_404(Contest, name_id=request.GET.get('contest'))
+
+    handler = CompareHandler(contest=contest)
+
+    return render(request, 'compare.html', handler.execute(request))
