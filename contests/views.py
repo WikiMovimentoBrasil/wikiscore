@@ -14,6 +14,8 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 from collections import defaultdict
 from functools import wraps
+from django.http import HttpResponse
+from django.template import loader
 
 def contest_evaluator_required(view_func):
     @wraps(view_func)
@@ -264,3 +266,26 @@ def compare_view(request):
     handler = CompareHandler(contest=contest)
 
     return render(request, 'compare.html', handler.execute(request))
+
+@login_required()
+@contest_evaluator_required
+def edits_view(request):
+    contest = get_object_or_404(Contest, name_id=request.GET.get('contest'))
+
+    edits = Edit.objects.filter(contest=contest, participant__isnull=False)
+
+    if request.POST.get('csv'):
+        response = HttpResponse(
+            content_type="text/csv; charset=windows-1252",
+            headers={"Content-Disposition": 'attachment; filename="edits.csv"'},
+        )
+        t = loader.get_template("edits.csv")
+        c = {'data': edits}
+        response.write(t.render(c))
+        return response
+
+    return render(request, 'edits.html', {
+        'contest': contest,
+        'edits': edits,
+        'right': 'left' if translation.get_language_bidi() else 'right',
+    })

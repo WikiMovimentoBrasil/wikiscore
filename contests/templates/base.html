@@ -77,7 +77,7 @@
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='compare')?:'w3-blue'?>">
                     <i class="fa-solid fa-code-compare"></i>&nbsp; {% trans 'compare' %}
                 </a>
-                <a href="index.php?contest={{ contest.name_id }}&page=edits"
+                <a href="{% url 'edits_view' %}?contest={{ contest.name_id }}"
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='edits')?:'w3-blue'?>">
                     <i class="fa-solid fa-list-check"></i>&nbsp; {% trans 'triage-evaluated' %}
                 </a>
