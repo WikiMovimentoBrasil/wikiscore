@@ -33,37 +33,6 @@ def contest_evaluator_required(view_func):
         return view_func(request, *args, **kwargs)
     return _wrapped_view
 
-def color_view(request):
-    color = request.GET.get('color')
-    
-    # Check if the color parameter is provided
-    if not color:
-        return HttpResponse("/* Color parameter is missing */", content_type="text/css")
-    
-    # Escape the color parameter to avoid XSS attacks
-    color = escape(color)
-    
-    # Define the CSS content
-    css_content = f"""
-    .w3-color,
-    .w3-hover-color:hover {{
-        color: #fff !important;
-        background-color: #{color} !important;
-    }}
-
-    .w3-text-color,
-    .w3-hover-text-color:hover {{
-        color: #{color} !important;
-    }}
-
-    .w3-border-color,
-    .w3-hover-border-color:hover {{
-        border-color: #{color} !important;
-    }}
-    """
-    
-    # Return the CSS content as a response with the correct content type
-    return HttpResponse(css_content, content_type="text/css")
 
 def home_view(request):
     # Get contests from the database
