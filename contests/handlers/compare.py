@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.utils import timezone
 from datetime import timedelta
 import requests
-from .models import Contest, Edit, Qualification, Evaluator, Article
+from contests.models import Contest, Edit, Qualification, Evaluator, Article
 
 class CompareHandler:    
     def __init__(self, contest):

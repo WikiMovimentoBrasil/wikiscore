@@ -1,7 +1,7 @@
 import requests
 from datetime import datetime, timedelta
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Contest, Edit, Evaluation, Participant, ParticipantEnrollment, Qualification, Evaluator
+from contests.models import Contest, Edit, Evaluation, Participant, ParticipantEnrollment, Qualification, Evaluator
 from django.utils import timezone
 from django.db import transaction
 from django.db.models import Sum, Case, When, Value, IntegerField, Q, OuterRef, Subquery, Count

@@ -1,10 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Contest, Edit, Participant, Qualification, Evaluator
-from .triage import TriageHandler
-from .counter import CounterHandler
-from .compare import CompareHandler
 from credentials.models import Profile
-from .evaluators import EvaluatorsHandler
 from django.db import connection
 from datetime import datetime, timedelta
 from django.db.models import Count, Sum, Case, When, Value, IntegerField, Q, F, OuterRef, Subquery
@@ -18,6 +14,10 @@ from collections import defaultdict
 from functools import wraps
 from django.http import HttpResponse
 from django.template import loader
+from handlers.triage import TriageHandler
+from handlers.counter import CounterHandler
+from handlers.compare import CompareHandler
+from handlers.evaluators import EvaluatorsHandler
 
 def contest_evaluator_required(view_func):
     @wraps(view_func)
