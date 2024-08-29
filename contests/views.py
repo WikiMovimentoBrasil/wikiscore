@@ -4,6 +4,7 @@ from .triage import TriageHandler
 from .counter import CounterHandler
 from .compare import CompareHandler
 from credentials.models import Profile
+from .evaluators import EvaluatorsHandler
 from django.db import connection
 from datetime import datetime, timedelta
 from django.db.models import Count, Sum, Case, When, Value, IntegerField, Q, F, OuterRef, Subquery

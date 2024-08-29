@@ -85,7 +85,7 @@
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='backtrack')?:'w3-blue'?>">
                     <i class="fa-solid fa-history"></i>&nbsp; {% trans 'backtrack' %}
                 </a>
-                <a href="index.php?contest={{ contest.name_id }}&page=evaluators"
+                <a href="{% url 'evaluators_view' %}?contest={{ contest.name_id }}"
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='evaluators')?:'w3-blue'?>">
                     <i class="fa-solid fa-users"></i>&nbsp; {% trans 'evaluators' %}
                 </a>

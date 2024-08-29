@@ -106,7 +106,7 @@
                                             <span class="w3-text-green w3-large">✗</span>
                                         {% endif %}
                                     </td>
-                                    <td>{{ query.last_evaluation.evaluator.user }}</td>
+                                    <td>{{ query.last_evaluation.evaluator.profile }}</td>
                                     <td>{{ query.last_evaluation.when }}</td>
                                     <td>{{ query.last_evaluation.obs | default_if_none:"" }}</td>
                                 </tr>
