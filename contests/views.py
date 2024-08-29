@@ -3,6 +3,7 @@ from .models import Contest, Edit, Participant, Qualification, Evaluator
 from .triage import TriageHandler
 from .counter import CounterHandler
 from .compare import CompareHandler
+from credentials.models import Profile
 from django.db import connection
 from datetime import datetime, timedelta
 from django.db.models import Count, Sum, Case, When, Value, IntegerField, Q, F, OuterRef, Subquery
@@ -25,7 +26,7 @@ def contest_evaluator_required(view_func):
             return redirect('/')
         contest = get_object_or_404(Contest, name_id=contest_name_id)
         try:
-            Evaluator.objects.get(contest=contest, user=request.user)
+            Evaluator.objects.get(contest=contest, profile=request.user.profile, user_status__in=['A', 'G'])
         except Evaluator.DoesNotExist:
             raise PermissionDenied("You are not allowed to access this page.")
         return view_func(request, *args, **kwargs)
@@ -89,7 +90,7 @@ def contest_view(request):
 
     is_evaluator = False
     try:
-        Evaluator.objects.get(contest=contest, user=request.user)
+        Evaluator.objects.get(contest=contest, profile=request.user.profile)
         is_evaluator = True
     except Evaluator.DoesNotExist:
         pass
@@ -209,7 +210,7 @@ def triage_view(request):
     triage_dict = get_evaluate | do_evaluate
     triage_dict.update({
         'triage_points': int(contest.max_bytes_per_article / contest.bytes_per_points),
-        'evaluator_status': Evaluator.objects.get(contest=contest, user=request.user).user_status,
+        'evaluator_status': Evaluator.objects.get(contest=contest, profile=request.user.profile).user_status,
         'right': 'left' if translation.get_language_bidi() else 'right',
         'left': 'right' if translation.get_language_bidi() else 'left',
     })

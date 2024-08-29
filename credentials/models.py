@@ -36,3 +36,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
     USERNAME_FIELD = 'username'
     EMAIL_FIELD = 'email'
+
+class Profile(models.Model):
+    global_id = models.CharField(max_length=50, unique=True)
+    username = models.CharField(max_length=100)
+    account = models.OneToOneField(CustomUser, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return self.username if self.username else "No username"

@@ -38,15 +38,15 @@ class Contest(models.Model):
         return self.name_id
 
 class Evaluator(models.Model):
-    user = models.ForeignKey('credentials.CustomUser', on_delete=models.PROTECT)
+    profile = models.ForeignKey('credentials.Profile', on_delete=models.PROTECT)
     contest = models.ForeignKey('Contest', on_delete=models.CASCADE)
     user_status = models.CharField(max_length=1, default='P')
 
     def __str__(self):
-        return self.user.username
+        return self.profile.username
 
     class Meta:
-        unique_together = ['user', 'contest']
+        unique_together = ['profile', 'contest']
 
 class Article(models.Model):
     contest = models.ForeignKey('Contest', on_delete=models.CASCADE)
@@ -135,4 +135,4 @@ class Evaluation(models.Model):
     obs = models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return (f"{self.contest.name_id} - {self.diff.diff} - {self.evaluator.user.username} - {self.status} - {self.when}")
+        return (f"{self.contest.name_id} - {self.diff.diff} - {self.evaluator.profile.username} - {self.status} - {self.when}")

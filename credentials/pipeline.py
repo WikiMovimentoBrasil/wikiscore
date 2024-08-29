@@ -1,3 +1,9 @@
+from django.db import transaction
+from .models import Profile
+import logging
+
+logger = logging.getLogger(__name__)
+
 def get_username(strategy, details, user=None, *args, **kwargs):
     """
     This pipeline function customizes the behavior of python-social-auth to return the username 
@@ -35,8 +41,32 @@ def save_profile(backend, user, response, *args, **kwargs):
     - None
     """
     if backend.name == 'mediawiki':
-        if user.username:
-            if kwargs.get('details', False).get('username', False):
-                if user.username != kwargs['details']['username']:
-                    user.username = kwargs['details']['username']
+        details = kwargs.get('details', {})
+
+        try:
+            new_username = details.get('username')
+            global_id = details.get('userID')
+
+            if not global_id:
+                logger.error("No global_id provided in the MediaWiki response.")
+                return
+
+            if not new_username:
+                logger.warning(f"Username is missing for global_id {global_id}.")
+                return
+
+            with transaction.atomic():
+                if user.username != new_username:
+                    user.username = new_username
                     user.save()
+
+                profile, created = Profile.objects.get_or_create(global_id=global_id)
+                if profile.account != user:
+                    profile.account = user
+                    profile.save()
+                if profile.username != new_username:
+                    profile.username = new_username
+                    profile.save()
+
+        except Exception as e:
+            logger.error(f"Error while saving profile for user {user.id}: {str(e)}")

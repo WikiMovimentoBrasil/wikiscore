@@ -27,7 +27,7 @@ class TriageHandler:
                 return {'action': 'release'}
 
         elif request.POST.get('unhold'):
-            if Evaluator.objects.get(contest=contest, user=self.user).user_status != 'G':
+            if Evaluator.objects.get(contest=contest, profile=self.user.profile).user_status != 'G':
                 raise PermissionError('User is not a group member')
             else:
                 if self.unhold_edit():
@@ -102,7 +102,7 @@ class TriageHandler:
     def skip_edit(self, diff):
         evaluation = Evaluation.objects.create(
             contest=self.contest,
-            evaluator=Evaluator.objects.get(contest=self.contest, user=self.user),
+            evaluator=Evaluator.objects.get(contest=self.contest, profile=self.user.profile),
             diff=Edit.objects.get(diff=diff),
             status='3'
         )
@@ -110,7 +110,7 @@ class TriageHandler:
         return evaluation
 
     def release_edit(self):
-        evaluator = Evaluator.objects.get(contest=self.contest, user=self.user)
+        evaluator = Evaluator.objects.get(contest=self.contest, profile=self.user.profile)
 
         skipped = Edit.objects.filter(
             contest=self.contest, 
@@ -145,7 +145,7 @@ class TriageHandler:
 
         evaluation = Evaluation.objects.create(
             contest=self.contest,
-            evaluator=Evaluator.objects.get(contest=self.contest, user=self.user),
+            evaluator=Evaluator.objects.get(contest=self.contest, profile=self.user.profile),
             diff=Edit.objects.get(diff=request.POST.get('diff')),
             valid_edit=True if request.POST.get('valid') == 'sim' else False,
             pictures=picture,
@@ -168,7 +168,7 @@ class TriageHandler:
         ).filter(
             Q(last_evaluation=None) |
             Q(last_evaluation__status='0') |
-            (Q(last_evaluation__status='2') & Q(last_evaluation__evaluator=Evaluator.objects.get(contest=contest, user=self.user)))
+            (Q(last_evaluation__status='2') & Q(last_evaluation__evaluator=Evaluator.objects.get(contest=contest, profile=self.user.profile)))
         ).order_by('timestamp').first()
 
         return edit
@@ -202,17 +202,17 @@ class TriageHandler:
             ).filter(
                 Q(last_evaluation=None) |
                 Q(last_evaluation__status='0') |
-                (Q(last_evaluation__status='2') & Q(last_evaluation__evaluator=Evaluator.objects.get(contest=self.contest, user=self.user)))
+                (Q(last_evaluation__status='2') & Q(last_evaluation__evaluator=Evaluator.objects.get(contest=self.contest, profile=self.user.profile)))
             ).first()
 
             if held_edit:
                 # Check if the edit is already held by the same user (status='2' and evaluator is the current user)
-                if held_edit.last_evaluation and held_edit.last_evaluation.status == '2' and held_edit.last_evaluation.evaluator.user == self.user:
+                if held_edit.last_evaluation and held_edit.last_evaluation.status == '2' and held_edit.last_evaluation.evaluator.profile == self.user.profile:
                     # Edit is already held by the current user, no need to create a new evaluation
                     return True
                 
                 # Create a new evaluation if the edit is not already held by the current user
-                evaluator = Evaluator.objects.get(contest=self.contest, user=self.user)
+                evaluator = Evaluator.objects.get(contest=self.contest, profile=self.user.profile)
                 evaluation = Evaluation.objects.create(
                     contest=self.contest,
                     evaluator=evaluator,

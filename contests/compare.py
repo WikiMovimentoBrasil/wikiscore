@@ -168,7 +168,7 @@ class CompareHandler:
             contest=contest,
             status='0',
             diff=Edit.objects.get(diff=diff),
-            evaluator=Evaluator.objects.get(contest=contest, user=self.user),
+            evaluator=Evaluator.objects.get(contest=contest, profile=self.user.profile),
         )
         Edit.objects.filter(diff=diff).update(last_qualification=qualif)
 
