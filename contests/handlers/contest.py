@@ -1,0 +1,92 @@
+from datetime import timedelta
+from django.db.models import Count, Sum, Subquery, OuterRef
+from django.db.models.functions import TruncDay
+from contests.models import Evaluator, Edit, Participant, Qualification
+
+
+class ContestHandler():
+    def __init__(self, contest):
+        self.contest = contest
+
+    def execute(self, request):
+        contest = self.contest
+        is_evaluator = self.check_evaluator(request.user)
+
+        date_range = self.get_date_range(contest.start_time, contest.end_time)
+        
+        approved_edits = self.get_approved_edits(contest)
+        
+        stats = {
+            'new_articles': self.get_stat_by_date(Edit, contest, 'new_page', True),
+            'new_participants': self.get_stat_by_date(Participant, contest),
+            'total_edits': self.get_stat_by_date(Edit, contest),
+            'total_bytes': self.get_stat_by_date(Edit, contest, 'orig_bytes__gte', 0, 'orig_bytes', sum_field=True),
+            'valid_edits': self.get_stat_by_date(Edit, contest, 'pk__in', approved_edits),
+            'valid_bytes': self.get_stat_by_date(Edit, contest, 'pk__in', approved_edits, 'orig_bytes', sum_field=True)
+        }
+
+        return self.build_response_dict(stats, date_range, contest, is_evaluator)
+
+    def check_evaluator(self, user):
+        try:
+            Evaluator.objects.get(contest=self.contest, profile=user.profile)
+            return True
+        except Evaluator.DoesNotExist:
+            return False
+
+    def get_date_range(self, start_date, end_date):
+        return [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
+
+    def get_approved_edits(self, contest):
+        subquery = Qualification.objects.filter(
+            contest=contest,
+            diff=OuterRef('diff')
+        ).order_by('-when').values('pk')[:1]
+        
+        return Qualification.objects.filter(
+            contest=contest,
+            pk__in=Subquery(subquery),
+            status=1
+        ).values_list('diff__diff', flat=True)
+
+    def get_stat_by_date(self, model, contest, filter_field=None, filter_value=None, value_field='id', sum_field=False):
+        queryset = model.objects.filter(contest=contest, timestamp__range=(contest.start_time, contest.end_time))
+        
+        if filter_field and filter_value is not None:
+            queryset = queryset.filter(**{filter_field: filter_value})
+
+        annotated_queryset = queryset.annotate(date=TruncDay('timestamp')).values('date')
+        
+        if sum_field:
+            return {entry['date']: entry['sum_value'] for entry in annotated_queryset.annotate(sum_value=Sum(value_field)).order_by('date')}
+        
+        return {entry['date']: entry['count'] for entry in annotated_queryset.annotate(count=Count(value_field)).order_by('date')}
+
+    def build_response_dict(self, stats, date_range, contest, is_evaluator):
+        response_data = {
+            'contest': contest,
+            'date': [],
+            'new_articles': [],
+            'new_participants': [],
+            'total_edits': [],
+            'total_bytes': [],
+            'valid_edits': [],
+            'valid_bytes': [],
+            'is_evaluator': is_evaluator,
+        }
+
+        for date in date_range:
+            day_diff = str(abs(date - contest.start_time).days)
+            response_data['date'].append(day_diff)
+            response_data['new_articles'].append(str(stats['new_articles'].get(date, 0)))
+            response_data['new_participants'].append(str(stats['new_participants'].get(date, 0)))
+            response_data['total_edits'].append(str(stats['total_edits'].get(date, 0)))
+            response_data['total_bytes'].append(str(stats['total_bytes'].get(date, 0)))
+            response_data['valid_edits'].append(str(stats['valid_edits'].get(date, 0)))
+            response_data['valid_bytes'].append(str(stats['valid_bytes'].get(date, 0)))
+
+        for key in response_data:
+            if isinstance(response_data[key], list):
+                response_data[key] = ', '.join(response_data[key])
+
+        return response_data

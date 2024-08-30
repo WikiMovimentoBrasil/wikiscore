@@ -20,10 +20,12 @@
 </head>
 <body>
     <div class="w3-{{ contest.theme }} w3-large w3-bar">
-        <img src="{% static 'Logo_Branco.svg' %}" alt="logo" class="w3-bar-item" style="width: 128px;">
+        <a href="{% url 'home_view' %}">
+            <img src="{% static 'Logo_Branco.svg' %}" alt="logo" class="w3-bar-item" style="width: 128px;">
+        </a>
         <button onclick="window.open('graph_page', '_blank');" class="w3-button w3-bar-item">{% trans 'login-graph' %}</button>
-        {% if result.is_evaluator %}
-            <button onclick="window.open('{% url 'triage_view' %}?contest={{ contest.name_id }}')" class="w3-button w3-bar-item">{% trans 'login' %}</button>
+        {% if is_evaluator %}
+            <button onclick="window.open('{% url 'triage_view' %}?contest={{ contest.name_id }}', '_self')" class="w3-button w3-bar-item">{% trans 'login' %}</button>
         {% endif %}
         <span class="w3-bar-item w3-right w3-hide-small">{{ contest.name }}</span>
     </div>
@@ -45,7 +47,7 @@
         </div>
     </div>
     <script type="text/javascript">
-        const dias = [ {{ result.date }} ];
+        const dias = [ {{ date }} ];
 
         const total_edits = new Chart(
             document.getElementById('total_edits'),
@@ -68,14 +70,14 @@
                     datasets: [
                         {
                             label: '{% trans 'login-alledits' %}',
-                            data: [ {{ result.total_edits }} ],
+                            data: [ {{ total_edits }} ],
                             fill: false,
                             borderColor: 'rgb(128, 0, 128)',
                             tension: 0.1
                         },
                         {
                             label: '{% trans 'login-validedits' %}',
-                            data: [ {{ result.valid_edits }} ],
+                            data: [ {{ valid_edits }} ],
                             fill: false,
                             borderColor: 'rgb(143, 188, 143)',
                             tension: 0.1
@@ -106,14 +108,14 @@
                     datasets: [
                         {
                             label: '{% trans 'login-newpages' %}',
-                            data: [ {{ result.new_articles }} ],
+                            data: [ {{ new_articles }} ],
                             fill: false,
                             borderColor: 'rgb(65, 105, 225)',
                             tension: 0.1
                         },
                         {
                             label: '{% trans 'login-newparticipants' %}',
-                            data: [ {{ result.new_participants }} ],
+                            data: [ {{ new_participants }} ],
                             fill: false,
                             borderColor: 'rgb(219, 112, 147)',
                             tension: 0.1
@@ -144,14 +146,14 @@
                     datasets: [
                         {
                             label: '{% trans 'login-newbytes' %}',
-                            data: [ {{ result.total_bytes }} ],
+                            data: [ {{ total_bytes }} ],
                             fill: false,
                             borderColor: 'rgb(219, 112, 147)',
                             tension: 0.1
                         },
                         {
                             label: '{% trans 'login-validbytes' %}',
-                            data: [ {{ result.valid_bytes }} ],
+                            data: [ {{ valid_bytes }} ],
                             fill: false,
                             borderColor: 'rgb(255, 69, 0)',
                             tension: 0.1

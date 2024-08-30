@@ -11,6 +11,7 @@ from functools import wraps
 from collections import defaultdict
 from .models import Contest, Edit, Participant, Qualification, Evaluator
 from .handlers.triage import TriageHandler
+from .handlers.contest import ContestHandler
 from .handlers.counter import CounterHandler
 from .handlers.compare import CompareHandler
 from .handlers.evaluators import EvaluatorsHandler
@@ -62,117 +63,9 @@ def home_view(request):
     })
 
 def contest_view(request):
-    contest_name_id = request.GET.get('contest')
-    if not contest_name_id:
-        return redirect('/')
-    contest = get_object_or_404(Contest, name_id=contest_name_id)
-
-    is_evaluator = False
-    try:
-        Evaluator.objects.get(contest=contest, profile=request.user.profile)
-        is_evaluator = True
-    except Evaluator.DoesNotExist:
-        pass
-
-    date_min = contest.start_time
-    date_max = contest.end_time
-    date_range = date_range = [date_min + timedelta(days=x) for x in range((date_max - date_min).days + 1)]
-
-    subquery = Qualification.objects.filter(
-        contest=contest,
-        diff=OuterRef('diff')
-    ).order_by('-when').values('pk')[:1]
-    approved_edits = Qualification.objects.filter(
-        contest=contest,
-        pk__in=Subquery(subquery),
-        status=1
-    ).values_list('diff__diff', flat=True)
-
-    new_articles = {
-        entry['date']: entry['count'] 
-        for entry in Edit.objects
-            .filter(contest=contest, new_page=True, timestamp__range=(date_min, date_max))
-            .annotate(date=TruncDay('timestamp'))
-            .values('date')
-            .annotate(count=Count('id'))
-            .order_by('date')
-    }
-    new_participants = {
-        entry['date']: entry['count'] 
-        for entry in Participant.objects
-            .filter(contest=contest, timestamp__range=(date_min, date_max))
-            .annotate(date=TruncDay('timestamp'))
-            .values('date')
-            .annotate(count=Count('id'))
-            .order_by('date')
-    }
-    total_edits = {
-        entry['date']: entry['count'] 
-        for entry in Edit.objects
-            .filter(contest=contest, timestamp__range=(date_min, date_max))
-            .annotate(date=TruncDay('timestamp'))
-            .values('date')
-            .annotate(count=Count('id'))
-            .order_by('date')
-    }
-    total_bytes = {
-        entry['date']: entry['sum_bytes'] 
-        for entry in Edit.objects
-            .filter(contest=contest, orig_bytes__gte=0, timestamp__range=(date_min, date_max))
-            .annotate(date=TruncDay('timestamp'))
-            .values('date')
-            .annotate(sum_bytes=Sum('orig_bytes'))
-            .order_by('date')
-    }
-    valid_edits = {
-        entry['date']: entry['count'] 
-        for entry in Edit.objects
-            .filter(contest=contest, pk__in=approved_edits, timestamp__range=(date_min, date_max))
-            .annotate(date=TruncDay('timestamp'))
-            .values('date')
-            .annotate(count=Count('id'))
-            .order_by('date')
-    }
-    valid_bytes = {
-        entry['date']: entry['sum_bytes'] 
-        for entry in Edit.objects
-            .filter(contest=contest, pk__in=approved_edits, timestamp__range=(date_min, date_max))
-            .annotate(date=TruncDay('timestamp'))
-            .values('date')
-            .annotate(sum_bytes=Sum('orig_bytes'))
-            .order_by('date')
-    }
-    
-    # Prepare the result
-    dates = []
-    new_articles_list = []
-    new_participants_list = []
-    total_edits_list = []
-    total_bytes_list = []
-    valid_edits_list = []
-    valid_bytes_list = []
-
-    for date in date_range:
-        dates.append(str(abs(date - date_min).days))
-        new_articles_list.append(str(new_articles.get(date, 0)))
-        new_participants_list.append(str(new_participants.get(date, 0)))
-        total_edits_list.append(str(total_edits.get(date, 0)))
-        total_bytes_list.append(str(total_bytes.get(date, 0)))
-        valid_edits_list.append(str(valid_edits.get(date, 0)))
-        valid_bytes_list.append(str(valid_bytes.get(date, 0)))
-
-    result = {
-        'date': ', '.join(dates),
-        'new_articles': ', '.join(new_articles_list),
-        'new_participants': ', '.join(new_participants_list),
-        'total_edits': ', '.join(total_edits_list),
-        'total_bytes': ', '.join(total_bytes_list),
-        'valid_edits': ', '.join(valid_edits_list),
-        'valid_bytes': ', '.join(valid_bytes_list),
-        'is_evaluator': is_evaluator,
-    }
-
-    return render(request, 'contest.html', {'contest': contest, 'result': result})
+    contest = get_contest_from_request(request)
+    handler = ContestHandler(contest=contest)
+    return render_with_bidi(request, 'contest.html', handler.execute(request))
 
 @login_required()
 @contest_evaluator_required
