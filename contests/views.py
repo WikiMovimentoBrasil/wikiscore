@@ -16,6 +16,7 @@ from .handlers.counter import CounterHandler
 from .handlers.compare import CompareHandler
 from .handlers.evaluators import EvaluatorsHandler
 from .handlers.modify import ModifyHandler
+from .handlers.manage import ManageHandler
 from credentials.models import Profile
 
 def get_contest_from_request(request):
@@ -151,3 +152,9 @@ def evaluators_view(request, contest):
 def modify_view(request, contest):
     handler = ModifyHandler(contest=contest)
     return render_with_bidi(request, 'modify.html', handler.execute(request))
+
+@login_required()
+def manage_view(request):
+    if request.user.profile.group_set.exists():
+        handler = ManageHandler()
+        return render_with_bidi(request, 'manage.html', handler.execute(request))

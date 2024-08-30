@@ -15,10 +15,15 @@
 <!-- Header -->
 <header class="w3-container w3-content w3-padding-32">
     <div style="display: flex; justify-content: flex-end;">
+        {% if user.is_authenticated %}
+            <div class="w3-section">
+                {% blocktrans with triage_welcome_1=user.username %}.{{ triage_welcome_1 }}.{% endblocktrans %}
+            </div>
+        {% endif %}
         <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
             <input name="next" type="hidden" value="{{ redirect_to }}">
             <select name="language" onchange="this.form.submit()" style="max-width: 16em; text-transform: uppercase;"
-            class="w3-select w3-border w3-border-black w3-padding-small w3-round-xxlarge w3-small">
+            class="w3-select w3-margin w3-border w3-border-black w3-padding-small w3-round-xxlarge w3-small">
                 {% get_current_language as LANGUAGE_CODE %}
                 {% get_available_languages as LANGUAGES %}
                 {% get_language_info_list for LANGUAGES as languages %}
@@ -37,20 +42,22 @@
     style="text-transform: uppercase;"
     onclick="document.getElementById('id01').style.display='block'"
     >{% trans 'contest-enter' %}</button>
-    <button
-    class="w3-button w3-black w3-padding w3-margin w3-round-xxlarge"
-    style="text-transform: uppercase;"
-    onclick="location.href='?manage=true'"
-    >{% trans 'contest-manage' %}</button>
-    {% if user.is_authenticated %}
+    {% if request.user.profile.group_set.exists %}
         <button
         class="w3-button w3-black w3-padding w3-margin w3-round-xxlarge"
+        style="text-transform: uppercase;"
+        onclick="location.href='{% url 'manage_view' %}'"
+        >{% trans 'contest-manage' %}</button>
+    {% endif %}
+    {% if user.is_authenticated %}
+        <button
+        class="w3-button w3-red w3-padding w3-margin w3-round-xxlarge"
         style="text-transform: uppercase;"
         onclick="location.href='{% url 'logout' %}'"
         >{% trans 'exit' %}</button>
     {% else %}
         <button
-        class="w3-button w3-black w3-padding w3-margin w3-round-xxlarge"
+        class="w3-button w3-blue w3-padding w3-margin w3-round-xxlarge"
         style="text-transform: uppercase;"
         onclick="location.href='{% url 'login' %}'"
         >{% trans 'login' %}</button>

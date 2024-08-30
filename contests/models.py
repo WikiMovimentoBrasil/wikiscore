@@ -2,6 +2,7 @@ from django.db import models
 
 class Group(models.Model):
     name = models.CharField(max_length=100, unique=True)
+    manager = models.ManyToManyField('credentials.Profile')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -20,7 +21,7 @@ class Contest(models.Model):
     category_petscan = models.IntegerField(blank=True, null=True)
     endpoint = models.URLField()
     api_endpoint = models.URLField()
-    outreach_name = models.TextField()
+    outreach_name = models.TextField(null=True)
     campaign_event_id = models.IntegerField(default=None, blank=True, null=True)
     bytes_per_points = models.IntegerField(default=3000)
     max_bytes_per_article = models.IntegerField(default=90000)

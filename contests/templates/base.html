@@ -75,7 +75,7 @@
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='triage')?:'w3-blue'?>">
                     <i class="fa-solid fa-check-to-slot"></i>&nbsp; {% trans 'triage' %}
                 </a>
-                <a href="{% url 'counter_view' %}?contest={{ contest.name_id }}&page=counter"
+                <a href="{% url 'counter_view' %}?contest={{ contest.name_id }}"
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='counter')?:'w3-blue'?>">
                     <i class="fa-solid fa-chart-line"></i>&nbsp; {% trans 'counter' %}
                 </a>
@@ -114,14 +114,7 @@
                     <i class="fa-solid fa-circle-nodes"></i>&nbsp; {% trans 'triage-outreach' %}
                     <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
                 </a>
-                <a href="index.php?contest={{ contest.name_id }}&page=password"
-                rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='password')?:'w3-blue'?>">
-                    <i class="fa-solid fa-key"></i>&nbsp; {% trans 'password' %}
-                </a>
-                <form method="post" id="logout" style="display: none;">
-                    <input type="hidden" name="logout" value="Logout">
-                </form>
-                <a href="javascript:document.getElementById('logout').submit()"
+                <a href="{% url 'contest_view' %}?contest={{ contest.name_id }}"
                 rel="noopener" class="w3-bar-item w3-button w3-padding">
                     <i class="fa-solid fa-door-open"></i>&nbsp; {% trans 'exit' %}
                 </a>
