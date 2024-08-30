@@ -1,42 +1,51 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Contest, Edit, Participant, Qualification, Evaluator
-from credentials.models import Profile
-from django.db import connection
-from datetime import datetime, timedelta
-from django.db.models import Count, Sum, Case, When, Value, IntegerField, Q, F, OuterRef, Subquery
-from django.db.models.functions import TruncDay
-from django.utils import timezone, translation
-from django.utils.html import escape
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
-from django.contrib.auth.decorators import login_required
-from collections import defaultdict
-from functools import wraps
-from django.http import HttpResponse
 from django.template import loader
-from handlers.triage import TriageHandler
-from handlers.counter import CounterHandler
-from handlers.compare import CompareHandler
-from handlers.evaluators import EvaluatorsHandler
+from django.utils import translation
+from django.utils.html import escape
+from django.db.models.functions import TruncDay
+from datetime import timedelta
+from functools import wraps
+from collections import defaultdict
+from .models import Contest, Edit, Participant, Qualification, Evaluator
+from .handlers.triage import TriageHandler
+from .handlers.counter import CounterHandler
+from .handlers.compare import CompareHandler
+from .handlers.evaluators import EvaluatorsHandler
 from .handlers.modify import ModifyHandler
+from credentials.models import Profile
+
+def get_contest_from_request(request):
+    contest_name_id = request.GET.get('contest')
+    if not contest_name_id:
+        return redirect('/')
+    return get_object_or_404(Contest, name_id=contest_name_id)
+
+def check_evaluator_permission(request, contest):
+    try:
+        Evaluator.objects.get(contest=contest, profile=request.user.profile, user_status__in=['A', 'G'])
+    except Evaluator.DoesNotExist:
+        raise PermissionDenied("You are not allowed to access this page.")
 
 def contest_evaluator_required(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
-        contest_name_id = request.GET.get('contest')
-        if not contest_name_id:
-            return redirect('/')
-        contest = get_object_or_404(Contest, name_id=contest_name_id)
-        try:
-            Evaluator.objects.get(contest=contest, profile=request.user.profile, user_status__in=['A', 'G'])
-        except Evaluator.DoesNotExist:
-            raise PermissionDenied("You are not allowed to access this page.")
-        return view_func(request, *args, **kwargs)
+        contest = get_contest_from_request(request)
+        check_evaluator_permission(request, contest)
+        return view_func(request, contest, *args, **kwargs)
     return _wrapped_view
 
+def render_with_bidi(request, template_name, context):
+    bidi_context = {
+        'right': 'left' if translation.get_language_bidi() else 'right',
+        'left': 'right' if translation.get_language_bidi() else 'left',
+    }
+    context.update(bidi_context)
+    return render(request, template_name, context)
 
 def home_view(request):
-    # Get contests from the database
     contests = Contest.objects.all().order_by('-start_time')
     
     contests_chooser = {}
@@ -46,8 +55,7 @@ def home_view(request):
             contests_chooser[group] = []
         contests_chooser[group].append([contest.name_id, contest.name])
     contests_groups = list(contests_chooser.keys())
-      
-    # Render the main template
+
     return render(request, 'home.html', {
         'contests_groups': contests_groups,
         'contests_chooser': contests_chooser,
@@ -168,9 +176,7 @@ def contest_view(request):
 
 @login_required()
 @contest_evaluator_required
-def triage_view(request):
-    contest = get_object_or_404(Contest, name_id=request.GET.get('contest'))
-
+def triage_view(request, contest):
     handler = TriageHandler(contest=contest, user=request.user, api_endpoint=contest.api_endpoint)
     if request.method == 'POST':
         do_evaluate = handler.do_evaluate(request)
@@ -189,26 +195,21 @@ def triage_view(request):
 
 @login_required()
 @contest_evaluator_required
-def counter_view(request):
-    contest = get_object_or_404(Contest, name_id=request.GET.get('contest'))
-
+def counter_view(request, contest):
     handler = CounterHandler(contest=contest)
-    context = handler.get_context(request)
-
-    return render(request, "counter.html", context)
+    return render_with_bidi(request, "counter.html", handler.get_context(request))
 
 @login_required()
 @contest_evaluator_required
-def backtrack_view(request):
+def backtrack_view(request, contest):
     contest = get_object_or_404(Contest, name_id=request.GET.get('contest'))
 
     qualified = False
     diff = None
     if request.POST.get('diff'):
         diff = request.POST.get('diff')
-        edit = Edit.objects.get(diff=diff)
-        evaluator = Evaluator.objects.get(contest=contest, user=request.user)
-        new_qualification = Qualification.objects.create(contest=contest, diff=edit, evaluator=evaluator)
+        evaluator = Evaluator.objects.get(contest=contest, profile=request.user.profile)
+        new_qualification = Qualification.objects.create(contest=contest, diff=Edit.objects.get(diff=diff), evaluator=evaluator)
         qualified = Edit.objects.filter(contest=contest, diff=diff, last_qualification__isnull=True).update(last_qualification=new_qualification)
 
     edits = Edit.objects.filter(
@@ -232,35 +233,27 @@ def backtrack_view(request):
 
 @login_required()
 @contest_evaluator_required
-def compare_view(request):
-    contest = get_object_or_404(Contest, name_id=request.GET.get('contest'))
-
+def compare_view(request, contest):
     handler = CompareHandler(contest=contest)
-
-    return render(request, 'compare.html', handler.execute(request))
+    return render_with_bidi(request, 'compare.html', handler.execute(request))
 
 @login_required()
 @contest_evaluator_required
-def edits_view(request):
-    contest = get_object_or_404(Contest, name_id=request.GET.get('contest'))
-
-    edits = Edit.objects.filter(contest=contest, participant__isnull=False)
-
+def edits_view(request, contest):
+    edits = Edit.objects.filter(contest=contest)
     if request.POST.get('csv'):
-        response = HttpResponse(
-            content_type="text/csv; charset=windows-1252",
-            headers={"Content-Disposition": 'attachment; filename="edits.csv"'},
-        )
-        t = loader.get_template("edits.csv")
-        c = {'data': edits}
-        response.write(t.render(c))
+        response = HttpResponse(content_type="text/csv; charset=windows-1252",
+                                headers={"Content-Disposition": 'attachment; filename="edits.csv"'})
+        response.write(loader.get_template("edits.csv").render({'data': edits}))
         return response
 
-    return render(request, 'edits.html', {
-        'contest': contest,
-        'edits': edits,
-        'right': 'left' if translation.get_language_bidi() else 'right',
-    })
+    return render_with_bidi(request, 'edits.html', {'contest': contest, 'edits': edits})
+
+@login_required()
+@contest_evaluator_required
+def evaluators_view(request, contest):
+    handler = EvaluatorsHandler(contest=contest)
+    return render_with_bidi(request, 'evaluators.html', handler.execute(request))
 
 @login_required()
 @contest_evaluator_required
