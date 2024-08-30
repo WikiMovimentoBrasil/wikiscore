@@ -1,0 +1,199 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+
+
+{% block pagename %}{% trans 'modify' %}{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'diff.css' %}">
+<script>
+    function changeInput() {
+        var overwriteInput = document.getElementById('overwrite');
+        overwriteInput.removeAttribute('value');
+        overwriteInput.type = 'number';
+        overwriteInput.className = 'w3-input w3-border';
+        overwriteInput.value = '{{ edit.orig_bytes }}';
+        overwriteInput.removeAttribute('onclick');
+        overwriteInput.removeAttribute('id');
+        document.getElementById('obs').required = true;
+    }
+</script>
+{% endblock %}
+
+{% block content %}
+    <div class="w3-row-padding w3-content w3-main" style="max-width:1400px;margin-top:43px;padding-top:16px;">
+        <div class="w3-container w3-quarter w3-margin-top">
+            <form class="w3-container w3-card w3-margin-bottom" id="modify" method="post">
+                <h2>{% trans 'modify-consult' %}</h2>
+                {% csrf_token %}
+                <p>
+                    <input
+                    class="w3-input w3-border"
+                    type="number"
+                    name="diff"
+                    value="{{ diff }}"
+                    required
+                    >
+                    <label>{% trans 'modify-diff' %}</label>
+                </p>
+                <p>
+                    <button
+                    class="w3-button w3-section w3-green w3-ripple"
+                    style="width:100%"
+                    >{% trans 'modify-load' %}</button>
+                </p>
+            </form>
+            <form
+            class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom"
+            id="modify"
+            method="post"
+            style="display:{% if allowed %}block{% else %}none{% endif %}"
+            >
+                <h2>{% trans 'modify-reavaluate' %}</h2>
+                {% csrf_token %}
+                <input type="hidden" name="diff" value="{{ diff }}">
+                <div class="w3-container w3-cell w3-half">
+                    <p>{% trans 'isvalid' %}</p>
+                    <input
+                    class="w3-radio w3-section"
+                    type="radio"
+                    id="valid-sim"
+                    name="valid"
+                    value="1"
+                    onclick="document.getElementById('obs').required = false"
+                    onKeyDown="document.getElementById('obs').required = false"
+                    required>
+                    <label for="valid-sim">{% trans 'yes' %}</label><br>
+                    <input
+                    class="w3-radio w3-section"
+                    type="radio"
+                    id="valid-nao"
+                    name="valid"
+                    value="0"
+                    onclick="document.getElementById('obs').required = true"
+                    onKeyDown="document.getElementById('obs').required = true" 
+                    required>
+                    <label for="valid-nao">{% trans 'no' %}</label><br><br>
+                </div>
+                <div class="w3-container w3-cell w3-half">
+                    <p>{% trans 'withimage' %}</p>
+                    {% if contest.pictures_mode == 2 %}
+                        <input
+                        class="w3-input w3-border"
+                        type="number"
+                        id="pic"
+                        name="pic"
+                        value="0"
+                        min="0"
+                        max="9"
+                        required>
+                        <label for="pic">{% trans 'quantity' %}</label><br><br>
+                    {% else %}
+                        <input
+                        class="w3-radio w3-section"
+                        type="radio"
+                        id="pic-sim"
+                        name="pic"
+                        value="1"
+                        required>
+                        <label for="pic-sim">{% trans 'yes' %}</label><br>
+                        <input
+                        class="w3-radio w3-section"
+                        type="radio"
+                        id="pic-nao"
+                        name="pic"
+                        value="0"
+                        required>
+                        <label for="pic-nao">{% trans 'no' %}</label><br><br>
+                    {% endif %}
+                </div>
+                <p>
+                    <input
+                    class="w3-input w3-border"
+                    name="obs"
+                    id="obs"
+                    type="text"
+                    placeholder="Observação"
+                    required
+                    >
+                    <br>
+                    <input
+                    class="w3-button w3-border w3-block w3-red"
+                    name="overwrite"
+                    id="overwrite"
+                    type="button"
+                    value="Alterar bytes"
+                    onclick="changeInput()"
+                    onKeyDown="changeInput()">
+                    <input
+                    class="w3-button w3-orange w3-border-orange w3-border w3-block w3-margin-top"
+                    type="submit"
+                    value="{% trans 'modify' %}"
+                    >
+                </p>
+            </form>
+            <div
+            class="w3-container w3-light-grey w3-border w3-border-dark-grey w3-margin-bottom"
+            style="display: {% if diff %}block{% else %}none{% endif %}"
+            >   
+                {% if content %}
+                <h2>{% trans 'modify-diffstats' %}</h2>
+                <ul class="w3-ul w3-margin-bottom">
+                    <li>{% trans 'modify-label-edition' %}<br>
+                        <a
+                        href="{{ contest.endpoint }}?diff={{ diff }}"
+                        target="_blank"
+                        rel="noopener"
+                        >
+                            {{ diff }}
+                        </a>
+                    </li>
+                    <li>{% trans 'modify-label-curid' %}<br>
+                        <a
+                        href="{{ contest.endpoint }}?curid={{ edit.article.articleID }}"
+                        target="_blank"
+                        rel="noopener"
+                        >
+                            {{ edit.article.articleID }}
+                        </a>
+                    </li>
+                    <li>{% trans 'label-timestamp' %}<br>{{ edit.timestamp }}</li>
+                    <li>{% trans 'label-user' %}<br>{{ author }}</li>
+                    <li>{% trans 'modify-label-bytes' %}<br>{{ edit.orig_bytes }} -> {{ edit.last_evaluation.real_bytes }}</li>
+                    <li>{% trans 'label-summary' %}<br>{{ comment }}</li>
+                    <li>{% trans 'modify-label-newpage' %}<br>{% if edit.new_page %}{% trans 'yes' %}{% else %}{% trans 'no' %}{% endif %}</li>
+                    <li>{% trans 'modify-label-valid' %}<br>{% if edit.last_evaluation.valid_edit %}{% trans 'yes' %}{% else %}{% trans 'no' %}{% endif %}</li>
+                    <li>{% trans 'modify-label-enrolled' %}<br>{% if edit.participant.last_enrollment.enrolled %}{% trans 'yes' %}{% else %}{% trans 'no' %}{% endif %}</li>
+                    <li>{% trans 'modify-label-withimage' %}<br>{{ edit.last_evaluation.pictures }}</li>
+                    <li>{% trans 'modify-label-reverted' %}<br>{% if edit.last_qualification.status == 0 %}{% trans 'yes' %}{% else %}{% trans 'no' %}{% endif %}</li>
+                    <li>{% trans 'modify-label-evaluator' %}<br>{{ edit.last_evaluation.evaluator.profile.username }}</li>
+                    <li>{% trans 'modify-label-evaltimestamp' %}<br>{{ edit.last_evaluation.when }}</li>
+                    <li>{% trans 'modify-label-comment' %}<br>{{ edit.last_evaluation.obs|default_if_none:"" }}&nbsp;</li>
+                </ul>
+                {% endif %}
+            </div>
+        </div>
+        <div class="w3-threequarter">
+            {% if content %}
+            <div>
+                <h3>{% trans 'modify-showdiff' %}</h3>
+                <table
+                role="presentation"
+                aria-label="{% trans 'modify-showdiff' %}"
+                class="diff diff-contentalign-left diff-editfont-monospace"
+                >
+                    {{ content | safe }}
+                </table>
+                <hr>
+            </div>
+            {% elif diff and not content %}
+                <script>alert('{% trans 'modify-notfound' %}');</script>
+            {% endif %}
+            {% if evalution %}
+                <script>alert('{% trans 'modify-success' %}');</script>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

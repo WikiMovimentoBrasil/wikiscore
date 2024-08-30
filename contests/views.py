@@ -18,6 +18,7 @@ from handlers.triage import TriageHandler
 from handlers.counter import CounterHandler
 from handlers.compare import CompareHandler
 from handlers.evaluators import EvaluatorsHandler
+from .handlers.modify import ModifyHandler
 
 def contest_evaluator_required(view_func):
     @wraps(view_func)
@@ -260,3 +261,9 @@ def edits_view(request):
         'edits': edits,
         'right': 'left' if translation.get_language_bidi() else 'right',
     })
+
+@login_required()
+@contest_evaluator_required
+def modify_view(request, contest):
+    handler = ModifyHandler(contest=contest)
+    return render_with_bidi(request, 'modify.html', handler.execute(request))

@@ -76,7 +76,7 @@
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='counter')?:'w3-blue'?>">
                     <i class="fa-solid fa-chart-line"></i>&nbsp; {% trans 'counter' %}
                 </a>
-                <a href="index.php?contest={{ contest.name_id }}&page=modify"
+                <a href="{% url 'modify_view' %}?contest={{ contest.name_id }}"
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='modify')?:'w3-blue'?>">
                     <i class="fa-solid fa-pen-to-square"></i>&nbsp; {% trans 'modify' %}
                 </a>
