@@ -8,9 +8,6 @@
 
 {% block head %}
     <link rel="stylesheet" href="{% static 'diff.css' %}">
-    {% if LANGUAGE_BIDI %}
-        <link rel="stylesheet" href="{% static 'rtl.css' %}">
-    {% endif %}
     <script type="text/javascript" src="{% static 'authorship.js' %}"></script>
     <script type="text/javascript" src="{% static 'copyvios.js' %}"></script>
     <script type="text/javascript">

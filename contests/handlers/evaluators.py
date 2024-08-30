@@ -1,7 +1,6 @@
 import requests
 from credentials.models import Profile
 from django.db.models import Count, Q
-from django.utils import translation
 from contests.models import Evaluator, Edit
 
 class EvaluatorsHandler:
@@ -25,8 +24,6 @@ class EvaluatorsHandler:
             'managers': self.get_evaluators_by_status('G'),
             'disabled': self.get_disabled_evaluators(),
             'status': evaluator.user_status,
-            'right': 'left' if translation.get_language_bidi() else 'right',
-            'left': 'right' if translation.get_language_bidi() else 'left',
         }
 
     def get_current_evaluator(self, request):

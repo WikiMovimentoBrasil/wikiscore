@@ -4,7 +4,6 @@ from django.shortcuts import render
 from contests.models import Evaluator, Edit, Evaluation
 
 
-
 class ModifyHandler():
     def __init__(self, contest):
         self.contest = contest
@@ -58,7 +57,6 @@ class ModifyHandler():
                     edit.save()
                 else:
                     raise PermissionDenied("You are not allowed to perform this action.")
-            
         
         return_dict = {
             'contest': contest, 

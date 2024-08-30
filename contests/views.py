@@ -81,10 +81,9 @@ def triage_view(request, contest):
     triage_dict.update({
         'triage_points': int(contest.max_bytes_per_article / contest.bytes_per_points),
         'evaluator_status': Evaluator.objects.get(contest=contest, profile=request.user.profile).user_status,
-        'right': 'left' if translation.get_language_bidi() else 'right',
-        'left': 'right' if translation.get_language_bidi() else 'left',
     })
     return render(request, "triage.html", triage_dict)
+    return render_with_bidi(request, "triage.html", triage_dict)
 
 @login_required()
 @contest_evaluator_required
@@ -117,11 +116,10 @@ def backtrack_view(request, contest):
         result[user]['enrollment_timestamp'] = edit.participant.timestamp
         result[user]['diffs'].append({'diff': edit.diff, 'bytes': edit.orig_bytes, 'timestamp': edit.timestamp})
 
-    return render(request, 'backtrack.html', {
+    return render_with_bidi(request, 'backtrack.html', {
         'contest': contest,
         'result': result.items(),
-        'diff': diff if qualified else None,
-        'right': 'left' if translation.get_language_bidi() else 'right',
+        'diff': diff if qualified else None
     })
 
 @login_required()

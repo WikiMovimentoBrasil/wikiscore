@@ -17,6 +17,9 @@
                 .w3-border-color, .w3-hover-border-color:hover {border-color: var(--color) !important;}
             </style>
         {% endif %}
+        {% if LANGUAGE_BIDI %}
+            <link rel="stylesheet" href="{% static 'rtl.css' %}">
+        {% endif %}
         <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/font-awesome/6.2.0/css/all.css">
         {% block head %}{% endblock %}
     </head>
