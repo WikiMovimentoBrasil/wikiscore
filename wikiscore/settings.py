@@ -12,30 +12,18 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
-from dotenv import load_dotenv
 from contests.locale import get_available_languages
-
-load_dotenv()
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+from wikiscore.settings_env import (
+    BASE_DIR, HOME, SECRET_KEY, SOCIAL_AUTH_MEDIAWIKI_URL, SOCIAL_AUTH_MEDIAWIKI_KEY, 
+    SOCIAL_AUTH_MEDIAWIKI_SECRET, DEBUG, ALLOWED_HOSTS, SOCIAL_AUTH_MEDIAWIKI_CALLBACK, DATABASES
+)
 
 # Secrets
-SECRET_KEY = os.environ.get('SECRET_KEY')
-SOCIAL_AUTH_MEDIAWIKI_URL = 'https://meta.wikimedia.org/w/index.php'
-SOCIAL_AUTH_MEDIAWIKI_KEY = os.environ.get("SOCIAL_AUTH_MEDIAWIKI_KEY")
-SOCIAL_AUTH_MEDIAWIKI_SECRET = os.environ.get("SOCIAL_AUTH_MEDIAWIKI_SECRET")
-SOCIAL_AUTH_MEDIAWIKI_CALLBACK = 'http://127.0.0.1:8000/oauth/complete/mediawiki/'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_URL_NAMESPACE = 'social'
 PROTECTED_USER_FIELDS = ['groups']
 LANGUAGES = get_available_languages()
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -105,17 +93,6 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 WSGI_APPLICATION = 'wikiscore.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 
 # Password validation
