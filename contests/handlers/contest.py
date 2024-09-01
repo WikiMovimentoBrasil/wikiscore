@@ -1,5 +1,6 @@
+import requests
 from datetime import timedelta
-from django.db.models import Count, Sum, Subquery, OuterRef, Case, When
+from django.db.models import Count, Sum, Subquery, OuterRef, Case, When, Q
 from django.db.models.functions import TruncDay
 from contests.models import Evaluator, Edit, Participant, Qualification, Article
 
@@ -92,10 +93,23 @@ class ContestHandler():
         return biggest_edit
 
     def count_participants(self, contest):
-        return Participant.objects.filter(contest=contest, timestamp__isnull=False, last_enrollment__enrolled=True).count()
+        return Participant.objects.filter(
+            contest=contest, timestamp__isnull=False
+        ).filter(
+            Q(last_enrollment__enrolled=True) | Q(last_enrollment__isnull=True)
+        ).count()
 
     def count_articles(self, contest):
-        return Article.objects.filter(contest=contest, active=True).count()
+        api_params = {
+            'action': 'query',
+            'generator': 'links',
+            'pageids': contest.official_list_pageid,
+            'gplnamespace': 0,
+            'gpllimit': 'max',
+            'format': 'json'
+        }
+        response = requests.get(contest.api_endpoint, params=api_params).json()
+        return len(response['query']['pages'])
 
     def edits_summary(self, contest):
         edits_summary = (
@@ -104,7 +118,10 @@ class ContestHandler():
                 new_pages=Sum(Case(When(new_page=True, then=1), default=0)),
                 edited_articles=Count('article', distinct=True),
                 valid_edits=Sum(Case(When(last_evaluation__valid_edit=True, then=1), default=0)),
-                all_bytes=Sum(Case(When(last_evaluation__real_bytes__gt=0, then='last_evaluation__real_bytes'), default=0)),
+                all_bytes=Sum(Case(
+                    When(orig_bytes__gt=0, then='orig_bytes'),
+                    default=0
+                )),
             )
         )
         return edits_summary
