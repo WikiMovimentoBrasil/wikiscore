@@ -1,7 +1,7 @@
 from datetime import timedelta
-from django.db.models import Count, Sum, Subquery, OuterRef
+from django.db.models import Count, Sum, Subquery, OuterRef, Case, When
 from django.db.models.functions import TruncDay
-from contests.models import Evaluator, Edit, Participant, Qualification
+from contests.models import Evaluator, Edit, Participant, Qualification, Article
 
 
 class ContestHandler():
@@ -62,6 +62,53 @@ class ContestHandler():
         
         return {entry['date']: entry['count'] for entry in annotated_queryset.annotate(count=Count(value_field)).order_by('date')}
 
+    def most_edited_article(self, contest):
+        most_edited = (
+            Edit.objects.filter(contest=contest)
+            .values('article', 'article__title')
+            .annotate(total=Count('diff'), bytes_sum=Sum('last_evaluation__real_bytes'))
+            .order_by('-total')
+            .first()
+        )
+        return most_edited
+
+    def biggest_delta(self, contest):
+        biggest_delta = (
+            Edit.objects.filter(contest=contest)
+            .values('article', 'article__title')
+            .annotate(total=Sum('last_evaluation__real_bytes'))
+            .order_by('-total')
+            .first()
+        )
+        return biggest_delta
+
+    def biggest_edit(self, contest):
+        biggest_edit = (
+            Edit.objects.filter(contest=contest, last_evaluation__valid_edit=True)
+            .values('article', 'article__title', 'diff', 'last_evaluation__real_bytes')
+            .order_by('-last_evaluation__real_bytes')
+            .first()
+        )
+        return biggest_edit
+
+    def count_participants(self, contest):
+        return Participant.objects.filter(contest=contest, timestamp__isnull=False, last_enrollment__enrolled=True).count()
+
+    def count_articles(self, contest):
+        return Article.objects.filter(contest=contest, active=True).count()
+
+    def edits_summary(self, contest):
+        edits_summary = (
+            Edit.objects.filter(contest=contest)
+            .aggregate(
+                new_pages=Sum(Case(When(new_page=True, then=1), default=0)),
+                edited_articles=Count('article', distinct=True),
+                valid_edits=Sum(Case(When(last_evaluation__valid_edit=True, then=1), default=0)),
+                all_bytes=Sum(Case(When(last_evaluation__real_bytes__gt=0, then='last_evaluation__real_bytes'), default=0)),
+            )
+        )
+        return edits_summary
+    
     def build_response_dict(self, stats, date_range, contest, is_evaluator):
         response_data = {
             'contest': contest,
@@ -73,6 +120,12 @@ class ContestHandler():
             'valid_edits': [],
             'valid_bytes': [],
             'is_evaluator': is_evaluator,
+            'most_edited': self.most_edited_article(contest),
+            'biggest_delta': self.biggest_delta(contest),
+            'biggest_edit': self.biggest_edit(contest),
+            'edits_summary': self.edits_summary(contest),
+            'participants': self.count_participants(contest),
+            'articles': self.count_articles(contest),
         }
 
         for date in date_range:

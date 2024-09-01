@@ -1,5 +1,7 @@
 {% load static %}
 {% load i18n %}
+{% load titlescore %}
+{% trans 'edits-title' as title %}
 
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -23,11 +25,98 @@
         <a href="{% url 'home_view' %}">
             <img src="{% static 'Logo_Branco.svg' %}" alt="logo" class="w3-bar-item" style="width: 128px;">
         </a>
-        <button onclick="window.open('graph_page', '_blank');" class="w3-button w3-bar-item">{% trans 'login-graph' %}</button>
+        <button onclick="window.open('graph_page', '_blank');" class="w3-button w3-bar-item" disabled>{% trans 'login-graph' %}</button>
         {% if is_evaluator %}
             <button onclick="window.open('{% url 'triage_view' %}?contest={{ contest.name_id }}', '_self')" class="w3-button w3-bar-item">{% trans 'login' %}</button>
         {% endif %}
         <span class="w3-bar-item w3-right w3-hide-small">{{ contest.name }}</span>
+    </div>
+    <div class="w3-container w3-card w3-margin w3-{{ contest.theme }}">
+        <div class="w3-center">
+            <h3 class="w3-margin-top w3-padding">{% trans 'main-title' %}</h3>
+        </div>
+        <div class="w3-row">
+            <div class="w3-half">
+                <div class="w3-third">
+                    <h6 class="w3-center">{% trans 'counter-allpages' %}</h6>
+                    <h1 class="w3-center">{{ articles |floatformat:"g" }}</h1>
+                </div>
+                <div class="w3-third">
+                    <h6 class="w3-center">{% trans 'counter-alledited' %}</h6>
+                    <h1 class="w3-center">{{ edits_summary.edited_articles |floatformat:"g" }}</h1>
+                </div>
+                <div class="w3-third">
+                    <h6 class="w3-center">{% trans 'counter-allcreated' %}</h6>
+                    <h1 class="w3-center">{{ edits_summary.new_pages |floatformat:"g" }}</h1>
+                </div>
+            </div>
+            <div class="w3-half">
+                <div class="w3-third">
+                    <h6 class="w3-center">{% trans 'counter-allenrolled' %}</h6>
+                    <h1 class="w3-center">{{ participants |floatformat:"g" }}</h1>
+                </div>
+                <div class="w3-third">
+                    <h6 class="w3-center">{% trans 'counter-allvalidated' %}</h6>
+                    <h1 class="w3-center">{{ edits_summary.valid_edits |floatformat:"g" }}</h1>
+                </div>
+                <div class="w3-third">
+                    <h6 class="w3-center">{% trans 'counter-allbytes' %}</h6>
+                    <h1 class="w3-center">{{ edits_summary.all_bytes |floatformat:"g" }}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div class="w3-row-padding w3-center w3-section">
+            <div class="w3-third">
+                <div class="w3-container w3-card w3-{{ contest.theme }}">
+                    <div class="w3-half">
+                        <h6 class="w3-center">{% trans 'counter-most-edited' %}</h6>
+                    </div>
+                    <div class="w3-half">
+                        <h4 class="w3-center">
+                            <a href="{{ contest.endpoint }}?curid={{ most_edited.article}}" target="_blank" rel="noopener">
+                                {{ most_edited.article__title| titlescore  |default_if_none:title }}
+                            </a>
+                            <br>
+                            {% blocktrans with counter_editions_1=most_edited.total %}.{{ counter_editions_1 }}.{% endblocktrans %}
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <div class="w3-third">
+                <div class="w3-container w3-card w3-{{ contest.theme }}">
+                    <div class="w3-half">
+                        <h6 class="w3-center">{% trans 'counter-biggest-delta' %}</h6>
+                    </div>
+                    <div class="w3-half">
+                        <h4 class="w3-center">
+                            <a href="{{ contest.endpoint }}?curid={{ biggest_delta.article}}" target="_blank" rel="noopener">
+                                {{ biggest_delta.article__title| titlescore  |default_if_none:title }}
+                            </a>
+                            <br>
+                            {% blocktrans with triage_bytes_1=biggest_delta.total %}.{{ triage_bytes_1 }}.{% endblocktrans %}
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            <div class="w3-third">
+                <div class="w3-container w3-card w3-{{ contest.theme }}">
+                    <div class="w3-half">
+                        <h6 class="w3-center">{% trans 'counter-biggest-edition' %}</h6>
+                    </div>
+                    <div class="w3-half">
+                        <h4 class="w3-center">
+                            <a href="{{ contest.endpoint }}?curid={{ biggest_edit.article}}" target="_blank" rel="noopener">
+                                {{ biggest_edit.article__title| titlescore |default_if_none:title }}
+                            </a>
+                            <br>
+                            {% blocktrans with triage_bytes_1=biggest_edit.last_evaluation__real_bytes %}.{{ triage_bytes_1 }}.{% endblocktrans %}
+                        </h4>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="w3-row-padding">
         <div class="w3-third w3-margin-bottom">
