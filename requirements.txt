@@ -6,3 +6,4 @@ social-auth-app-django
 rest-social-auth
 polib
 python-dotenv
+pymysql

@@ -14,8 +14,8 @@ SOCIAL_AUTH_MEDIAWIKI_SECRET = os.environ.get("SOCIAL_AUTH_MEDIAWIKI_SECRET")
 def configure_settings():
     if os.path.exists(HOME + '/replica.my.cnf'):
         debug = False
-        hosts = ['capx-backend.toolforge.org','toolforge.org']
-        callback = 'https://capx.toolforge.org/oauth'
+        hosts = [ os.environ.get("TOOLNAME") + '.toolforge.org', 'toolforge.org' ]
+        callback = 'https://' + os.environ.get("TOOLNAME") + '.toolforge.org/oauth'
         message = 'You are running in production mode'
 
         databases = {
