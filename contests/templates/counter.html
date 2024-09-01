@@ -33,7 +33,6 @@
         </div>
     </div>
     {% if contest_begun %}
-        # TODO: stats.php
         <div class="w3-container">
             <table aria-label="Lista de participantes" class="w3-table-all w3-hoverable w3-card">
                 <tr>
@@ -44,7 +43,7 @@
                     <th>{% trans 'counter-images' %}</th>
                     <th>{% trans 'counter-ppi' %}</th>
                     <th>{% trans 'counter-points' %}</th>
-                    {% if user.user_status == 'G' %}
+                    {% if manager %}
                         <th>{% trans 'counter-redefine' %}</th>
                     {% endif %}
                 </tr>
@@ -57,7 +56,7 @@
                         <td>{{ row.total_pictures }}</td>
                         <td>{{ row.pictures_points }}</td>
                         <td>{{ row.total_points }}</td>
-                        {% if user.user_status == 'G' %}
+                        {% if manager %}
                             <td>
                                 <form
                                 method='post'

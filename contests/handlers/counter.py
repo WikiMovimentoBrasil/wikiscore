@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.utils import timezone
-from contests.models import Contest, Edit
+from contests.models import Contest, Edit, Evaluator, Participant
 from django.shortcuts import render, redirect, get_object_or_404
 from datetime import timezone as dt_timezone
 
@@ -135,6 +135,16 @@ class CounterHandler:
 
         counter = self.get_points(time_round)
 
+        manager = True if Evaluator.objects.get(
+            contest=self.contest, 
+            profile=request.user.profile
+        ).user_status == 'G' else False
+
+        if request.method == 'POST':
+            success = self.reset_participant(request)
+        else:
+            success = False
+
         return {
             'contest': self.contest,
             'counter': counter,
@@ -142,5 +152,15 @@ class CounterHandler:
             'time': request_time.strftime('%H:%M:%S'),
             'time_form': request_time.strftime('%Y-%m-%dT%H:%M:%S'),
             'contest_begun': self.contest.start_time < request_time,
+            'manager': manager,
+            'success': success,
         }
+
+    def reset_participant(self, request):
+        participant_id = request.POST.get('user_id')
+        participant = Edit.objects.filter(
+            contest=self.contest, 
+            participant=Participant.objects.get(local_id=participant_id)
+        ).update(last_evaluation=None)
+        return True if participant.count() > 0 else False
     
