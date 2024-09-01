@@ -131,22 +131,29 @@ class Command(BaseCommand):
             timestamp = parser.parse(enrollment['enrollment_timestamp'])
             self.stdout.write(f"Coletando informações do usuário {username} ({global_id})...")
 
-            if not global_id:
-                self.stdout.write("Usuário sem ID global. Ignorando...")
-                continue
-
             self.insert_or_update_user(global_id, username, contest, wiki_id, timestamp)
 
     def insert_or_update_user(self, global_id, username, contest, wiki_id, timestamp):
         """Inserts or updates the user in the Participant table."""
-        try:
-            participant = Participant.objects.get(global_id=global_id, contest=contest)
-            local_id = participant.local_id
-            self.stdout.write(f"Usuário {username} já está na tabela. Ignorando...")
-        except Participant.DoesNotExist:
-            participant = None
-            local_id = self.add_user_contest(global_id, contest, wiki_id, timestamp)
-            self.stdout.write(f"Usuário {username} inserido com sucesso!")
+        if global_id:         
+            try:
+                participant = Participant.objects.get(global_id=global_id, contest=contest)
+                local_id = participant.local_id
+                self.stdout.write(f"Usuário {username} já está na tabela. Ignorando...")
+            except Participant.DoesNotExist:
+                participant = None
+                local_id = self.add_user_contest(global_id, contest, wiki_id, timestamp, username)
+                self.stdout.write(f"Usuário {username} inserido com sucesso!")
+        else:
+            self.stdout.write(f"Usuário {username} sem ID global.")
+            local_id = None
+            try:
+                participant = Participant.objects.get(user=username, contest=contest)
+            except Participant.DoesNotExist:
+                self.stdout.write(f"Usuário {username} não encontrado. Inserindo...")
+                self.add_user_contest(global_id, contest, wiki_id, timestamp, username)
+                participant = None
+
         
         if participant and participant.user != username:
             self.stdout.write(f"Usuário {username} mudou de nome. Atualizando...")
@@ -158,31 +165,38 @@ class Command(BaseCommand):
         else:
             self.update_user_edits(local_id, contest, timestamp)
 
-    def add_user_contest(self, global_id, contest, wiki_id, timestamp):
+    def add_user_contest(self, global_id, contest, wiki_id, timestamp, username):
         """Adds a user to the contest."""
-        centralauth_response = self.fetch_user_data(global_id, contest)
-        centralauth_merged = centralauth_response['query']['globaluserinfo']['merged']
-        local_id = next((merged['id'] for merged in centralauth_merged if merged['wiki'] == wiki_id), None)
-        user = centralauth_response['query']['globaluserinfo']['name']
-        attached = centralauth_response['query']['globaluserinfo']['registration']
-
-        if not local_id:
-            return None
+        if global_id:
+            centralauth_response = self.fetch_user_data(global_id, contest)
+            centralauth_merged = centralauth_response['query']['globaluserinfo']['merged']
+            local_id = next((merged['id'] for merged in centralauth_merged if merged['wiki'] == wiki_id), None)
+            user = centralauth_response['query']['globaluserinfo']['name']
+            attached = centralauth_response['query']['globaluserinfo']['registration']
         else:
-            new_participant = Participant.objects.create(
-                contest=contest,
-                user=user,
-                timestamp=timestamp,
-                global_id=global_id,
-                local_id=local_id,
-                attached=attached,
-            )
+            local_id = None
+            user = None
+            attached = None
+            global_id = None
+            user=username
+
+        new_participant = Participant.objects.create(
+            contest=contest,
+            user=user,
+            timestamp=timestamp,
+            global_id=global_id,
+            local_id=local_id,
+            attached=attached,
+        )
+
+        if global_id and local_id:
             new_enrollment = ParticipantEnrollment.objects.create(
                 contest=contest,
                 user=new_participant
             )
             Participant.objects.filter(global_id=global_id, contest=contest).update(last_enrollment=new_enrollment)
-            return local_id
+
+        return local_id
 
     def fetch_user_data(self, global_id, contest):
         """Fetches user data from the contest API."""
@@ -227,5 +241,5 @@ class Command(BaseCommand):
         )
 
         Evaluation.objects.bulk_create([
-            Evaluation(contest=self.contest, diff=locked.diff) for locked in lockeds
+            Evaluation(contest=contest, diff=locked.diff) for locked in lockeds
         ])

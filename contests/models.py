@@ -62,10 +62,10 @@ class Article(models.Model):
 class Participant(models.Model):
     contest = models.ForeignKey('Contest', on_delete=models.CASCADE)
     user = models.CharField(max_length=100)
-    timestamp = models.DateTimeField(blank=True)
-    global_id = models.IntegerField()
-    local_id = models.IntegerField(blank=True)
-    attached = models.DateTimeField(blank=True)
+    timestamp = models.DateTimeField()
+    global_id = models.IntegerField(null=True)
+    local_id = models.IntegerField(null=True)
+    attached = models.DateTimeField(null=True)
     last_enrollment = models.ForeignKey('ParticipantEnrollment', on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
