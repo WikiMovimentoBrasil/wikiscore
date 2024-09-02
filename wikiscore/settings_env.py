@@ -15,7 +15,7 @@ def configure_settings():
     if os.path.exists(HOME + '/replica.my.cnf'):
         debug = False
         hosts = [ os.environ.get("TOOLNAME") + '.toolforge.org', 'toolforge.org' ]
-        callback = 'https://' + os.environ.get("TOOLNAME") + '.toolforge.org/oauth'
+        callback = 'https://' + os.environ.get("TOOLNAME") + '.toolforge.org/oauth/complete/mediawiki/'
         message = 'You are running in production mode'
 
         databases = {
