@@ -15,5 +15,5 @@ media/
 .vscode/
 pytest.ini
 coverage.xml
-static/
+static_files/
 locale/
