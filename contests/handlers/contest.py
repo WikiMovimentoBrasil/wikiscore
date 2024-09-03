@@ -22,8 +22,8 @@ class ContestHandler():
             'new_participants': self.get_stat_by_date(Participant, contest),
             'total_edits': self.get_stat_by_date(Edit, contest),
             'total_bytes': self.get_stat_by_date(Edit, contest, 'orig_bytes__gte', 0, 'orig_bytes', sum_field=True),
-            #'valid_edits': self.get_stat_by_date(Edit, contest, 'pk__in', approved_edits),
-            #'valid_bytes': self.get_stat_by_date(Edit, contest, 'pk__in', approved_edits, 'orig_bytes', sum_field=True)
+            'valid_edits': self.get_stat_by_date(Edit, contest, 'pk__in', approved_edits),
+            'valid_bytes': self.get_stat_by_date(Edit, contest, 'pk__in', approved_edits, 'orig_bytes', sum_field=True)
         }
 
         return self.build_response_dict(stats, date_range, contest, is_evaluator)
@@ -41,16 +41,10 @@ class ContestHandler():
         return [start_date + timedelta(days=x) for x in range((end_date - start_date).days + 1)]
 
     def get_approved_edits(self, contest):
-        subquery = Qualification.objects.filter(
+        return Edit.objects.filter(
             contest=contest,
-            diff=OuterRef('diff')
-        ).order_by('-when').values('pk')[:1]
-        
-        return Qualification.objects.filter(
-            contest=contest,
-            pk__in=Subquery(subquery),
-            status=1
-        ).values_list('diff__diff', flat=True)
+            last_evaluation__valid_edit=True
+        ).values('diff')
 
     def get_stat_by_date(self, model, contest, filter_field=None, filter_value=None, value_field='id', sum_field=False):
         queryset = model.objects.filter(contest=contest, timestamp__range=(contest.start_time, contest.end_time))
@@ -162,8 +156,8 @@ class ContestHandler():
             response_data['new_participants'].append(str(stats['new_participants'].get(date, 0)))
             response_data['total_edits'].append(str(stats['total_edits'].get(date, 0)))
             response_data['total_bytes'].append(str(stats['total_bytes'].get(date, 0)))
-            #response_data['valid_edits'].append(str(stats['valid_edits'].get(date, 0)))
-            #response_data['valid_bytes'].append(str(stats['valid_bytes'].get(date, 0)))
+            response_data['valid_edits'].append(str(stats['valid_edits'].get(date, 0)))
+            response_data['valid_bytes'].append(str(stats['valid_bytes'].get(date, 0)))
 
         for key in response_data:
             if isinstance(response_data[key], list):
