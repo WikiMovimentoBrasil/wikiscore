@@ -44,7 +44,7 @@ class ContestHandler():
         return Edit.objects.filter(
             contest=contest,
             last_evaluation__valid_edit=True
-        ).values('diff')
+        )
 
     def get_stat_by_date(self, model, contest, filter_field=None, filter_value=None, value_field='id', sum_field=False):
         queryset = model.objects.filter(contest=contest, timestamp__range=(contest.start_time, contest.end_time))
@@ -63,7 +63,7 @@ class ContestHandler():
         most_edited = (
             Edit.objects.filter(contest=contest)
             .values('article', 'article__title')
-            .annotate(total=Count('diff'), bytes_sum=Sum('last_evaluation__real_bytes'))
+            .annotate(total=Count('diff'))
             .order_by('-total')
             .first()
         )
@@ -73,7 +73,9 @@ class ContestHandler():
         biggest_delta = (
             Edit.objects.filter(contest=contest)
             .values('article', 'article__title')
-            .annotate(total=Sum('last_evaluation__real_bytes'))
+            .annotate(total=Sum(Case(
+                When(last_evaluation__valid_edit=True, then='last_evaluation__real_bytes'),
+                default='orig_bytes')))
             .order_by('-total')
             .first()
         )
@@ -123,6 +125,7 @@ class ContestHandler():
                 edited_articles=Count('article', distinct=True),
                 valid_edits=Sum(Case(When(last_evaluation__valid_edit=True, then=1), default=0)),
                 all_bytes=Sum(Case(
+                    When(last_evaluation__valid_edit=True, then='last_evaluation__real_bytes'),
                     When(orig_bytes__gt=0, then='orig_bytes'),
                     default=0
                 )),
