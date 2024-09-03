@@ -100,6 +100,7 @@ class ContestHandler():
         ).count()
 
     def count_articles(self, contest):
+        list_ = []
         api_params = {
             'action': 'query',
             'generator': 'links',
@@ -109,7 +110,14 @@ class ContestHandler():
             'format': 'json'
         }
         response = requests.get(contest.api_endpoint, params=api_params).json()
-        return len(response['query']['pages'])
+        list_.extend(response['query']['pages'])
+
+        while 'continue' in response:
+            api_params['gplcontinue'] = response['continue']['gplcontinue']
+            response = requests.get(contest.api_endpoint, params=api_params).json()
+            list_.extend(response['query']['pages'])
+
+        return len(list_)
 
     def edits_summary(self, contest):
         edits_summary = (
