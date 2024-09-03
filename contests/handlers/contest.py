@@ -22,8 +22,8 @@ class ContestHandler():
             'new_participants': self.get_stat_by_date(Participant, contest),
             'total_edits': self.get_stat_by_date(Edit, contest),
             'total_bytes': self.get_stat_by_date(Edit, contest, 'orig_bytes__gte', 0, 'orig_bytes', sum_field=True),
-            'valid_edits': self.get_stat_by_date(Edit, contest, 'pk__in', approved_edits),
-            'valid_bytes': self.get_stat_by_date(Edit, contest, 'pk__in', approved_edits, 'orig_bytes', sum_field=True)
+            #'valid_edits': self.get_stat_by_date(Edit, contest, 'pk__in', approved_edits),
+            #'valid_bytes': self.get_stat_by_date(Edit, contest, 'pk__in', approved_edits, 'orig_bytes', sum_field=True)
         }
 
         return self.build_response_dict(stats, date_range, contest, is_evaluator)
@@ -160,8 +160,8 @@ class ContestHandler():
             response_data['new_participants'].append(str(stats['new_participants'].get(date, 0)))
             response_data['total_edits'].append(str(stats['total_edits'].get(date, 0)))
             response_data['total_bytes'].append(str(stats['total_bytes'].get(date, 0)))
-            response_data['valid_edits'].append(str(stats['valid_edits'].get(date, 0)))
-            response_data['valid_bytes'].append(str(stats['valid_bytes'].get(date, 0)))
+            #response_data['valid_edits'].append(str(stats['valid_edits'].get(date, 0)))
+            #response_data['valid_bytes'].append(str(stats['valid_bytes'].get(date, 0)))
 
         for key in response_data:
             if isinstance(response_data[key], list):
