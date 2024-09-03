@@ -29,6 +29,8 @@ class ContestHandler():
         return self.build_response_dict(stats, date_range, contest, is_evaluator)
 
     def check_evaluator(self, user):
+        if user.is_anonymous:
+            return False
         try:
             Evaluator.objects.get(contest=self.contest, profile=user.profile)
             return True
