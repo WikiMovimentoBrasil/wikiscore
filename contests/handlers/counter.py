@@ -26,6 +26,9 @@ class CounterHandler:
             FROM 
                 `contests_edit` 
             INNER JOIN `contests_participant` ON `contests_participant`.`local_id` = `contests_edit`.`user_id`
+            WHERE
+                `contests_edit`.`contest_id` = '{self.contest.id}'
+                AND `contests_participant`.`contest_id` = '{self.contest.id}'
         ) AS `user_table` 
         LEFT JOIN (
             SELECT 
