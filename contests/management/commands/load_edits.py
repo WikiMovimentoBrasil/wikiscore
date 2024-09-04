@@ -94,6 +94,9 @@ class Command(BaseCommand):
             "cmlimit": "max"
         }
         response = requests.get(contest.api_endpoint, params=categorymembers_api_params).json()
+        if not 'query' in response:
+            return list_
+            
         list_.extend(response['query']['categorymembers'])
 
         # Coleta segunda página da lista, caso exista
