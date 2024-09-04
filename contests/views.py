@@ -48,7 +48,7 @@ def render_with_bidi(request, template_name, context):
     return render(request, template_name, context)
 
 def home_view(request):
-    contests = Contest.objects.all().order_by('-start_time')
+    contests = Contest.objects.select_related('group').order_by('-start_time')
     
     contests_chooser = {}
     for contest in contests:
