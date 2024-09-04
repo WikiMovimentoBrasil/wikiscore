@@ -233,13 +233,14 @@
                             "{{ contest.endpoint }}?diff={{ edits.diff|urlencode }}",
                             "_blank"
                         )'>{% trans 'compare-seediff' %}{{ edits.diff }}</button>
-                        <button
-                        class='w3-btn w3-padding-small w3-purple'
-                        type='button'
-                        onclick='window.open(
-                            "contest={{ contest.name_id }}&page=modify&diff={{ edits.diff|urlencode }}",
-                            "_blank"
-                        );'>{% trans 'compare-reevaluate' %}</button>
+                        <form
+                        action='/modify/?contest={{ contest.name_id }}'
+                        style='display: inline'
+                        method='post'>
+                            {% csrf_token %}
+                            <input type='hidden' name='diff' value='{{ edits.diff }}'>
+                            <input type='submit' class='w3-btn w3-padding-small w3-purple' value='{% trans 'compare-reevaluate' %}'>
+                        </form>
                     </li>
                 {% endfor %}
             </ul>
