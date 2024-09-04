@@ -197,8 +197,10 @@ class CompareHandler:
         """Coleta contagem regressiva para atualização."""
         if contest.end_time + timedelta(days=2) < timezone.now():
             return False
+        elif contest.next_update is None:
+            return 0
         elif contest.next_update > timezone.now() and not self.update:
-            return contest.next_update - timezone.now()
+            return (contest.next_update - timezone.now()).total_seconds()
         else:
             return 0
 
@@ -209,7 +211,18 @@ class CompareHandler:
 
     def check_recent_update(self, contest):
         """Verifica se houve atualização recente."""
-        if (timezone.now() - contest.finished_update) < timedelta(minutes=30) or contest.next_update==None:
+        # Caso todas as variáveis estejam nulas, retorna False
+        if contest.started_update is None and contest.finished_update is None and contest.next_update is None:
+            return False
+        
+        # Caso a atualização tenha sido iniciada e terminada, mas não há próxima atualização definida, retorna False
+        if contest.started_update is not None and contest.finished_update is not None and contest.next_update is None:
+            return False
+
+        # Se a atualização foi iniciada, mas ainda não foi terminada ou terminou há menos de 30 minutos
+        if contest.finished_update is None or contest.finished_update < contest.started_update or (timezone.now() - contest.finished_update) < timedelta(minutes=30):
             return True
+
+        # Caso contrário, não há atualização em andamento ou recente
         return False
     
