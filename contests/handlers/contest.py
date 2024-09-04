@@ -108,8 +108,10 @@ class ContestHandler():
             'format': 'json'
         }
         response = requests.get(contest.api_endpoint, params=api_params).json()
-        list_.extend(response['query']['pages'])
+        if not 'query' in response:
+            return list_
 
+        list_.extend(response['query']['pages'])
         while 'continue' in response:
             api_params['gplcontinue'] = response['continue']['gplcontinue']
             response = requests.get(contest.api_endpoint, params=api_params).json()
