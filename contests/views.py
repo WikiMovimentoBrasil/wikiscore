@@ -132,7 +132,10 @@ def compare_view(request, contest):
 @login_required()
 @contest_evaluator_required
 def edits_view(request, contest):
-    edits = Edit.objects.filter(contest=contest)
+    edits = Edit.objects.filter(contest=contest).select_related(
+        'article', 'participant', 'last_evaluation__evaluator__profile', 'last_qualification'
+    )
+
     if request.POST.get('csv'):
         response = HttpResponse(content_type="text/csv; charset=windows-1252",
                                 headers={"Content-Disposition": 'attachment; filename="edits.csv"'})
