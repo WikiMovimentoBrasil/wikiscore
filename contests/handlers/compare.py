@@ -104,6 +104,9 @@ class CompareHandler:
             "gcmlimit": "max",
         }
         response = requests.get(contest.api_endpoint, params=categorymembers_api_params).json()
+        if 'error' in response:
+            return list_
+
         list_.extend(response['query']['pages'])
 
         while 'continue' in response:
