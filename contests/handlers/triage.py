@@ -43,7 +43,7 @@ class TriageHandler:
         return_dict = {'contest': contest }
           
         # Check if the update start time is greater than the end time (indicating an update is in progress)
-        if contest.start_time > contest.end_time:
+        if (contest.started_update is not None and contest.finished_update is None) or (contest.started_update > contest.finished_update):
             return_dict.update({'error': 'updating'})
         
         # Fetch the next available edit for triage
