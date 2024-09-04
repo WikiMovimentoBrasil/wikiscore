@@ -116,7 +116,7 @@ class Command(BaseCommand):
         enrollments_ids = set(enrollment['global_id'] for enrollment in enrollments)
 
         for enrollment in already_enrolled:
-            if str(enrollment) not in enrollments_ids:
+            if enrollment != 0 and str(enrollment) not in enrollments_ids:
                 self.stdout.write(f"Usuário {enrollment} não está mais inscrito. Desinscrevendo...")
                 unenroll = ParticipantEnrollment.objects.create(
                     contest=contest, 
