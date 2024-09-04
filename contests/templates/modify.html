@@ -187,6 +187,40 @@
                     {{ content | safe }}
                 </table>
                 <hr>
+                <table class="w3-table-all w3-section">
+                    <tr>
+                        <th>{% trans 'modify-qualified' %}</th>
+                        <th>{% trans 'edits-evaluator' %}</th>
+                        <th>{% trans 'modify-timestamp' %}</th>
+                    </tr>
+                    {% for qualification in history_qualifications %}
+                        <tr>
+                            <td>{% if qualification.status == 1 %}{% trans 'yes' %}{% else %}{% trans 'no' %}{% endif %}</td>
+                            <td>{% if qualification.evaluator is None %}<i>{% trans 'modify-automatic' %}</i>{% else %}{{ qualification.evaluator.profile.username }}{% endif %}</td>
+                            <td>{{ qualification.when }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+                <table class="w3-table-all w3-section">
+                    <tr>
+                        <th>{% trans 'isvalid' %}</th>
+                        <th>{% trans 'withimage' %}</th>
+                        <th>{% trans 'edits-bytes' %}</th>
+                        <th>{% trans 'triage-observation' %}</th>
+                        <th>{% trans 'edits-evaluator' %}</th>
+                        <th>{% trans 'modify-timestamp' %}</th>
+                    </tr>
+                    {% for eval in history_evaluations %}
+                        <tr>
+                            <td>{% if eval.valid_edit %}{% trans 'yes' %}{% else %}{% trans 'no' %}{% endif %}</td>
+                            <td>{{ eval.pictures }}</td>
+                            <td>{{ eval.real_bytes }}</td>
+                            <td>{{ eval.obs|default_if_none:"" }}</td>
+                            <td>{{ eval.evaluator.profile.username }}</td>
+                            <td>{{ eval.when }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
             </div>
             {% elif diff and not content %}
                 <script>alert('{% trans 'modify-notfound' %}');</script>

@@ -1,7 +1,8 @@
 import requests
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import render
-from contests.models import Evaluator, Edit, Evaluation
+from contests.models import Evaluator, Edit, Evaluation, Qualification
+from contests.models import Contest
 
 
 class ModifyHandler():
@@ -17,6 +18,8 @@ class ModifyHandler():
         comment = None
         evaluation = None
         allowed = False
+        history_qualifications = None
+        history_evaluations = None
 
         if Evaluator.objects.get(
             contest=contest, 
@@ -26,7 +29,7 @@ class ModifyHandler():
 
         if request.method == 'POST' and request.POST.get('diff'):
             diff = request.POST.get('diff')
-            edit = Edit.objects.get(diff=diff)
+            edit = Edit.objects.get(contest=contest, diff=diff)
 
             compare_params = {
                 'action': 'compare',
@@ -40,6 +43,16 @@ class ModifyHandler():
             content = compare.get('*', '')
             author = compare.get('touser', '')
             comment = compare.get('tocomment', '')
+
+            history_qualifications = Qualification.objects.filter(
+                contest=contest, 
+                diff=edit
+            ).select_related('evaluator__profile').order_by('-when')
+
+            history_evaluations = Evaluation.objects.filter(
+                contest=contest, 
+                diff=edit
+            ).select_related('evaluator__profile').order_by('-when')
             
             if request.POST.get('obs'):
                 if allowed:
@@ -67,5 +80,7 @@ class ModifyHandler():
             'content': content,
             'author': author,
             'comment': comment,
+            'history_qualifications': history_qualifications,
+            'history_evaluations': history_evaluations,
         }
         return return_dict
