@@ -137,3 +137,6 @@ class Evaluation(models.Model):
 
     def __str__(self):
         return (f"{self.contest.name_id} - {self.diff.diff} - {self.evaluator.profile.username} - {self.status} - {self.when}")
+        
+        name = self.evaluator.profile.username if self.evaluator else 'None'
+        return (f"{self.contest.name_id} - {self.diff.diff} - {name} - {self.status} - {self.when}")
