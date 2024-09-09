@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
 from django.template import loader
+from django.conf import settings
 from django.utils import translation
 from django.utils.html import escape
 from django.db.models.functions import TruncDay
@@ -46,6 +47,24 @@ def render_with_bidi(request, template_name, context):
     }
     context.update(bidi_context)
     return render(request, template_name, context)
+
+def redirect_view(request):
+    lang = request.GET.get('lang')
+    contest = request.GET.get('contest')
+    page = request.GET.get('page')
+
+    if contest and not page:
+        response = redirect(f"/contests/?contest={contest}")
+    elif contest and page:
+        response = redirect(f"/{page}/?contest={contest}")
+    else:
+        response = redirect('/')
+
+    if lang:
+        translation.activate(lang)
+        response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang)
+
+    return response
 
 def home_view(request):
     contests = Contest.objects.select_related('group').order_by('-start_time')
