@@ -1,16 +1,13 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
-from django.core.exceptions import PermissionDenied
 from django.http import HttpResponse
-from django.template import loader
 from django.conf import settings
 from django.utils import translation
-from django.utils.html import escape
-from django.db.models.functions import TruncDay
-from datetime import timedelta
+from django.template import loader
+from django.core.exceptions import PermissionDenied
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect, get_object_or_404
 from functools import wraps
 from collections import defaultdict
-from .models import Contest, Edit, Participant, Qualification, Evaluator
+from .models import Contest, Edit, Qualification, Evaluator
 from .handlers.triage import TriageHandler
 from .handlers.contest import ContestHandler
 from .handlers.counter import CounterHandler
@@ -18,7 +15,7 @@ from .handlers.compare import CompareHandler
 from .handlers.evaluators import EvaluatorsHandler
 from .handlers.modify import ModifyHandler
 from .handlers.manage import ManageHandler
-from credentials.models import Profile
+
 
 def get_contest_from_request(request):
     contest_name_id = request.GET.get('contest')
@@ -77,7 +74,7 @@ def home_view(request):
         contests_chooser[group].append([contest.name_id, contest.name])
     contests_groups = list(contests_chooser.keys())
 
-    return render(request, 'home.html', {
+    return render_with_bidi(request, 'home.html', {
         'contests_groups': contests_groups,
         'contests_chooser': contests_chooser,
     })
@@ -102,7 +99,6 @@ def triage_view(request, contest):
         'triage_points': int(contest.max_bytes_per_article / contest.bytes_per_points),
         'evaluator_status': Evaluator.objects.get(contest=contest, profile=request.user.profile).user_status,
     })
-    return render(request, "triage.html", triage_dict)
     return render_with_bidi(request, "triage.html", triage_dict)
 
 @login_required()
