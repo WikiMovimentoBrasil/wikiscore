@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from functools import wraps
 from collections import defaultdict
+from pathlib import Path
 from .models import Contest, Edit, Qualification, Evaluator
 from .handlers.triage import TriageHandler
 from .handlers.contest import ContestHandler
@@ -45,6 +46,24 @@ def render_with_bidi(request, template_name, context):
     context.update(bidi_context)
     return render(request, template_name, context)
 
+def get_active_branch_name():
+    head_dir = Path(".") / ".git" / "HEAD"
+    with head_dir.open("r") as f: content = f.read().splitlines()
+
+    for line in content:
+        if line[0:4] == "ref:":
+            return line.partition("refs/heads/")[2]
+
+def get_active_commit_message():
+    head_dir = Path(".") / ".git" / "COMMIT_EDITMSG"
+    with head_dir.open("r") as f: content = f.readlines()
+    return content[0]
+
+def get_active_commit_hash():
+    head_dir = Path(".") / ".git" / "ORIG_HEAD"
+    with head_dir.open("r") as f: content = f.read().splitlines()
+    return content[0][:7]
+
 def redirect_view(request):
     lang = request.GET.get('lang')
     contest = request.GET.get('contest')
@@ -77,6 +96,8 @@ def home_view(request):
     return render_with_bidi(request, 'home.html', {
         'contests_groups': contests_groups,
         'contests_chooser': contests_chooser,
+        'git_branch': 'Branch: ' + get_active_branch_name(),
+        'git_commit': 'Commit: ' + get_active_commit_hash() + ' - ' + get_active_commit_message(),
     })
 
 def contest_view(request):
