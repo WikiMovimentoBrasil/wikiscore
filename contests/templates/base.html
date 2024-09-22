@@ -53,7 +53,7 @@
                 <i class="fa fa-bars"></i> &nbsp;
                 <img src="{% static 'Logo_Branco.svg' %}" alt="logo" class="w3-hide-medium w3-hide-small" style="width: 83px;">
             </button>
-            <span class="w3-bar-item w3-{{ left }}">{% block pagename %}{% trans 'triage' %}{% endblock %}</span>
+            <span class="w3-bar-item w3-{{ left }}">{% block pagename %}{% trans 'Triage' context 'triage' %}{% endblock %}</span>
             <span class="w3-bar-item w3-{{ right }} w3-hide-small">{{ contest.name }}</span>
         </div>
         <nav class="w3-sidebar w3-white w3-animate-{{ left }}" style="z-index:3;width:280px;display:none;min-height:100vh;" id="mySidebar">
@@ -63,60 +63,60 @@
                     <i class="fa-solid fa-circle-user" style="font-size: 3em;"></i>
                 </div>
                 <div class="w3-col s8 w3-bar">
-                    <span>{% blocktrans with triage_welcome_1=request.user %}.{{ triage_welcome_1 }}.{% endblocktrans %}</span><br>
+                    <span>{% blocktrans with 1=request.user context 'triage-welcome' %}Welcome, {{1}}{% endblocktrans %}</span><br>
                 </div>
             </div>
             <hr>
             <div class="w3-container">
-                <h5>{% trans 'triage-panel' %}</h5>
+                <h5>{% trans 'Panel' context 'triage-panel' %}</h5>
             </div>
             <div class="w3-bar-block">
                 <a href="{% url 'triage_view' %}?contest={{ contest.name_id }}"
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='triage')?:'w3-blue'?>">
-                    <i class="fa-solid fa-check-to-slot"></i>&nbsp; {% trans 'triage' %}
+                    <i class="fa-solid fa-check-to-slot"></i>&nbsp; {% trans 'Triage' context 'triage' %}
                 </a>
                 <a href="{% url 'counter_view' %}?contest={{ contest.name_id }}"
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='counter')?:'w3-blue'?>">
-                    <i class="fa-solid fa-chart-line"></i>&nbsp; {% trans 'counter' %}
+                    <i class="fa-solid fa-chart-line"></i>&nbsp; {% trans 'Counter' context 'counter' %}
                 </a>
                 <a href="{% url 'modify_view' %}?contest={{ contest.name_id }}"
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='modify')?:'w3-blue'?>">
-                    <i class="fa-solid fa-pen-to-square"></i>&nbsp; {% trans 'modify' %}
+                    <i class="fa-solid fa-pen-to-square"></i>&nbsp; {% trans 'Review' context 'modify' %}
                 </a>
                 <a href="{% url 'compare_view' %}?contest={{ contest.name_id }}"
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='compare')?:'w3-blue'?>">
-                    <i class="fa-solid fa-code-compare"></i>&nbsp; {% trans 'compare' %}
+                    <i class="fa-solid fa-code-compare"></i>&nbsp; {% trans 'Comparator' context 'compare' %}
                 </a>
                 <a href="{% url 'edits_view' %}?contest={{ contest.name_id }}"
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='edits')?:'w3-blue'?>">
-                    <i class="fa-solid fa-list-check"></i>&nbsp; {% trans 'triage-evaluated' %}
+                    <i class="fa-solid fa-list-check"></i>&nbsp; {% trans 'Evaluated' context 'triage-evaluated' %}
                 </a>
                 <a href="{% url 'backtrack_view' %}?contest={{ contest.name_id }}"
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='backtrack')?:'w3-blue'?>">
-                    <i class="fa-solid fa-history"></i>&nbsp; {% trans 'backtrack' %}
+                    <i class="fa-solid fa-history"></i>&nbsp; {% trans 'Backtrack' context 'backtrack' %}
                 </a>
                 <a href="{% url 'evaluators_view' %}?contest={{ contest.name_id }}"
                 rel="noopener" class="w3-bar-item w3-button w3-padding <?=($getPage!='evaluators')?:'w3-blue'?>">
-                    <i class="fa-solid fa-users"></i>&nbsp; {% trans 'evaluators' %}
+                    <i class="fa-solid fa-users"></i>&nbsp; {% trans 'Evaluators' context 'evaluators' %}
                 </a>
                 <a href="{{ contest.endpoint }}?curid={{ contest.official_list_pageid }}" target="_blank"
                 rel="noopener" class="w3-bar-item w3-button w3-padding">
-                    <i class="fa-solid fa-certificate"></i>&nbsp; {% trans 'triage-list' %}
+                    <i class="fa-solid fa-certificate"></i>&nbsp; {% trans 'Official list' context 'triage-list' %}
                     <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
                 </a>
                 <a href="{% if contest.category_petscan %}https://petscan.wmflabs.org/?psid={{ contest.category_petscan }}{% else %}{{ contest.endpoint }}?curid={{ contest.category_pageid }}{% endif %}" 
                 target="_blank" rel="noopener" class="w3-bar-item w3-button w3-padding">
-                    <i class="fa-solid fa-magnifying-glass-chart"></i>&nbsp; {% trans 'triage-cat' %}
+                    <i class="fa-solid fa-magnifying-glass-chart"></i>&nbsp; {% trans 'Categorization' context 'triage-cat' %}
                     <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
                 </a>
                 <a href="https://outreachdashboard.wmflabs.org/courses/{{ contest.outreach_name }}" target="_blank"
                 rel="noopener" class="w3-bar-item w3-button w3-padding">
-                    <i class="fa-solid fa-circle-nodes"></i>&nbsp; {% trans 'triage-outreach' %}
+                    <i class="fa-solid fa-circle-nodes"></i>&nbsp; {% trans 'Outreach Dashboard' context 'triage-outreach' %}
                     <i class="fa-solid fa-arrow-up-right-from-square fa-xs"></i>
                 </a>
                 <a href="{% url 'contest_view' %}?contest={{ contest.name_id }}"
                 rel="noopener" class="w3-bar-item w3-button w3-padding">
-                    <i class="fa-solid fa-door-open"></i>&nbsp; {% trans 'exit' %}
+                    <i class="fa-solid fa-door-open"></i>&nbsp; {% trans 'Exit' context 'exit' %}
                 </a>
                 <br><br>
             </div>

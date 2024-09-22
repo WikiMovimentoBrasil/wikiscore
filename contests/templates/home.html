@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>{% trans 'main-title' %}</title>
+    <title>{% trans 'WikiScore' context 'main-title' %}</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{% static 'w3.css' %}">
@@ -17,12 +17,12 @@
     <div style="display: flex; justify-content: flex-end;">
         {% if user.is_authenticated %}
             <div class="w3-section">
-                {% blocktrans with triage_welcome_1=user.username %}.{{ triage_welcome_1 }}.{% endblocktrans %}
+                {% blocktrans with 1=user.username context 'triage-welcome' %}Welcome, {{1}}{% endblocktrans %}
             </div>
         {% endif %}
         <form action="{% url 'set_language' %}" method="post">{% csrf_token %}
             <input name="next" type="hidden" value="{{ redirect_to }}">
-            <select name="language" onchange="this.form.submit()" style="max-width: 16em; text-transform: uppercase;"
+            <select name="language" onchange="this.form.submit()" style="width: auto; text-transform: uppercase;"
             class="w3-select w3-margin w3-border w3-border-black w3-padding-small w3-round-xxlarge w3-small">
                 {% get_current_language as LANGUAGE_CODE %}
                 {% get_available_languages as LANGUAGES %}
@@ -41,26 +41,26 @@
     class="w3-button w3-black w3-padding w3-margin w3-round-xxlarge"
     style="text-transform: uppercase;"
     onclick="document.getElementById('id01').style.display='block'"
-    >{% trans 'contest-enter' %}</button>
+    >{% trans 'Join a contest' context 'contest-enter' %}</button>
     {% if request.user.profile.group_set.exists %}
         <button
         class="w3-button w3-black w3-padding w3-margin w3-round-xxlarge"
         style="text-transform: uppercase;"
         onclick="location.href='{% url 'manage_view' %}'"
-        >{% trans 'contest-manage' %}</button>
+        >{% trans 'Manage contests' context 'contest-manage' %}</button>
     {% endif %}
     {% if user.is_authenticated %}
         <button
         class="w3-button w3-red w3-padding w3-margin w3-round-xxlarge"
         style="text-transform: uppercase;"
         onclick="location.href='{% url 'logout' %}'"
-        >{% trans 'exit' %}</button>
+        >{% trans 'Exit' context 'exit' %}</button>
     {% else %}
         <button
         class="w3-button w3-blue w3-padding w3-margin w3-round-xxlarge"
         style="text-transform: uppercase;"
         onclick="location.href='{% url 'login' %}'"
-        >{% trans 'login' %}</button>
+        >{% trans 'Log in' context 'login' %}</button>
     {% endif %}
 </header>
 
@@ -74,7 +74,7 @@
         <header class="w3-container w3-black">
             <button onclick="document.getElementById('id01').style.display='none'"
             class="w3-button w3-display-topright">&times;</button>
-            <h4>{% trans 'contest-select' %}</h4>
+            <h4>{% trans 'Select your contest' context 'contest-select' %}</h4>
         </header>
         <div class="w3-padding">
             <div class="w3-bar w3-black">
@@ -114,10 +114,10 @@
 <!-- First Grid -->
 <div class="w3-padding w3-padding-24 w3-container w3-border-top w3-border-black">
     <div class="w3-content">
-        <div class="w3-half w3-jumbo">{% trans 'index-about-short' %}</div>
+        <div class="w3-half w3-jumbo">{% trans 'What is it?' context 'index-about-short' %}</div>
         <div class="w3-half w3-padding">
-            <p>{% trans 'index-about-intro' %}</p>
-            <p style="color: #8493a6;">{% trans 'index-about-main' %}</p>
+            <p>{% trans 'WikiScore is a tool created to validate edits and count scores of participants in wikicontests.' context 'index-about-intro' %}</p>
+            <p style="color: #8493a6;">{% trans 'The tool has a simple interface translatable to other languages. It allows to quickly validate edits in articles from any wikicontest. Different evaluators may have different profiles, with individualized validation records.' context 'index-about-main' %}</p>
         </div>
     </div>
 </div>
@@ -126,13 +126,13 @@
 <div class="w3-padding w3-padding-24 w3-container w3-border-top w3-border-black">
     <div class="w3-content">
         <div class="w3-half w3-xlarge w3-margin-top">
-            {% trans 'index-enroll-short' %}
+            {% trans 'Register a new wikicontest' context 'index-enroll-short' %}
             <br>
             <img src="static/folder.svg" alt="folder" style="width: 30px;">
         </div>
         <div class="w3-half w3-padding">
-            <p>{% trans 'index-enroll-intro' %}</p>
-            <p style="color: #8493a6;">{% trans 'index-enroll-main' %}</p>
+            <p>{% trans 'To request the registration of a new wikicontest, the initial contact will be made via the contact email of Wiki Movimento Brasil.' context 'index-enroll-intro' %}</p>
+            <p style="color: #8493a6;">{% trans 'Send an email to wikiscore@wmnobrasil.org and provide basic information about your group (chapter, thematic organization or user group, official or not) and potential contests. We may request additional information later for final adjustments to the tool.' context 'index-enroll-main' %}</p>
         </div>
     </div>
 </div>

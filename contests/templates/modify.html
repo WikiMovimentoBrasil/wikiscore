@@ -4,7 +4,7 @@
 {% get_current_language_bidi as LANGUAGE_BIDI %}
 
 
-{% block pagename %}{% trans 'modify' %}{% endblock %}
+{% block pagename %}{% trans 'Review' context 'modify' %}{% endblock %}
 
 {% block head %}
 <link rel="stylesheet" href="{% static 'diff.css' %}">
@@ -26,7 +26,7 @@
     <div class="w3-row-padding w3-content w3-main" style="max-width:1400px;margin-top:43px;padding-top:16px;">
         <div class="w3-container w3-quarter w3-margin-top">
             <form class="w3-container w3-card w3-margin-bottom" id="modify" method="post">
-                <h2>{% trans 'modify-consult' %}</h2>
+                <h2>{% trans 'Check evaluation' context 'modify-consult' %}</h2>
                 {% csrf_token %}
                 <p>
                     <input
@@ -36,13 +36,13 @@
                     value="{{ diff }}"
                     required
                     >
-                    <label>{% trans 'modify-diff' %}</label>
+                    <label>{% trans 'Diff' context 'modify-diff' %}</label>
                 </p>
                 <p>
                     <button
                     class="w3-button w3-section w3-green w3-ripple"
                     style="width:100%"
-                    >{% trans 'modify-load' %}</button>
+                    >{% trans 'Load edit' context 'modify-load' %}</button>
                 </p>
             </form>
             <form
@@ -51,11 +51,11 @@
             method="post"
             style="display:{% if allowed %}block{% else %}none{% endif %}"
             >
-                <h2>{% trans 'modify-reavaluate' %}</h2>
+                <h2>{% trans 'Reevaluate' context 'modify-reavaluate' %}</h2>
                 {% csrf_token %}
                 <input type="hidden" name="diff" value="{{ diff }}">
                 <div class="w3-container w3-cell w3-half">
-                    <p>{% trans 'isvalid' %}</p>
+                    <p>{% trans 'Valid edit?' context 'isvalid' %}</p>
                     <input
                     class="w3-radio w3-section"
                     type="radio"
@@ -65,7 +65,7 @@
                     onclick="document.getElementById('obs').required = false"
                     onKeyDown="document.getElementById('obs').required = false"
                     required>
-                    <label for="valid-sim">{% trans 'yes' %}</label><br>
+                    <label for="valid-sim">{% trans 'Yes' context 'yes' %}</label><br>
                     <input
                     class="w3-radio w3-section"
                     type="radio"
@@ -75,10 +75,10 @@
                     onclick="document.getElementById('obs').required = true"
                     onKeyDown="document.getElementById('obs').required = true" 
                     required>
-                    <label for="valid-nao">{% trans 'no' %}</label><br><br>
+                    <label for="valid-nao">{% trans 'No' context 'no' %}</label><br><br>
                 </div>
                 <div class="w3-container w3-cell w3-half">
-                    <p>{% trans 'withimage' %}</p>
+                    <p>{% trans 'With image?' context 'withimage' %}</p>
                     {% if contest.pictures_mode == 2 %}
                         <input
                         class="w3-input w3-border"
@@ -89,7 +89,7 @@
                         min="0"
                         max="9"
                         required>
-                        <label for="pic">{% trans 'quantity' %}</label><br><br>
+                        <label for="pic">{% trans 'Quantity' context 'quantity' %}</label><br><br>
                     {% else %}
                         <input
                         class="w3-radio w3-section"
@@ -98,7 +98,7 @@
                         name="pic"
                         value="1"
                         required>
-                        <label for="pic-sim">{% trans 'yes' %}</label><br>
+                        <label for="pic-sim">{% trans 'Yes' context 'yes' %}</label><br>
                         <input
                         class="w3-radio w3-section"
                         type="radio"
@@ -106,7 +106,7 @@
                         name="pic"
                         value="0"
                         required>
-                        <label for="pic-nao">{% trans 'no' %}</label><br><br>
+                        <label for="pic-nao">{% trans 'No' context 'no' %}</label><br><br>
                     {% endif %}
                 </div>
                 <p>
@@ -130,7 +130,7 @@
                     <input
                     class="w3-button w3-orange w3-border-orange w3-border w3-block w3-margin-top"
                     type="submit"
-                    value="{% trans 'modify' %}"
+                    value="{% trans 'Review' context 'modify' %}"
                     >
                 </p>
             </form>
@@ -139,9 +139,9 @@
             style="display: {% if diff %}block{% else %}none{% endif %}"
             >   
                 {% if content %}
-                <h2>{% trans 'modify-diffstats' %}</h2>
+                <h2>{% trans 'Data from edit' context 'modify-diffstats' %}</h2>
                 <ul class="w3-ul w3-margin-bottom">
-                    <li>{% trans 'modify-label-edition' %}<br>
+                    <li>{% trans 'Edit:' context 'modify-label-edition' %}<br>
                         <a
                         href="{{ contest.endpoint }}?diff={{ diff }}"
                         target="_blank"
@@ -150,7 +150,7 @@
                             {{ diff }}
                         </a>
                     </li>
-                    <li>{% trans 'modify-label-curid' %}<br>
+                    <li>{% trans 'Article ID:' context 'modify-label-curid' %}<br>
                         <a
                         href="{{ contest.endpoint }}?curid={{ edit.article.articleID }}"
                         target="_blank"
@@ -159,18 +159,18 @@
                             {{ edit.article.articleID }}
                         </a>
                     </li>
-                    <li>{% trans 'label-timestamp' %}<br>{{ edit.timestamp }}</li>
-                    <li>{% trans 'label-user' %}<br>{{ author }}</li>
-                    <li>{% trans 'modify-label-bytes' %}<br>{{ edit.orig_bytes }} -> {{ edit.last_evaluation.real_bytes }}</li>
-                    <li>{% trans 'label-summary' %}<br>{{ comment }}</li>
-                    <li>{% trans 'modify-label-newpage' %}<br>{% if edit.new_page %}{% trans 'yes' %}{% else %}{% trans 'no' %}{% endif %}</li>
-                    <li>{% trans 'modify-label-valid' %}<br>{% if edit.last_evaluation.valid_edit %}{% trans 'yes' %}{% else %}{% trans 'no' %}{% endif %}</li>
-                    <li>{% trans 'modify-label-enrolled' %}<br>{% if edit.participant.last_enrollment.enrolled %}{% trans 'yes' %}{% else %}{% trans 'no' %}{% endif %}</li>
-                    <li>{% trans 'modify-label-withimage' %}<br>{{ edit.last_evaluation.pictures }}</li>
-                    <li>{% trans 'modify-label-reverted' %}<br>{% if edit.last_qualification.status == 0 %}{% trans 'yes' %}{% else %}{% trans 'no' %}{% endif %}</li>
-                    <li>{% trans 'modify-label-evaluator' %}<br>{{ edit.last_evaluation.evaluator.profile.username }}</li>
-                    <li>{% trans 'modify-label-evaltimestamp' %}<br>{{ edit.last_evaluation.when }}</li>
-                    <li>{% trans 'modify-label-comment' %}<br>{{ edit.last_evaluation.obs|default_if_none:"" }}&nbsp;</li>
+                    <li>{% trans 'Timestamp:' context 'label-timestamp' %}<br>{{ edit.timestamp }}</li>
+                    <li>{% trans 'User:' context 'label-user' %}<br>{{ author }}</li>
+                    <li>{% trans 'Bytes:' context 'modify-label-bytes' %}<br>{{ edit.orig_bytes }} -> {{ edit.last_evaluation.real_bytes }}</li>
+                    <li>{% trans 'Summary:' context 'label-summary' %}<br>{{ comment }}</li>
+                    <li>{% trans 'New article:' context 'modify-label-newpage' %}<br>{% if edit.new_page %}{% trans 'Yes' context 'yes' %}{% else %}{% trans 'No' context 'no' %}{% endif %}</li>
+                    <li>{% trans 'Valid edit:' context 'modify-label-valid' %}<br>{% if edit.last_evaluation.valid_edit %}{% trans 'Yes' context 'yes' %}{% else %}{% trans 'No' context 'no' %}{% endif %}</li>
+                    <li>{% trans 'Enrolled user:' context 'modify-label-enrolled' %}<br>{% if edit.participant.last_enrollment.enrolled %}{% trans 'Yes' context 'yes' %}{% else %}{% trans 'No' context 'no' %}{% endif %}</li>
+                    <li>{% trans 'With image:' context 'modify-label-withimage' %}<br>{{ edit.last_evaluation.pictures }}</li>
+                    <li>{% trans 'Reverted edit:' context 'modify-label-reverted' %}<br>{% if edit.last_qualification.status == 0 %}{% trans 'Yes' context 'yes' %}{% else %}{% trans 'No' context 'no' %}{% endif %}</li>
+                    <li>{% trans 'Evaluator:' context 'modify-label-evaluator' %}<br>{{ edit.last_evaluation.evaluator.profile.username }}</li>
+                    <li>{% trans 'Evaluation timestamp:' context 'modify-label-evaltimestamp' %}<br>{{ edit.last_evaluation.when }}</li>
+                    <li>{% trans 'Evaluator's comment:' context 'modify-label-comment' %}<br>{{ edit.last_evaluation.obs|default_if_none:"" }}&nbsp;</li>
                 </ul>
                 {% endif %}
             </div>
@@ -178,10 +178,10 @@
         <div class="w3-threequarter">
             {% if content %}
             <div>
-                <h3>{% trans 'modify-showdiff' %}</h3>
+                <h3>{% trans 'Edit diff' context 'modify-showdiff' %}</h3>
                 <table
                 role="presentation"
-                aria-label="{% trans 'modify-showdiff' %}"
+                aria-label="{% trans 'Edit diff' context 'modify-showdiff' %}"
                 class="diff diff-contentalign-left diff-editfont-monospace"
                 >
                     {{ content | safe }}
@@ -189,30 +189,30 @@
                 <hr>
                 <table class="w3-table-all w3-section">
                     <tr>
-                        <th>{% trans 'modify-qualified' %}</th>
-                        <th>{% trans 'edits-evaluator' %}</th>
-                        <th>{% trans 'modify-timestamp' %}</th>
+                        <th>{% trans 'Qualified?' context 'modify-qualified' %}</th>
+                        <th>{% trans 'Evaluator' context 'edits-evaluator' %}</th>
+                        <th>{% trans 'Timestamp' context 'modify-timestamp' %}</th>
                     </tr>
                     {% for qualification in history_qualifications %}
                         <tr>
-                            <td>{% if qualification.status == 1 %}{% trans 'yes' %}{% else %}{% trans 'no' %}{% endif %}</td>
-                            <td>{% if qualification.evaluator is None %}<i>{% trans 'modify-automatic' %}</i>{% else %}{{ qualification.evaluator.profile.username }}{% endif %}</td>
+                            <td>{% if qualification.status == 1 %}{% trans 'Yes' context 'yes' %}{% else %}{% trans 'No' context 'no' %}{% endif %}</td>
+                            <td>{% if qualification.evaluator is None %}<i>{% trans 'Automatic' context 'modify-automatic' %}</i>{% else %}{{ qualification.evaluator.profile.username }}{% endif %}</td>
                             <td>{{ qualification.when }}</td>
                         </tr>
                     {% endfor %}
                 </table>
                 <table class="w3-table-all w3-section">
                     <tr>
-                        <th>{% trans 'isvalid' %}</th>
-                        <th>{% trans 'withimage' %}</th>
-                        <th>{% trans 'edits-bytes' %}</th>
-                        <th>{% trans 'triage-observation' %}</th>
-                        <th>{% trans 'edits-evaluator' %}</th>
-                        <th>{% trans 'modify-timestamp' %}</th>
+                        <th>{% trans 'Valid edit?' context 'isvalid' %}</th>
+                        <th>{% trans 'With image?' context 'withimage' %}</th>
+                        <th>{% trans 'Bytes' context 'edits-bytes' %}</th>
+                        <th>{% trans 'Observation' context 'triage-observation' %}</th>
+                        <th>{% trans 'Evaluator' context 'edits-evaluator' %}</th>
+                        <th>{% trans 'Timestamp' context 'modify-timestamp' %}</th>
                     </tr>
                     {% for eval in history_evaluations %}
                         <tr>
-                            <td>{% if eval.valid_edit %}{% trans 'yes' %}{% else %}{% trans 'no' %}{% endif %}</td>
+                            <td>{% if eval.valid_edit %}{% trans 'Yes' context 'yes' %}{% else %}{% trans 'No' context 'no' %}{% endif %}</td>
                             <td>{{ eval.pictures }}</td>
                             <td>{{ eval.real_bytes }}</td>
                             <td>{{ eval.obs|default_if_none:"" }}</td>
@@ -223,10 +223,10 @@
                 </table>
             </div>
             {% elif diff and not content %}
-                <script>alert('{% trans 'modify-notfound' %}');</script>
+                <script>alert('{% trans 'Edit not found in the database!' context 'modify-notfound' %}');</script>
             {% endif %}
             {% if evalution %}
-                <script>alert('{% trans 'modify-success' %}');</script>
+                <script>alert('{% trans 'Modification successfully done!' context 'modify-success' %}');</script>
             {% endif %}
         </div>
     </div>

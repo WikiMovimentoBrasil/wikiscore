@@ -3,7 +3,7 @@
 {% load i18n %}
 
 
-{% block pagename %}{% trans 'compare' %}{% endblock %}
+{% block pagename %}{% trans 'Comparator' context 'compare' %}{% endblock %}
 
 {% block head %}
 <script type="text/javascript">
@@ -30,7 +30,7 @@
             countdownDiv.textContent = formatTime(remainingTimeInSeconds);
             requestAnimationFrame(() => updateCountdown(targetTime));
         } else {
-            countdownDiv.textContent = '{% trans 'compare-soon' %}';
+            countdownDiv.textContent = '{% trans "up to 10 minutes" context "compare-soon" %}';
         }
     }
 
@@ -54,9 +54,9 @@
     {% if update_countdown is False %}
         <div class="w3-panel w3-pale-red w3-display-container w3-border">
             {% if early_update and update_request %}
-                <h3>{% trans 'compare-next' %} {% trans 'compare-soon' %}</h3>
+                <h3>{% trans 'Next update in:' context 'compare-next' %} {% trans 'up to 10 minutes' context 'compare-soon' %}</h3>
             {% else %}
-                <h3>{% trans 'compare-ended' %}</h3>
+                <h3>{% trans 'Contest ended. There will be no further updates.' context 'compare-ended' %}</h3>
                 <form method="post">
                     {% csrf_token %}
                     <p>
@@ -65,14 +65,14 @@
                         type="submit"
                         name="update"
                         value="update"
-                        >{% trans 'compare-force' %}</button>
+                        >{% trans 'Update anyway' context 'compare-force' %}</button>
                     </p>
                 </form>
             {% endif %}
         </div>
     {% else %}
         <div class="w3-panel w3-pale-blue w3-display-container w3-border">
-            <h3>{% trans 'compare-next' %} <span id="countdown">...</span></h3>
+            <h3>{% trans 'Next update in:' context 'compare-next' %} <span id="countdown">...</span></h3>
             <form method="post">
                 {% csrf_token %}
                 <p>
@@ -82,9 +82,9 @@
                     name="update"
                     value="update"
                     style="display:{% if update_countdown is 0 or early_update %}none{% else %}block{% endif %}"
-                    >{% trans 'compare-anticipate' %}</button>
+                    >{% trans 'Anticipate update' context 'compare-anticipate' %}</button>
                     <span style="display:{% if early_update %}inline{% else %}none{% endif %}">
-                        {% trans 'compare-early' %}
+                        {% trans 'The last update occurred less than 30 minutes ago. Please wait before requesting a new update.' context 'compare-early' %}
                     </span>
                 </p>
             </form>
@@ -96,11 +96,11 @@
     <div class="w3-third w3-section">
         <div class="w3-card white">
             <div class="w3-container w3-purple">
-                <h3>{% trans 'compare-unlisted' %}</h3>
+                <h3>{% trans 'Not listed' context 'compare-unlisted' %}</h3>
             </div>
             <ul class="w3-ul w3-border-top">
                 <li>
-                    {% trans 'compare-unlisted-about' %}
+                    {% trans 'The articles below are included in the category but are not listed officially.' context 'compare-unlisted-about' %}
                 </li>
                 {% for title in articles.list_official_not_category %}
                     <li>
@@ -118,11 +118,11 @@
     <div class="w3-third w3-section">
         <div class="w3-card white">
             <div class="w3-container w3-indigo">
-                <h3>{% trans 'compare-uncated' %}</h3>
+                <h3>{% trans 'Removed from category' context 'compare-uncated' %}</h3>
             </div>
             <ul class="w3-ul w3-border-top">
                 <li>
-                    {% trans 'compare-uncated-about' %}
+                    {% trans 'The articles below are listed officially, but are not included in the category.' context 'compare-uncated-about' %}
                 </li>
                 {% for title in articles.list_category_not_official %}
                     <li>
@@ -140,11 +140,11 @@
     <div class="w3-third w3-section">
         <div class="w3-card white">
             <div class="w3-container w3-red">
-                <h3>{% trans 'compare-deletion' %}</h3>
+                <h3>{% trans 'Potential deletions' context 'compare-deletion' %}</h3>
             </div>
             <ul class="w3-ul w3-border-top">
                 <li>
-                    {% trans 'compare-deletion-about' %}
+                    {% trans 'The articles below are included in the category and are marked for some form of deletion (fast, semi-fast, by consensus, or by application).' context 'compare-deletion-about' %}
                 </li>
                 {% for title in articles.deletion %}
                     <li>
@@ -164,11 +164,11 @@
     <div class="w3-third w3-section">
         <div class="w3-card white">
             <div class="w3-container w3-blue">
-                <h3>{% trans 'compare-nowikidata' %}</h3>
+                <h3>{% trans 'Missing Wikidata' context 'compare-nowikidata' %}</h3>
             </div>
             <ul class="w3-ul w3-border-top">
                 <li>
-                    {% trans 'compare-nowikidata-about' %}
+                    {% trans 'The articles below are included in the category but have no connection to Wikidata.' context 'compare-nowikidata-about' %}
                 </li>
                 {% for title in articles.list_wikidata %}
                     <li>
@@ -186,11 +186,11 @@
     <div class="w3-third w3-section">
         <div class="w3-card white">
             <div class="w3-container w3-black">
-                <h3>{% trans 'compare-inconsistency' %}</h3>
+                <h3>{% trans 'Inconsistencies' context 'compare-inconsistency' %}</h3>
             </div>
             <ul class="w3-ul w3-border-top">
                 <li>
-                    {% trans 'compare-inconsistency-about' %}
+                    {% trans 'The listed edits below belong to articles that were listed in the category but were removed. If they are marked in red, the edit was validated and awarded points to the participant.' context 'compare-inconsistency-about' %}
                 </li>
                 {% for edits in inconsistent_edits %}
                     <li class='{% if edits.last_evaluation__valid_edit is True %}w3-red{% endif %}'>
@@ -200,15 +200,15 @@
                         onclick='window.open(
                             "{{ contest.endpoint }}?diff={{ edits.diff|urlencode }}",
                             "_blank"
-                        )'>{% trans 'compare-seediff' %}{{ edits.diff }}</button>
+                        )'>{% trans 'See edit no.' context 'compare-seediff' %}{{ edits.diff }}</button>
                         <form
                         style='display: inline'
                         method='post'
-                        onSubmit='return confirm(
-                            "{% trans 'compare-areyousure' %}"
-                        )'>
+                        onSubmit="return confirm(
+                            '{% trans 'This edit will be removed from the database. Do you want to proceed?' context 'compare-areyousure' %}'
+                        )">
                             <input type='hidden' name='diff' value='{{ edits.diff }}'>
-                            <input type='submit' class='w3-btn w3-padding-small w3-red' value='{% trans 'compare-delete' %}'>
+                            <input type='submit' class='w3-btn w3-padding-small w3-red' value="{% trans 'Delete' context 'compare-delete' %}">
                         </form>
                     </li>
                 {% endfor %}
@@ -218,11 +218,11 @@
     <div class="w3-third w3-section">
         <div class="w3-card white">
             <div class="w3-container w3-deep-orange">
-                <h3>{% trans 'compare-rollback' %}</h3>
+                <h3>{% trans 'Rollbacks' context 'compare-rollback' %}</h3>
             </div>
             <ul class="w3-ul w3-border-top">
                 <li>
-                    {% trans 'compare-rollback-about' %}
+                    {% trans 'The listed edits below were rolled back after validation.' context 'compare-rollback-about' %}
                 </li>
                 {% for edits in reverted_edits %}
                     <li>
@@ -232,14 +232,14 @@
                         onclick='window.open(
                             "{{ contest.endpoint }}?diff={{ edits.diff|urlencode }}",
                             "_blank"
-                        )'>{% trans 'compare-seediff' %}{{ edits.diff }}</button>
+                        )'>{% trans 'See edit no.' context 'compare-seediff' %}{{ edits.diff }}</button>
                         <form
                         action='/modify/?contest={{ contest.name_id }}'
                         style='display: inline'
                         method='post'>
                             {% csrf_token %}
                             <input type='hidden' name='diff' value='{{ edits.diff }}'>
-                            <input type='submit' class='w3-btn w3-padding-small w3-purple' value='{% trans 'compare-reevaluate' %}'>
+                            <input type='submit' class='w3-btn w3-padding-small w3-purple' value="{% trans 'Reevaluate' context 'compare-reevaluate' %}">
                         </form>
                     </li>
                 {% endfor %}

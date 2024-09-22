@@ -5,7 +5,7 @@
 {% get_current_language_bidi as LANGUAGE_BIDI %}
 
 
-{% block pagename %}{% trans 'triage-evaluated' %}{% endblock %}
+{% block pagename %}{% trans 'Evaluated' context 'triage-evaluated' %}{% endblock %}
 
 {% block head %}
     <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css" />
@@ -43,12 +43,12 @@
     <div class="w3-row-padding w3-content w3-main" style="max-width:1200px;margin-top:43px;padding-top:16px;">
         <div class="w3-container w3-margin-top w3-card-4">
             <div class="w3-container w3-row w3-padding-16">
-                <div class="w3-threequarter">{% trans 'edits-about' %}</div>
+                <div class="w3-threequarter">{% trans 'This page lists all edits made by contest participants. To access edits made by all users, download the CSV file.' context 'edits-about' %}</div>
                 <form method="post" target="_blank" class="w3-quarter">
                     {% csrf_token %}
                     <input type="hidden" name="csv" value="csv">
                     <button class="w3-button w3-<?=$right?> w3-green" type="submit">
-                        <i class="fa-solid fa-file-csv"></i> {% trans 'edits-csv' %}
+                        <i class="fa-solid fa-file-csv"></i> {% trans 'Download' context 'edits-csv' %}
                     </button>
                 </form>
             </div>
@@ -59,19 +59,19 @@
                 <table id="myTable" class="display responsive" style="width:100%">
                     <thead>
                         <tr>
-                            <th>{% trans 'edits-diff' %}</th>
-                            <th>{% trans 'edits-title' %}</th>
-                            <th>{% trans 'edits-timestamp' %}</th>
-                            <th>{% trans 'edits-user' %}</th>
-                            <th>{% trans 'edits-attached' %}</th>
-                            <th>{% trans 'edits-bytes' %}</th>
-                            <th>{% trans 'edits-newpage' %}</th>
-                            <th>{% trans 'edits-valid' %}</th>
-                            <th>{% trans 'edits-withimage' %}</th>
-                            <th>{% trans 'edits-reverted' %}</th>
-                            <th>{% trans 'edits-evaluator' %}</th>
-                            <th>{% trans 'edits-evaltimestamp' %}</th>
-                            <th>{% trans 'edits-comment' %}</th>
+                            <th>{% trans 'Edit diff' context 'edits-diff' %}</th>
+                            <th>{% trans 'Title' context 'edits-title' %}</th>
+                            <th>{% trans 'Edit timestamp' context 'edits-timestamp' %}</th>
+                            <th>{% trans 'User' context 'edits-user' %}</th>
+                            <th>{% trans 'Account attach date' context 'edits-attached' %}</th>
+                            <th>{% trans 'Bytes' context 'edits-bytes' %}</th>
+                            <th>{% trans 'New article' context 'edits-newpage' %}</th>
+                            <th>{% trans 'Valid edit' context 'edits-valid' %}</th>
+                            <th>{% trans 'With image' context 'edits-withimage' %}</th>
+                            <th>{% trans 'Reverted edit' context 'edits-reverted' %}</th>
+                            <th>{% trans 'Evaluator' context 'edits-evaluator' %}</th>
+                            <th>{% trans 'Evaluation timestamp' context 'edits-evaltimestamp' %}</th>
+                            <th>{% trans 'Evaluator's comment' context 'edits-comment' %}</th>
                         </tr>
                     </thead>
                     <tbody>

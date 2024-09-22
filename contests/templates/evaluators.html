@@ -5,19 +5,19 @@
 {% get_current_language_bidi as LANGUAGE_BIDI %}
 
 
-{% block pagename %}{% trans 'evaluators' %}{% endblock %}
+{% block pagename %}{% trans 'Evaluators' context 'evaluators' %}{% endblock %}
 
 {% block content %}
     <div class="w3-row-padding w3-content w3-main" style="max-width:800px;margin-top:43px;padding-top:16px;">
         <div class="w3-container w3-margin-top w3-card-4">
             <div class="w3-container">
-                <p>{% trans 'evaluators-about' %}</p>
+                <p>{% trans 'This page lists the managers and evaluators of this wikicontest. The contest manager also has options to enable or disable evaluators.' context 'evaluators-about' %}</p>
             </div>
         </div>
         {% if status == "G" %}
             <div class="w3-margin-top w3-card">
                 <header class='w3-container w3-{{ contest.theme }}'>
-                    <h1>{% trans 'evaluators-neweval' %}</h1>
+                    <h1>{% trans 'Add new evaluator' context 'evaluators-neweval' %}</h1>
                 </header>
                 <div class="w3-container">
                     <ul class="w3-ul">
@@ -25,13 +25,13 @@
                             <i class="w3-bar-item w3-padding-16 fa-regular fa-circle-user w3-{{ left }}" style="font-size: 3em; padding: 20px;"></i>
                             <form method="post">
                                 {% csrf_token %}
-                                <input type="text" placeholder="{% trans 'password-username' %}" name="new"
+                                <input type="text" placeholder="{% trans 'Username' context 'password-username' %}" name="new"
                                 class="w3-input w3-border w3-bar-item w3-section w3-{{ left }}"
                                 >
                                 <button type='submit'
                                 class='w3-bar-item w3-{{ right }} w3-button w3-section w3-{{ contest.theme }}'
                                 >
-                                    {% trans 'evaluators-register' %}
+                                    {% trans 'Register' context 'evaluators-register' %}
                                 </button>
                             </form>
                         </li>
@@ -41,7 +41,7 @@
         {% endif %}
         <div class="w3-margin-top w3-card">
             <header style="filter: hue-rotate(60deg);" class='w3-container w3-{{ contest.theme }}'>
-                <h1>{% trans 'evaluators-manager' %}</h1>
+                <h1>{% trans 'Managers' context 'evaluators-manager' %}</h1>
             </header>
             <div class="w3-container">
                 <ul class="w3-ul">
@@ -51,7 +51,7 @@
                             <div class="w3-bar-item w3-{{ left }}">
                                 <span class='w3-large'>{{ evaluator.username }}</span><br>
                                 <span>{{ evaluator.global_id }}</span><br>
-                                <span>{% blocktrans with evaluators_stats_1=evaluator.evaluation_count %}.{{evaluators_stats_1}}.{% endblocktrans %}</span>
+                                <span>{% blocktrans with 1=evaluator.evaluation_count context 'evaluators-stats' %}{{1}} evaluations performed{% endblocktrans %}</span>
                             </div>
                             {% if status == "G" %}
                                 <form method="post">
@@ -60,9 +60,9 @@
                                     <input type='hidden' name='user' value='{{ evaluator.username }}'>
                                     <button
                                     type='submit'
-                                    onclick="return confirm('{% trans 'evaluators-areyousure' %}')"
+                                    onclick="return confirm('{% trans 'Are you sure?' context 'evaluators-areyousure' %}')"
                                     class='w3-bar-item w3-{{ right }} w3-button w3-margin w3-red'
-                                    >{% trans 'counter-redefine' %}</button>
+                                    >{% trans 'Reset' context 'counter-redefine' %}</button>
                                 </form>
                             {% endif %}
                         </li>
@@ -72,7 +72,7 @@
         </div>
         <div class="w3-margin-top w3-card">
             <header style="filter: hue-rotate(120deg);" class='w3-container w3-{{ contest.theme }}'>
-                <h1>{% trans 'evaluators' %}</h1>
+                <h1>{% trans 'Evaluators' context 'evaluators' %}</h1>
             </header>
             <div class="w3-container">
                 <ul class="w3-ul">
@@ -82,7 +82,7 @@
                             <div class="w3-bar-item w3-{{ left }}">
                                 <span class='w3-large'>{{ evaluator.username }}</span><br>
                                 <span>{{ evaluator.global_id }}</span><br>
-                                <span>{% blocktrans with evaluators_stats_1=evaluator.evaluation_count %}.{{evaluators_stats_1}}.{% endblocktrans %}</span>
+                                <span>{% blocktrans with 1=evaluator.evaluation_count context 'evaluators-stats' %}{{1}} evaluations performed{% endblocktrans %}</span>
                             </div>
                             {% if status == "G" %}
                                 <form method="post">
@@ -91,9 +91,9 @@
                                     <input type='hidden' name='user' value='{{ evaluator.username }}'>
                                     <button
                                     type='submit'
-                                    onclick="return confirm('{% trans 'evaluators-areyousure' %}')"
+                                    onclick="return confirm('{% trans 'Are you sure?' context 'evaluators-areyousure' %}')"
                                     class='w3-bar-item w3-{{ right }} w3-button w3-section w3-orange'
-                                    >{% trans 'evaluators-disable' %}</button>
+                                    >{% trans 'Disable' context 'evaluators-disable' %}</button>
                                 </form>
                                 <form method="post">
                                     {% csrf_token %}
@@ -101,9 +101,9 @@
                                     <input type='hidden' name='user' value='{{ evaluator.username }}'>
                                     <button
                                     type='submit'
-                                    onclick="return confirm('{% trans 'evaluators-areyousure' %}')"
+                                    onclick="return confirm('{% trans 'Are you sure?' context 'evaluators-areyousure' %}')"
                                     class='w3-bar-item w3-{{ right }} w3-button w3-margin w3-red'
-                                    >{% trans 'counter-redefine' %}</button>
+                                    >{% trans 'Reset' context 'counter-redefine' %}</button>
                                 </form>
                             {% endif %}
                         </li>
@@ -113,7 +113,7 @@
         </div>
         <div class="w3-margin-top w3-card">
             <header style="filter: hue-rotate(180deg);" class='w3-container w3-{{ contest.theme }}'>
-                <h1>{% trans 'evaluators-disabled' %}</h1>
+                <h1>{% trans 'Disabled' context 'evaluators-disabled' %}</h1>
             </header>
             <div class="w3-container">
                 <ul class="w3-ul">
@@ -123,7 +123,7 @@
                             <div class="w3-bar-item w3-{{ left }}">
                                 <span class='w3-large'>{{ evaluator.username }}</span><br>
                                 <span>{{ evaluator.global_id }}</span><br>
-                                <span>{% blocktrans with evaluators_stats_1=evaluator.evaluation_count %}.{{evaluators_stats_1}}.{% endblocktrans %}</span>
+                                <span>{% blocktrans with 1=evaluator.evaluation_count context 'evaluators-stats' %}{{1}} evaluations performed{% endblocktrans %}</span>
                             </div>
                             {% if status == "G" %}
                                 <form method="post">
@@ -132,9 +132,9 @@
                                     <input type='hidden' name='user' value='{{ evaluator.username }}'>
                                     <button
                                     type='submit'
-                                    onclick="return confirm('{% trans 'evaluators-areyousure' %}')"
+                                    onclick="return confirm('{% trans 'Are you sure?' context 'evaluators-areyousure' %}')"
                                     class='w3-bar-item w3-{{ right }} w3-button w3-section w3-green'
-                                    >{% trans 'evaluators-enable' %}</button>
+                                    >{% trans 'Enable' context 'evaluators-enable' %}</button>
                                 </form>
                                 <form method="post">
                                     {% csrf_token %}
@@ -142,9 +142,9 @@
                                     <input type='hidden' name='user' value='{{ evaluator.username }}'>
                                     <button
                                     type='submit'
-                                    onclick="return confirm('{% trans 'evaluators-areyousure' %}')"
+                                    onclick="return confirm('{% trans 'Are you sure?' context 'evaluators-areyousure' %}')"
                                     class='w3-bar-item w3-{{ right }} w3-button w3-margin w3-red'
-                                    >{% trans 'counter-redefine' %}</button>
+                                    >{% trans 'Reset' context 'counter-redefine' %}</button>
                                 </form>
                             {% endif %}
                         </li>

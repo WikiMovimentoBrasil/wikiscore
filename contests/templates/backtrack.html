@@ -4,7 +4,7 @@
 {% get_current_language_bidi as LANGUAGE_BIDI %}
 
 
-{% block pagename %}{% trans 'backtrack' %}{% endblock %}
+{% block pagename %}{% trans 'Backtrack' context 'backtrack' %}{% endblock %}
 
 
 {% block content %}
@@ -12,7 +12,7 @@
         <div class="w3-container w3-margin-top w3-card-4">
             <div class="w3-container">
                 <p>
-                    {% trans 'backtrack-about' %}
+                    {% trans 'This page lists the edits participats did in the context of the wikicontest but were made before their registration in the Outreach Dashboard. If necessary, click on the button to accept the edit. After acceptance, the edit will be available in the evaluation queue.' context 'backtrack-about' %}
                 </p>
             </div>
         </div>
@@ -33,7 +33,7 @@
                                     </span>
                                     <br>
                                     <span>
-                                        {% blocktrans with backtrack_stats_1=diff.timestamp backtrack_stats_2=diff.bytes %}.{{ backtrack_stats_1 }}.{{ backtrack_stats_2 }}.{% endblocktrans %}
+                                        {% blocktrans with 1=diff.timestamp 2=diff.bytes context 'backtrack-stats' %}Edit on {{1}} with {{2}} bytes{% endblocktrans %}
                                     </span>
                                 </div>
                                 <form method="post">
@@ -41,23 +41,23 @@
                                     <input type='hidden' name='diff' value='{{ diff.diff }}'>
                                     <button
                                     type='submit'
-                                    onclick="return confirm('{% trans 'backtrack-areyousure' %}')"
+                                    onclick="return confirm('{% trans 'Are you sure?' context 'backtrack-areyousure' %}')"
                                     class='w3-bar-item w3-{{ right }} w3-button w3-section w3-green'
-                                    >{% trans 'backtrack-accept' %}</button>
+                                    >{% trans 'Accept edit' context 'backtrack-accept' %}</button>
                                 </form>
                             </li>
                         {% endfor %}
                     </ul>
                 </div>
                 <footer class='w3-container w3-{{ contest.theme }}' style='filter: hue-rotate(180deg);'>
-                    <h5>{% blocktrans with backtrack_enrollment_1=data.enrollment_timestamp %}.{{ backtrack_enrollment_1 }}.{% endblocktrans %}</h5>
+                    <h5>{% blocktrans with 1=data.enrollment_timestamp context 'backtrack-enrollment' %}Participant enrolled on {{1}}{% endblocktrans %}</h5>
                 </footer>
             </div>
         {% endfor %}
     </div>
     {% if diff %}
         <script>
-            alert('{% trans 'backtrack-success' %}');
+            alert('{% trans 'Edit accepted successfully!' context 'backtrack-success' %}');
             window.location.href = window.location.href;
         </script>
     {% endif %}

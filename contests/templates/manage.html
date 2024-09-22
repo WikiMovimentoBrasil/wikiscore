@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
-        <title>{% trans 'manage-title' %}</title>
+        <title>{% trans 'Contest management' context 'manage-title' %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="{% static 'w3.css' %}">
         <script type="text/javascript">
@@ -18,9 +18,9 @@
                 var selectedOption = sourceSelect.options[sourceSelect.selectedIndex].value;
 
                 if (selectedOption === "category") {
-                    text.textContent = "{% trans 'manage-catid' %}";
+                    text.textContent = "{% trans 'Category ID of articles' context 'manage-catid' %}";
                 } else if (selectedOption === "petscan") {
-                    text.textContent = "{% trans 'manage-petscan' %}";
+                    text.textContent = "{% trans 'PetScan ID of the pages' context 'manage-petscan' %}";
                 }
             }
 
@@ -87,13 +87,13 @@
     </head>
     <body>
         <header class="w3-container w3-deep-green">
-            <h1>{% trans 'manage-title' %}</h1>
+            <h1>{% trans 'Contest management' context 'manage-title' %}</h1>
         </header>
         <br>
         <div class="w3-row-padding w3-content" style="max-width:800px">
             <div class="w3-container w3-margin-top w3-card-4">
                 <div class="w3-container">
-                    <p>{% trans 'manage-about' %}</p>
+                    <p>{% trans 'This page lists the contests registered in the system and allows the creation of new contests.' context 'manage-about' %}</p>
                 </div>
             </div>
             {% for contest in contests %}
@@ -102,7 +102,7 @@
                     class="w3-container w3-{% if contest.pk %}{{ contest.theme }}{% else %}black{% endif %}"
                     style="color: #fff; background-color: #{% if contest.pk %}{{ contest.color }}{% else %}fff{% endif %}"
                     >
-                        <h1>{% if contest.pk %}{{ contest.name }}{% else %}{% trans 'manage-newcontest' %}{% endif %}</h1>
+                        <h1>{% if contest.pk %}{{ contest.name }}{% else %}{% trans 'Create new contest' context 'manage-newcontest' %}{% endif %}</h1>
                     </header>
                     <div class="w3-container">
                         <form id="{% if contest.pk %}{{ contest.name_id }}{% else %}create{% endif %}" method="post">
@@ -110,13 +110,13 @@
                             <div class="w3-section">
 
                                 <label for="contestname">
-                                    <strong>{% trans 'manage-contestname' %}</strong>
+                                    <strong>{% trans 'Contest name' context 'manage-contestname' %}</strong>
                                 </label>
                                 <input
                                 class="w3-input w3-border w3-margin-bottom"
                                 id="contestname"
                                 type="text"
-                                placeholder="{% trans 'manage-contestnameabout' %}"
+                                placeholder="{% trans 'Enter the full contest name' context 'manage-contestnameabout' %}"
                                 maxlength="255"
                                 name="name"
                                 value="{% if contest.pk %}{{ contest.name }}{% endif %}"
@@ -126,13 +126,13 @@
                                     <div class="w3-threequarter" style="padding-{{ right }}: 8px;">
 
                                         <label for="internalcode">
-                                            <strong>{% trans 'manage-internalcode' %}</strong>
+                                            <strong>{% trans 'Internal code' context 'manage-internalcode' %}</strong>
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
                                         id="internalcode"
                                         type="text"
-                                        placeholder="{% trans 'manage-internalcodeabout' %}"
+                                        placeholder="{% trans 'Use only lower case letters and underscores' context 'manage-internalcodeabout' %}"
                                         maxlength="30"
                                         pattern="[a-z0_]{1,30}"
                                         name="name_id"
@@ -143,7 +143,7 @@
                                     <div class="w3-quarter" style="padding-{{ right }}: 8px;">
 
                                         <label for="group">
-                                            <strong>{% trans 'manage-group' %}</strong>
+                                            <strong>{% trans 'Group' context 'manage-group' %}</strong>
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
@@ -159,7 +159,7 @@
                                 </div>
 
                                 <label for="starttime">
-                                    <strong>{% trans 'manage-starttime' %}</strong>
+                                    <strong>{% trans 'Start time' context 'manage-starttime' %}</strong>
                                 </label>
                                 <input
                                 class="w3-input w3-border w3-margin-bottom"
@@ -171,7 +171,7 @@
                                 {% if contest.pk %}disabled{% else %}required{% endif %}>
 
                                 <label for="endtime">
-                                    <strong>{% trans 'manage-endtime' %}</strong>
+                                    <strong>{% trans 'End time' context 'manage-endtime' %}</strong>
                                 </label>
                                 <input
                                 class="w3-input w3-border w3-margin-bottom"
@@ -184,7 +184,7 @@
                                 {% if contest.pk %}disabled{% else %}required{% endif %}>
 
                                 <label for="endpoint">
-                                    <strong>{% trans 'manage-endpoint' %}</strong>
+                                    <strong>{% trans 'Endpoint address' context 'manage-endpoint' %}</strong>
                                 </label>
                                 <input
                                 class="w3-input w3-border w3-margin-bottom"
@@ -196,7 +196,7 @@
                                 {% if contest.pk %}disabled{% else %}required{% endif %}>
 
                                 <label for="api">
-                                    <strong>{% trans 'manage-api' %}</strong>
+                                    <strong>{% trans 'API address' context 'manage-api' %}</strong>
                                 </label>
                                 <input
                                 class="w3-input w3-border w3-margin-bottom"
@@ -211,7 +211,7 @@
                                     <div class="w3-half" style="padding-{{ right }}: 8px;">
 
                                         <label for="reverttime">
-                                            <strong>{% trans 'manage-reverttime' %}</strong>
+                                            <strong>{% trans 'Rollback period (hours)' context 'manage-reverttime' %}</strong>
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
@@ -225,7 +225,7 @@
                                         {% if contest.pk %}disabled{% else %}required{% endif %}>
 
                                         <label for="source">
-                                            <strong>{% trans 'manage-source' %}</strong>
+                                            <strong>{% trans 'Monitoring method' context 'manage-source' %}</strong>
                                         </label>
                                         <select
                                         id="source"
@@ -234,11 +234,11 @@
                                         onchange="sourceChange('{% if contest.pk %}{{ contest.name_id }}{% else %}create{% endif %}')"
                                         {% if contest.pk %}disabled{% else %}required{% endif %}>
                                         {% if contest.pk and contest.category_petscan %}
-                                            <option value="category">{% trans 'manage-catid' %}</option>
-                                            <option value="petscan" selected>{% trans 'manage-petscan' %}</option>
+                                            <option value="category">{% trans 'Category ID of articles' context 'manage-catid' %}</option>
+                                            <option value="petscan" selected>{% trans 'PetScan ID of the pages' context 'manage-petscan' %}</option>
                                         {% else %}
-                                            <option value="category" selected>{% trans 'manage-catid' %}</option>
-                                            <option value="petscan">{% trans 'manage-petscan' %}</option>
+                                            <option value="category" selected>{% trans 'Category ID of articles' context 'manage-catid' %}</option>
+                                            <option value="petscan">{% trans 'PetScan ID of the pages' context 'manage-petscan' %}</option>
                                         {% endif %}
                                         </select>
 
@@ -246,7 +246,7 @@
                                     <div class="w3-half" style="padding-{{ left }}: 8px;">
 
                                         <label for="listid">
-                                            <strong>{% trans 'manage-listid' %}</strong>
+                                            <strong>{% trans 'Page ID with list of articles' context 'manage-listid' %}</strong>
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
@@ -258,7 +258,7 @@
                                         {% if contest.pk %}disabled{% else %}required{% endif %}>
 
                                         <label for="sourceid">
-                                            <strong>{% if contest.pk and contest.category_petscan %}{% trans 'manage-petscan' %}{% else %}{% trans 'manage-catid' %}{% endif %}</strong>
+                                            <strong>{% if contest.pk and contest.category_petscan %}{% trans 'PetScan ID of the pages' context 'manage-petscan' %}{% else %}{% trans 'Category ID of articles' context 'manage-catid' %}{% endif %}</strong>
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
@@ -274,13 +274,13 @@
                                 </div>
 
                                 <label for="outreach">
-                                    <strong>{% trans 'manage-outreach' %}</strong>
+                                    <strong>{% trans 'Contest name in Outreach Dashboard' context 'manage-outreach' %}</strong>
                                 </label>
                                 <input
                                 class="w3-input w3-border w3-margin-bottom"
                                 id="outreach"
                                 type="text"
-                                placeholder="{% trans 'manage-outreachplacehold' %}"
+                                placeholder="{% trans 'Campaign_Name/Program_Name' context 'manage-outreachplacehold' %}"
                                 name="outreach_name"
                                 value="{% if contest.pk %}{{ contest.outreach_name }}{% endif %}"
                                 {% if contest.pk %}disabled{% else %}required{% endif %}>
@@ -289,7 +289,7 @@
                                     <div class="w3-half" style="padding-{{ right }}: 8px;">
 
                                         <label for="bpp">
-                                            <strong>{% trans 'manage-bpp' %}</strong>
+                                            <strong>{% trans 'Bytes per point' context 'manage-bpp' %}</strong>
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
@@ -302,7 +302,7 @@
                                         {% if contest.pk %}disabled{% else %}required{% endif %}>
 
                                         <label for="maxbytes">
-                                            <strong>{% trans 'manage-maxbytes' %}</strong>
+                                            <strong>{% trans 'Maximum bytes per article-participant' context 'manage-maxbytes' %}</strong>
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
@@ -316,7 +316,7 @@
                                         {% if contest.pk %}disabled{% else %}required{% endif %}>
 
                                         <label for="minbytes">
-                                            <strong>{% trans 'manage-minbytes' %}</strong>
+                                            <strong>{% trans 'Minimum bytes per edit' context 'manage-minbytes' %}</strong>
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
@@ -333,7 +333,7 @@
                                     <div class="w3-half" style="padding-{{ left }}: 8px;">
 
                                         <label for="ipp">
-                                            <strong>{% trans 'manage-ipp' %}</strong>
+                                            <strong>{% trans 'Images per point' context 'manage-ipp' %}</strong>
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
@@ -346,7 +346,7 @@
                                         {% if contest.pk %}disabled{% else %}required{% endif %}>
 
                                         <label for="maximages">
-                                            <strong>{% trans 'manage-maximages' %}</strong>
+                                            <strong>{% trans 'Maximum images per article-participant' context 'manage-maximages' %}</strong>
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
@@ -355,21 +355,21 @@
                                         min="0"
                                         max="999999999"
                                         name="max_pic_per_article"
-                                        placeholder="{% trans 'triage-indef' %}"
+                                        placeholder="{% trans 'Undefined' context 'triage-indef' %}"
                                         value="{% if contest.pk %}{{ contest.max_pic_per_article }}{% endif %}"
                                         {% if contest.pk %}disabled{% else %}required{% endif %}>
 
                                         <label for="imagemode">
-                                            <strong>{% trans 'manage-imagemode' %}</strong>
+                                            <strong>{% trans 'Image evaluation mode' context 'manage-imagemode' %}</strong>
                                         </label>
                                         <select
                                         name="pictures_mode"
                                         class="w3-select w3-border w3-margin-bottom"
                                         id="imagemode"
                                         {% if contest.pk %}disabled{% else %}required{% endif %}>
-                                            <option value="0" {% if contest.pictures_mode == 0 %}selected{% endif %}>{% trans 'manage-perarticle' %}</option>
-                                            <option value="1" {% if contest.pictures_mode == 1 %}selected{% endif %}>{% trans 'manage-peredit' %}</option>
-                                            <option value="2" {% if contest.pictures_mode == 2 %}selected{% endif %}>{% trans 'manage-perimage' %}</option>
+                                            <option value="0" {% if contest.pictures_mode == 0 %}selected{% endif %}>{% trans 'Per article' context 'manage-perarticle' %}</option>
+                                            <option value="1" {% if contest.pictures_mode == 1 %}selected{% endif %}>{% trans 'Per edit' context 'manage-peredit' %}</option>
+                                            <option value="2" {% if contest.pictures_mode == 2 %}selected{% endif %}>{% trans 'Per image' context 'manage-perimage' %}</option>
                                         </select>
 
                                     </div>
@@ -378,7 +378,7 @@
                                 <div class="w3-row">
                                     <div class="w3-half" style="padding-{{ right }}: 8px;">
                                         <label for="theme">
-                                            <strong>{% trans 'manage-palette' %}</strong>
+                                            <strong>{% trans 'Color palette' context 'manage-palette' %}</strong>
                                         </label>
                                         <select
                                         name="theme"
@@ -415,12 +415,12 @@
                                             <option value="pale-yellow" class="w3-pale-yellow" {% if contest.theme == 'pale-yellow' %}selected{% endif %}>pale-yellow</option>
                                             <option value="pale-green" class="w3-pale-green" {% if contest.theme == 'pale-green' %}selected{% endif %}>pale-green</option>
                                             <option value="pale-blue" class="w3-pale-blue" {% if contest.theme == 'pale-blue' %}selected{% endif %}>pale-blue</option>
-                                            <option value="color" class="w3-transparent" {% if contest.theme == 'color' %}selected{% endif %}>{% trans 'manage-custom' %}</option>
+                                            <option value="color" class="w3-transparent" {% if contest.theme == 'color' %}selected{% endif %}>{% trans 'custom' context 'manage-custom' %}</option>
                                         </select>
                                     </div>
                                     <div class="w3-half" style="padding-{{ left }}: 8px;">
                                         <label for="hex">
-                                            <strong>{% trans 'manage-hexcolor' %}</strong>
+                                            <strong>{% trans 'Custom color (hex)' context 'manage-hexcolor' %}</strong>
                                         </label>
                                         <input
                                         class="w3-input w3-border w3-margin-bottom"
@@ -444,21 +444,21 @@
                                             type="button"
                                             id="editor"
                                             onclick="editChange('{{ contest.name_id }}')"
-                                            >{% trans 'modify' %}</button>
+                                            >{% trans 'Review' context 'modify' %}</button>
                                             <button
                                             class="w3-button w3-green w3-block w3-{{ right }}bar w3-border-white"
                                             style="display: none;"
                                             name="do_edit"
                                             id="saver"
                                             type="submit"
-                                            >{% trans 'triage-save' %}</button>
+                                            >{% trans 'Save' context 'triage-save' %}</button>
                                         </div>
                                         <div class="w3-half">
                                             <button
                                             class="w3-button w3-black w3-block w3-{{ left }}bar w3-border-white"
                                             name="do_manager"
                                             onclick="managerChange('{% if contest.pk %}{{ contest.name_id }}{% endif %}', true)"
-                                            type="button">{% trans 'manage-newmanager' %}</button>
+                                            type="button">{% trans 'Set new manager' context 'manage-newmanager' %}</button>
                                         </div>
                                     </div>
                                     <div class="w3-row w3-section">
@@ -466,26 +466,26 @@
                                             <button
                                             class="w3-button w3-orange w3-block w3-{{ right }}bar w3-border-white"
                                             name="do_restart"
-                                            onclick="editChange('{{ contest.name_id }}'); return confirm('{% trans 'manage-confirmrestart' %}')"
-                                            type="submit">{% trans 'manage-restart' %}</button>
+                                            onclick="editChange('{{ contest.name_id }}'); return confirm('{% trans 'By restarting the contest, all evaluations already made will be deleted. Do you want to proceed?' context 'manage-confirmrestart' %}')"
+                                            type="submit">{% trans 'Restart' context 'manage-restart' %}</button>
                                         </div>
                                         <div class="w3-half">
                                             <button
                                             class="w3-button w3-red w3-block w3-{{ left }}bar w3-border-white"
                                             name="do_delete"
-                                            onclick="editChange('{{ contest.name_id }}'); return confirm('{% trans 'manage-confirmdelete' %}')"
-                                            type="submit">{% trans 'manage-delete' %}</button>
+                                            onclick="editChange('{{ contest.name_id }}'); return confirm('{% trans 'By deleting the contest, all records related to this contest will be deleted. Do you want to proceed?' context 'manage-confirmdelete' %}')"
+                                            type="submit">{% trans 'Delete' context 'manage-delete' %}</button>
                                         </div>
                                     </div>
                                 {% else %}
                                     <label for="managemail">
-                                        <strong>{% trans 'manage-managemail' %}</strong>
+                                        <strong>{% trans 'Manager's email' context 'manage-managemail' %}</strong>
                                     </label>
                                     <input
                                     class="w3-input w3-border w3-margin-bottom"
                                     id="managemail"
                                     type="text"
-                                    placeholder="{% trans 'password-username' %}"
+                                    placeholder="{% trans 'Username' context 'password-username' %}"
                                     name="manager"
                                     value=""
                                     {% if contest.pk %}disabled{% else %}required{% endif %}>
@@ -494,7 +494,7 @@
                                     class="w3-button w3-block w3-deep-green w3-section w3-padding"
                                     name="do_create"
                                     type="submit"
-                                    >{% trans 'manage-create' %}</button>
+                                    >{% trans 'Create' context 'manage-create' %}</button>
                                 {% endif %}
                             </div>
                         </form>
@@ -503,14 +503,14 @@
                         method="post">
                             {% csrf_token %}
                             <div class="w3-section">
-                                <p>{% trans 'manage-confirmmanager' %}</p>
+                                <p>{% trans 'By defining a new manager, all evaluators and managers already registered will be deactivated. Do you want to proceed?' context 'manage-confirmmanager' %}</p>
                                 <input type="hidden" name="name_id" value="{% if contest.pk %}{{ contest.name_id }}{% endif %}">
                                 <input type="hidden" name="name" value="{% if contest.pk %}{{ contest.name }}{% endif %}">
                                 <input
                                 class="w3-input w3-border w3-margin-bottom"
                                 id="managemail"
                                 type="text"
-                                placeholder="{% trans 'password-username' %}"
+                                placeholder="{% trans 'Username' context 'password-username' %}"
                                 name="manager"
                                 required>
                                 <div class="w3-row">
@@ -518,13 +518,13 @@
                                         <button
                                         class="w3-button w3-orange w3-block w3-{{ right }}bar w3-border-white"
                                         name="do_manager"
-                                        type="submit">{% trans 'manage-newmanager' %}</button>
+                                        type="submit">{% trans 'Set new manager' context 'manage-newmanager' %}</button>
                                     </div>
                                     <div class="w3-half">
                                         <button
                                         class="w3-button w3-red w3-block w3-{{ left }}bar w3-border-white"
                                         type="button"
-                                        onclick="managerChange('{% if contest.pk %}{{ contest.name_id }}{% endif %}', false)">{% trans 'login-cancel' %}</button>
+                                        onclick="managerChange('{% if contest.pk %}{{ contest.name_id }}{% endif %}', false)">{% trans 'Cancel' context 'login-cancel' %}</button>
                                     </div>
                                 </div>
                             </div>

@@ -4,22 +4,22 @@
 {% get_current_language_bidi as LANGUAGE_BIDI %}
 
 
-{% block pagename %}{% trans 'counter' %}{% endblock %}
+{% block pagename %}{% trans 'Counter' context 'counter' %}{% endblock %}
 
 
 {% block content %}
     <div class="w3-container" style="margin-top:43px;padding-top:16px;">
         <div class="w3-threequarter w3-section">
             <p class="w3-text-darkgrey w3-container">
-                {% blocktrans with counter_about_1=contest.name counter_about_2=date counter_about_3=time %}.{{ counter_about_1 }}.{{ counter_about_2 }}.{{ counter_about_3 }}.{% endblocktrans %}
-                {% trans 'counter-description' %}
+                {% blocktrans with 1=contest.name 2=date 3=time context 'counter-about' %}This count refers to the wikicontest {{1}} and was generated on {{2}} at {{3}} UTC time.{% endblocktrans %}
+                {% trans 'The ranking order is determined according to the total points, calculated with the score rounded down, using the total sum of added bytes as a tiebreaker, and if there is still a tie, in alphabetical order. All registered users who have edited any of the articles in the list of this wikicontest are listed below, even if they have no valid edits.' context 'counter-description' %}
             </p>
         </div>
         <div class="w3-quarter w3-section">
             <form class="w3-container w3-card w3-padding" method="post">
                 {% csrf_token %}
                 <caption>
-                    {% trans 'counter-uptotime' %}
+                    {% trans 'If you want to get a score up to a specific time, please specify it in the form below.' context 'counter-uptotime' %}
                 </caption>
                 <input
                 class="w3-input w3-border"
@@ -36,15 +36,15 @@
         <div class="w3-container">
             <table aria-label="Lista de participantes" class="w3-table-all w3-hoverable w3-card">
                 <tr>
-                    <th>{% trans 'counter-user' %}</th>
-                    <th>{% trans 'counter-bytes' %}</th>
-                    <th>{% trans 'counter-edits' %}</th>
-                    <th>{% trans 'counter-ppb' %}</th>
-                    <th>{% trans 'counter-images' %}</th>
-                    <th>{% trans 'counter-ppi' %}</th>
-                    <th>{% trans 'counter-points' %}</th>
+                    <th>{% trans 'User' context 'counter-user' %}</th>
+                    <th>{% trans 'Sum of bytes' context 'counter-bytes' %}</th>
+                    <th>{% trans 'Total edits' context 'counter-edits' %}</th>
+                    <th>{% trans 'Points per byte' context 'counter-ppb' %}</th>
+                    <th>{% trans 'Articles with images' context 'counter-images' %}</th>
+                    <th>{% trans 'Points per image' context 'counter-ppi' %}</th>
+                    <th>{% trans 'Total points' context 'counter-points' %}</th>
                     {% if manager %}
-                        <th>{% trans 'counter-redefine' %}</th>
+                        <th>{% trans 'Reset' context 'counter-redefine' %}</th>
                     {% endif %}
                 </tr>
                 {% for row in counter %}
@@ -61,15 +61,15 @@
                                 <form
                                 method='post'
                                 onSubmit='return confirm(
-                                    "{% trans 'counter-confirm' %}"
-                                )'>
+                                    \'{% trans "All evaluations on this participant's edits will be undone. Do you want to proceed?" context 'counter-confirm' %}"
+                                )\'>
                                     {% csrf_token %}
                                     <input type='hidden' name='user_id' value='{{ row.id }}'>
                                     <input
                                     {% if row.total_edits == 0 %}disabled{% endif %}
                                     type='submit'
                                     class='w3-btn w3-{{ contest.theme }}'
-                                    value='{% trans 'counter-redefine' %}'>
+                                    value='{% trans 'Reset' context 'counter-redefine' %}'>
                                 </form>
                             </td>
                         {% endif %}
@@ -80,7 +80,7 @@
     {% else %}
         <div class="w3-panel w3-orange w3-margin w3-display-container w3-border">
             <p>
-                <h3>{% trans 'triage-noedit' %}</h3>
+                <h3>{% trans 'There is no edit to be displayed at this time.' context 'triage-noedit' %}</h3>
             </p>
         </div>
     {% endif %}
@@ -88,7 +88,7 @@
 {% if success %}
     <script>
         alert(
-            '{% trans 'counter-success' %}'
+            '{% trans 'Edits successfully reset! A new database update will be performed shortly.' context 'counter-success' %}'
         );
         window.location.href = window.location.href;
     </script>
