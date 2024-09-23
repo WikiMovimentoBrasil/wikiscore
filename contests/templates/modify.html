@@ -170,7 +170,7 @@
                     <li>{% trans 'Reverted edit:' context 'modify-label-reverted' %}<br>{% if edit.last_qualification.status == 0 %}{% trans 'Yes' context 'yes' %}{% else %}{% trans 'No' context 'no' %}{% endif %}</li>
                     <li>{% trans 'Evaluator:' context 'modify-label-evaluator' %}<br>{{ edit.last_evaluation.evaluator.profile.username }}</li>
                     <li>{% trans 'Evaluation timestamp:' context 'modify-label-evaltimestamp' %}<br>{{ edit.last_evaluation.when }}</li>
-                    <li>{% trans 'Evaluator's comment:' context 'modify-label-comment' %}<br>{{ edit.last_evaluation.obs|default_if_none:"" }}&nbsp;</li>
+                    <li>{% trans "Evaluator's comment:" context 'modify-label-comment' %}<br>{{ edit.last_evaluation.obs|default_if_none:"" }}&nbsp;</li>
                 </ul>
                 {% endif %}
             </div>
