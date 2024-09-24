@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.utils import translation
 from django.template import loader
-from django.core.exceptions import PermissionDenied
+from django.core.exceptions import PermissionDenied, BadRequest
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from functools import wraps
@@ -22,7 +22,7 @@ from .handlers.graph import GraphHandler
 def get_contest_from_request(request):
     contest_name_id = request.GET.get('contest')
     if not contest_name_id:
-        return redirect('/')
+        return False
     return get_object_or_404(Contest, name_id=contest_name_id)
 
 def check_evaluator_permission(request, contest):
@@ -35,6 +35,8 @@ def contest_evaluator_required(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
         contest = get_contest_from_request(request)
+        if not contest:
+            raise BadRequest("Contest not found.")
         check_evaluator_permission(request, contest)
         return view_func(request, contest, *args, **kwargs)
     return _wrapped_view
@@ -103,6 +105,8 @@ def home_view(request):
 
 def contest_view(request):
     contest = get_contest_from_request(request)
+    if not contest:
+        return redirect('/')
     handler = ContestHandler(contest=contest)
     return render_with_bidi(request, 'contest.html', handler.execute(request))
 
