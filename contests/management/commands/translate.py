@@ -10,6 +10,12 @@ class Command(BaseCommand):
     help = "Convert JSON translations to PO files."
 
     def handle(self, *args, **options):
+        for root, dirs, files in os.walk(os.path.join(settings.BASE_DIR, 'locale'), topdown=False):
+            for name in files:
+                os.remove(os.path.join(root, name))
+            for name in dirs:
+                os.rmdir(os.path.join(root, name))
+
         json_dir = os.path.join(settings.BASE_DIR, 'translations')
         for filename in os.listdir(json_dir):
             if filename.endswith('.json'):
