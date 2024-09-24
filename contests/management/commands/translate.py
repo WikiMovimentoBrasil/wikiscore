@@ -106,7 +106,7 @@ class Command(BaseCommand):
         for entry in po:
             msgid_sub = re.sub(r'\%\((\d+)\)s', '$\\1', entry.msgid)
             if entry.msgctxt in flat_json and flat_json[entry.msgctxt] != msgid_sub:
-                print(f"Warning: Different message in PO and JSON for context '{entry.msgctxt}': PO='{msgid_sub}' JSON='{flat_json[entry.msgctxt]}'")
+                self.stderr.write(f"Error: Different message in PO and JSON for context '{entry.msgctxt}': PO='{msgid_sub}' JSON='{flat_json[entry.msgctxt]}'")
 
         # 4. Save the updated JSON file
         updated_json = self.unflatten_dict(flat_json)
