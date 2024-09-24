@@ -83,6 +83,17 @@
 
                 parent.parentNode.scrollIntoView(true);
             }
+
+            const messages = {
+                'do_create': "{% trans 'Contest created successfully!' context 'manage-created' %}",
+                'do_manager': "{% trans 'New manager successfully defined!' context 'manage-remanaged' %}",
+                'do_restart': "{% trans 'Contest restarted successfully! Perform the database update.' context 'manage-restarted' %}",
+                'do_delete': "{% trans 'Contest deleted successfully!' context 'manage-deleted' %}"
+            };
+            var message = "{{ message }}";
+            if (messages[message]) {
+                alert(messages[message]);
+            }
         </script>
     </head>
     <body>

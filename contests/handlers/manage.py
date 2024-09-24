@@ -1,12 +1,14 @@
-from contests.models import Contest
+from contests.models import Contest, Evaluator, Edit, Participant, Article
+from credentials.models import Profile
 
 class ManageHandler():
     def execute(self, request):
         group = request.user.profile.group_set.first()
+        message = None
 
         if request.method == 'POST':
             name_id = request.POST.get('name_id')
-            if request.POST.get('do_create'):
+            if request.POST.get('do_create') is not None:
                 if Contest.objects.filter(name_id=name_id).exists():
                     raise PermissionDenied("Contest already exists.")
                 else:
@@ -38,8 +40,9 @@ class ManageHandler():
                         profile=self.get_or_create_profile(request.POST.get('manager')), 
                         user_status='G'
                     )
+                    message = 'do_create'
 
-            elif request.POST.get('do_edit'):
+            elif request.POST.get('do_edit') is not None:
                 if Contest.objects.filter(name_id=name_id).exists():
                     contest = Contest.objects.get(name_id=name_id)
                     contest.start_time = request.POST.get('start_time')
@@ -62,35 +65,41 @@ class ManageHandler():
                     contest.theme = request.POST.get('theme') or 'red'
                     contest.color = request.POST.get('color') or ''
                     contest.save()
+                    message = 'do_edit'
 
-            elif request.POST.get('do_manager'):
+            elif request.POST.get('do_manager') is not None:
                 if Contest.objects.filter(name_id=name_id).exists():
                     contest = Contest.objects.get(name_id=name_id)
                     Evaluator.objects.filter(
                         contest=contest,
                     ).update(user_status='P')
-                    Evaluator.objects.create(
+                    evaluator, _ = Evaluator.objects.get_or_create(
                         contest=contest, 
-                        profile=self.get_or_create_profile(request.POST.get('manager')), 
-                        user_status='G'
+                        profile=self.get_or_create_profile(request.POST.get('manager'))
                     )
+                    evaluator.user_status = 'G'
+                    evaluator.save()
+                    message = 'do_manager'
 
-            elif request.POST.get('do_restart'):
+            elif request.POST.get('do_restart') is not None:
                 if Contest.objects.filter(name_id=name_id).exists():
                     contest = Contest.objects.get(name_id=name_id)
                     Edit.objects.filter(contest=contest).delete()
                     Participant.objects.filter(contest=contest).delete()
                     Article.objects.filter(contest=contest).delete()
+                    message = 'do_restart'
 
-            elif request.POST.get('do_delete'):
+            elif request.POST.get('do_delete') is not None:
                 if Contest.objects.filter(name_id=name_id).exists():
                     Contest.objects.get(name_id=name_id).delete()
+                    message = 'do_delete'
 
         contests = list(Contest.objects.filter(group=group).order_by('-start_time'))
         contests.append(Contest())
         return {
             'contests': contests,
             'group': group,
+            'message': message
         }
 
     def get_or_create_profile(self, username):
