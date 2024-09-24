@@ -25,7 +25,7 @@
         <a href="{% url 'home_view' %}">
             <img src="{% static 'Logo_Branco.svg' %}" alt="logo" class="w3-bar-item" style="width: 128px;">
         </a>
-        <button onclick="window.open('graph_page', '_blank');" class="w3-button w3-bar-item" disabled>{% trans 'Graphic scoreboard' context 'login-graph' %}</button>
+        <button onclick="window.open('{% url 'graph_view' %}?contest={{ contest.name_id }}', '_blank');" class="w3-button w3-bar-item">{% trans 'Graphic scoreboard' context 'login-graph' %}</button>
         {% if is_evaluator %}
             <button onclick="window.open('{% url 'triage_view' %}?contest={{ contest.name_id }}', '_self')" class="w3-button w3-bar-item">{% trans 'Log in' context 'login' %}</button>
         {% endif %}

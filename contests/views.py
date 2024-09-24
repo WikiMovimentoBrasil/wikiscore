@@ -16,6 +16,7 @@ from .handlers.compare import CompareHandler
 from .handlers.evaluators import EvaluatorsHandler
 from .handlers.modify import ModifyHandler
 from .handlers.manage import ManageHandler
+from .handlers.graph import GraphHandler
 
 
 def get_contest_from_request(request):
@@ -104,6 +105,13 @@ def contest_view(request):
     contest = get_contest_from_request(request)
     handler = ContestHandler(contest=contest)
     return render_with_bidi(request, 'contest.html', handler.execute(request))
+
+def graph_view(request):
+    contest = get_contest_from_request(request)
+    if not contest:
+        return redirect('/')
+    handler = GraphHandler(contest=contest)
+    return render_with_bidi(request, 'graph.html', handler.execute(request))
 
 @login_required()
 @contest_evaluator_required
