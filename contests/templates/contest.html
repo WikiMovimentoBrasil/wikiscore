@@ -27,7 +27,7 @@
         </a>
         <button onclick="window.open('{% url 'graph_view' %}?contest={{ contest.name_id }}', '_blank');" class="w3-button w3-bar-item">{% trans 'Graphic scoreboard' context 'login-graph' %}</button>
         {% if is_evaluator %}
-            <button onclick="window.open('{% url 'triage_view' %}?contest={{ contest.name_id }}', '_self')" class="w3-button w3-bar-item">{% trans 'Log in' context 'login' %}</button>
+            <button onclick="window.open('{% url 'triage_view' %}?contest={{ contest.name_id }}', '_self')" class="w3-button w3-bar-item">{% trans 'Manage contest' context 'login-manage' %}</button>
         {% endif %}
         <span class="w3-bar-item w3-right w3-hide-small">{{ contest.name }}</span>
     </div>

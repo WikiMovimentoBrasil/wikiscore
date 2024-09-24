@@ -172,6 +172,7 @@
     "recover-subject": "WikiScore - New password",
     "recover-notemail": "Error: Invalid email!",
     "password": "Password",
+    "login-manage": "Manage contest",
     "password-username": "Username",
     "password-oldpassword": "Old password",
     "password-wrongpass": "Incorrect old password!",
