@@ -185,7 +185,7 @@ class TriageHandler:
         )
 
         for locked in lockeds:
-            evalution = Evaluation.objects.create(
+            evaluation = Evaluation.objects.create(
                 contest=self.contest,
                 diff=locked.diff,
                 status='0' # Status '0' indicates the edit is pending
@@ -298,7 +298,14 @@ class TriageHandler:
                 delta = edit['size'] - revision_history[i + 1]['size']
             else:
                 delta = edit['size']
-            delta_color = 'green' if delta > 0 else ('red' if delta < 0 else 'grey')
+
+            if delta > 0:
+                delta_color = 'green'
+            elif delta < 0:
+                delta_color = 'red'
+            else:
+                delta_color = 'grey'
+                
             history_class = 'w3-small w3-leftbar w3-border-grey w3-padding-small' if edit['revid'] == current_diff else 'w3-small'
             
             if edit['revid'] != 0:

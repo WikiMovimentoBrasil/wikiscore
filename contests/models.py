@@ -135,8 +135,6 @@ class Evaluation(models.Model):
     when = models.DateTimeField(auto_now_add=True)
     obs = models.TextField(blank=True, null=True)
 
-    def __str__(self):
-        return (f"{self.contest.name_id} - {self.diff.diff} - {self.evaluator.profile.username} - {self.status} - {self.when}")
-        
+    def __str__(self):        
         name = self.evaluator.profile.username if self.evaluator else 'None'
         return (f"{self.contest.name_id} - {self.diff.diff} - {name} - {self.status} - {self.when}")

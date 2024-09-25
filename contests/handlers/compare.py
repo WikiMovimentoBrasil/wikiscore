@@ -80,7 +80,7 @@ class CompareHandler:
             'gpllimit': 'max',
         }
         response = requests.get(contest.api_endpoint, params=list_api_params).json()
-        if not 'query' in response:
+        if 'query' not in response:
             return list_
 
         list_.extend(response['query']['pages'])
@@ -107,7 +107,7 @@ class CompareHandler:
             "gcmlimit": "max",
         }
         response = requests.get(contest.api_endpoint, params=categorymembers_api_params).json()
-        if not 'query' in response:
+        if 'query' not in response:
             return list_
 
         list_.extend(response['query']['pages'])
@@ -132,7 +132,7 @@ class CompareHandler:
             'cmprop': 'title',
         }
         response = requests.get(contest.api_endpoint, params=deletion_api_params).json()
-        if not 'query' in response:
+        if 'query' not in response:
             return list_
             
         list_.extend(response['query']['categorymembers'])

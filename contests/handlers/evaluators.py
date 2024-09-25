@@ -10,13 +10,12 @@ class EvaluatorsHandler:
     def execute(self, request):
         evaluator = self.get_current_evaluator(request)
         
-        if request.method == 'POST':
-            if evaluator.user_status == 'G':
-                if request.POST.get('new'):
-                    self.add_new_evaluator(request.POST.get('new'))
+        if request.method == 'POST' and evaluator.user_status == 'G':
+            if request.POST.get('new'):
+                self.add_new_evaluator(request.POST.get('new'))
 
-                if request.POST.get('user'):
-                    self.update_evaluator_status(request)
+            if request.POST.get('user'):
+                self.update_evaluator_status(request)
 
         return {
             'contest': self.contest,

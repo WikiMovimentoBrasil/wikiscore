@@ -60,7 +60,7 @@ def save_profile(backend, user, response, *args, **kwargs):
                     user.username = new_username
                     user.save()
 
-                profile, created = Profile.objects.get_or_create(global_id=global_id)
+                profile, _ = Profile.objects.get_or_create(global_id=global_id)
                 if profile.account != user:
                     profile.account = user
                     profile.save()

@@ -5,6 +5,7 @@ from django.template import loader
 from django.core.exceptions import PermissionDenied, BadRequest
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_GET, require_http_methods
 from functools import wraps
 from collections import defaultdict
 from pathlib import Path
@@ -67,14 +68,27 @@ def get_active_commit_hash():
     with head_dir.open("r") as f: content = f.read().splitlines()
     return content[0][:7]
 
+@require_GET
 def redirect_view(request):
     lang = request.GET.get('lang')
     contest = request.GET.get('contest')
     page = request.GET.get('page')
 
+    page_list = [
+        'contest', 
+        'triage', 
+        'counter', 
+        'backtrack', 
+        'compare', 
+        'edits', 
+        'evaluators', 
+        'modify',
+        'graph',
+    ]
+
     if contest and not page:
         response = redirect(f"/contests/?contest={contest}")
-    elif contest and page:
+    elif contest and page in page_list:
         response = redirect(f"/{page}/?contest={contest}")
     else:
         response = redirect('/')
@@ -85,6 +99,7 @@ def redirect_view(request):
 
     return response
 
+@require_GET
 def home_view(request):
     contests = Contest.objects.select_related('group').order_by('-start_time')
     
@@ -103,6 +118,7 @@ def home_view(request):
         'git_commit': 'Commit: ' + get_active_commit_hash() + ' - ' + get_active_commit_message(),
     })
 
+@require_GET
 def contest_view(request):
     contest = get_contest_from_request(request)
     if not contest:
@@ -110,15 +126,17 @@ def contest_view(request):
     handler = ContestHandler(contest=contest)
     return render_with_bidi(request, 'contest.html', handler.execute(request))
 
+@require_GET
 def graph_view(request):
     contest = get_contest_from_request(request)
     if not contest:
         return redirect('/')
     handler = GraphHandler(contest=contest)
-    return render_with_bidi(request, 'graph.html', handler.execute(request))
+    return render_with_bidi(request, 'graph.html', handler.execute())
 
 @login_required()
 @contest_evaluator_required
+@require_http_methods(["GET", "POST"])
 def triage_view(request, contest):
     handler = TriageHandler(contest=contest, user=request.user, api_endpoint=contest.api_endpoint)
     if request.method == 'POST':
@@ -136,15 +154,15 @@ def triage_view(request, contest):
 
 @login_required()
 @contest_evaluator_required
+@require_http_methods(["GET", "POST"])
 def counter_view(request, contest):
     handler = CounterHandler(contest=contest)
     return render_with_bidi(request, "counter.html", handler.get_context(request))
 
 @login_required()
 @contest_evaluator_required
+@require_http_methods(["GET", "POST"])
 def backtrack_view(request, contest):
-    contest = get_object_or_404(Contest, name_id=request.GET.get('contest'))
-
     qualified = False
     diff = None
     if request.POST.get('diff'):
@@ -173,12 +191,14 @@ def backtrack_view(request, contest):
 
 @login_required()
 @contest_evaluator_required
+@require_http_methods(["GET", "POST"])
 def compare_view(request, contest):
     handler = CompareHandler(contest=contest)
     return render_with_bidi(request, 'compare.html', handler.execute(request))
 
 @login_required()
 @contest_evaluator_required
+@require_http_methods(["GET", "POST"])
 def edits_view(request, contest):
     edits = Edit.objects.filter(contest=contest).select_related(
         'article', 'participant', 'last_evaluation__evaluator__profile', 'last_qualification'
@@ -194,17 +214,20 @@ def edits_view(request, contest):
 
 @login_required()
 @contest_evaluator_required
+@require_http_methods(["GET", "POST"])
 def evaluators_view(request, contest):
     handler = EvaluatorsHandler(contest=contest)
     return render_with_bidi(request, 'evaluators.html', handler.execute(request))
 
 @login_required()
 @contest_evaluator_required
+@require_http_methods(["GET", "POST"])
 def modify_view(request, contest):
     handler = ModifyHandler(contest=contest)
     return render_with_bidi(request, 'modify.html', handler.execute(request))
 
 @login_required()
+@require_http_methods(["GET", "POST"])
 def manage_view(request):
     if request.user.profile.group_set.exists():
         handler = ManageHandler()

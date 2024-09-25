@@ -15,11 +15,11 @@ class GraphHandler:
         self.counter = CounterHandler(contest=self.contest)
         self.start_day = self.contest.start_time.strftime("%Y-%m-%d")
 
-    def execute(self, request):
+    def execute(self):
         if self.is_contest_not_started():
             return self._response_with_empty_graph()
 
-        end_day, finished = self.get_end_day_and_status()
+        end_day = self.get_end_day()
         days, last_day = self.prepare_days_range(end_day)
         all_points = self.collect_points_for_days(days + [last_day])
         best_users = self.get_top_users(all_points, last_day)
@@ -33,11 +33,11 @@ class GraphHandler:
     def is_contest_not_started(self):
         return now().date() < self.contest.start_time.date()
 
-    def get_end_day_and_status(self):
+    def get_end_day(self):
         if now().date() > self.contest.end_time.date():
             end_day = (self.contest.end_time + timedelta(days=1)).strftime("%Y-%m-%d")
-            return end_day, True
-        return now().strftime("%Y-%m-%d"), False
+            return end_day
+        return now().strftime("%Y-%m-%d")
 
     def prepare_days_range(self, end_day):
         days = self.generate_date_range(self.start_day, end_day)

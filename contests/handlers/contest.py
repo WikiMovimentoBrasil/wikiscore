@@ -108,7 +108,7 @@ class ContestHandler():
             'format': 'json'
         }
         response = requests.get(contest.api_endpoint, params=api_params).json()
-        if not 'query' in response:
+        if 'query' not in response:
             return list_
 
         list_.extend(response['query']['pages'])
