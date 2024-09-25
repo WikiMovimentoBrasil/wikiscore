@@ -187,7 +187,7 @@ def edits_view(request, contest):
     if request.POST.get('csv'):
         response = HttpResponse(content_type="text/csv; charset=windows-1252",
                                 headers={"Content-Disposition": 'attachment; filename="edits.csv"'})
-        response.write(loader.get_template("edits.csv").render({'data': edits}))
+        response.write(loader.get_template("edits.txt").render({'data': edits}))
         return response
 
     return render_with_bidi(request, 'edits.html', {'contest': contest, 'edits': edits})
