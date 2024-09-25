@@ -112,6 +112,7 @@ class Command(BaseCommand):
         updated_json = self.unflatten_dict(flat_json)
         with open(json_path, 'w', encoding='utf-8') as f:
             json.dump(updated_json, f, ensure_ascii=False, indent=4)
+            f.write('\n')
         print(f"Successfully synchronized {json_path} with the PO file.")
         return po
 
