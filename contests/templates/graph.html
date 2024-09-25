@@ -1,0 +1,76 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+    <head>
+        <title>{% trans 'Points graph' context 'graph' %} - {{ contest.name }}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="{% static 'w3.css' %}">
+        {% if contest.color %}
+            <style>
+                :root {--color: #{{ contest.color }};}
+                .w3-color, .w3-hover-color:hover {color: #fff !important; background-color: var(--color) !important;}
+                .w3-text-color, .w3-hover-text-color:hover {color: var(--color) !important;}
+                .w3-border-color, .w3-hover-border-color:hover {border-color: var(--color) !important;}
+            </style>
+        {% endif %}
+        <script
+        src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/Chart.js/3.9.1/chart.min.js"
+        integrity="sha384-9MhbyIRcBVQiiC7FSd7T38oJNj2Zh+EfxS7/vjhBi4OOT78NlHSnzM31EZRWR1LZ"
+        crossorigin="anonymous"></script>
+    </head>
+    <body>
+        <header class="w3-container w3-{{ contest.theme }}">
+            <h1>{% trans 'Points graph' context 'graph' %} - {{ contest.name }}</h1>
+        </header>
+        <br>
+        <div class="w3-row-padding w3-content" style="max-width:800px">
+            <div class="w3-container w3-margin-top w3-card-4">
+                <div class="w3-container">
+                    <p>{% trans 'The graph below displays the evolution of scores received by the top 9 participants during the wikicontest. This graph is generated automatically and does not constitute a final or official ranking. Please note that organizers may reevaluate previous edits, and the displayed points may be recalculated without prior notice. In case of discrepancy, only the table inserted by the organizers of the wikicontest on their official page should be considered.' context 'graph-about' %}</p>
+                </div>
+            </div>
+            <div class="w3-container w3-section w3-card-4">
+                {% if datasets_graph %}
+                    <canvas id="ranking"></canvas>
+                    <script type="text/javascript">
+                        const dias = {{ all_days }};
+
+                        const ranking = new Chart(
+                            document.getElementById('ranking'),
+                            {
+                                type: 'line',
+                                options: {
+                                    aspectRatio: 1.5,
+                                    plugins: {
+                                        title: {
+                                            display: true,
+                                            text: "{% trans 'Ranking of the top 9 participants by elapsed day' context 'graph-axis' %}"
+                                        },
+                                        legend: {
+                                            display: false
+                                        }
+                                    }
+                                },
+                                data: {
+                                    labels: dias,
+                                    datasets: {{ datasets_graph | safe }}
+                                }
+                            }
+                        );
+                    </script>
+                {% else %}
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" style="width:200px;margin:auto;display:block;">
+                     <path
+                         d="M 8 2 C 4.6862915 2 2 4.6862915 2 8 C 2 11.313708 4.6862915 14 8 14 C 8.3415702 14 8.6740174 13.964985 9 13.910156 L 9 12.900391 C 8.6769296 12.965962 8.3424207 13 8 13 C 5.2385763 13 3 10.761424 3 8 C 3 5.2385763 5.2385763 3 8 3 C 10.761424 3 13 5.2385763 13 8 C 13 8.3424207 12.965962 8.6769296 12.900391 9 L 13.910156 9 C 13.964985 8.6740174 14 8.3415702 14 8 C 14 4.6862915 11.313708 2 8 2 z M 7 4 L 7 8 L 7 9 L 9 9 L 12 9 L 12 8 L 8 8 L 8 4 L 7 4 z "
+                         style="fill:currentColor;fill-opacity:1;stroke:none;color:#4d4d4d;"/>
+                     <path
+                        d="M 9.9899998,9.0000003 9,9.99 11.01,12 9,14.01 9.9899998,15 12,12.99 14.01,15 15,14.01 12.99,12 15,9.99 14.01,9.0000003 12,11.01 Z"
+                        style="fill:currentColor;fill-opacity:1;stroke:none;color:#da4453;"/>
+                    </svg>
+                {% endif %}
+            </div>
+        </div>
+    </body>
+</html>

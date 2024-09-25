@@ -1,98 +1,60 @@
-name: Translation
+name: Compile translations
 
-on: push
+on:
+  push:
+    branches:
+      - develop
+    paths:
+      - 'translations/**'
 
 jobs:
-  regex-json-verification:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-        
-      - name: Verify Regex and JSON
-        run: |
-          # Run regex verification
-          source_keys=()
-          while IFS= read -r match
-          do
-            # Extract the desired part from the match using awk
-            clean_match=$(echo "$match" | awk -F "['\"]" '{print $2}')
-            source_keys+=("$clean_match")
-          done < <(grep -r -P -o "(?<=§\()['\"]([\w-]+)['\"]" .)
+    run-translate:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+            pull-requests: write
+        strategy:
+            max-parallel: 4
+            matrix:
+                python-version: [3.9]
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
 
-          if [ ${#source_keys[@]} -gt 0 ]
-          then
-            echo "Regex pattern found in code."
-          else
-            echo "Regex pattern not found."
-            exit 1
-          fi
-          
-          # Verify JSON keys
-          json_keys=($(jq -r 'keys[]' translations/en.json))
-          if [ ${#json_keys[@]} -gt 0 ]
-          then
-            echo "JSON source found."
-          else
-            echo "JSON source not found."
-            exit 1
-          fi
+            - name: Install GNU gettext tools
+              run: sudo apt-get update && sudo apt-get install -y gettext
 
-          #Matching keys
-          MISMATCH_FOUND=false
-          for source_key in "${source_keys[@]}"
-          do
-            KEY_FOUND=false
-            for json_key in "${json_keys[@]}"
-            do
-              if [ "$json_key" = "$source_key" ]
-              then
-                KEY_FOUND=true
-                break
-              fi
-            done
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v3
+              with:
+                python-version: ${{ matrix.python-version }}
 
-            if [ "$KEY_FOUND" = false ]
-            then
-              echo "Key ${source_key} is not defined"
-              MISMATCH_FOUND=true
-            fi
-          done
-          
-          if [ "$MISMATCH_FOUND" = true ]
-          then
-            echo "Some asked JSON keys were not found."
-            exit 1
-          else
-            echo "All asked JSON keys were found."
-          fi
+            - name: Install dependencies
+              run: |
+                python -m pip install --upgrade pip
+                pip install -r requirements.txt
 
-          #Inverse matching
-          UNUSED_KEYS=false
-          for json_key in "${json_keys[@]}"
-          do
-            KEY_FOUND=false
-            for source_key in "${source_keys[@]}"
-            do
-              if [ "$json_key" = "$source_key" ]
-              then
-                KEY_FOUND=true
-                break
-              fi
-            done
+            - name: Compile translations
+              run: |
+                python manage.py translate
 
-            if [ "$KEY_FOUND" = false ]
-            then
-              echo "Key ${json_key} is not used"
-              UNUSED_KEYS=true
-            fi
-          done
-          
-          if [ "$UNUSED_KEYS" = true ]
-          then
-            echo "Some JSON keys were not been used."
-            exit 1
-          else
-            echo "All JSON keys were been used."
-          fi
+            - name: Configure Git
+              run: |
+                git config --global user.name "github-actions[bot]"
+                git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+            - name: Check for changes
+              run: |
+                git add .
+                if git diff --cached --quiet; then
+                    echo "No changes to commit; exiting."
+                    exit 0
+                fi
+                git commit -m "Compile localisation updates"
+
+            - name: Push changes
+              if: success()
+              uses: ad-m/github-push-action@master
+              with:
+                github_token: ${{ secrets.GITHUB_TOKEN }}
+                branch: ${{ github.ref }}

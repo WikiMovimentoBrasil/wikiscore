@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% load static %}
+{% load i18n %}
+{% load titlescore %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+
+
+{% block pagename %}{% trans 'Evaluated' context 'triage-evaluated' %}{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/datatables/1.10.21/css/jquery.dataTables.min.css" />
+    <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/datatables.net-buttons-dt/2.3.6/buttons.dataTables.min.css" />
+    <link rel="stylesheet" href="https://tools-static.wmflabs.org/cdnjs/ajax/libs/datatables.net-responsive-dt/2.4.1/responsive.dataTables.min.css" />
+    <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/datatables.net/2.1.1/jquery.dataTables.min.js"></script>
+    <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/datatables.net-responsive/2.4.1/dataTables.responsive.min.js"></script>
+    <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/datatables.net-buttons/2.3.6/js/dataTables.buttons.min.js"></script>
+    <script src="https://tools-static.wmflabs.org/cdnjs/ajax/libs/datatables.net-buttons/2.3.6/js/buttons.colVis.min.js"></script>
+    <style>
+    .loader {
+        border: 16px solid #f3f3f3;
+        border-radius: 50%;
+        border-top: 16px solid #000000;
+        width: 120px;
+        height: 120px;
+        margin: auto;
+        animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    #myTable {
+        display: none;
+        font-size: small;
+    }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="w3-row-padding w3-content w3-main" style="max-width:1200px;margin-top:43px;padding-top:16px;">
+        <div class="w3-container w3-margin-top w3-card-4">
+            <div class="w3-container w3-row w3-padding-16">
+                <div class="w3-threequarter">{% trans 'This page lists all edits made by contest participants. To access edits made by all users, download the CSV file.' context 'edits-about' %}</div>
+                <form method="post" target="_blank" class="w3-quarter">
+                    {% csrf_token %}
+                    <input type="hidden" name="csv" value="csv">
+                    <button class="w3-button w3-<?=$right?> w3-green" type="submit">
+                        <i class="fa-solid fa-file-csv"></i> {% trans 'Download' context 'edits-csv' %}
+                    </button>
+                </form>
+            </div>
+        </div>
+        <div class="w3-margin-top w3-card-4">
+            <div class="w3-padding">
+                <div class="loader"></div>
+                <table id="myTable" class="display responsive" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>{% trans 'Edit diff' context 'edits-diff' %}</th>
+                            <th>{% trans 'Title' context 'edits-title' %}</th>
+                            <th>{% trans 'Edit timestamp' context 'edits-timestamp' %}</th>
+                            <th>{% trans 'User' context 'edits-user' %}</th>
+                            <th>{% trans 'Account attach date' context 'edits-attached' %}</th>
+                            <th>{% trans 'Bytes' context 'edits-bytes' %}</th>
+                            <th>{% trans 'New article' context 'edits-newpage' %}</th>
+                            <th>{% trans 'Valid edit' context 'edits-valid' %}</th>
+                            <th>{% trans 'With image' context 'edits-withimage' %}</th>
+                            <th>{% trans 'Reverted edit' context 'edits-reverted' %}</th>
+                            <th>{% trans 'Evaluator' context 'edits-evaluator' %}</th>
+                            <th>{% trans 'Evaluation timestamp' context 'edits-evaltimestamp' %}</th>
+                            <th>{% trans "Evaluator's comment" context 'edits-comment' %}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for query in edits %}
+                            {% if query.participant is not None %}
+                                <tr>
+                                    <td>{{ query.diff }}</td>
+                                    <td>{{ query.article.title | titlescore }}</td>
+                                    <td>{{ query.timestamp }}</td>
+                                    <td>{{ query.participant.user }}</td>
+                                    <td>{{ query.participant.attached }}</td>
+                                    <td>{{ query.orig_bytes }}</td>
+                                    <td>
+                                        {% if query.new_page == True %}
+                                            <span class="w3-text-green w3-large">✓</span>
+                                        {% else %}
+                                            <span class="w3-text-red w3-large">✗</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if query.last_evaluation.valid_edit == True %}
+                                            <span class="w3-text-green w3-large">✓</span>
+                                        {% else %}
+                                            <span class="w3-text-red w3-large">✗</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ query.last_evaluation.pictures }}</td>
+                                    <td>
+                                        {% if query.last_qualification.status == 1 %}
+                                            <span class="w3-text-red w3-large">✓</span>
+                                        {% else %}
+                                            <span class="w3-text-green w3-large">✗</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ query.last_evaluation.evaluator.profile }}</td>
+                                    <td>{{ query.last_evaluation.when }}</td>
+                                    <td>{{ query.last_evaluation.obs | default_if_none:"" }}</td>
+                                </tr>
+                            {% endif %}
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <script type="text/javascript">
+                    $(document).ready( function () {
+                        $('.loader').hide();
+                        $('#myTable').show();
+                        $('#myTable').DataTable( {
+                            responsive: true,
+                            columnDefs: [
+                                {
+                                    targets: "_all",
+                                    className: 'dt-body-center'
+                                }
+                            ]
+                        } );
+                    } );
+                </script>
+            </div>
+        </div>
+    </div>
+{% endblock %}
