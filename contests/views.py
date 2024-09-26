@@ -1,3 +1,4 @@
+import zlib
 from django.http import HttpResponse
 from django.conf import settings
 from django.utils import translation
@@ -50,23 +51,50 @@ def render_with_bidi(request, template_name, context):
     context.update(bidi_context)
     return render(request, template_name, context)
 
+def get_head_ref():
+    git_dir = Path('.') / '.git'
+    head_file = git_dir / 'HEAD'
+    with head_file.open('r') as f:
+        ref = f.readline().strip()
+    
+    if ref.startswith('ref:'):
+        ref_path = ref.split(' ')[1]
+        commit_file = git_dir / ref_path
+    else:
+        commit_file = None
+    
+    return commit_file, ref
+
 def get_active_branch_name():
-    head_dir = Path(".") / ".git" / "HEAD"
-    with head_dir.open("r") as f: content = f.read().splitlines()
-
-    for line in content:
-        if line[0:4] == "ref:":
-            return line.partition("refs/heads/")[2]
-
-def get_active_commit_message():
-    head_dir = Path(".") / ".git" / "COMMIT_EDITMSG"
-    with head_dir.open("r") as f: content = f.readlines()
-    return content[0]
+    commit_file, ref = get_head_ref()
+    if commit_file:
+        return ref.partition("refs/heads/")[2]
+    return "Detached HEAD"
 
 def get_active_commit_hash():
-    head_dir = Path(".") / ".git" / "ORIG_HEAD"
-    with head_dir.open("r") as f: content = f.read().splitlines()
-    return content[0][:7]
+    commit_file, ref = get_head_ref()
+    if commit_file and commit_file.exists():
+        with commit_file.open('r') as f:
+            return f.readline().strip()[:7]
+    return ref[:7]
+
+def get_active_commit_message():
+    commit_file, ref = get_head_ref()
+    if commit_file and commit_file.exists():
+        with commit_file.open('r') as f:
+            commit_hash = f.readline().strip()
+    else:
+        commit_hash = ref
+
+    git_dir = Path('.') / '.git'
+    commit_object = git_dir / 'objects' / commit_hash[:2] / commit_hash[2:]
+    if commit_object.exists():
+        with commit_object.open('rb') as f:
+            compressed_data = f.read()
+        decompressed_data = zlib.decompress(compressed_data).decode('utf-8', errors='ignore')
+        commit_message = decompressed_data.split('\n\n', 1)[-1].strip()
+        return commit_message
+    return "No commit message found"
 
 @require_GET
 def redirect_view(request):
