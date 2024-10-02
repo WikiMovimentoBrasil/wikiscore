@@ -1,0 +1,9 @@
+django
+markdown
+python-dateutil
+django-filter
+social-auth-app-django
+rest-social-auth
+polib
+python-dotenv
+pymysql

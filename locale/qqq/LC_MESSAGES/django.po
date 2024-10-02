@@ -1,0 +1,1626 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-25 12:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: contests/templates/backtrack.html:7 contests/templates/base.html:96
+msgctxt "backtrack"
+msgid "Backtrack"
+msgstr ""
+"Name of the tool page where evaluators can enable for evaluation edits made "
+"prior to the user's registration in the contest, effectively backtracking "
+"the participant's registration."
+
+#: contests/templates/backtrack.html:15
+msgctxt "backtrack-about"
+msgid ""
+"This page lists the edits participats did in the context of the wikicontest "
+"but were made before their registration in the Outreach Dashboard. If "
+"necessary, click on the button to accept the edit. After acceptance, the "
+"edit will be available in the evaluation queue."
+msgstr "Text displayed on the page that describes its purpose."
+
+#: contests/templates/backtrack.html:36
+#, python-format
+msgctxt "backtrack-stats"
+msgid "Edit on %(1)s with %(2)s bytes"
+msgstr ""
+"Description of an edit that can be backtracked.\n"
+"\n"
+"Parameters:\n"
+"* %(1)s: Date/time the edit was made (e.g.: 2023-03-02 12:13:14)\n"
+"* %(2)s: Number of bytes in the edit"
+
+#: contests/templates/backtrack.html:44
+msgctxt "backtrack-areyousure"
+msgid "Are you sure?"
+msgstr ""
+"Confirmation [https://developer.mozilla.org/en-US/docs/Web/API/Window/confirm message] before the action requested by the evaluator is performed.\n"
+"{{Identical|Are you sure?}}"
+
+#: contests/templates/backtrack.html:46
+msgctxt "backtrack-accept"
+msgid "Accept edit"
+msgstr "Text used in a button for the evaluator to accept a certain edit"
+
+#: contests/templates/backtrack.html:53
+#, python-format
+msgctxt "backtrack-enrollment"
+msgid "Participant enrolled on %(1)s"
+msgstr ""
+"Description of the author of an edit that can be backtracked.\n"
+"\n"
+"Parameters:\n"
+"* %(1)s: Date/time of participant registration in the contest."
+
+#: contests/templates/backtrack.html:60
+msgctxt "backtrack-success"
+msgid "Edit accepted successfully!"
+msgstr "Message displayed when an edit acceptance request has been completed."
+
+#: contests/templates/base.html:56 contests/templates/base.html:76
+#: contests/templates/triage.html:7
+msgctxt "triage"
+msgid "Triage"
+msgstr ""
+"Name of the page of the tool where the triage (approval/rejection) of edits "
+"made to the contest is carried out."
+
+#: contests/templates/base.html:66 contests/templates/home.html:20
+#, python-format
+msgctxt "triage-welcome"
+msgid "Welcome, %(1)s"
+msgstr ""
+"Welcome message shown in the sidebar\n"
+"\n"
+"Parameters:\n"
+"* %(1)s: name of the evaluator"
+
+#: contests/templates/base.html:71
+msgctxt "triage-panel"
+msgid "Panel"
+msgstr "Panel"
+
+#: contests/templates/base.html:80 contests/templates/counter.html:7
+msgctxt "counter"
+msgid "Counter"
+msgstr ""
+"Name of the tool page where the points count of each contest participant is "
+"displayed."
+
+#: contests/templates/base.html:84 contests/templates/manage.html:458
+#: contests/templates/modify.html:7 contests/templates/modify.html:133
+msgctxt "modify"
+msgid "Review"
+msgstr ""
+"Name of the tool page where the review (or reevaluation) of evaluations "
+"already made is carried out."
+
+#: contests/templates/base.html:88 contests/templates/compare.html:6
+msgctxt "compare"
+msgid "Comparator"
+msgstr ""
+"Name of the tool page where the comparison between the category and the "
+"official list is made."
+
+#: contests/templates/base.html:92 contests/templates/edits.html:8
+msgctxt "triage-evaluated"
+msgid "Evaluated"
+msgstr ""
+"Name of the tool page where the table with the evaluated editions is "
+"generated. An adjective that describes one or more editions of a wiki page."
+
+#: contests/templates/base.html:100 contests/templates/evaluators.html:8
+#: contests/templates/evaluators.html:75
+msgctxt "evaluators"
+msgid "Evaluators"
+msgstr ""
+"Label on a board with list of registered evaluators for a given contest"
+
+#: contests/templates/base.html:104
+msgctxt "triage-list"
+msgid "Official list"
+msgstr ""
+"Name of the tool page that redirects the evaluator to the official list of "
+"articles on the wiki."
+
+#: contests/templates/base.html:109
+msgctxt "triage-cat"
+msgid "Categorization"
+msgstr ""
+"Name of the page of the tool that redirects the contest page categorization "
+"system. Corresponds a category on the wiki or a [[:m:PetScan|PetScan "
+"search]]."
+
+#: contests/templates/base.html:114
+msgctxt "triage-outreach"
+msgid "Outreach Dashboard"
+msgstr ""
+"Short name of the '''Programs & Events Outreach Dashboard'''. See "
+"[[Translating:Wiki Ed Dashboard]]."
+
+#: contests/templates/base.html:119 contests/templates/home.html:57
+msgctxt "exit"
+msgid "Exit"
+msgstr "{{Identical|Exit}}"
+
+#: contests/templates/compare.html:33 contests/templates/compare.html:57
+msgctxt "compare-soon"
+msgid "up to 10 minutes"
+msgstr ""
+"Text used when the countdown is less than 10 minutes, indicating that it could occur at any time soon.\n"
+"Translate in a way that makes grammatical sense with the prefix [[Special:Translations/Wikimedia:Wikiscore-compare-soon|Wikimedia:Wikiscore-compare-next]]. \n"
+"\n"
+"It will be displayed as:\n"
+"<code>{{:Wikimedia:Wikiscore-compare-next/en}} {{:Wikimedia:Wikiscore-compare-soon/en}}</code>."
+
+#: contests/templates/compare.html:57 contests/templates/compare.html:75
+msgctxt "compare-next"
+msgid "Next update in:"
+msgstr "Label where the countdown to the next update time is displayed."
+
+#: contests/templates/compare.html:59
+msgctxt "compare-ended"
+msgid "Contest ended. There will be no further updates."
+msgstr ""
+"Warning message displayed when a contest has ended, informing the user that "
+"there will be no new updates to the database."
+
+#: contests/templates/compare.html:68
+msgctxt "compare-force"
+msgid "Update anyway"
+msgstr ""
+"Text used in a button where the evaluator can request a forced update of the"
+" database after the end of the contest."
+
+#: contests/templates/compare.html:85
+msgctxt "compare-anticipate"
+msgid "Anticipate update"
+msgstr ""
+"Text used in a button where the evaluator can request an immediate update of"
+" the database."
+
+#: contests/templates/compare.html:87
+msgctxt "compare-early"
+msgid ""
+"The last update occurred less than 30 minutes ago. Please wait before "
+"requesting a new update."
+msgstr ""
+"Error text displayed when a database update was requested but was not "
+"performed because the last update was too recent."
+
+#: contests/templates/compare.html:99
+msgctxt "compare-unlisted"
+msgid "Not listed"
+msgstr "Title of a list of articles that are not on the official list."
+
+#: contests/templates/compare.html:103
+msgctxt "compare-unlisted-about"
+msgid ""
+"The articles below are included in the category but are not listed "
+"officially."
+msgstr "Text displayed above the list, explaining its purpose."
+
+#: contests/templates/compare.html:121
+msgctxt "compare-uncated"
+msgid "Removed from category"
+msgstr ""
+"Title of a list of articles that are not included in the monitoring "
+"category."
+
+#: contests/templates/compare.html:125
+msgctxt "compare-uncated-about"
+msgid ""
+"The articles below are listed officially, but are not included in the "
+"category."
+msgstr "Text displayed above the list, explaining its purpose."
+
+#: contests/templates/compare.html:143
+msgctxt "compare-deletion"
+msgid "Potential deletions"
+msgstr ""
+"Title of a list of articles that are subject to deletion by the wiki "
+"community."
+
+#: contests/templates/compare.html:147
+msgctxt "compare-deletion-about"
+msgid ""
+"The articles below are included in the category and are marked for some form"
+" of deletion (fast, semi-fast, by consensus, or by application)."
+msgstr "Text displayed above the list, explaining its purpose."
+
+#: contests/templates/compare.html:167
+msgctxt "compare-nowikidata"
+msgid "Missing Wikidata"
+msgstr "Title of a list of articles that are disconnected from Wikidata."
+
+#: contests/templates/compare.html:171
+msgctxt "compare-nowikidata-about"
+msgid ""
+"The articles below are included in the category but have no connection to "
+"Wikidata."
+msgstr "Text displayed above the list, explaining its purpose."
+
+#: contests/templates/compare.html:189
+msgctxt "compare-inconsistency"
+msgid "Inconsistencies"
+msgstr ""
+"Title of a list of edits that do not belong to any categorized article."
+
+#: contests/templates/compare.html:193
+msgctxt "compare-inconsistency-about"
+msgid ""
+"The listed edits below belong to articles that were listed in the category "
+"but were removed. If they are marked in red, the edit was validated and "
+"awarded points to the participant."
+msgstr "Text displayed above the list, explaining its purpose."
+
+#: contests/templates/compare.html:203 contests/templates/compare.html:235
+msgctxt "compare-seediff"
+msgid "See edit no."
+msgstr ""
+"Text used in a button that directs to inconsistent edition. Keep the message"
+" short, as the edition number will still be added to the end of the text."
+
+#: contests/templates/compare.html:208
+msgctxt "compare-areyousure"
+msgid "This edit will be removed from the database. Do you want to proceed?"
+msgstr ""
+"Text displayed in an alert after a request to delete a edit from the "
+"database."
+
+#: contests/templates/compare.html:211
+msgctxt "compare-delete"
+msgid "Delete"
+msgstr "{{Identical|Delete}}"
+
+#: contests/templates/compare.html:221
+msgctxt "compare-rollback"
+msgid "Rollbacks"
+msgstr "{{identical|Rollback}}"
+
+#: contests/templates/compare.html:225
+msgctxt "compare-rollback-about"
+msgid "The listed edits below were rolled back after validation."
+msgstr "The listed edits below were rolled back after validation."
+
+#: contests/templates/compare.html:242
+msgctxt "compare-reevaluate"
+msgid "Reevaluate"
+msgstr "Reevaluate"
+
+#: contests/templates/contest.html:4 contests/templates/edits.html:63
+#: contests/templates/edits.txt:2
+msgctxt "edits-title"
+msgid "Title"
+msgstr ""
+"Table column label with the name of the article/page of the corresponding "
+"issue"
+
+#: contests/templates/contest.html:28
+msgctxt "login-graph"
+msgid "Graphic scoreboard"
+msgstr "Graphic scoreboard"
+
+#: contests/templates/contest.html:30
+msgctxt "login-manage"
+msgid "Manage contest"
+msgstr "Manage contest"
+
+#: contests/templates/contest.html:36 contests/templates/home.html:7
+msgctxt "main-title"
+msgid "WikiScore"
+msgstr ""
+"Tool name displayed in the page title. Give preference to the original "
+"spelling (in English) if the language uses [[:w:Latin script|Latin script]]."
+" Otherwise, translate the separate concepts ([[:wikt:wiki|wiki]] + "
+"[[:wikt:score#Noun|score]]) and join the words."
+
+#: contests/templates/contest.html:41
+msgctxt "counter-allpages"
+msgid "Listed articles"
+msgstr ""
+"Label where the number of articles listed for the contest is displayed."
+
+#: contests/templates/contest.html:45
+msgctxt "counter-alledited"
+msgid "Edited articles"
+msgstr ""
+"Label where the number of articles edited in the contest is displayed."
+
+#: contests/templates/contest.html:49
+msgctxt "counter-allcreated"
+msgid "Created articles"
+msgstr ""
+"Label where the number of articles created during the contest is displayed."
+
+#: contests/templates/contest.html:55
+msgctxt "counter-allenrolled"
+msgid "Enrolled users"
+msgstr ""
+"Label where the number of participants registered for the contest is "
+"displayed."
+
+#: contests/templates/contest.html:59
+msgctxt "counter-allvalidated"
+msgid "Validated edits"
+msgstr ""
+"Label where the number of editions validated in the contest is displayed."
+
+#: contests/templates/contest.html:63
+msgctxt "counter-allbytes"
+msgid "Bytes added"
+msgstr ""
+"Label where the number of bytes added during the contest is displayed."
+
+#: contests/templates/contest.html:74
+msgctxt "counter-most-edited"
+msgid "Most edited article"
+msgstr ""
+"Label where the name of the most edited article during the contest is "
+"displayed."
+
+#: contests/templates/contest.html:82
+#, python-format
+msgctxt "counter-editions"
+msgid "%(1)s edits"
+msgstr ""
+"Number of edits made in given article.\n"
+"\n"
+"Parameters:\n"
+"* %(1)s: number of edits"
+
+#: contests/templates/contest.html:90
+msgctxt "counter-biggest-delta"
+msgid "Most expanded article"
+msgstr ""
+"Label where the name of the most expanded article (in number of bytes) "
+"during the contest is displayed."
+
+#: contests/templates/contest.html:98 contests/templates/contest.html:114
+#: contests/templates/triage.html:422 contests/templates/triage.html:427
+#: contests/templates/triage.html:439
+#, python-format
+msgctxt "triage-bytes"
+msgid "%(1)s bytes"
+msgstr ""
+"Maximum number of bytes accepted by each participant in each article.\n"
+"\n"
+"Parameters:\n"
+"* %(1)s: number of bytes"
+
+#: contests/templates/contest.html:106
+msgctxt "counter-biggest-edition"
+msgid "Biggest edition"
+msgstr ""
+"Label where the name of the article containing the largest edit made (in "
+"number of bytes) during the contest is displayed."
+
+#: contests/templates/contest.html:150 contests/templates/contest.html:161
+msgctxt "login-alledits"
+msgid "Edits per day"
+msgstr "Edits per day"
+
+#: contests/templates/contest.html:168
+msgctxt "login-validedits"
+msgid "Validated edits per day"
+msgstr "Validated edits per day"
+
+#: contests/templates/contest.html:188
+msgctxt "login-newevents"
+msgid "Created articles and enrolled participants per day"
+msgstr "Created articles and enrolled participants per day"
+
+#: contests/templates/contest.html:199
+msgctxt "login-newpages"
+msgid "New articles per day"
+msgstr "New articles per day"
+
+#: contests/templates/contest.html:206
+msgctxt "login-newparticipants"
+msgid "Enrolled participants per day"
+msgstr "Enrolled participants per day"
+
+#: contests/templates/contest.html:226 contests/templates/contest.html:237
+msgctxt "login-newbytes"
+msgid "KBytes added per day"
+msgstr "KBytes added per day"
+
+#: contests/templates/contest.html:244
+msgctxt "login-validbytes"
+msgid "KBytes validated per day"
+msgstr "KBytes validated per day"
+
+#: contests/templates/counter.html:14
+#, python-format
+msgctxt "counter-about"
+msgid ""
+"This count refers to the wikicontest %(1)s and was generated on %(2)s at "
+"%(3)s UTC time."
+msgstr ""
+"Explanatory text about the list of participants and their respective scores.\n"
+"\n"
+"Parameters:\n"
+"* %(1)s: Contest's name\n"
+"* %(2)s: Table generation day (e.g.: 2023/04/05)\n"
+"* %(3)s: Table generation time (e.g.: 12:34:56)"
+
+#: contests/templates/counter.html:15
+msgctxt "counter-description"
+msgid ""
+"The ranking order is determined according to the total points, calculated "
+"with the score rounded down, using the total sum of added bytes as a "
+"tiebreaker, and if there is still a tie, in alphabetical order. All "
+"registered users who have edited any of the articles in the list of this "
+"wikicontest are listed below, even if they have no valid edits."
+msgstr "Text displayed on the page that describes its purpose."
+
+#: contests/templates/counter.html:22
+msgctxt "counter-uptotime"
+msgid ""
+"If you want to get a score up to a specific time, please specify it in the "
+"form below."
+msgstr ""
+"Text displayed above a date/time form, asking the user if they want a report"
+" from a specific point in time."
+
+#: contests/templates/counter.html:39
+msgctxt "counter-user"
+msgid "User"
+msgstr "{{Identical|User}}"
+
+#: contests/templates/counter.html:40
+msgctxt "counter-bytes"
+msgid "Sum of bytes"
+msgstr "Sum of bytes"
+
+#: contests/templates/counter.html:41
+msgctxt "counter-edits"
+msgid "Total edits"
+msgstr "Total edits"
+
+#: contests/templates/counter.html:42
+msgctxt "counter-ppb"
+msgid "Points per byte"
+msgstr "Points per byte"
+
+#: contests/templates/counter.html:43
+msgctxt "counter-images"
+msgid "Articles with images"
+msgstr "Articles with images"
+
+#: contests/templates/counter.html:44
+msgctxt "counter-ppi"
+msgid "Points per image"
+msgstr "Points per image"
+
+#: contests/templates/counter.html:45
+msgctxt "counter-points"
+msgid "Total points"
+msgstr "Total points"
+
+#: contests/templates/counter.html:47 contests/templates/counter.html:72
+#: contests/templates/evaluators.html:65
+#: contests/templates/evaluators.html:106
+#: contests/templates/evaluators.html:147
+msgctxt "counter-redefine"
+msgid "Reset"
+msgstr "{{Identical|Reset}}"
+
+#: contests/templates/counter.html:64
+msgctxt "counter-confirm"
+msgid ""
+"All evaluations on this participant's edits will be undone. Do you want to "
+"proceed?"
+msgstr ""
+"Text displayed in an alert after a request to delete editions from a "
+"participant."
+
+#: contests/templates/counter.html:83 contests/templates/triage.html:304
+msgctxt "triage-noedit"
+msgid "There is no edit to be displayed at this time."
+msgstr "There is no edit to be displayed at this time."
+
+#: contests/templates/counter.html:91
+msgctxt "counter-success"
+msgid ""
+"Edits successfully reset! A new database update will be performed shortly."
+msgstr ""
+"Message displayed when a evaluation deletion request has been completed."
+
+#: contests/templates/edits.html:46
+msgctxt "edits-about"
+msgid ""
+"This page lists all edits made by contest participants. To access edits made"
+" by all users, download the CSV file."
+msgstr ""
+"This page lists all edits made by contest participants. To access edits made"
+" by all users, download the CSV file."
+
+#: contests/templates/edits.html:51
+msgctxt "edits-csv"
+msgid "Download"
+msgstr "{{Identical|Download}}"
+
+#: contests/templates/edits.html:62 contests/templates/edits.txt:2
+msgctxt "edits-diff"
+msgid "Edit diff"
+msgstr ""
+"Table column label with the  "
+"[[:mw:Manual:Parameters_to_index.php#Page_revision_or_version|id of the "
+"edition (oldid)]] of the corresponding edit"
+
+#: contests/templates/edits.html:64 contests/templates/edits.txt:2
+msgctxt "edits-timestamp"
+msgid "Edit timestamp"
+msgstr "Table column label with the date/time of the corresponding edit"
+
+#: contests/templates/edits.html:65 contests/templates/edits.txt:2
+msgctxt "edits-user"
+msgid "User"
+msgstr ""
+"Table column label with the name of the author of the corresponding edition"
+
+#: contests/templates/edits.html:66 contests/templates/edits.txt:2
+msgctxt "edits-attached"
+msgid "Account attach date"
+msgstr ""
+"Table column label with the date/time of the corresponding edit author's "
+"account when it was linked to CentralAuth. In most cases it corresponds to "
+"the account creation time."
+
+#: contests/templates/edits.html:67 contests/templates/edits.txt:2
+#: contests/templates/modify.html:208
+msgctxt "edits-bytes"
+msgid "Bytes"
+msgstr "Table column label with corresponding edit size in bytes"
+
+#: contests/templates/edits.html:68 contests/templates/edits.txt:2
+msgctxt "edits-newpage"
+msgid "New article"
+msgstr ""
+"Table column label indicating whether the edit corresponds to the first edit"
+" (creation) of the page."
+
+#: contests/templates/edits.html:69 contests/templates/edits.txt:2
+msgctxt "edits-valid"
+msgid "Valid edit"
+msgstr ""
+"Table column label indicating whether an evaluator defined the corresponding"
+" edition as valid for counting in the contest."
+
+#: contests/templates/edits.html:70 contests/templates/edits.txt:2
+msgctxt "edits-withimage"
+msgid "With image"
+msgstr ""
+"Table column label indicating whether a reviewer defined the corresponding "
+"edit as containing images."
+
+#: contests/templates/edits.html:71 contests/templates/edits.txt:2
+msgctxt "edits-reverted"
+msgid "Reverted edit"
+msgstr ""
+"Table column label indicating whether the edit was reverted by the wiki "
+"community itself."
+
+#: contests/templates/edits.html:72 contests/templates/edits.txt:2
+#: contests/templates/modify.html:193 contests/templates/modify.html:210
+msgctxt "edits-evaluator"
+msgid "Evaluator"
+msgstr ""
+"Table column label indicating the name of the reviewer who reviewed the "
+"corresponding edition."
+
+#: contests/templates/edits.html:73 contests/templates/edits.txt:2
+msgctxt "edits-evaltimestamp"
+msgid "Evaluation timestamp"
+msgstr "Table column label indicating the time the evaluation was made."
+
+#: contests/templates/edits.html:74 contests/templates/edits.txt:2
+msgctxt "edits-comment"
+msgid "Evaluator's comment"
+msgstr ""
+"Table column label indicating the notes entered by the evaluator at the time"
+" of evaluation in the corresponding edition."
+
+#: contests/templates/edits.txt:2
+msgctxt "edits-curid"
+msgid "Article CurID"
+msgstr ""
+"Table column label with the "
+"[[:mw:Manual:Parameters_to_index.php#Page_revision_or_version|id of the wiki"
+" page]] of the corresponding edit"
+
+#: contests/templates/edits.txt:2
+msgctxt "edits-enrolled"
+msgid "Enrolled user"
+msgstr ""
+"Table column label indicating whether the corresponding edit was made by a "
+"user registered in the contest"
+
+#: contests/templates/evaluators.html:14
+msgctxt "evaluators-about"
+msgid ""
+"This page lists the managers and evaluators of this wikicontest. The contest"
+" manager also has options to enable or disable evaluators."
+msgstr "Text displayed on the page that describes its purpose."
+
+#: contests/templates/evaluators.html:20
+msgctxt "evaluators-neweval"
+msgid "Add new evaluator"
+msgstr "Label of a board containing a form for inserting a new evaluator."
+
+#: contests/templates/evaluators.html:28 contests/templates/manage.html:499
+#: contests/templates/manage.html:524
+msgctxt "password-username"
+msgid "Username"
+msgstr "{{identical|Username}}"
+
+#: contests/templates/evaluators.html:34
+msgctxt "evaluators-register"
+msgid "Register"
+msgstr ""
+"Text used in the button so the manager can insert a new evaluator in the "
+"competition."
+
+#: contests/templates/evaluators.html:44
+msgctxt "evaluators-manager"
+msgid "Managers"
+msgstr ""
+"Label on a board with list of managers registered for a specific contest"
+
+#: contests/templates/evaluators.html:54 contests/templates/evaluators.html:85
+#: contests/templates/evaluators.html:126
+#, python-format
+msgctxt "evaluators-stats"
+msgid "%(1)s evaluations performed"
+msgstr ""
+"Description of the number of edits made by an evaluator.\n"
+"\n"
+"Parameters:\n"
+"* %(1)s: number of edits"
+
+#: contests/templates/evaluators.html:63 contests/templates/evaluators.html:94
+#: contests/templates/evaluators.html:104
+#: contests/templates/evaluators.html:135
+#: contests/templates/evaluators.html:145 contests/templates/triage.html:280
+msgctxt "evaluators-areyousure"
+msgid "Are you sure?"
+msgstr ""
+"Confirmation [https://developer.mozilla.org/en-US/docs/Web/API/Window/confirm message] before the action requested by the evaluator is performed.\n"
+"{{Identical|Are you sure?}}"
+
+#: contests/templates/evaluators.html:96
+msgctxt "evaluators-disable"
+msgid "Disable"
+msgstr "Button label for a manager to disable an evaluator."
+
+#: contests/templates/evaluators.html:116
+msgctxt "evaluators-disabled"
+msgid "Disabled"
+msgstr ""
+"Label on a board with list of evaluators disabled for a given competition. "
+"Disabled reviewers will have access to the tool blocked."
+
+#: contests/templates/evaluators.html:137
+msgctxt "evaluators-enable"
+msgid "Enable"
+msgstr "Button label for a manager to enable an evaluator."
+
+#: contests/templates/graph.html:7 contests/templates/graph.html:25
+msgctxt "graph"
+msgid "Points graph"
+msgstr ""
+"Text used in button to access the graph of points obtained by contest "
+"participants"
+
+#: contests/templates/graph.html:31
+msgctxt "graph-about"
+msgid ""
+"The graph below displays the evolution of scores received by the top 9 "
+"participants during the wikicontest. This graph is generated automatically "
+"and does not constitute a final or official ranking. Please note that "
+"organizers may reevaluate previous edits, and the displayed points may be "
+"recalculated without prior notice. In case of discrepancy, only the table "
+"inserted by the organizers of the wikicontest on their official page should "
+"be considered."
+msgstr "Text displayed on the page that describes its purpose."
+
+#: contests/templates/graph.html:49
+msgctxt "graph-axis"
+msgid "Ranking of the top 9 participants by elapsed day"
+msgstr "Axis label for the graph of scores obtained by contest participants"
+
+#: contests/templates/home.html:44
+msgctxt "contest-enter"
+msgid "Join a contest"
+msgstr ""
+"Text used in a button so that evaluators and contest managers can access the"
+" pages of a specific contest to evaluate editions and access other features "
+"of the tool."
+
+#: contests/templates/home.html:50
+msgctxt "contest-manage"
+msgid "Manage contests"
+msgstr ""
+"Text used in a button so that administrators can create new contests and "
+"access other features of the tool."
+
+#: contests/templates/home.html:63
+msgctxt "login"
+msgid "Log in"
+msgstr "{{Identical|Log in}}"
+
+#: contests/templates/home.html:77
+msgctxt "contest-select"
+msgid "Select your contest"
+msgstr ""
+"Title used in a list of registered contests, asking the user to access the "
+"interface of a specific contest."
+
+#: contests/templates/home.html:117
+msgctxt "index-about-short"
+msgid "What is it?"
+msgstr "Trecho do texto da página inicial que descreve a ferramenta."
+
+#: contests/templates/home.html:119
+msgctxt "index-about-intro"
+msgid ""
+"WikiScore is a tool created to validate edits and count scores of "
+"participants in wikicontests."
+msgstr "Text displayed on the page that describes its purpose."
+
+#: contests/templates/home.html:120
+msgctxt "index-about-main"
+msgid ""
+"The tool has a simple interface translatable to other languages. It allows "
+"to quickly validate edits in articles from any wikicontest. Different "
+"evaluators may have different profiles, with individualized validation "
+"records."
+msgstr "Text displayed on the page that describes its purpose."
+
+#: contests/templates/home.html:129
+msgctxt "index-enroll-short"
+msgid "Register a new wikicontest"
+msgstr "Trecho do texto da página inicial que descreve a ferramenta."
+
+#: contests/templates/home.html:134
+msgctxt "index-enroll-intro"
+msgid ""
+"To request the registration of a new wikicontest, the initial contact will "
+"be made via the contact email of Wiki Movimento Brasil."
+msgstr "Text displayed on the page that describes its purpose."
+
+#: contests/templates/home.html:135
+msgctxt "index-enroll-main"
+msgid ""
+"Send an email to wikiscore@wmnobrasil.org and provide basic information "
+"about your group (chapter, thematic organization or user group, official or "
+"not) and potential contests. We may request additional information later for"
+" final adjustments to the tool."
+msgstr "Text displayed on the page that describes its purpose."
+
+#: contests/templates/manage.html:8 contests/templates/manage.html:101
+msgctxt "manage-title"
+msgid "Contest management"
+msgstr "Contest management"
+
+#: contests/templates/manage.html:21 contests/templates/manage.html:248
+#: contests/templates/manage.html:251 contests/templates/manage.html:272
+msgctxt "manage-catid"
+msgid "Category ID of articles"
+msgstr "Label for the input field of the contest's monitoring category."
+
+#: contests/templates/manage.html:23 contests/templates/manage.html:249
+#: contests/templates/manage.html:252 contests/templates/manage.html:272
+msgctxt "manage-petscan"
+msgid "PetScan ID of the pages"
+msgstr "Label for the PetScan PSID code input field."
+
+#: contests/templates/manage.html:88
+msgctxt "manage-created"
+msgid "Contest created successfully!"
+msgstr ""
+"Message displayed when a registration request for a new contest has been "
+"completed."
+
+#: contests/templates/manage.html:89
+msgctxt "manage-remanaged"
+msgid "New manager successfully defined!"
+msgstr "Success message after defining a new contest manager."
+
+#: contests/templates/manage.html:90
+msgctxt "manage-restarted"
+msgid "Contest restarted successfully! Perform the database update."
+msgstr "Contest restarted successfully! Perform the database update."
+
+#: contests/templates/manage.html:91
+msgctxt "manage-deleted"
+msgid "Contest deleted successfully!"
+msgstr "Message displayed when a contest deletion request has been completed."
+
+#: contests/templates/manage.html:107
+msgctxt "manage-about"
+msgid ""
+"This page lists the contests registered in the system and allows the "
+"creation of new contests."
+msgstr "Text displayed on the page that describes its purpose."
+
+#: contests/templates/manage.html:116
+msgctxt "manage-newcontest"
+msgid "Create new contest"
+msgstr "Title of the form for creating a new contest."
+
+#: contests/templates/manage.html:124
+msgctxt "manage-contestname"
+msgid "Contest name"
+msgstr "Label for the contest full name input field."
+
+#: contests/templates/manage.html:130
+msgctxt "manage-contestnameabout"
+msgid "Enter the full contest name"
+msgstr "Placeholder for the contest full name input field."
+
+#: contests/templates/manage.html:140
+msgctxt "manage-internalcode"
+msgid "Internal code"
+msgstr ""
+"Label for the input field of the contest's internal code, as a kind of "
+"nickname."
+
+#: contests/templates/manage.html:146
+msgctxt "manage-internalcodeabout"
+msgid "Use only lower case letters and underscores"
+msgstr "Placeholder for the input field of the contest's group"
+
+#: contests/templates/manage.html:157
+msgctxt "manage-group"
+msgid "Group"
+msgstr ""
+"Label for the input field of the contest's group (e.g.: an Wikimedia "
+"affiliate)"
+
+#: contests/templates/manage.html:173
+msgctxt "manage-starttime"
+msgid "Start time"
+msgstr "Label for the start time input field."
+
+#: contests/templates/manage.html:185
+msgctxt "manage-endtime"
+msgid "End time"
+msgstr "Label for the end time input field."
+
+#: contests/templates/manage.html:198
+msgctxt "manage-endpoint"
+msgid "Endpoint address"
+msgstr ""
+"Label for the [[:mw:Manual:Index.php|wiki access point address]] input "
+"field."
+
+#: contests/templates/manage.html:210
+msgctxt "manage-api"
+msgid "API address"
+msgstr ""
+"Label for the [[:mw:Manual:Api.php|wiki API access point address]] input "
+"field."
+
+#: contests/templates/manage.html:225
+msgctxt "manage-reverttime"
+msgid "Rollback period (hours)"
+msgstr ""
+"Label for the field for inserting the desired delay period in evaluating "
+"edits."
+
+#: contests/templates/manage.html:239
+msgctxt "manage-source"
+msgid "Monitoring method"
+msgstr ""
+"Label for the input field for the wiki edit collection method (via category "
+"or PetScan)."
+
+#: contests/templates/manage.html:260
+msgctxt "manage-listid"
+msgid "Page ID with list of articles"
+msgstr ""
+"Label for the input field of the contest's official list of articles that "
+"are part of the contest."
+
+#: contests/templates/manage.html:288
+msgctxt "manage-outreach"
+msgid "Contest name in Outreach Dashboard"
+msgstr ""
+"Label for the input field of the contest's handle on the Outreach Dashboard."
+
+#: contests/templates/manage.html:294
+msgctxt "manage-outreachplacehold"
+msgid "Campaign_Name/Program_Name"
+msgstr ""
+"Placeholder for the input field of the contest's handle on the Outreach "
+"Dashboard. Try to maintain the same format when translating, keeping the "
+"slash and the two underscores, which indicates that a part of the Outreach "
+"URL is being requested."
+
+#: contests/templates/manage.html:303
+msgctxt "manage-bpp"
+msgid "Bytes per point"
+msgstr ""
+"Label for the input field of the contest's conversion rate from bytes to "
+"points."
+
+#: contests/templates/manage.html:316
+msgctxt "manage-maxbytes"
+msgid "Maximum bytes per article-participant"
+msgstr ""
+"Label for the input field of the contest's maximum limit of bytes added by "
+"each participant in each article."
+
+#: contests/templates/manage.html:330
+msgctxt "manage-minbytes"
+msgid "Minimum bytes per edit"
+msgstr ""
+"Label for the input field of the contest's required amount of bytes added in"
+" each edition for it to be countable."
+
+#: contests/templates/manage.html:347
+msgctxt "manage-ipp"
+msgid "Images per point"
+msgstr ""
+"Label for the input field of the contest's conversion rate from images to "
+"points."
+
+#: contests/templates/manage.html:360
+msgctxt "manage-maximages"
+msgid "Maximum images per article-participant"
+msgstr ""
+"Label for the input field of the contest's maximum limit of images added by "
+"each participant in each article."
+
+#: contests/templates/manage.html:369 contests/templates/triage.html:435
+#: contests/templates/triage.html:468
+msgctxt "triage-indef"
+msgid "Undefined"
+msgstr "{{Identical|Undefined}}"
+
+#: contests/templates/manage.html:374
+msgctxt "manage-imagemode"
+msgid "Image evaluation mode"
+msgstr "Image evaluation mode"
+
+#: contests/templates/manage.html:381
+msgctxt "manage-perarticle"
+msgid "Per article"
+msgstr "Per article"
+
+#: contests/templates/manage.html:382
+msgctxt "manage-peredit"
+msgid "Per edit"
+msgstr "Per edit"
+
+#: contests/templates/manage.html:383
+msgctxt "manage-perimage"
+msgid "Per image"
+msgstr "Per image"
+
+#: contests/templates/manage.html:392
+msgctxt "manage-palette"
+msgid "Color palette"
+msgstr "Label for contest predefined color palette selection field."
+
+#: contests/templates/manage.html:429
+msgctxt "manage-custom"
+msgid "custom"
+msgstr ""
+"Special option among the color palettes, indicating that the user wants to "
+"insert a different color instead of the predefined ones."
+
+#: contests/templates/manage.html:434
+msgctxt "manage-hexcolor"
+msgid "Custom color (hex)"
+msgstr ""
+"Label for the hexadecimal code input field for the contest theme color."
+
+#: contests/templates/manage.html:465 contests/templates/triage.html:228
+msgctxt "triage-save"
+msgid "Save"
+msgstr ""
+"Text used in a button for the evaluator to save their evaluation in relation"
+" to the on-screen edit."
+
+#: contests/templates/manage.html:472 contests/templates/manage.html:532
+msgctxt "manage-newmanager"
+msgid "Set new manager"
+msgstr "Text used in a button to define a new contest manager."
+
+#: contests/templates/manage.html:480
+msgctxt "manage-confirmrestart"
+msgid ""
+"By restarting the contest, all evaluations already made will be deleted. Do "
+"you want to proceed?"
+msgstr "Text displayed in an alert after a request to restart a contest."
+
+#: contests/templates/manage.html:481
+msgctxt "manage-restart"
+msgid "Restart"
+msgstr ""
+"Text used in a button to delete records from a contest's tables from the "
+"database."
+
+#: contests/templates/manage.html:487
+msgctxt "manage-confirmdelete"
+msgid ""
+"By deleting the contest, all records related to this contest will be "
+"deleted. Do you want to proceed?"
+msgstr "Text displayed in an alert after a request to delete a contest."
+
+#: contests/templates/manage.html:488
+msgctxt "manage-delete"
+msgid "Delete"
+msgstr "Text used in a button to delete a contest from the database."
+
+#: contests/templates/manage.html:493
+msgctxt "manage-managemail"
+msgid "Manager's email"
+msgstr "Label for the contest manager's email input field."
+
+#: contests/templates/manage.html:508
+msgctxt "manage-create"
+msgid "Create"
+msgstr "Text used in a button to create a contest in the database."
+
+#: contests/templates/manage.html:517
+msgctxt "manage-confirmmanager"
+msgid ""
+"By defining a new manager, all evaluators and managers already registered "
+"will be deactivated. Do you want to proceed?"
+msgstr ""
+"Text displayed in an alert after a request to define a new contest manager."
+
+#: contests/templates/manage.html:538
+msgctxt "login-cancel"
+msgid "Cancel"
+msgstr "{{Identical|Cancel}}"
+
+#: contests/templates/modify.html:29
+msgctxt "modify-consult"
+msgid "Check evaluation"
+msgstr ""
+"Title of the section where the form for consulting evaluations already made "
+"is displayed"
+
+#: contests/templates/modify.html:39
+msgctxt "modify-diff"
+msgid "Diff"
+msgstr ""
+"Label of the input field where the differential number is entered for consultation\n"
+"{{Identical|Diff}}"
+
+#: contests/templates/modify.html:45
+msgctxt "modify-load"
+msgid "Load edit"
+msgstr "Text used in a button to consult an evaluation already made"
+
+#: contests/templates/modify.html:54
+msgctxt "modify-reavaluate"
+msgid "Reevaluate"
+msgstr ""
+"Title of the section where the form for modifying an evaluation already made"
+" is displayed"
+
+#: contests/templates/modify.html:58 contests/templates/modify.html:206
+#: contests/templates/triage.html:142
+msgctxt "isvalid"
+msgid "Valid edit?"
+msgstr ""
+"Question label on the form where the evaluator certifies whether the edition"
+" is valid for the contest or not."
+
+#: contests/templates/modify.html:68 contests/templates/modify.html:101
+#: contests/templates/modify.html:166 contests/templates/modify.html:167
+#: contests/templates/modify.html:168 contests/templates/modify.html:170
+#: contests/templates/modify.html:198 contests/templates/modify.html:215
+#: contests/templates/triage.html:110 contests/templates/triage.html:119
+#: contests/templates/triage.html:152 contests/templates/triage.html:186
+msgctxt "yes"
+msgid "Yes"
+msgstr ""
+"Label of the option on the form where the evaluator confirms the question presented about some aspect of the on-screen edition.\n"
+"\n"
+"{{Identical|Yes}}"
+
+#: contests/templates/modify.html:78 contests/templates/modify.html:109
+#: contests/templates/modify.html:166 contests/templates/modify.html:167
+#: contests/templates/modify.html:168 contests/templates/modify.html:170
+#: contests/templates/modify.html:198 contests/templates/modify.html:215
+#: contests/templates/triage.html:113 contests/templates/triage.html:122
+#: contests/templates/triage.html:162 contests/templates/triage.html:194
+msgctxt "no"
+msgid "No"
+msgstr ""
+"Label of the option on the form where the evaluator rejects the question presented about some aspect of the on-screen edit.\n"
+"\n"
+"{{Identical|No}}"
+
+#: contests/templates/modify.html:81 contests/templates/modify.html:207
+#: contests/templates/triage.html:166 contests/templates/triage.html:178
+msgctxt "withimage"
+msgid "With image?"
+msgstr ""
+"Question label on the form where the evaluator confirms whether the edition "
+"contains an inserted image or not."
+
+#: contests/templates/modify.html:92 contests/templates/triage.html:176
+msgctxt "quantity"
+msgid "Quantity"
+msgstr ""
+"Label of the form field where the evaluator enters the quantity of some aspect of the on-screen edition.\n"
+"{{Identical|Quantity}}"
+
+#: contests/templates/modify.html:142
+msgctxt "modify-diffstats"
+msgid "Data from edit"
+msgstr ""
+"Title of the section where information about the on-screen edition is "
+"displayed"
+
+#: contests/templates/modify.html:144
+msgctxt "modify-label-edition"
+msgid "Edit:"
+msgstr "Label where the id number of the on-screen edit is displayed."
+
+#: contests/templates/modify.html:153
+msgctxt "modify-label-curid"
+msgid "Article ID:"
+msgstr ""
+"Label where the "
+"[[:mw:Manual:Parameters_to_index.php#Page_revision_or_version|id of the wiki"
+" page]] of the on-screen edit is displayed."
+
+#: contests/templates/modify.html:162 contests/templates/triage.html:323
+msgctxt "label-timestamp"
+msgid "Timestamp:"
+msgstr "Label where the date/time of the on-screen edit is displayed."
+
+#: contests/templates/modify.html:163 contests/templates/triage.html:311
+msgctxt "label-user"
+msgid "User:"
+msgstr ""
+"Label where the name of the account that performed the on-screen edit is "
+"displayed"
+
+#: contests/templates/modify.html:164
+msgctxt "modify-label-bytes"
+msgid "Bytes:"
+msgstr "Label where the number of bytes of the on-screen edit is displayed"
+
+#: contests/templates/modify.html:165 contests/templates/triage.html:339
+msgctxt "label-summary"
+msgid "Summary:"
+msgstr "Label where the on-screen edit summary is displayed"
+
+#: contests/templates/modify.html:166
+msgctxt "modify-label-newpage"
+msgid "New article:"
+msgstr ""
+"Label where the indication that on-screen editing corresponds to page "
+"creation is displayed."
+
+#: contests/templates/modify.html:167
+msgctxt "modify-label-valid"
+msgid "Valid edit:"
+msgstr ""
+"Label where the indication that the on-screen edit has been validated by an "
+"evaluator is displayed"
+
+#: contests/templates/modify.html:168
+msgctxt "modify-label-enrolled"
+msgid "Enrolled user:"
+msgstr ""
+"Label where the indication that the on-screen edit was made by a participant"
+" registered in the contest is displayed"
+
+#: contests/templates/modify.html:169
+msgctxt "modify-label-withimage"
+msgid "With image:"
+msgstr ""
+"Label where the indication that the on-screen edition has images according "
+"to the evaluator is displayed"
+
+#: contests/templates/modify.html:170
+msgctxt "modify-label-reverted"
+msgid "Reverted edit:"
+msgstr ""
+"Label where the indication that the on-screen edit was reverted by the wiki "
+"community itself is displayed"
+
+#: contests/templates/modify.html:171
+msgctxt "modify-label-evaluator"
+msgid "Evaluator:"
+msgstr ""
+"Label where the name of the evaluator responsible for the previous "
+"evaluation is displayed"
+
+#: contests/templates/modify.html:172
+msgctxt "modify-label-evaltimestamp"
+msgid "Evaluation timestamp:"
+msgstr ""
+"Label where the date/time the previous evaluation was made is displayed"
+
+#: contests/templates/modify.html:173
+msgctxt "modify-label-comment"
+msgid "Evaluator's comment:"
+msgstr "Label where the notes entered by the previous evaluator is displayed"
+
+#: contests/templates/modify.html:181 contests/templates/modify.html:184
+msgctxt "modify-showdiff"
+msgid "Edit diff"
+msgstr ""
+"Title of the section where the changes between two revisions of a page are "
+"displayed."
+
+#: contests/templates/modify.html:192
+msgctxt "modify-qualified"
+msgid "Qualified?"
+msgstr "Qualified?"
+
+#: contests/templates/modify.html:194 contests/templates/modify.html:211
+msgctxt "modify-timestamp"
+msgid "Timestamp"
+msgstr "Timestamp"
+
+#: contests/templates/modify.html:199
+msgctxt "modify-automatic"
+msgid "Automatic"
+msgstr "Automatic"
+
+#: contests/templates/modify.html:209 contests/templates/triage.html:204
+msgctxt "triage-observation"
+msgid "Observation"
+msgstr ""
+"Text used in a button so that the evaluator can enter notes about the "
+"edition being evaluated. Usually a justification when an edit is rejected, "
+"for example."
+
+#: contests/templates/modify.html:226
+msgctxt "modify-notfound"
+msgid "Edit not found in the database!"
+msgstr ""
+"Error message displayed when the edition number entered is not in the "
+"database."
+
+#: contests/templates/modify.html:229
+msgctxt "modify-success"
+msgid "Modification successfully done!"
+msgstr ""
+"Message displayed when an evaluation modification request has been "
+"completed."
+
+#: contests/templates/triage.html:65 contests/templates/triage.html:344
+msgctxt "triage-counter"
+msgid "Bytes in selected text"
+msgstr ""
+"Label for the byte counter referring to the text of an edition selected by "
+"the user"
+
+#: contests/templates/triage.html:98
+msgctxt "triage-lasteval"
+msgid "Last evaluation"
+msgstr "Last evaluation"
+
+#: contests/templates/triage.html:100 contests/templates/triage.html:330
+msgctxt "triage-diff"
+msgid "Diff"
+msgstr "{{Identical|Diff}}"
+
+#: contests/templates/triage.html:107
+msgctxt "triage-validedit"
+msgid "Valid edit"
+msgstr "Valid edit"
+
+#: contests/templates/triage.html:116
+msgctxt "triage-withimage"
+msgid "With image"
+msgstr "With image"
+
+#: contests/templates/triage.html:131
+msgctxt "triage-fix"
+msgid "Review"
+msgstr ""
+"Name of the tool page where the review (or reevaluation) of evaluations "
+"already made is carried out."
+
+#: contests/templates/triage.html:137
+msgctxt "triage-evaluation"
+msgid "Evaluation"
+msgstr "Evaluation"
+
+#: contests/templates/triage.html:211
+msgctxt "triage-alterbytes"
+msgid "Change bytes"
+msgstr ""
+"Text used in a button so that the evaluator can modify the number of bytes "
+"that an edit would give to count points for a participant."
+
+#: contests/templates/triage.html:215
+msgctxt "triage-vda"
+msgid "Copyright infringement"
+msgstr "Menu option with frequent reasons for rejecting edits."
+
+#: contests/templates/triage.html:216
+msgctxt "triage-redirect"
+msgid "Mere redirection"
+msgstr ""
+"Menu option with frequent reasons for rejecting edits. Indicates that "
+"editing is invalid as it is just a redirection."
+
+#: contests/templates/triage.html:217
+msgctxt "triage-noref"
+msgid "Sourceless content"
+msgstr ""
+"Menu option with frequent reasons for rejecting edits. Indicates that the "
+"edit is invalid because the added content does not have sources."
+
+#: contests/templates/triage.html:218
+msgctxt "triage-onlycat"
+msgid "Mere categorization"
+msgstr ""
+"Menu option with frequent reasons for rejecting edits. Indicates that the "
+"edit is invalid as it was just adding a category to the page."
+
+#: contests/templates/triage.html:219
+msgctxt "triage-onlytag"
+msgid "Mere insertion of maintenance marks"
+msgstr ""
+"Menu option with frequent reasons for rejecting edits. Indicates that the "
+"edition is invalid because it was just an addition of maintenance markings "
+"(e.g.: source needed, partial, etc...)"
+
+#: contests/templates/triage.html:239
+msgctxt "triage-jump"
+msgid "Skip"
+msgstr ""
+"Text used in a button so that the evaluator can temporarily skip the "
+"evaluation of one edition and can evaluate another edition"
+
+#: contests/templates/triage.html:245
+msgctxt "edits"
+msgid "Edits"
+msgstr "{{Identical|Edit}}"
+
+#: contests/templates/triage.html:248
+msgctxt "triage-toeval"
+msgid "Available"
+msgstr ""
+"An adjective that describes an edit of a wiki page.\n"
+"\n"
+"{{identical|Available}}"
+
+#: contests/templates/triage.html:252
+msgctxt "triage-towait"
+msgid "Awaiting"
+msgstr "An adjective that describes an edit of a wiki page."
+
+#: contests/templates/triage.html:258
+msgctxt "triage-onhold"
+msgid "On evaluation"
+msgstr "Describes an edit of a wiki page."
+
+#: contests/templates/triage.html:262
+msgctxt "triage-onskip"
+msgid "Skipped"
+msgstr "An adjective that describes an edit of a wiki page."
+
+#: contests/templates/triage.html:274
+msgctxt "triage-release"
+msgid "Release skipped edits"
+msgstr ""
+"Text used in a button so that the evaluator can release skipped edits to be "
+"placed back in the evaluation queue"
+
+#: contests/templates/triage.html:287
+msgctxt "triage-unhold"
+msgid "Release edits from all evaluators"
+msgstr ""
+"Text used in a button so that the contest manager can reinsert into the "
+"evaluation queue all editions that have been skipped or are being evaluated "
+"by an evaluator"
+
+#: contests/templates/triage.html:297
+msgctxt "triage-database"
+msgid "Database updating."
+msgstr "Database updating."
+
+#: contests/templates/triage.html:298
+msgctxt "triage-databaseabout"
+msgid "Please wait a few minutes and refresh the page."
+msgstr "Please wait a few minutes and refresh the page."
+
+#: contests/templates/triage.html:309
+msgctxt "triage-details"
+msgid "Edit details"
+msgstr ""
+"Frame label where additional information about the edition being evaluated "
+"is presented."
+
+#: contests/templates/triage.html:314
+msgctxt "label-page"
+msgid "Article:"
+msgstr ""
+"Label where the name of the article corresponding to the on-screen edition "
+"is displayed"
+
+#: contests/templates/triage.html:318
+msgctxt "triage-authorship"
+msgid "Authorship:"
+msgstr "Authorship:"
+
+#: contests/templates/triage.html:320 contests/templates/triage.html:336
+msgctxt "triage-verify"
+msgid "Verify"
+msgstr "Verify"
+
+#: contests/templates/triage.html:327
+msgctxt "label-diff"
+msgid "Difference:"
+msgstr "Label where the number of bytes of the on-screen edit is displayed"
+
+#: contests/templates/triage.html:334
+msgctxt "triage-copyvio"
+msgid "Copyvio Detector"
+msgstr ""
+"Label showing the copy rate of an edition. Refers to [[:w:WP:EARWIG]]."
+
+#: contests/templates/triage.html:347
+msgctxt "triage-differential"
+msgid "Edit differential"
+msgstr ""
+"Title of the section where the changes between two revisions of a page are "
+"displayed."
+
+#: contests/templates/triage.html:375
+msgctxt "triage-recenthistory"
+msgid "Recent history"
+msgstr ""
+"Label of the table where some information about recent editions of the "
+"article being evaluated is displayed."
+
+#: contests/templates/triage.html:388
+msgctxt "triage-generalinfo"
+msgid "General information"
+msgstr "Label of the table where the contest parameters are displayed."
+
+#: contests/templates/triage.html:390
+msgctxt "triage-contestname"
+msgid "wikicontest name"
+msgstr "Label where the name of the contest is displayed"
+
+#: contests/templates/triage.html:395
+msgctxt "triage-loggedname"
+msgid "Current evaluator name"
+msgstr "Label where the name of the evaluator is displayed"
+
+#: contests/templates/triage.html:400
+msgctxt "triage-conteststart"
+msgid "wikicontest start time"
+msgstr ""
+"Label where the timestamp of the start of the contest is displayed. Only "
+"edits made from that moment on will be evaluated."
+
+#: contests/templates/triage.html:405
+msgctxt "triage-contestend"
+msgid "wikicontest end time"
+msgstr ""
+"Label where the timestamp of the end of the contest is displayed. Only edits"
+" made up to that moment will be evaluated."
+
+#: contests/templates/triage.html:410
+msgctxt "triage-lastupdate"
+msgid "Last database update"
+msgstr "Label where the timestamp of the last database update is displayed."
+
+#: contests/templates/triage.html:415
+msgctxt "triage-delay"
+msgid "Delay in registering edits"
+msgstr ""
+"Label showing the period, in hours, that the tool must \"hold\" for the "
+"editions to be made available for evaluation. This period is useful so that "
+"the edit made can be evaluated by the wiki community itself, where the "
+"inserted content can be reversed or the article deleted."
+
+#: contests/templates/triage.html:417
+#, python-format
+msgctxt "triage-hours"
+msgid "%(1)s hours"
+msgstr ""
+"Evaluation delay period.\n"
+"\n"
+"Parameters:\n"
+"* %(1)s: quantity of hours"
+
+#: contests/templates/triage.html:420
+msgctxt "triage-bpp"
+msgid "Bytes per point"
+msgstr "Bytes per point"
+
+#: contests/templates/triage.html:425
+msgctxt "triage-maxbytes"
+msgid "Maximum bytes/points per article"
+msgstr "Maximum bytes/points per article"
+
+#: contests/templates/triage.html:429
+#, python-format
+msgctxt "triage-points"
+msgid "%(1)s points"
+msgstr ""
+"Maximum number of points accepted by each participant in each article.\n"
+"\n"
+"Parameters:\n"
+"* %(1)s: number of points"
+
+#: contests/templates/triage.html:432
+msgctxt "triage-minbytes"
+msgid "Minimum bytes per edit"
+msgstr "Minimum bytes per edit"
+
+#: contests/templates/triage.html:437
+msgctxt "triage-includingall"
+msgid "Including edits with negative bytes"
+msgstr "Including edits with negative bytes"
+
+#: contests/templates/triage.html:443
+msgctxt "triage-ipp"
+msgid "Images per point"
+msgstr "Images per point"
+
+#: contests/templates/triage.html:446
+msgctxt "triage-noimages"
+msgid "Disabled"
+msgstr "{{Identical|Disabled}}"
+
+#: contests/templates/triage.html:448
+#, python-format
+msgctxt "triage-images"
+msgid "%(1)s image(s)"
+msgstr ""
+"Maximum number of points accepted by each participant in each article.\n"
+"\n"
+"Parameters:\n"
+"* %(1)s: number of points"
+
+#: contests/templates/triage.html:452
+msgctxt "triage-imagemode"
+msgid "Image mode"
+msgstr "Image mode"
+
+#: contests/templates/triage.html:455
+msgctxt "triage-byimage"
+msgid "Per image"
+msgstr "Per image"
+
+#: contests/templates/triage.html:457
+msgctxt "triage-byedition"
+msgid "Per edit"
+msgstr "Per edit"
+
+#: contests/templates/triage.html:459
+msgctxt "triage-bypage"
+msgid "Per article"
+msgstr "Per article"
+
+#: contests/templates/triage.html:463
+msgctxt "triage-maximages"
+msgid "Maximum images per article"
+msgstr "Maximum images per article"
