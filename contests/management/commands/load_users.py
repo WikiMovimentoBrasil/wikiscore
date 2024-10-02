@@ -21,7 +21,7 @@ class Command(BaseCommand):
         if contest.campaign_event_id:
             self.stdout.write("Este concurso possui um evento de campanha.")
             event_id = contest.campaign_event_id
-            api = f"https://meta.wikimedia.org/w/rest.php/campaignevents/v0/event_registration/{event_id}/participants"
+            api = f"https://meta.wikimedia.org/w/rest.php/campaignevents/v0/event_registration/{event_id}/participants?include_private=no&uselang=en"
             response = requests.get(api).json()
             enrollments = self.parse_event(response)
         else:
