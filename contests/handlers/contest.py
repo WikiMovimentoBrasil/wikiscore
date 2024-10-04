@@ -1,5 +1,5 @@
 import requests
-from datetime import timedelta
+from datetime import timedelta, datetime, timezone
 from django.db.models import Count, Sum, Subquery, OuterRef, Case, When, Q
 from django.db.models.functions import TruncDay
 from contests.models import Evaluator, Edit, Participant, Qualification, Article
@@ -120,11 +120,12 @@ class ContestHandler():
         return len(list_)
 
     def edits_summary(self, contest):
+        timecut = datetime(2024, 10, 1, tzinfo=timezone.utc)
         edits_summary = (
             Edit.objects.filter(contest=contest)
             .aggregate(
                 new_pages=Sum(Case(When(new_page=True, then=1), default=0)),
-                edited_articles=Count('article', distinct=True),
+                edited_articles=Count('article', filter=Q(participant__isnull=False) & Q(contest__start_time__gt=timecut) | Q(contest__start_time__lte=timecut), distinct=True),
                 valid_edits=Sum(Case(When(last_evaluation__valid_edit=True, then=1), default=0)),
                 all_bytes=Sum(Case(
                     When(last_evaluation__valid_edit=True, then='last_evaluation__real_bytes'),
