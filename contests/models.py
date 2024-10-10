@@ -52,11 +52,14 @@ class Evaluator(models.Model):
 class Article(models.Model):
     contest = models.ForeignKey('Contest', on_delete=models.CASCADE)
     articleID = models.IntegerField()
-    title = models.TextField()
+    title = models.TextField(default='')
     active = models.BooleanField(default=True)
 
     def __str__(self):
         return (f"{self.contest.name_id} - {self.articleID} - {self.title}")
+
+    class Meta:
+        unique_together = ['contest', 'articleID']
 
 
 class Participant(models.Model):

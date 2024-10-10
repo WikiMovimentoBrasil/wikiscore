@@ -8,7 +8,16 @@ def triage_view(request):
     context = {}
     return render(request, "triage.html", context)
 
-def login_oauth():
+def login_oauth(request):
+    '''
+    Redirects the user to the MediaWiki OAuth login page.
+
+    Parameters:
+    - request: The HTTP request.
+
+    Returns:
+    - HttpResponseRedirect: Redirects the user to the MediaWiki OAuth login page.
+    '''
     return redirect(reverse('social:begin', kwargs={"backend": "mediawiki"}))
 
 def logout(request):

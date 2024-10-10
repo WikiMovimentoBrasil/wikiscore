@@ -35,12 +35,14 @@ class Command(BaseCommand):
         for item in list_:
             article, created = Article.objects.get_or_create(
                 contest=contest,
-                articleID=item['id'],
-                title=item['title'],
+                articleID=item['pageid'],
             )
             if not created:
                 article.active = True
                 article.save(update_fields=['active'])
+            if article.title == '' or article.title != item['title']:
+                article.title = item['title']
+                article.save(update_fields=['title'])
 
         # Coleta lista de revisões já inseridas no banco de dados
         existing_revisions = Edit.objects.filter(contest=contest).values_list('diff', flat=True)

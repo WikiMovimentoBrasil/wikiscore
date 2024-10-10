@@ -64,7 +64,7 @@ class GraphHandler:
         colors = self.COLORS.copy()
 
         for user, _ in best_users.items():
-            user_data = [all_points[day].get(user, 0) for day in days]
+            user_data = [int(all_points[day].get(user, 0)) for day in days]
             color = colors.pop(0)
             datasets_graph.append(self.build_user_dataset(user, user_data, color))
 

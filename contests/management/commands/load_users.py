@@ -21,7 +21,7 @@ class Command(BaseCommand):
         if contest.campaign_event_id:
             self.stdout.write("Este concurso possui um evento de campanha.")
             event_id = contest.campaign_event_id
-            api = f"https://meta.wikimedia.org/w/rest.php/campaignevents/v0/event_registration/{event_id}/participants"
+            api = f"https://meta.wikimedia.org/w/rest.php/campaignevents/v0/event_registration/{event_id}/participants?include_private=no&uselang=en"
             response = requests.get(api).json()
             enrollments = self.parse_event(response)
         else:
@@ -229,17 +229,17 @@ class Command(BaseCommand):
         """Unlocks any remaining locked edits in the Edit table."""
         self.stdout.write("Destravando edições...")
 
-        subquery = Evaluation.objects.filter(
+        lockeds = Edit.objects.filter(
             contest=contest,
-            diff=OuterRef('diff')
-        ).order_by('-when').values('pk')[:1]
-
-        lockeds = Evaluation.objects.filter(
-            contest=contest,
-            pk__in=Subquery(subquery),
-            status__in=['2', '3']
+            last_evaluation__status__in=['2', '3'],
         )
 
-        Evaluation.objects.bulk_create([
-            Evaluation(contest=contest, diff=locked.diff) for locked in lockeds
-        ])
+        for locked in lockeds:
+            unlocked = Evaluation.objects.create(
+                contest=contest,
+                diff=locked,
+            )
+            locked.last_evaluation = unlocked
+            locked.save(update_fields=['last_evaluation'])
+            
+        self.stdout.write("Edições destravadas com sucesso!")
