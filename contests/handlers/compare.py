@@ -43,9 +43,9 @@ class CompareHandler:
             })
         
         if contest.api_endpoint == 'https://pt.wikipedia.org/w/api.php':
-            return_dict.update({'articles': {'deletion': self.get_deletion_pages(contest)}})
+            return_dict['articles'].update({'deletion': self.get_deletion_pages(contest)})
         else:
-            return_dict.update({'articles': {'deletion': []}})
+            return_dict['articles'].update({'deletion': []})
 
         return return_dict
     
@@ -57,8 +57,8 @@ class CompareHandler:
         list_category = [page['title'] for page in category.values()]
         list_wikidata = [page['title'] for page in category.values() if 'pageprops' not in page or 'wikibase_item' not in page['pageprops']]
 
-        list_official_not_category = list(set(list_official) - set(list_category))
-        list_category_not_official = list(set(list_category) - set(list_official))
+        list_category_not_official = list(set(list_official) - set(list_category))
+        list_official_not_category = list(set(list_category) - set(list_official))
         
         return {
             'list_wikidata': list_wikidata,
