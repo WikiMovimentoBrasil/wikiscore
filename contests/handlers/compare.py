@@ -51,11 +51,11 @@ class CompareHandler:
     
     def generate_list_cat_intersection(self, contest):
         """Gera lista de artigos que estão tanto na lista oficial quanto na categoria."""
-        list_official = [page.title for page in self.get_list_articles(contest) if 'missing' not in page]
+        list_official = [page['title'] for page in self.get_list_articles(contest).values() if 'missing' not in page]
 
         category = self.get_category_articles(contest)
-        list_category = [page['title'] for page in category]
-        list_wikidata = [page['title'] for page in category if 'pageprops' not in page or 'wikibase_item' not in page['pageprops']]
+        list_category = [page['title'] for page in category.values()]
+        list_wikidata = [page['title'] for page in category.values() if 'pageprops' not in page or 'wikibase_item' not in page['pageprops']]
 
         list_official_not_category = list(set(list_official) - set(list_category))
         list_category_not_official = list(set(list_category) - set(list_official))
@@ -70,7 +70,7 @@ class CompareHandler:
     def get_list_articles(self, contest):
         """Coleta lista de artigos na lista oficial."""
         
-        list_ = []
+        list_ = {}
         list_api_params = {
             'action': 'query',
             'format': 'json',
@@ -83,18 +83,18 @@ class CompareHandler:
         if 'query' not in response:
             return list_
 
-        list_.extend(response['query']['pages'])
+        list_.update(response['query']['pages'])
 
         while 'continue' in response:
             list_api_params['gplcontinue'] = response['continue']['gplcontinue']
             response = requests.get(contest.api_endpoint, params=list_api_params).json()
-            list_.extend(response['query']['pages'])
+            list_.update(response['query']['pages'])
 
         return list_
 
     def get_category_articles(self, contest):
         """Coleta lista de artigos na categoria."""
-        list_ = []
+        list_ = {}
         categorymembers_api_params = {
             "action": "query",
             "format": "json",
@@ -110,12 +110,12 @@ class CompareHandler:
         if 'query' not in response:
             return list_
 
-        list_.extend(response['query']['pages'])
+        list_.update(response['query']['pages'])
 
         while 'continue' in response:
-            categorymembers_api_params['cmcontinue'] = response['continue']['cmcontinue']
+            categorymembers_api_params['gcmcontinue'] = response['continue']['gcmcontinue']
             response = requests.get(contest.api_endpoint, params=categorymembers_api_params).json()
-            list_.extend(response['query']['pages'])
+            list_.update(response['query']['pages'])
 
         return list_
 
