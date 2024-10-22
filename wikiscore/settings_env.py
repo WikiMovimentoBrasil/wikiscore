@@ -17,6 +17,10 @@ def configure_settings():
         hosts = [ os.environ.get("TOOLNAME") + '.toolforge.org', 'toolforge.org' ]
         callback = 'https://' + os.environ.get("TOOLNAME") + '.toolforge.org/oauth/complete/mediawiki/'
         message = 'You are running in production mode'
+        email_host = 'mail.tools.wmflabs.org'
+        email_port = 587
+        server_email = os.environ.get("TOOLNAME") + '@tools.wmflabs.org'
+        admins = [('Admin', 'wikiscore@wmnobrasil.org')]
 
         databases = {
             'default': {
@@ -42,6 +46,10 @@ def configure_settings():
         hosts = ['127.0.0.1']
         callback = 'http://127.0.0.1:8000/oauth/complete/mediawiki/'
         message = 'You are running in local mode, please make sure to set up the replica.my.cnf file to run in production mode'
+        email_host = 'localhost'
+        email_port = 25
+        server_email = 'root@localhost'
+        admins = []
 
         databases = {
             'default': {
@@ -56,6 +64,10 @@ def configure_settings():
         'SOCIAL_AUTH_MEDIAWIKI_CALLBACK': callback,
         'DATABASES': databases,
         'MESSAGE': message,
+        'EMAIL_HOST': email_host,
+        'EMAIL_PORT': email_port,
+        'SERVER_EMAIL': server_email,
+        'ADMINS': admins
     }
 
 settings = configure_settings()
@@ -63,4 +75,8 @@ DEBUG = settings['DEBUG']
 ALLOWED_HOSTS = settings['ALLOWED_HOSTS']
 SOCIAL_AUTH_MEDIAWIKI_CALLBACK = settings['SOCIAL_AUTH_MEDIAWIKI_CALLBACK']
 DATABASES = settings['DATABASES']
+EMAIL_HOST = settings['EMAIL_HOST']
+EMAIL_PORT = settings['EMAIL_PORT']
+SERVER_EMAIL = settings['SERVER_EMAIL']
+ADMINS = settings['ADMINS']
 print(settings['MESSAGE'])

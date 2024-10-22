@@ -16,7 +16,8 @@ from datetime import timedelta
 from contests.locale import get_available_languages
 from wikiscore.settings_env import (
     BASE_DIR, HOME, SECRET_KEY, SOCIAL_AUTH_MEDIAWIKI_URL, SOCIAL_AUTH_MEDIAWIKI_KEY, 
-    SOCIAL_AUTH_MEDIAWIKI_SECRET, DEBUG, ALLOWED_HOSTS, SOCIAL_AUTH_MEDIAWIKI_CALLBACK, DATABASES
+    SOCIAL_AUTH_MEDIAWIKI_SECRET, DEBUG, ALLOWED_HOSTS, SOCIAL_AUTH_MEDIAWIKI_CALLBACK, DATABASES,
+    EMAIL_HOST, EMAIL_PORT, SERVER_EMAIL, ADMINS
 )
 
 # Secrets
@@ -43,6 +44,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
     "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",

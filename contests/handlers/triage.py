@@ -139,10 +139,11 @@ class TriageHandler:
         if not diff:
             raise ValueError('Edit not found')
 
-        if self.contest.pictures_mode == 2 and isnumeric(request.POST.get('picture')):
-            picture = request.POST.get('picture')
+        picture_input = request.POST.get('picture', 'nao')
+        if self.contest.pictures_mode == 2 and picture_input and picture_input.isnumeric():
+            picture = picture_input
         else:
-            picture = True if request.POST.get('picture') == 'sim' else False
+            picture = True if picture_input == 'sim' else False
 
         overwrite_value = request.POST.get('overwrite')
         real_bytes = int(overwrite_value) if overwrite_value and overwrite_value.isnumeric() else Edit.objects.get(diff=diff).orig_bytes
