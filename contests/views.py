@@ -233,7 +233,7 @@ def edits_view(request, contest):
     )
 
     if request.POST.get('csv'):
-        response = HttpResponse(content_type="text/csv; charset=windows-1252",
+        response = HttpResponse(content_type="text/csv; charset=utf-8",
                                 headers={"Content-Disposition": 'attachment; filename="edits.csv"'})
         response.write(loader.get_template("edits.txt").render({'data': edits}))
         return response
