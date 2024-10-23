@@ -162,13 +162,13 @@
                         <label for="valid-nao">{% trans 'No' context 'no' %}</label><br><br>
                     </div>
                     <div class="w3-container w3-cell w3-col l6 m12 s6">
-                        {% if contest.picture_mode == 2 %}
+                        {% if contest.pictures_mode == 2 %}
                             <p>{% trans 'With image?' context 'withimage' %}</p>
                             <input
                             class="w3-input w3-section"
                             type="number"
                             id="pic"
-                            name="pic"
+                            name="picture"
                             value="0"
                             min="0"
                             max="9"
@@ -180,7 +180,7 @@
                             class="w3-radio w3-section"
                             type="radio"
                             id="pic-sim"
-                            name="pic"
+                            name="picture"
                             value="sim"
                             required>
                             <label for="pic-sim">{% trans 'Yes' context 'yes' %}</label><br>
@@ -188,7 +188,7 @@
                             class="w3-radio w3-section"
                             type="radio"
                             id="pic-nao"
-                            name="pic"
+                            name="picture"
                             value="nao"
                             required>
                             <label for="pic-nao">{% trans 'No' context 'no' %}</label><br><br>
