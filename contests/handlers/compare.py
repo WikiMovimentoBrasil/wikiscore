@@ -176,10 +176,10 @@ class CompareHandler:
         qualif = Qualification.objects.create(
             contest=contest,
             status='0',
-            diff=Edit.objects.get(diff=diff),
+            diff=Edit.objects.get(contest=contest, diff=diff),
             evaluator=Evaluator.objects.get(contest=contest, profile=self.user.profile),
         )
-        Edit.objects.filter(diff=diff).update(last_qualification=qualif)
+        Edit.objects.filter(contest=contest, diff=diff).update(last_qualification=qualif)
 
     def get_inconsistent_edits(self, contest):
         """Coleta edições inconsistentes."""

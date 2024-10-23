@@ -47,10 +47,10 @@ class Command(BaseCommand):
             ):
                 new_qualification = Qualification.objects.create(
                     contest=contest,
-                    diff=Edit.objects.get(diff=diff),
+                    diff=Edit.objects.get(contest=contest, diff=diff),
                     status=0,
                 )
-                Edit.objects.filter(diff=diff).update(last_qualification=new_qualification)
+                Edit.objects.filter(contest=contest, diff=diff).update(last_qualification=new_qualification)
                 self.stdout.write(f"Marcada edição {diff} como revertida.")
 
         # Encerra script

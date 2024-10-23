@@ -107,10 +107,10 @@ class TriageHandler:
         evaluation = Evaluation.objects.create(
             contest=self.contest,
             evaluator=Evaluator.objects.get(contest=self.contest, profile=self.user.profile),
-            diff=Edit.objects.get(diff=diff),
+            diff=Edit.objects.get(contest=self.contest, diff=diff),
             status='3'
         )
-        Edit.objects.filter(diff=diff).update(last_evaluation=evaluation)
+        Edit.objects.filter(contest=self.contest, diff=diff).update(last_evaluation=evaluation)
         return evaluation
 
     def release_edit(self):
@@ -129,7 +129,7 @@ class TriageHandler:
                 diff=skip,
                 status='0' # Status '0' indicates the edit is pending
             )
-            Edit.objects.filter(diff=skip.diff).update(last_evaluation=evaluation)
+            Edit.objects.filter(contest=self.contest, diff=skip.diff).update(last_evaluation=evaluation)
 
         return skipped
 
@@ -146,19 +146,19 @@ class TriageHandler:
             picture = True if picture_input == 'sim' else False
 
         overwrite_value = request.POST.get('overwrite')
-        real_bytes = int(overwrite_value) if overwrite_value and overwrite_value.isnumeric() else Edit.objects.get(diff=diff).orig_bytes
+        real_bytes = int(overwrite_value) if overwrite_value and overwrite_value.isnumeric() else Edit.objects.get(contest=self.contest, diff=diff).orig_bytes
 
         evaluation = Evaluation.objects.create(
             contest=self.contest,
             evaluator=Evaluator.objects.get(contest=self.contest, profile=self.user.profile),
-            diff=Edit.objects.get(diff=request.POST.get('diff')),
+            diff=Edit.objects.get(contest=self.contest, diff=diff),
             valid_edit=True if request.POST.get('valid') == 'sim' else False,
             pictures=picture,
             real_bytes=real_bytes,
             status='1',
             obs=request.POST.get('obs') or None
         )
-        Edit.objects.filter(diff=diff).update(last_evaluation=evaluation)
+        Edit.objects.filter(contest=self.contest, diff=diff).update(last_evaluation=evaluation)
 
         return evaluation.__dict__
 
@@ -191,7 +191,7 @@ class TriageHandler:
                 diff=locked.diff,
                 status='0' # Status '0' indicates the edit is pending
             )
-            Edit.objects.filter(diff=locked.diff).update(last_evaluation=evaluation)
+            Edit.objects.filter(contest=self.contest, diff=locked.diff).update(last_evaluation=evaluation)
 
         return lockeds
 
