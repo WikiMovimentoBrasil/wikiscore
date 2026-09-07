@@ -257,5 +257,12 @@
 	"manage-confirmdelete": "대회를 삭제하면 이 대회와 관련된 모든 기록이 삭제됩니다. 계속하시겠습니까?",
 	"manage-restart": "다시 시작",
 	"manage-delete": "삭제",
-	"label-tags": "태그:"
+	"counter-statementscount": "총 서술",
+	"counter-referencescount": "총 각주",
+	"counter-qualifierscount": "총 한정어",
+	"label-statements": "생성/수정된 서술:",
+	"label-references": "생성/수정된 각주:",
+	"label-qualifiers": "생성/수정된 한정어:",
+	"label-tags": "태그:",
+	"label-none": "없음"
 }
