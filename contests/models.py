@@ -113,7 +113,7 @@ class EditWikidata(models.Model):
 
 class Edit(models.Model):
     contest = models.ForeignKey('Contest', on_delete=models.CASCADE)
-    diff = models.IntegerField()
+    diff = models.BigIntegerField()
     article = models.ForeignKey('Article', on_delete=models.SET_NULL, null=True)
     timestamp = models.DateTimeField(blank=True)
     user_id = models.IntegerField()
